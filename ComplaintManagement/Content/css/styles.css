@@ -1,0 +1,250 @@
+body{
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+form.user .form-control-user {
+    border-radius: 0px;
+}
+
+.newcolor {
+    color: #E0301E;
+}
+
+.newcolorbg {
+    background-color: #E0301E;
+    background: #E0301E;
+}
+
+.btn-newlog {
+    border: 0;
+    width: 200px;
+    border-radius: 0 !important;
+}
+
+.bg-login-image {
+    background: url('../img/login.png');
+    background-position: center;
+    background-size: cover;
+}
+
+/* ==================== MASTERS PAGE ========================= */
+
+.bg-header {
+    background-color: #EB8C00;
+}
+
+.bg-menu {
+    background-color: #E0301E;
+}
+
+#wrapper #content-wrapper {
+    background-color: #DEDEDE;
+}
+
+footer.sticky-footer {
+    padding: 10px;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #E0301E;
+}
+
+.nav-pills .nav-link {
+    color: #000;
+}
+
+.height-table {
+    display: table;
+    width: 100%;
+}
+
+.d-table-cell {
+    display: table-cell;
+}
+
+.nav-pills .nav-link {
+    background: #fff;
+    border: 1px solid #c4c4c4;
+    border-radius: 0;
+    margin: 0 5px;
+}
+
+    .nav-pills .nav-link.active {
+        background-color: #fff;
+        border: 1px solid #E0301E;
+        border-radius: 0;
+        color: #E0301E;
+        font-weight: 600;
+    }
+
+.text-black {
+    color: #000000;
+}
+
+.page-title h2 {
+    font-weight: bold;
+    font-size: 26px;
+    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+}
+
+.h-40p {
+    height: 40px;
+}
+
+.w-40p {
+    width: 40px;
+}
+
+.f-14 {
+    font-size: 14px;
+}
+
+.f-16 {
+    font-size: 16px;
+}
+
+.f-18 {
+    font-size: 18px;
+}
+
+.f-20 {
+    font-size: 20px;
+}
+
+.f-22 {
+    font-size: 22px;
+}
+
+.f-24 {
+    font-size: 24px;
+}
+
+.f-111 {
+    font-size: 111px;
+}
+
+.min-h-365 {
+    min-height: 365px;
+}
+
+.custom-file-input:lang(en) ~ .custom-file-label::after {
+    content: "Upload";
+    background: #e0301e;
+    color: #ffffff;
+}
+
+.sidebar .nav-item .nav-link span {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.sidebar-dark .nav-item .nav-link i {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.sidebar-dark .nav-item .nav-link[data-toggle=collapse]::after {
+    color: #ffffff;
+}
+
+#uploadFile .file-upload {
+    border-bottom: 2px solid #efa230;
+    color: #de220f;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.close-modal {
+    top: 10px;
+    background: #de220f;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    display: inline-block;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    position: absolute;
+    right: 10px;
+    line-height: 25px;
+    z-index: 9;
+    cursor: pointer;
+}
+
+#uploadFile .btn {
+    padding: .375rem .75rem;
+    font-size: 1rem;
+}
+#uploadFile .modal-content {
+    padding: 50px 20px;
+}
+
+.pie-legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+    .pie-legend span {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 100%;
+        margin-right: 16px;
+        margin-bottom: -2px;
+    }
+
+    .pie-legend li {
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+.sidebar .sidebar-brand {
+    height: auto;
+}
+
+.topbar .navbar-search {
+    width: 15rem;
+}
+
+.topbar #sidebarToggleTop {
+    background: #eaecf4
+}
+
+.topbar.navbar-light .navbar-nav .nav-item .nav-link, .topbar.navbar-light .navbar-nav .nav-item .nav-link:hover,
+.topbar.navbar-light .navbar-nav .nav-item .nav-link:focus {
+    color: #ffffff;
+}
+
+#searchIcon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #000000;
+    font-size: 16px;
+    z-index: 9;
+}
+
+.pl-30 {
+    padding-left: 30px;
+}
+.topbar h4{
+    font-family:Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+}
+
+
+@media(max-width:767px) {
+    .topbar .navbar-search {
+        width: 12rem;
+    }
+
+    .bg-header h4 {
+        font-size: 18px;
+        margin-right: 5px !important;
+    }
+
+    .topbar .topbar-divider {
+        margin: auto 5px
+    }
+}

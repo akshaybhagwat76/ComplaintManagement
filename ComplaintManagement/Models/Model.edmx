@@ -1,0 +1,1126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DB_A6A061_complaintuserModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CategoryMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CommitteeMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CommitteeName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompetencyMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompetencyName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="Userid" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="DesignationMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Designation" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="EntityMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EntityName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="LocationMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LocationName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="LOSMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LOSName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="SBUId" Type="int" Nullable="false" />
+          <Property Name="SubSBUId" Type="int" Nullable="false" />
+          <Property Name="CompetencyId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="RegionMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Region" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="RoleMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="LOSId" Type="int" Nullable="false" />
+          <Property Name="SBUId" Type="int" Nullable="false" />
+          <Property Name="SubSBUId" Type="int" Nullable="false" />
+          <Property Name="CompetencyId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SBUMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SBU" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SubCategoryMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SubCategoryName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SubSBUMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SubSBU" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="UserMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="EmployeeId" Type="int" Nullable="false" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Age" Type="int" Nullable="false" />
+          <Property Name="WorkEmail" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="TimeType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BusinessTitle" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Company" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="LOSId" Type="int" Nullable="false" />
+          <Property Name="SBUId" Type="int" Nullable="false" />
+          <Property Name="SubSBUId" Type="int" Nullable="false" />
+          <Property Name="CompentencyId" Type="int" Nullable="false" />
+          <Property Name="LocationId" Type="int" Nullable="false" />
+          <Property Name="RegionId" Type="int" Nullable="false" />
+          <Property Name="DateOfJoining" Type="date" Nullable="false" />
+          <Property Name="MobileNo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Manager" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="ImagePath" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CommitteeMasters_UserMasters">
+          <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="1" />
+          <End Role="CommitteeMasters" Type="Self.CommitteeMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommitteeMasters">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LOSMasters_CompetencyMasters">
+          <End Role="CompetencyMasters" Type="Self.CompetencyMasters" Multiplicity="1" />
+          <End Role="LOSMasters" Type="Self.LOSMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetencyMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LOSMasters">
+              <PropertyRef Name="CompetencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LOSMasters_SBUMasters">
+          <End Role="SBUMasters" Type="Self.SBUMasters" Multiplicity="1" />
+          <End Role="LOSMasters" Type="Self.LOSMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LOSMasters">
+              <PropertyRef Name="SBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LOSMasters_SubSBUMasters">
+          <End Role="SubSBUMasters" Type="Self.SubSBUMasters" Multiplicity="1" />
+          <End Role="LOSMasters" Type="Self.LOSMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubSBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LOSMasters">
+              <PropertyRef Name="SubSBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_CompetencyMasters">
+          <End Role="CompetencyMasters" Type="Self.CompetencyMasters" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetencyMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="CompetencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_LOSMasters">
+          <End Role="LOSMasters" Type="Self.LOSMasters" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LOSMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="LOSId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_SBUMasters">
+          <End Role="SBUMasters" Type="Self.SBUMasters" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="SBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_SubSBUMasters">
+          <End Role="SubSBUMasters" Type="Self.SubSBUMasters" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubSBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="SubSBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_UserMasters">
+          <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_CompetencyMasters">
+          <End Role="CompetencyMasters" Type="Self.CompetencyMasters" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetencyMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="CompentencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_LocationMasters">
+          <End Role="LocationMasters" Type="Self.LocationMasters" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LocationMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="LocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_LOSMasters">
+          <End Role="LOSMasters" Type="Self.LOSMasters" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LOSMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="LOSId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_RegionMasters">
+          <End Role="RegionMasters" Type="Self.RegionMasters" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegionMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="RegionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_SBUMasters">
+          <End Role="SBUMasters" Type="Self.SBUMasters" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="SBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_SubSBUMasters">
+          <End Role="SubSBUMasters" Type="Self.SubSBUMasters" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubSBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="SubSBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DB_A6A061_complaintuserModelStoreContainer">
+          <EntitySet Name="CategoryMasters" EntityType="Self.CategoryMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CommitteeMasters" EntityType="Self.CommitteeMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompetencyMasters" EntityType="Self.CompetencyMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DesignationMasters" EntityType="Self.DesignationMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EntityMasters" EntityType="Self.EntityMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LocationMasters" EntityType="Self.LocationMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LOSMasters" EntityType="Self.LOSMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RegionMasters" EntityType="Self.RegionMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoleMasters" EntityType="Self.RoleMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SBUMasters" EntityType="Self.SBUMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubCategoryMasters" EntityType="Self.SubCategoryMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubSBUMasters" EntityType="Self.SubSBUMasters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserMasters" EntityType="Self.UserMasters" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CommitteeMasters_UserMasters" Association="Self.FK_CommitteeMasters_UserMasters">
+            <End Role="UserMasters" EntitySet="UserMasters" />
+            <End Role="CommitteeMasters" EntitySet="CommitteeMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LOSMasters_CompetencyMasters" Association="Self.FK_LOSMasters_CompetencyMasters">
+            <End Role="CompetencyMasters" EntitySet="CompetencyMasters" />
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LOSMasters_SBUMasters" Association="Self.FK_LOSMasters_SBUMasters">
+            <End Role="SBUMasters" EntitySet="SBUMasters" />
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LOSMasters_SubSBUMasters" Association="Self.FK_LOSMasters_SubSBUMasters">
+            <End Role="SubSBUMasters" EntitySet="SubSBUMasters" />
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_CompetencyMasters" Association="Self.FK_RoleMasters_CompetencyMasters">
+            <End Role="CompetencyMasters" EntitySet="CompetencyMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_LOSMasters" Association="Self.FK_RoleMasters_LOSMasters">
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_SBUMasters" Association="Self.FK_RoleMasters_SBUMasters">
+            <End Role="SBUMasters" EntitySet="SBUMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_SubSBUMasters" Association="Self.FK_RoleMasters_SubSBUMasters">
+            <End Role="SubSBUMasters" EntitySet="SubSBUMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_UserMasters" Association="Self.FK_RoleMasters_UserMasters">
+            <End Role="UserMasters" EntitySet="UserMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_CompetencyMasters" Association="Self.FK_UserMasters_CompetencyMasters">
+            <End Role="CompetencyMasters" EntitySet="CompetencyMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_LocationMasters" Association="Self.FK_UserMasters_LocationMasters">
+            <End Role="LocationMasters" EntitySet="LocationMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_LOSMasters" Association="Self.FK_UserMasters_LOSMasters">
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_RegionMasters" Association="Self.FK_UserMasters_RegionMasters">
+            <End Role="RegionMasters" EntitySet="RegionMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_SBUMasters" Association="Self.FK_UserMasters_SBUMasters">
+            <End Role="SBUMasters" EntitySet="SBUMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_SubSBUMasters" Association="Self.FK_UserMasters_SubSBUMasters">
+            <End Role="SubSBUMasters" EntitySet="SubSBUMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DB_A6A061_complaintuserModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CategoryMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CommitteeMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CommitteeName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="UserMaster" Relationship="Self.FK_CommitteeMasters_UserMasters" FromRole="CommitteeMasters" ToRole="UserMasters" />
+        </EntityType>
+        <EntityType Name="CompetencyMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompetencyName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="Userid" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="LOSMasters" Relationship="Self.FK_LOSMasters_CompetencyMasters" FromRole="CompetencyMasters" ToRole="LOSMasters" />
+          <NavigationProperty Name="RoleMasters" Relationship="Self.FK_RoleMasters_CompetencyMasters" FromRole="CompetencyMasters" ToRole="RoleMasters" />
+          <NavigationProperty Name="UserMasters" Relationship="Self.FK_UserMasters_CompetencyMasters" FromRole="CompetencyMasters" ToRole="UserMasters" />
+        </EntityType>
+        <EntityType Name="DesignationMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Designation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="EntityMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EntityName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="LocationMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LocationName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="UserMasters" Relationship="Self.FK_UserMasters_LocationMasters" FromRole="LocationMasters" ToRole="UserMasters" />
+        </EntityType>
+        <EntityType Name="LOSMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOSName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SBUId" Type="Int32" Nullable="false" />
+          <Property Name="SubSBUId" Type="Int32" Nullable="false" />
+          <Property Name="CompetencyId" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CompetencyMaster" Relationship="Self.FK_LOSMasters_CompetencyMasters" FromRole="LOSMasters" ToRole="CompetencyMasters" />
+          <NavigationProperty Name="SBUMaster" Relationship="Self.FK_LOSMasters_SBUMasters" FromRole="LOSMasters" ToRole="SBUMasters" />
+          <NavigationProperty Name="SubSBUMaster" Relationship="Self.FK_LOSMasters_SubSBUMasters" FromRole="LOSMasters" ToRole="SubSBUMasters" />
+          <NavigationProperty Name="RoleMasters" Relationship="Self.FK_RoleMasters_LOSMasters" FromRole="LOSMasters" ToRole="RoleMasters" />
+          <NavigationProperty Name="UserMasters" Relationship="Self.FK_UserMasters_LOSMasters" FromRole="LOSMasters" ToRole="UserMasters" />
+        </EntityType>
+        <EntityType Name="RegionMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Region" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="UserMasters" Relationship="Self.FK_UserMasters_RegionMasters" FromRole="RegionMasters" ToRole="UserMasters" />
+        </EntityType>
+        <EntityType Name="RoleMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="LOSId" Type="Int32" Nullable="false" />
+          <Property Name="SBUId" Type="Int32" Nullable="false" />
+          <Property Name="SubSBUId" Type="Int32" Nullable="false" />
+          <Property Name="CompetencyId" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CompetencyMaster" Relationship="Self.FK_RoleMasters_CompetencyMasters" FromRole="RoleMasters" ToRole="CompetencyMasters" />
+          <NavigationProperty Name="LOSMaster" Relationship="Self.FK_RoleMasters_LOSMasters" FromRole="RoleMasters" ToRole="LOSMasters" />
+          <NavigationProperty Name="SBUMaster" Relationship="Self.FK_RoleMasters_SBUMasters" FromRole="RoleMasters" ToRole="SBUMasters" />
+          <NavigationProperty Name="SubSBUMaster" Relationship="Self.FK_RoleMasters_SubSBUMasters" FromRole="RoleMasters" ToRole="SubSBUMasters" />
+          <NavigationProperty Name="UserMaster" Relationship="Self.FK_RoleMasters_UserMasters" FromRole="RoleMasters" ToRole="UserMasters" />
+        </EntityType>
+        <EntityType Name="SBUMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SBU" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="LOSMasters" Relationship="Self.FK_LOSMasters_SBUMasters" FromRole="SBUMasters" ToRole="LOSMasters" />
+          <NavigationProperty Name="RoleMasters" Relationship="Self.FK_RoleMasters_SBUMasters" FromRole="SBUMasters" ToRole="RoleMasters" />
+          <NavigationProperty Name="UserMasters" Relationship="Self.FK_UserMasters_SBUMasters" FromRole="SBUMasters" ToRole="UserMasters" />
+        </EntityType>
+        <EntityType Name="SubCategoryMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SubCategoryName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="SubSBUMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SubSBU" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="LOSMasters" Relationship="Self.FK_LOSMasters_SubSBUMasters" FromRole="SubSBUMasters" ToRole="LOSMasters" />
+          <NavigationProperty Name="RoleMasters" Relationship="Self.FK_RoleMasters_SubSBUMasters" FromRole="SubSBUMasters" ToRole="RoleMasters" />
+          <NavigationProperty Name="UserMasters" Relationship="Self.FK_UserMasters_SubSBUMasters" FromRole="SubSBUMasters" ToRole="UserMasters" />
+        </EntityType>
+        <EntityType Name="UserMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+          <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Age" Type="Int32" Nullable="false" />
+          <Property Name="WorkEmail" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TimeType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BusinessTitle" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Company" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LOSId" Type="Int32" Nullable="false" />
+          <Property Name="SBUId" Type="Int32" Nullable="false" />
+          <Property Name="SubSBUId" Type="Int32" Nullable="false" />
+          <Property Name="CompentencyId" Type="Int32" Nullable="false" />
+          <Property Name="LocationId" Type="Int32" Nullable="false" />
+          <Property Name="RegionId" Type="Int32" Nullable="false" />
+          <Property Name="DateOfJoining" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="MobileNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Manager" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ImagePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CommitteeMasters" Relationship="Self.FK_CommitteeMasters_UserMasters" FromRole="UserMasters" ToRole="CommitteeMasters" />
+          <NavigationProperty Name="CompetencyMaster" Relationship="Self.FK_UserMasters_CompetencyMasters" FromRole="UserMasters" ToRole="CompetencyMasters" />
+          <NavigationProperty Name="LocationMaster" Relationship="Self.FK_UserMasters_LocationMasters" FromRole="UserMasters" ToRole="LocationMasters" />
+          <NavigationProperty Name="LOSMaster" Relationship="Self.FK_UserMasters_LOSMasters" FromRole="UserMasters" ToRole="LOSMasters" />
+          <NavigationProperty Name="RegionMaster" Relationship="Self.FK_UserMasters_RegionMasters" FromRole="UserMasters" ToRole="RegionMasters" />
+          <NavigationProperty Name="RoleMasters" Relationship="Self.FK_RoleMasters_UserMasters" FromRole="UserMasters" ToRole="RoleMasters" />
+          <NavigationProperty Name="SBUMaster" Relationship="Self.FK_UserMasters_SBUMasters" FromRole="UserMasters" ToRole="SBUMasters" />
+          <NavigationProperty Name="SubSBUMaster" Relationship="Self.FK_UserMasters_SubSBUMasters" FromRole="UserMasters" ToRole="SubSBUMasters" />
+        </EntityType>
+        <Association Name="FK_CommitteeMasters_UserMasters">
+          <End Role="UserMasters" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="CommitteeMasters" Type="Self.CommitteeMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommitteeMasters">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LOSMasters_CompetencyMasters">
+          <End Role="CompetencyMasters" Type="Self.CompetencyMaster" Multiplicity="1" />
+          <End Role="LOSMasters" Type="Self.LOSMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetencyMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LOSMasters">
+              <PropertyRef Name="CompetencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_CompetencyMasters">
+          <End Role="CompetencyMasters" Type="Self.CompetencyMaster" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetencyMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="CompetencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_CompetencyMasters">
+          <End Role="CompetencyMasters" Type="Self.CompetencyMaster" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetencyMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="CompentencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_LocationMasters">
+          <End Role="LocationMasters" Type="Self.LocationMaster" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LocationMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="LocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LOSMasters_SBUMasters">
+          <End Role="SBUMasters" Type="Self.SBUMaster" Multiplicity="1" />
+          <End Role="LOSMasters" Type="Self.LOSMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LOSMasters">
+              <PropertyRef Name="SBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LOSMasters_SubSBUMasters">
+          <End Role="SubSBUMasters" Type="Self.SubSBUMaster" Multiplicity="1" />
+          <End Role="LOSMasters" Type="Self.LOSMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubSBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LOSMasters">
+              <PropertyRef Name="SubSBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_LOSMasters">
+          <End Role="LOSMasters" Type="Self.LOSMaster" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LOSMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="LOSId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_LOSMasters">
+          <End Role="LOSMasters" Type="Self.LOSMaster" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LOSMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="LOSId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_RegionMasters">
+          <End Role="RegionMasters" Type="Self.RegionMaster" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegionMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="RegionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_SBUMasters">
+          <End Role="SBUMasters" Type="Self.SBUMaster" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="SBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_SubSBUMasters">
+          <End Role="SubSBUMasters" Type="Self.SubSBUMaster" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubSBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="SubSBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleMasters_UserMasters">
+          <End Role="UserMasters" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="RoleMasters" Type="Self.RoleMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleMasters">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_SBUMasters">
+          <End Role="SBUMasters" Type="Self.SBUMaster" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="SBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMasters_SubSBUMasters">
+          <End Role="SubSBUMasters" Type="Self.SubSBUMaster" Multiplicity="1" />
+          <End Role="UserMasters" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubSBUMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserMasters">
+              <PropertyRef Name="SubSBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DB_A6A061_complaintuserEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CategoryMasters" EntityType="Self.CategoryMaster" />
+          <EntitySet Name="CommitteeMasters" EntityType="Self.CommitteeMaster" />
+          <EntitySet Name="CompetencyMasters" EntityType="Self.CompetencyMaster" />
+          <EntitySet Name="DesignationMasters" EntityType="Self.DesignationMaster" />
+          <EntitySet Name="EntityMasters" EntityType="Self.EntityMaster" />
+          <EntitySet Name="LocationMasters" EntityType="Self.LocationMaster" />
+          <EntitySet Name="LOSMasters" EntityType="Self.LOSMaster" />
+          <EntitySet Name="RegionMasters" EntityType="Self.RegionMaster" />
+          <EntitySet Name="RoleMasters" EntityType="Self.RoleMaster" />
+          <EntitySet Name="SBUMasters" EntityType="Self.SBUMaster" />
+          <EntitySet Name="SubCategoryMasters" EntityType="Self.SubCategoryMaster" />
+          <EntitySet Name="SubSBUMasters" EntityType="Self.SubSBUMaster" />
+          <EntitySet Name="UserMasters" EntityType="Self.UserMaster" />
+          <AssociationSet Name="FK_CommitteeMasters_UserMasters" Association="Self.FK_CommitteeMasters_UserMasters">
+            <End Role="UserMasters" EntitySet="UserMasters" />
+            <End Role="CommitteeMasters" EntitySet="CommitteeMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LOSMasters_CompetencyMasters" Association="Self.FK_LOSMasters_CompetencyMasters">
+            <End Role="CompetencyMasters" EntitySet="CompetencyMasters" />
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_CompetencyMasters" Association="Self.FK_RoleMasters_CompetencyMasters">
+            <End Role="CompetencyMasters" EntitySet="CompetencyMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_CompetencyMasters" Association="Self.FK_UserMasters_CompetencyMasters">
+            <End Role="CompetencyMasters" EntitySet="CompetencyMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_LocationMasters" Association="Self.FK_UserMasters_LocationMasters">
+            <End Role="LocationMasters" EntitySet="LocationMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LOSMasters_SBUMasters" Association="Self.FK_LOSMasters_SBUMasters">
+            <End Role="SBUMasters" EntitySet="SBUMasters" />
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LOSMasters_SubSBUMasters" Association="Self.FK_LOSMasters_SubSBUMasters">
+            <End Role="SubSBUMasters" EntitySet="SubSBUMasters" />
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_LOSMasters" Association="Self.FK_RoleMasters_LOSMasters">
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_LOSMasters" Association="Self.FK_UserMasters_LOSMasters">
+            <End Role="LOSMasters" EntitySet="LOSMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_RegionMasters" Association="Self.FK_UserMasters_RegionMasters">
+            <End Role="RegionMasters" EntitySet="RegionMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_SBUMasters" Association="Self.FK_RoleMasters_SBUMasters">
+            <End Role="SBUMasters" EntitySet="SBUMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_SubSBUMasters" Association="Self.FK_RoleMasters_SubSBUMasters">
+            <End Role="SubSBUMasters" EntitySet="SubSBUMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleMasters_UserMasters" Association="Self.FK_RoleMasters_UserMasters">
+            <End Role="UserMasters" EntitySet="UserMasters" />
+            <End Role="RoleMasters" EntitySet="RoleMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_SBUMasters" Association="Self.FK_UserMasters_SBUMasters">
+            <End Role="SBUMasters" EntitySet="SBUMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMasters_SubSBUMasters" Association="Self.FK_UserMasters_SubSBUMasters">
+            <End Role="SubSBUMasters" EntitySet="SubSBUMasters" />
+            <End Role="UserMasters" EntitySet="UserMasters" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DB_A6A061_complaintuserModelStoreContainer" CdmEntityContainer="DB_A6A061_complaintuserEntities">
+          <EntitySetMapping Name="CategoryMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CategoryMaster">
+              <MappingFragment StoreEntitySet="CategoryMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CommitteeMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CommitteeMaster">
+              <MappingFragment StoreEntitySet="CommitteeMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CommitteeName" ColumnName="CommitteeName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompetencyMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CompetencyMaster">
+              <MappingFragment StoreEntitySet="CompetencyMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CompetencyName" ColumnName="CompetencyName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Userid" ColumnName="Userid" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DesignationMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.DesignationMaster">
+              <MappingFragment StoreEntitySet="DesignationMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EntityMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EntityMaster">
+              <MappingFragment StoreEntitySet="EntityMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EntityName" ColumnName="EntityName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LocationMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.LocationMaster">
+              <MappingFragment StoreEntitySet="LocationMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LOSMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.LOSMaster">
+              <MappingFragment StoreEntitySet="LOSMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LOSName" ColumnName="LOSName" />
+                <ScalarProperty Name="SBUId" ColumnName="SBUId" />
+                <ScalarProperty Name="SubSBUId" ColumnName="SubSBUId" />
+                <ScalarProperty Name="CompetencyId" ColumnName="CompetencyId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RegionMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.RegionMaster">
+              <MappingFragment StoreEntitySet="RegionMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoleMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.RoleMaster">
+              <MappingFragment StoreEntitySet="RoleMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="LOSId" ColumnName="LOSId" />
+                <ScalarProperty Name="SBUId" ColumnName="SBUId" />
+                <ScalarProperty Name="SubSBUId" ColumnName="SubSBUId" />
+                <ScalarProperty Name="CompetencyId" ColumnName="CompetencyId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SBUMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.SBUMaster">
+              <MappingFragment StoreEntitySet="SBUMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SBU" ColumnName="SBU" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubCategoryMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.SubCategoryMaster">
+              <MappingFragment StoreEntitySet="SubCategoryMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SubCategoryName" ColumnName="SubCategoryName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubSBUMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.SubSBUMaster">
+              <MappingFragment StoreEntitySet="SubSBUMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SubSBU" ColumnName="SubSBU" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.UserMaster">
+              <MappingFragment StoreEntitySet="UserMasters">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="WorkEmail" ColumnName="WorkEmail" />
+                <ScalarProperty Name="TimeType" ColumnName="TimeType" />
+                <ScalarProperty Name="BusinessTitle" ColumnName="BusinessTitle" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="LOSId" ColumnName="LOSId" />
+                <ScalarProperty Name="SBUId" ColumnName="SBUId" />
+                <ScalarProperty Name="SubSBUId" ColumnName="SubSBUId" />
+                <ScalarProperty Name="CompentencyId" ColumnName="CompentencyId" />
+                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+                <ScalarProperty Name="RegionId" ColumnName="RegionId" />
+                <ScalarProperty Name="DateOfJoining" ColumnName="DateOfJoining" />
+                <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
+                <ScalarProperty Name="Manager" ColumnName="Manager" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

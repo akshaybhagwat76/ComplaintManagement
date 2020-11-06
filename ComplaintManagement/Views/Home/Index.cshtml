@@ -1,0 +1,347 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-header topbar mb-4 static-top shadow">
+            <!-- Sidebar Toggle (Topbar) -->
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                <i class="fa fa-bars"></i>
+            </button>
+            <h4 class="text-white m-0">Dashboard</h4>
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <form class="d-none d-sm-inline-block form-inline my-3 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                            <i class="fas fa-search fa-sm" id="searchIcon"></i>
+                        </div>
+                    </form>
+                </li>
+                <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                <li class="nav-item dropdown no-arrow d-sm-none">
+                    <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <!-- Dropdown - Messages -->
+                    <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                        <form class="form-inline mr-auto w-100 navbar-search">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+
+                <!-- Nav Item - Alerts -->
+                <li class="nav-item dropdown no-arrow mx-1">
+                    <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bell fa-fw text-white"></i>
+                        <!-- Counter - Alerts -->
+                        <span class="badge badge-danger badge-counter">3+</span>
+                    </a>
+                    <!-- Dropdown - Alerts -->
+                    <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                        <h6 class="dropdown-header">
+                            Alerts Center
+                        </h6>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-primary">
+                                    <i class="fas fa-file-alt text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">December 12, 2019</div>
+                                <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                            </div>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-success">
+                                    <i class="fas fa-donate text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">December 7, 2019</div>
+                                $290.29 has been deposited into your account!
+                            </div>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-warning">
+                                    <i class="fas fa-exclamation-triangle text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">December 2, 2019</div>
+                                Spending Alert: We've noticed unusually high spending for your account.
+                            </div>
+                        </a>
+                        <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                    </div>
+                </li>
+                <div class="topbar-divider d-none d-sm-block"></div>
+                <!-- Nav Item - User Information -->
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="mr-2 d-none d-lg-inline text-white small">P Goswami</span>
+                        <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                    </a>
+                    <!-- Dropdown - User Information -->
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="user-profile.html">
+                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!-- End of Topbar -->
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+            <div class="page-title mb-3">
+                <h2 class="text-black">Overview</h2>
+            </div>
+            <div class="card mb-4 rounded-0 border-0">
+                <div class="card-body text-black">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <h2 class="font-weight-bold">10</h2>
+                            <span><strong>Due Complaints</strong></span>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h2 class="font-weight-bold">20</h2>
+                            <span><strong>Overdue Complaints</strong></span>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h2 class="font-weight-bold">05</h2>
+                            <span><strong>Awaiting My Approval Complaints</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4 rounded-0 border-0">
+                <div class="card-body py-2">
+                    <div class="row justify-content-between">
+                        <div class="col-md-10">
+                            <ul class="nav">
+                                <li class="nav-item mr-3">
+                                    <input type="text" class="form-control" placeholder="From Date" />
+                                </li>
+                                <li class="nav-item mr-3">
+                                    <input type="text" class="form-control" placeholder="To Date" />
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="col-md-2">
+                            <ul class="nav justify-content-end">
+                                <li class="nav-item">
+                                    <button type="submit" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-search"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab Bar -->
+            <div class="user-list">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="card mb-4 rounded-0 border-0">
+                            <div class="card-header">
+                                <span class="text-success">Category wise</span>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="card mb-4 rounded-0 border-0">
+                            <div class="card-header">
+                                <span class="text-success">Sub-Category wise</span>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <canvas id="subcategoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="card mb-4 rounded-0 border-0">
+                            <div class="card-header">
+                                <span class="text-success">LOS wise</span>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <canvas id="losChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="card mb-4 rounded-0 border-0">
+                            <div class="card-header">
+                                <span class="text-success">Overall Status wise</span>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <canvas id="overallChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+</div>
+<script src="https://www.chartjs.org/dist/2.9.4/Chart.min.js"></script>
+<!--<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>-->
+<script>
+        var ctx = document.getElementById("categoryChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            position: 'right',
+            type: 'pie',
+            data: {
+                labels: ["", "", "", "", ""],
+                datasets: [{
+                    backgroundColor: [
+                        "#be5168",
+                        "#993767",
+                        "#3c8e9d",
+                        "#e9d78e",
+                        "#e2975d",
+                        "#e16552"
+                    ],
+                    data: [50, 55, 60, 33, 45, 60]
+                }]
+            },
+            // Configuration options go here
+            options: {
+                legend: {
+                    position: 'right'
+                },
+                tooltips: {
+                    enabled: false
+                }
+            },
+            //plugins: {
+            //   datalabels: {
+            //        formatter: (value, ctx) => {
+            //           let datasets = ctx.chart.data.datasets;
+            //           if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
+            //               let sum = datasets[0].data.reduce((a, b) => a + b, 0);
+            //               let percentage = Math.round((value / sum) * 100) + '%';
+            //               return percentage;
+            //           } else {
+            //               return percentage;
+            //           }
+            //        }
+            //    }
+            //}
+        });
+
+
+        var ctx = document.getElementById("subcategoryChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            position: 'right',
+            type: 'pie',
+            data: {
+                labels: ["Reyas", "Chu", "Williams"],
+                datasets: [{
+                    backgroundColor: [
+                        "#7a61ba",
+                        "#d8b655",
+                        "#4198d7"
+                    ],
+                    data: [50, 55, 60]
+                }]
+            },
+            // Configuration options go here
+            options: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        usePointStyle: true
+                    }
+                },
+                tooltips: {
+                    enabled: false
+                }
+            },
+        });
+
+
+        var ctx = document.getElementById("losChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            position: 'right',
+            type: 'pie',
+            data: {
+                labels: ["Green", "Blue", "Purple", "Purple"],
+                datasets: [{
+                    backgroundColor: [
+                        "#50514f",
+                        "#eec683",
+                        "#81ddc6",
+                        "#f45e58"
+                    ],
+                    data: [50, 55, 60, 55]
+                }]
+            },
+            // Configuration options go here
+            options: {
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    enabled: false
+                }
+            },
+        });
+
+
+        var ctx = document.getElementById("overallChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            position: 'right',
+            type: 'pie',
+            data: {
+                datasets: [{
+                    backgroundColor: [
+                        "#5a9bd5",
+                        "#4472c5",
+                        "#ed7d32",
+                        "#a5a5a5",
+                        "#ffc100"
+                    ],
+                    data: [50, 55, 60, 55, 50]
+                }]
+            },
+            // Configuration options go here
+            options: {
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    enabled: false
+                }
+            },
+        });</script>    
