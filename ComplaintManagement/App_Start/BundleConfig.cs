@@ -8,6 +8,10 @@ namespace ComplaintManagement
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            // CSS style (bootstrap/inspinia)
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/common.css"));
+
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
@@ -20,11 +24,7 @@ namespace ComplaintManagement
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
-
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Scripts/bootstrap.min.js"));
 
             // Font Awesome All
             bundles.Add(new StyleBundle("~/font-awesome/all").Include(
@@ -37,6 +37,10 @@ namespace ComplaintManagement
             // SB-admin-2-style
             bundles.Add(new StyleBundle("~/sb-admin2/styles").Include(
                      "~/Content/css/styles.css"));
+
+            // jQuery
+            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+                        "~/Scripts/jquery-3.4.1.min.js"));
 
             //Jquery 
             bundles.Add(new ScriptBundle("~/sb-admin2/jquery").Include(
@@ -53,6 +57,57 @@ namespace ComplaintManagement
             //Custom scripts for all pages
             bundles.Add(new ScriptBundle("~/sb-admin2/js").Include(
                     "~/Scripts/js/sb-admin-2.min.js"));
+
+            // jQueryUI CSS
+            bundles.Add(new ScriptBundle("~/Scripts/vendor/jquery-ui/jqueryuiStyles").Include(
+                        "~/Scripts/vendor/jquery-ui/jquery-ui.min.css"));
+
+
+            // jQueryUI 
+            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
+                        "~/Scripts/vendor/jquery-ui/jquery-ui.min.js"));
+
+            // toastr notification 
+            bundles.Add(new ScriptBundle("~/plugins/toastr").Include(
+                      "~/Scripts/vendor/toastr/toastr.min.js"));
+
+            // toastr notification styles
+            bundles.Add(new StyleBundle("~/plugins/toastrStyles").Include(
+                      "~/Content/toastr/toastr.min.css"));
+
+            // Bootstrap
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+                      "~/Scripts/bootstrap.min.js"));
+
+            // dataTables css styles
+            bundles.Add(new StyleBundle("~/Content/plugins/dataTables/dataTablesStyles").Include(
+                      "~/Content/plugins/dataTables/datatables.min.css",
+                      "~/Content/plugins/dataTables/responsive.min.css"));
+
+            // dataTables 
+            bundles.Add(new ScriptBundle("~/plugins/dataTables").Include(
+                      "~/Scripts/vendor/datatables/datatables.min.js",
+                      "~/Scripts/vendor/datatables/responsive.min.js"));
+
+            // dataPicker styles
+            bundles.Add(new StyleBundle("~/plugins/dataPickerStyles").Include(
+                      "~/Content/plugins/datepicker/datepicker3.css"));
+
+            // dataPicker 
+            bundles.Add(new ScriptBundle("~/plugins/datePicker").Include(
+                      "~/Scripts/plugins/datepicker/bootstrap-datepicker.js"));
+
+            //Common JS
+            bundles.Add(new Bundle("~/Assets/Common").Include(
+                     "~/Assets/common.js"));
+
+            // Category Master
+            bundles.Add(new ScriptBundle("~/Assets/CategoryMasters").Include(
+                      "~/Assets/CategoryMasters.js"));
+
+            //Edit Category Master
+            bundles.Add(new ScriptBundle("~/Assets/EditCategoryMasters").Include(
+                      "~/Assets/EditCategoryMaster.js"));
         }
     }
 }

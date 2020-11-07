@@ -12,6 +12,19 @@
     <!-- Custom styles for this template-->
     @Styles.Render("~/sb-admin2/css")
     @Styles.Render("~/sb-admin2/styles")
+    @Styles.Render("~/Content/css")
+    @*@Styles.Render("~/Scripts/vendor/jquery-ui/jqueryuiStyles")*@
+    @Styles.Render("~/plugins/toastrStyles")
+    @Styles.Render("~/Content/plugins/dataTables/dataTablesStyles")
+
+    <!-- Section for main scripts render -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/plugins/toastr")
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/Assets/Common")
+    @RenderSection("scripts", required: false)
 
     <!--<link href="css/helper.css" rel="stylesheet">-->
 </head>
@@ -76,43 +89,43 @@
                 </a>
                 <div id="collapseOne" class="collapse" aria-labelledby="collapseOne" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="user-masters.html">
+                        <a class="collapse-item" href="/UserMaster/Index">
                             <span>User</span>
                         </a>
-                        <a class="collapse-item" href="category-masters.html">
+                        <a class="collapse-item" href="/Category/index">
                             <span>Category</span>
                         </a>
-                        <a class="collapse-item" href="subcategory-masters.html">
+                        <a class="collapse-item" href="/subcategory/Index">
                             <span>Sub Category</span>
                         </a>
-                        <a class="collapse-item" href="designation-masters.html">
+                        <a class="collapse-item" href="/designation/index">
                             <span>Designation</span>
                         </a>
-                        <a class="collapse-item" href="los-masters.html">
+                        <a class="collapse-item" href="/LOS/Index">
                             <span>LOS</span>
                         </a>
-                        <a class="collapse-item" href="sbu-masters.html">
+                        <a class="collapse-item" href="/SBU/Index">
                             <span>SBU</span>
                         </a>
-                        <a class="collapse-item" href="subsbu-masters.html">
+                        <a class="collapse-item" href="/subsbu/Index">
                             <span>Sub SBU</span>
                         </a>
-                        <a class="collapse-item" href="competency-masters.html">
+                        <a class="collapse-item" href="/competency/Index">
                             <span>Competency</span>
                         </a>
-                        <a class="collapse-item" href="location-masters.html">
+                        <a class="collapse-item" href="/location/Index">
                             <span>Location</span>
                         </a>
-                        <a class="collapse-item" href="entity-masters.html">
+                        <a class="collapse-item" href="/entity/Index">
                             <span>Entity</span>
                         </a>
-                        <a class="collapse-item" href="region-masters.html">
+                        <a class="collapse-item" href="/region/Index">
                             <span>Region</span>
                         </a>
-                        <a class="collapse-item" href="role-masters.html">
+                        <a class="collapse-item" href="/role/Index">
                             <span>Role</span>
                         </a>
-                        <a class="collapse-item" href="committee-masters.html">
+                        <a class="collapse-item" href="/committee/Index">
                             <span>Committee</span>
                         </a>
                     </div>
@@ -158,6 +171,11 @@
         </div>
     </div>
 
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/plugins/dataTables")
+
     <!-- Bootstrap core JavaScript-->
     @Scripts.Render("~/sb-admin2/jquery")
     @Scripts.Render("~/sb-admin2/bootstrapbundle")
@@ -165,6 +183,6 @@
     @Scripts.Render("~/sb-admin2/Jqueryeasing")
     <!-- Custom scripts for all pages-->
     @Scripts.Render("~/sb-admin2/js")
- 
+
 </body>
 </html>

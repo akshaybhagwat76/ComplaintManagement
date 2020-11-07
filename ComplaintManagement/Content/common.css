@@ -1,0 +1,38 @@
+﻿.none {
+    display: none
+}
+
+label#lblError {
+    display: block;
+    text-align: center;
+}
+
+input.error, select.error, div.error {
+    border: 1px dotted #cc5965;
+}
+
+label.success {
+    color: #5cb85c;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.preloader {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url(../images/loading_light.gif) center no-repeat #fff;
+}
+
+
+.validation-summary-errors {
+    color: red;
+}
+
+.field-validation-error {
+    color: red;
+}
