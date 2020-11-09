@@ -18,6 +18,15 @@ namespace ComplaintManagement.App_Start
 
                 cfg.CreateMap<CommitteeMasterVM, CommitteeMaster>();
                 cfg.CreateMap<CommitteeMaster, CommitteeMasterVM>();
+
+                cfg.CreateMap<CompetencyMasterVM, CompetencyMaster>();
+                cfg.CreateMap<CompetencyMaster, CompetencyMasterVM>();
+
+                cfg.CreateMap<DesignationMasterVM, DesignationMaster>();
+                cfg.CreateMap<DesignationMaster,DesignationMasterVM>();
+
+                cfg.CreateMap<EntityMasterVM,EntityMaster>();
+                cfg.CreateMap<EntityMaster, EntityMasterVM>();
             });
         }
     }

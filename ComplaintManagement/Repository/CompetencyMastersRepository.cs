@@ -9,38 +9,38 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 
+
 namespace ComplaintManagement.Repository
 {
-    public class CommitteeMastersRepository
+    public class CompetencyMastersRepository
     {
-
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public CommitteeMastersRepository()
+        public CompetencyMastersRepository()
         {
 
         }
 
-        public CommitteeMasterVM AddOrUpdate(CommitteeMasterVM CommitteeVM)
+        public CompetencyMasterVM AddOrUpdate(CompetencyMasterVM CompetencyVM)
         {
             try
             {
-                var Committee = db.CommitteeMasters.FirstOrDefault(p => p.Id == CommitteeVM.Id);
-                if (Committee == null)
+                var Competency = db.CompetencyMasters.FirstOrDefault(p => p.Id == CompetencyVM.Id);
+                if (Competency == null)
                 {
-                    CommitteeVM.IsActive = true;
+                    CompetencyVM.IsActive = true;
 
-                    Committee = Mapper.Map<CommitteeMasterVM, CommitteeMaster>(CommitteeVM);
-                    db.CommitteeMasters.Add(Committee);
+                    Competency = Mapper.Map<CompetencyMasterVM, CompetencyMaster>(CompetencyVM);
+                    db.CompetencyMasters.Add(Competency);
                     db.SaveChanges();
-                    return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                    return Mapper.Map<CompetencyMaster, CompetencyMasterVM>(Competency);
                 }
                 else
                 {
-                    CommitteeVM.IsActive = true;
-                    db.Entry(Committee).CurrentValues.SetValues(CommitteeVM);
+                    CompetencyVM.IsActive = true;
+                    db.Entry(Competency).CurrentValues.SetValues(CompetencyVM);
                     db.SaveChanges();
-                    return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                    return Mapper.Map<CompetencyMaster, CompetencyMasterVM>(Competency);
 
                 }
             }
@@ -56,28 +56,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<CommitteeMasterVM> GetAll()
+        public List<CompetencyMasterVM> GetAll()
         {
-            List<CommitteeMaster> Committee = new List<CommitteeMaster>();
+            List<CompetencyMaster> Competency= new List<CompetencyMaster>();
             try
             {
-                Committee = db.CommitteeMasters.Where(i => i.IsActive).ToList();
+                Competency = db.CompetencyMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<CommitteeMaster>, List<CommitteeMasterVM>>(Committee);
+            return Mapper.Map<List<CompetencyMaster>, List<CompetencyMasterVM>>(Competency);
         }
 
-        public CommitteeMasterVM Get(int id)
+        public CompetencyMasterVM Get(int id)
         {
-            CommitteeMaster Committee = new CommitteeMaster();
+            CompetencyMaster Competency = new CompetencyMaster();
             try
             {
-                Committee = db.CommitteeMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Committee == null)
+                Competency = db.CompetencyMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (Competency == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -87,13 +87,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+            return Mapper.Map<CompetencyMaster, CompetencyMasterVM>(Competency);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.CommitteeMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.CompetencyMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;

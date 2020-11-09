@@ -11,36 +11,36 @@ using System.Web;
 
 namespace ComplaintManagement.Repository
 {
-    public class CommitteeMastersRepository
+    public class EntityMasterRepository
     {
 
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public CommitteeMastersRepository()
+        public EntityMasterRepository()
         {
 
         }
 
-        public CommitteeMasterVM AddOrUpdate(CommitteeMasterVM CommitteeVM)
+        public CategoryMasterVM AddOrUpdate(CategoryMasterVM categoryVM)
         {
             try
             {
-                var Committee = db.CommitteeMasters.FirstOrDefault(p => p.Id == CommitteeVM.Id);
-                if (Committee == null)
+                var category = db.CategoryMasters.FirstOrDefault(p => p.Id == categoryVM.Id);
+                if (category == null)
                 {
-                    CommitteeVM.IsActive = true;
+                    categoryVM.IsActive = true;
 
-                    Committee = Mapper.Map<CommitteeMasterVM, CommitteeMaster>(CommitteeVM);
-                    db.CommitteeMasters.Add(Committee);
+                    category = Mapper.Map<CategoryMasterVM, CategoryMaster>(categoryVM);
+                    db.CategoryMasters.Add(category);
                     db.SaveChanges();
-                    return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                    return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
                 }
                 else
                 {
-                    CommitteeVM.IsActive = true;
-                    db.Entry(Committee).CurrentValues.SetValues(CommitteeVM);
+                    categoryVM.IsActive = true;
+                    db.Entry(category).CurrentValues.SetValues(categoryVM);
                     db.SaveChanges();
-                    return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                    return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
 
                 }
             }
@@ -56,28 +56,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<CommitteeMasterVM> GetAll()
+        public List<CategoryMasterVM> GetAll()
         {
-            List<CommitteeMaster> Committee = new List<CommitteeMaster>();
+            List<CategoryMaster> category = new List<CategoryMaster>();
             try
             {
-                Committee = db.CommitteeMasters.Where(i => i.IsActive).ToList();
+                category = db.CategoryMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<CommitteeMaster>, List<CommitteeMasterVM>>(Committee);
+            return Mapper.Map<List<CategoryMaster>, List<CategoryMasterVM>>(category);
         }
 
-        public CommitteeMasterVM Get(int id)
+        public CategoryMasterVM Get(int id)
         {
-            CommitteeMaster Committee = new CommitteeMaster();
+            CategoryMaster category = new CategoryMaster();
             try
             {
-                Committee = db.CommitteeMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Committee == null)
+                category = db.CategoryMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (category == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -87,13 +87,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+            return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.CommitteeMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.CategoryMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;

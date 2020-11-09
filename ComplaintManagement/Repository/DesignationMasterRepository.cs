@@ -9,38 +9,39 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 
+
 namespace ComplaintManagement.Repository
 {
-    public class CommitteeMastersRepository
+    public class DesignationMasterRepository
     {
 
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public CommitteeMastersRepository()
+        public DesignationMasterRepository()
         {
 
         }
 
-        public CommitteeMasterVM AddOrUpdate(CommitteeMasterVM CommitteeVM)
+        public DesignationMasterVM AddOrUpdate(DesignationMasterVM DesignationVM)
         {
             try
             {
-                var Committee = db.CommitteeMasters.FirstOrDefault(p => p.Id == CommitteeVM.Id);
-                if (Committee == null)
+                var Designation = db.DesignationMasters.FirstOrDefault(p => p.Id == DesignationVM.Id);
+                if (Designation == null)
                 {
-                    CommitteeVM.IsActive = true;
+                    DesignationVM.IsActive = true;
 
-                    Committee = Mapper.Map<CommitteeMasterVM, CommitteeMaster>(CommitteeVM);
-                    db.CommitteeMasters.Add(Committee);
+                    Designation = Mapper.Map<DesignationMasterVM, DesignationMaster>(DesignationVM);
+                    db.DesignationMasters.Add(Designation);
                     db.SaveChanges();
-                    return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                    return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
                 }
                 else
                 {
-                    CommitteeVM.IsActive = true;
-                    db.Entry(Committee).CurrentValues.SetValues(CommitteeVM);
+                    DesignationVM.IsActive = true;
+                    db.Entry(Designation).CurrentValues.SetValues(DesignationVM);
                     db.SaveChanges();
-                    return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                    return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
 
                 }
             }
@@ -56,28 +57,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<CommitteeMasterVM> GetAll()
+        public List<DesignationMasterVM> GetAll()
         {
-            List<CommitteeMaster> Committee = new List<CommitteeMaster>();
+            List<DesignationMaster> Designation = new List<DesignationMaster>();
             try
             {
-                Committee = db.CommitteeMasters.Where(i => i.IsActive).ToList();
+                Designation = db.DesignationMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<CommitteeMaster>, List<CommitteeMasterVM>>(Committee);
+            return Mapper.Map<List<DesignationMaster>, List<DesignationMasterVM>>(Designation);
         }
 
-        public CommitteeMasterVM Get(int id)
+        public DesignationMasterVM Get(int id)
         {
-            CommitteeMaster Committee = new CommitteeMaster();
+            DesignationMaster Designation = new DesignationMaster();
             try
             {
-                Committee = db.CommitteeMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Committee == null)
+                Designation = db.DesignationMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (Designation == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -87,13 +88,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+            return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.CommitteeMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.DesignationMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;
