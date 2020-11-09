@@ -42,7 +42,7 @@ namespace ComplaintManagement.Repository
                 }
             }
             catch (DbEntityValidationException dve)
-            {
+            { 
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
                 throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
             }
