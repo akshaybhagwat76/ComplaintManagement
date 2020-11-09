@@ -217,6 +217,7 @@
     <Compile Include="Repository\EntityMasterRepository.cs" />
     <Compile Include="Repository\LOSMasterRepository.cs" />
     <Compile Include="Repository\SubCategoryMastersRepository.cs" />
+    <Compile Include="Repository\UserMastersRepository.cs" />
     <Compile Include="ViewModel\CategoryMasterVM.cs" />
     <Compile Include="ViewModel\CommitteeMasterVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="ViewModel\EntityMasterVM.cs" />
     <Compile Include="ViewModel\LOSMasterVM.cs" />
     <Compile Include="ViewModel\SubCategoryMasterVM.cs" />
+    <Compile Include="ViewModel\UserMasterVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Elmah.txt" />

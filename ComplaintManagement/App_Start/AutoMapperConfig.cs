@@ -23,10 +23,13 @@ namespace ComplaintManagement.App_Start
                 cfg.CreateMap<CompetencyMaster, CompetencyMasterVM>();
 
                 cfg.CreateMap<DesignationMasterVM, DesignationMaster>();
-                cfg.CreateMap<DesignationMaster,DesignationMasterVM>();
+                cfg.CreateMap<DesignationMaster, DesignationMasterVM>();
 
-                cfg.CreateMap<EntityMasterVM,EntityMaster>();
+                cfg.CreateMap<EntityMasterVM, EntityMaster>();
                 cfg.CreateMap<EntityMaster, EntityMasterVM>();
+
+                cfg.CreateMap<UserMasterVM, UserMaster>();
+                cfg.CreateMap<UserMaster, UserMasterVM>();
             });
         }
     }

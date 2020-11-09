@@ -8,37 +8,40 @@ using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
+
+
 namespace ComplaintManagement.Repository
 {
-    public class LOSMasterRepository
+    public class UserMastersRepository
     {
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public LOSMasterRepository()
+        public UserMastersRepository()
         {
 
         }
 
-        public LOSMasterVM AddOrUpdate(LOSMasterVM LOSVM)
+        public UserMasterVM AddOrUpdate(UserMasterVM UserVM)
         {
             try
             {
-                var LOS = db.LOSMasters.FirstOrDefault(p => p.Id == LOSVM.Id);
-                if (LOS == null)
+                var User = db.UserMasters.FirstOrDefault(p => p.Id == UserVM.Id);
+                if (User == null)
                 {
-                    LOSVM.IsActive = true;
+                    UserVM.IsActive = true;
 
-                    LOS = Mapper.Map<LOSMasterVM, LOSMaster>(LOSVM);
-                    db.LOSMasters.Add(LOS);
+                    User = Mapper.Map<UserMasterVM, UserMaster>(UserVM);
+                    db.UserMasters.Add(User);
                     db.SaveChanges();
-                    return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
+                    return Mapper.Map<UserMaster, UserMasterVM>(User);
                 }
                 else
                 {
-                    LOSVM.IsActive = true;
-                    db.Entry(LOSVM).CurrentValues.SetValues(LOSVM);
+                    UserVM.IsActive = true;
+                    db.Entry(User).CurrentValues.SetValues(UserVM);
                     db.SaveChanges();
-                    return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
+                    return Mapper.Map<UserMaster, UserMasterVM>(User);
+
                 }
             }
             catch (DbEntityValidationException dve)
@@ -53,28 +56,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<LOSMasterVM> GetAll()
+        public List<UserMasterVM> GetAll()
         {
-            List<LOSMaster> los = new List<LOSMaster>();
+            List<UserMaster> User = new List<UserMaster>();
             try
             {
-                los = db.LOSMasters.Where(i => i.IsActive).ToList();
+                User = db.UserMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<LOSMaster>, List<LOSMasterVM>>(los);
+            return Mapper.Map<List<UserMaster>, List<UserMasterVM>>(User);
         }
 
-        public LOSMasterVM Get(int id)
+        public UserMasterVM Get(int id)
         {
-            LOSMaster los = new LOSMaster();
+            UserMaster User = new UserMaster();
             try
             {
-                los = db.LOSMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (los == null)
+                User = db.UserMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (User == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -84,13 +87,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<LOSMaster, LOSMasterVM>(los);
+            return Mapper.Map<UserMaster, UserMasterVM>(User);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.LOSMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.UserMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;
