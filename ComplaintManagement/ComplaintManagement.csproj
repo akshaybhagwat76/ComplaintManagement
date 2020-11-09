@@ -154,7 +154,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Common.cs" />
+    <Compile Include="Helpers\Infrastructure.cs" />
     <Compile Include="Helpers\Messages.cs" />
+    <Compile Include="Helpers\ReplyFormat.cs" />
     <Compile Include="Models\CategoryMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -240,6 +242,7 @@
   <ItemGroup>
     <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Assets\CategoryMasters.js" />
+    <Content Include="Assets\CommitteeMasters.js" />
     <Content Include="Assets\common.js" />
     <Content Include="Assets\EditCategoryMaster.js" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -260,7 +263,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Images\loading_light.GIF" />
+    <Content Include="images\loading_light.GIF" />
     <Content Include="Models\Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Model.Context.cs</LastGenOutput>
@@ -2177,6 +2180,7 @@
     <Content Include="Views\Role\Index.cshtml" />
     <Content Include="Views\Committee\ManageCommitteeMaster.cshtml" />
     <Content Include="Views\Committee\Index.cshtml" />
+    <Content Include="Views\Shared\_CommonDeleteModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

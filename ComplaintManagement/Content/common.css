@@ -7,7 +7,14 @@ label#lblError {
     text-align: center;
 }
 
-input.error, select.error, div.error {
+/* Validation */
+label.adderror {
+    color: #cc5965;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+input.adderror, select.adderror, div.adderror {
     border: 1px dotted #cc5965;
 }
 
@@ -27,7 +34,11 @@ label.success {
     z-index: 9999;
     background: url(../images/loading_light.gif) center no-repeat #fff;
 }
-
+.requiredLabel:after {
+    content: " *";
+    font-weight: bold;
+    color: red;
+}
 
 .validation-summary-errors {
     color: red;

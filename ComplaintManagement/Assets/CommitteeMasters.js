@@ -1,9 +1,9 @@
 ﻿$(document).ready(function () {
     $.noConflict();
-   // $("#myTable").DataTable();
+    // $("#myTable").DataTable();
 });
-function deleteCategory(id) {
-    
+function deleteCommittee(id) {
+
     //$('#deleteModal').data('id', id).modal('show');
     //$('#deleteModal').modal('show');
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
@@ -46,7 +46,7 @@ function Confirm(title, msg, $true, $false, $link) { /*change*/
 function deleteAction(id) {
     $.ajax({
         type: "POST",
-        url: "/Category/Delete",
+        url: "/Committee/Delete",
         data: { id: id },
         success: function (response) {
             if (response.status != "Fail") {

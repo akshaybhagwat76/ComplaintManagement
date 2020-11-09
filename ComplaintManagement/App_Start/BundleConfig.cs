@@ -108,6 +108,10 @@ namespace ComplaintManagement
             //Edit Category Master
             bundles.Add(new ScriptBundle("~/Assets/EditCategoryMasters").Include(
                       "~/Assets/EditCategoryMaster.js"));
+
+            // Committee Master
+            bundles.Add(new ScriptBundle("~/Assets/CommitteeMasters").Include(
+                      "~/Assets/CommitteeMasters.js"));
         }
     }
 }
