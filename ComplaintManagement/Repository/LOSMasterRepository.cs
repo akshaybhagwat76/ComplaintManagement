@@ -16,7 +16,6 @@ namespace ComplaintManagement.Repository
 
         public LOSMasterRepository()
         {
-
         }
 
         public LOSMasterVM AddOrUpdate(LOSMasterVM LOSVM)
