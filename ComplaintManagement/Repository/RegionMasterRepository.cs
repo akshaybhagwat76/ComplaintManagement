@@ -11,36 +11,36 @@ using System.Web;
 
 namespace ComplaintManagement.Repository
 {
-    public class EntityMasterRepository
+    public class RegionMasterRepository
     {
 
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public EntityMasterRepository()
+        public RegionMasterRepository()
         {
 
         }
 
-        public EntityMasterVM AddOrUpdate(EntityMasterVM EntityVM)
+        public RegionMasterVM AddOrUpdate(RegionMasterVM RegionVM)
         {
             try
             {
-                var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
-                if (Entity == null)
+                var Region = db.RegionMasters.FirstOrDefault(p => p.Id == RegionVM.Id);
+                if (Region == null)
                 {
-                    EntityVM.IsActive = true;
+                    RegionVM.IsActive = true;
 
-                    Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
-                    db.EntityMasters.Add(Entity);
+                    Region = Mapper.Map<RegionMasterVM, RegionMaster>(RegionVM);
+                    db.RegionMasters.Add(Region);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+                    return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
                 }
                 else
                 {
-                    EntityVM.IsActive = true;
-                    db.Entry(Entity).CurrentValues.SetValues(EntityVM);
+                    RegionVM.IsActive = true;
+                    db.Entry(RegionVM).CurrentValues.SetValues(RegionVM);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster ,EntityMasterVM>(Entity);
+                    return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
 
                 }
             }
@@ -56,28 +56,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<EntityMasterVM> GetAll()
+        public List<RegionMasterVM> GetAll()
         {
-            List<EntityMaster> Entity = new List<EntityMaster>();
+            List<RegionMaster> Region = new List<RegionMaster>();
             try
             {
-                Entity = db.EntityMasters.Where(i => i.IsActive).ToList();
+                Region = db.RegionMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<EntityMaster>, List<EntityMasterVM>>(Entity);
+            return Mapper.Map<List<RegionMaster>, List<RegionMasterVM>>(Region);
         }
 
-        public EntityMasterVM Get(int id)
+        public RegionMasterVM Get(int id)
         {
-            EntityMaster Entity = new EntityMaster();
+            RegionMaster Region = new RegionMaster();
             try
             {
-                Entity = db.EntityMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Entity == null)
+                Region = db.RegionMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (Region == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -87,13 +87,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+            return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.EntityMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.RegionMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;

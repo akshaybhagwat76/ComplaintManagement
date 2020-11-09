@@ -11,36 +11,35 @@ using System.Web;
 
 namespace ComplaintManagement.Repository
 {
-    public class EntityMasterRepository
+    public class SubSBUMasterRepository
     {
-
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public EntityMasterRepository()
+        public SubSBUMasterRepository()
         {
 
         }
 
-        public EntityMasterVM AddOrUpdate(EntityMasterVM EntityVM)
+        public SubSBUMasterVM AddOrUpdate(SubSBUMasterVM SubSBUVM)
         {
             try
             {
-                var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
-                if (Entity == null)
+                var SubSBU = db.SubSBUMasters.FirstOrDefault(p => p.Id == SubSBUVM.Id);
+                if (SubSBU == null)
                 {
-                    EntityVM.IsActive = true;
+                    SubSBUVM.IsActive = true;
 
-                    Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
-                    db.EntityMasters.Add(Entity);
+                    SubSBU = Mapper.Map<SubSBUMasterVM, SubSBUMaster>(SubSBUVM);
+                    db.SubSBUMasters.Add(SubSBU);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+                    return Mapper.Map<SubSBUMaster, SubSBUMasterVM>(SubSBU);
                 }
                 else
                 {
-                    EntityVM.IsActive = true;
-                    db.Entry(Entity).CurrentValues.SetValues(EntityVM);
+                    SubSBUVM.IsActive = true;
+                    db.Entry(SubSBU).CurrentValues.SetValues(SubSBUVM);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster ,EntityMasterVM>(Entity);
+                    return Mapper.Map<SubSBUMaster, SubSBUMasterVM>(SubSBU);
 
                 }
             }
@@ -56,28 +55,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<EntityMasterVM> GetAll()
+        public List<SubSBUMasterVM> GetAll()
         {
-            List<EntityMaster> Entity = new List<EntityMaster>();
+            List<SubSBUMaster> SubSBU = new List<SubSBUMaster>();
             try
             {
-                Entity = db.EntityMasters.Where(i => i.IsActive).ToList();
+                SubSBU = db.SubSBUMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<EntityMaster>, List<EntityMasterVM>>(Entity);
+            return Mapper.Map<List<SubSBUMaster>, List<SubSBUMasterVM>>(SubSBU);
         }
 
-        public EntityMasterVM Get(int id)
+        public SubSBUMasterVM Get(int id)
         {
-            EntityMaster Entity = new EntityMaster();
+            SubSBUMaster SubSBU = new SubSBUMaster();
             try
             {
-                Entity = db.EntityMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Entity == null)
+                SubSBU = db.SubSBUMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (SubSBU == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -87,13 +86,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+            return Mapper.Map<SubSBUMaster, SubSBUMasterVM>(SubSBU);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.EntityMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.SubSBUMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;

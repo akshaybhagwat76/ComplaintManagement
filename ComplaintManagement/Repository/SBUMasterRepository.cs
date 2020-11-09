@@ -8,39 +8,38 @@ using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
-
 namespace ComplaintManagement.Repository
 {
-    public class EntityMasterRepository
+    public class SBUMasterRepository
     {
 
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public EntityMasterRepository()
+        public SBUMasterRepository()
         {
 
         }
 
-        public EntityMasterVM AddOrUpdate(EntityMasterVM EntityVM)
+        public SBUMasterVM AddOrUpdate(SBUMasterVM SBUVM)
         {
             try
             {
-                var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
-                if (Entity == null)
+                var SBU = db.SBUMasters.FirstOrDefault(p => p.Id == SBUVM.Id);
+                if (SBU == null)
                 {
-                    EntityVM.IsActive = true;
+                    SBUVM.IsActive = true;
 
-                    Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
-                    db.EntityMasters.Add(Entity);
+                    SBU = Mapper.Map<SBUMasterVM, SBUMaster>(SBUVM);
+                    db.SBUMasters.Add(SBU);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+                    return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
                 }
                 else
                 {
-                    EntityVM.IsActive = true;
-                    db.Entry(Entity).CurrentValues.SetValues(EntityVM);
+                    SBUVM.IsActive = true;
+                    db.Entry(SBU).CurrentValues.SetValues(SBUVM);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster ,EntityMasterVM>(Entity);
+                    return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
 
                 }
             }
@@ -56,28 +55,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<EntityMasterVM> GetAll()
+        public List<SBUMasterVM> GetAll()
         {
-            List<EntityMaster> Entity = new List<EntityMaster>();
+            List<SBUMaster> SBU = new List<SBUMaster>();
             try
             {
-                Entity = db.EntityMasters.Where(i => i.IsActive).ToList();
+              SBU = db.SBUMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<EntityMaster>, List<EntityMasterVM>>(Entity);
+            return Mapper.Map<List<SBUMaster>, List<SBUMasterVM>>(SBU);
         }
 
-        public EntityMasterVM Get(int id)
+        public SBUMasterVM Get(int id)
         {
-            EntityMaster Entity = new EntityMaster();
+            SBUMaster SBU= new SBUMaster();
             try
             {
-                Entity = db.EntityMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Entity == null)
+                SBU = db.SBUMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (SBU == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -87,13 +86,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+            return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.EntityMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.SBUMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;

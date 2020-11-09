@@ -28,6 +28,18 @@ namespace ComplaintManagement.App_Start
                 cfg.CreateMap<EntityMasterVM, EntityMaster>();
                 cfg.CreateMap<EntityMaster, EntityMasterVM>();
 
+                cfg.CreateMap<LocationMasterVM, LocationMaster>();
+                cfg.CreateMap<LocationMaster, LocationMasterVM>();
+
+                cfg.CreateMap<RegionMasterVM, RegionMaster>();
+                cfg.CreateMap<RegionMaster, RegionMasterVM>();
+
+                cfg.CreateMap<SBUMasterVM, SBUMaster>();
+                cfg.CreateMap<SBUMaster, SBUMasterVM>();
+
+                cfg.CreateMap<SubSBUMasterVM, SubSBUMaster>();
+                cfg.CreateMap<SubSBUMaster, SubSBUMasterVM>();
+
                 cfg.CreateMap<UserMasterVM, UserMaster>();
                 cfg.CreateMap<UserMaster, UserMasterVM>();
             });

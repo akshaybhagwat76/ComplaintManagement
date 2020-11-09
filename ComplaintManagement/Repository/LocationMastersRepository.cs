@@ -11,36 +11,35 @@ using System.Web;
 
 namespace ComplaintManagement.Repository
 {
-    public class EntityMasterRepository
+    public class LocationMastersRepository
     {
-
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public EntityMasterRepository()
+        public LocationMastersRepository()
         {
 
         }
 
-        public EntityMasterVM AddOrUpdate(EntityMasterVM EntityVM)
+        public LocationMasterVM AddOrUpdate(LocationMasterVM LocationVM)
         {
             try
             {
-                var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
-                if (Entity == null)
+                var Location = db.LocationMasters.FirstOrDefault(p => p.Id == LocationVM.Id);
+                if (Location == null)
                 {
-                    EntityVM.IsActive = true;
+                    LocationVM.IsActive = true;
 
-                    Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
-                    db.EntityMasters.Add(Entity);
+                    Location = Mapper.Map<LocationMasterVM, LocationMaster>(LocationVM);
+                    db.LocationMasters.Add(Location);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+                    return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
                 }
                 else
                 {
-                    EntityVM.IsActive = true;
-                    db.Entry(Entity).CurrentValues.SetValues(EntityVM);
+                    LocationVM.IsActive = true;
+                    db.Entry(Location).CurrentValues.SetValues(LocationVM);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster ,EntityMasterVM>(Entity);
+                    return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
 
                 }
             }
@@ -56,28 +55,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<EntityMasterVM> GetAll()
+        public List<LocationMasterVM> GetAll()
         {
-            List<EntityMaster> Entity = new List<EntityMaster>();
+            List<LocationMaster> Location = new List<LocationMaster>();
             try
             {
-                Entity = db.EntityMasters.Where(i => i.IsActive).ToList();
+                Location = db.LocationMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<EntityMaster>, List<EntityMasterVM>>(Entity);
+            return Mapper.Map<List<LocationMaster>, List<LocationMasterVM>>(Location);
         }
 
-        public EntityMasterVM Get(int id)
+        public LocationMasterVM Get(int id)
         {
-            EntityMaster Entity = new EntityMaster();
+            LocationMaster Location = new LocationMaster();
             try
             {
-                Entity = db.EntityMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Entity == null)
+                Location = db.LocationMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (Location == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -87,13 +86,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+            return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.EntityMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.LocationMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;

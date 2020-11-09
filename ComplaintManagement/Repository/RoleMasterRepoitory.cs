@@ -11,36 +11,38 @@ using System.Web;
 
 namespace ComplaintManagement.Repository
 {
-    public class EntityMasterRepository
+    public class RoleMasterRepoitory
     {
 
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public EntityMasterRepository()
+        public RoleMasterRepoitory()
         {
 
         }
 
-        public EntityMasterVM AddOrUpdate(EntityMasterVM EntityVM)
+        public RoleMasterVM AddOrUpdate(RoleMasterVM RoleVM)
         {
             try
             {
-                var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
-                if (Entity == null)
+                var Role = db.RoleMasters.FirstOrDefault(p => p.Id == RoleVM.Id);
+                if (Role == null)
                 {
-                    EntityVM.IsActive = true;
+                    RoleVM.IsActive = true;
 
-                    Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
-                    db.EntityMasters.Add(Entity);
+                    RoleVM.IsActive = true;
+
+                    Role = Mapper.Map<RoleMasterVM, RoleMaster>(RoleVM);
+                    db.RoleMasters.Add(Role);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+                    return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
                 }
                 else
                 {
-                    EntityVM.IsActive = true;
-                    db.Entry(Entity).CurrentValues.SetValues(EntityVM);
+                    RoleVM.IsActive = true;
+                    db.Entry(Role).CurrentValues.SetValues(RoleVM);
                     db.SaveChanges();
-                    return Mapper.Map<EntityMaster ,EntityMasterVM>(Entity);
+                    return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
 
                 }
             }
@@ -56,28 +58,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<EntityMasterVM> GetAll()
+        public List<RoleMasterVM> GetAll()
         {
-            List<EntityMaster> Entity = new List<EntityMaster>();
+            List<RoleMaster> Role= new List<RoleMaster>();
             try
             {
-                Entity = db.EntityMasters.Where(i => i.IsActive).ToList();
+                Role = db.RoleMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<EntityMaster>, List<EntityMasterVM>>(Entity);
+            return Mapper.Map<List<RoleMaster>, List<RoleMasterVM>>(Role);
         }
 
-        public EntityMasterVM Get(int id)
+        public RoleMasterVM Get(int id)
         {
-            EntityMaster Entity = new EntityMaster();
+            RoleMaster Role = new RoleMaster();
             try
             {
-                Entity = db.EntityMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Entity == null)
+                Role = db.RoleMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (Role == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -87,13 +89,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+            return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.EntityMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.RoleMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;

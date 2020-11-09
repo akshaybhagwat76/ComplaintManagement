@@ -215,16 +215,26 @@
     <Compile Include="Repository\CompetencyMastersRepository.cs" />
     <Compile Include="Repository\DesignationMasterRepository.cs" />
     <Compile Include="Repository\EntityMasterRepository.cs" />
+    <Compile Include="Repository\LocationMastersRepository.cs" />
+    <Compile Include="Repository\RegionMasterRepository.cs" />
+    <Compile Include="Repository\RoleMasterRepoitory.cs" />
+    <Compile Include="Repository\SBUMasterRepository.cs" />
     <Compile Include="Repository\LOSMasterRepository.cs" />
     <Compile Include="Repository\SubCategoryMastersRepository.cs" />
+    <Compile Include="Repository\SubSBUMasterRepository.cs" />
     <Compile Include="Repository\UserMastersRepository.cs" />
     <Compile Include="ViewModel\CategoryMasterVM.cs" />
     <Compile Include="ViewModel\CommitteeMasterVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
     <Compile Include="ViewModel\DesignationMasterVM.cs" />
     <Compile Include="ViewModel\EntityMasterVM.cs" />
+    <Compile Include="ViewModel\LocationMasterVM.cs" />
+    <Compile Include="ViewModel\RegionMasterVM.cs" />
+    <Compile Include="ViewModel\RoleMasterVM.cs" />
+    <Compile Include="ViewModel\SBUMasterVM.cs" />
     <Compile Include="ViewModel\LOSMasterVM.cs" />
     <Compile Include="ViewModel\SubCategoryMasterVM.cs" />
+    <Compile Include="ViewModel\SubSBUMasterVM.cs" />
     <Compile Include="ViewModel\UserMasterVM.cs" />
   </ItemGroup>
   <ItemGroup>
