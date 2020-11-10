@@ -30,7 +30,8 @@ namespace ComplaintManagement.Repository
                 if (Designation == null)
                 {
                     DesignationVM.IsActive = true;
-
+                    DesignationVM.CreatedDate = DateTime.UtcNow;
+                    DesignationVM.UserId = 1;
                     Designation = Mapper.Map<DesignationMasterVM, DesignationMaster>(DesignationVM);
                     db.DesignationMasters.Add(Designation);
                     db.SaveChanges();
@@ -39,6 +40,8 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     DesignationVM.IsActive = true;
+                    DesignationVM.UserId = 1; DesignationVM.CreatedDate = Designation.CreatedDate;
+                    DesignationVM.UpdatedDate = DateTime.UtcNow;
                     db.Entry(Designation).CurrentValues.SetValues(DesignationVM);
                     db.SaveChanges();
                     return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);

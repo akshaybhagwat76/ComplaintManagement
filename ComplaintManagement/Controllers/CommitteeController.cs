@@ -1,5 +1,6 @@
 ﻿using ComplaintManagement.Helpers;
 using ComplaintManagement.Repository;
+using ComplaintManagement.ViewModel;
 using Elmah;
 using System;
 using System.Web.Mvc;
@@ -33,14 +34,43 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
-        public ActionResult Create()
+        [HttpPost]
+        public ActionResult AddOrUpdateCommittee(CommitteeMasterVM CommitteeVM)
         {
-            return View("ManageCommitteeMaster");
+            try
+            {
+                var Committee = new CommitteeMastersRepository().AddOrUpdate(CommitteeVM);
+                return new ReplyFormat().Success(Messages.SUCCESS, Committee);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
         }
 
-        public ActionResult Edit()
+        public ActionResult Create()
         {
-            return View("ManageCommitteeMaster");
+            CommitteeMasterVM CommitteeMasterVM = new CommitteeMasterVM();
+            ViewBag.PageType = "Create";
+            return View("ManageCommitteeMaster", CommitteeMasterVM);
+           
+        }
+
+        public ActionResult Edit(int id)
+        {
+            try
+            {
+                CommitteeMasterVM CommitteeVM = new CommitteeMastersRepository().Get(id);
+                ViewBag.PageType = "Edit";
+                return View("ManageCommitteeMaster", CommitteeVM);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+            }
+            return View();
+           
         }
     }
 }

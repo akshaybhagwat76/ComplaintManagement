@@ -109,6 +109,47 @@ namespace ComplaintManagement
             bundles.Add(new ScriptBundle("~/Assets/EditCategoryMasters").Include(
                       "~/Assets/EditCategoryMaster.js"));
 
+            // SubCategory Master
+            bundles.Add(new ScriptBundle("~/Assets/SubCategoryMasters").Include(
+                      "~/Assets/SubCategoryMasters.js"));
+            //Edit SubCategory Master
+            bundles.Add(new ScriptBundle("~/Assets/EditSubCategoryMasters").Include(
+                      "~/Assets/EditSubCategoryMasters.js"));
+
+            // Designation Master
+            bundles.Add(new ScriptBundle("~/Assets/DesignationMasters").Include(
+                      "~/Assets/DesignationMasters.js"));
+
+            //Edit Designation Master
+            bundles.Add(new ScriptBundle("~/Assets/EditDesignationMasters").Include(
+                      "~/Assets/EditDesignationMasters.js"));
+
+            // SBU Master
+            bundles.Add(new ScriptBundle("~/Assets/SBUMasters").Include(
+                      "~/Assets/SBUMasters.js"));
+
+            //Edit SBU Master
+            bundles.Add(new ScriptBundle("~/Assets/EditSBUMasters").Include(
+                      "~/Assets/EditSBUMasters.js"));
+
+            // SubSBU Master
+            bundles.Add(new ScriptBundle("~/Assets/SubSBUMasters").Include(
+                      "~/Assets/SubSBUMasters.js"));
+
+            //Edit SubSBU Master
+            bundles.Add(new ScriptBundle("~/Assets/EditSubSBUMasters").Include(
+                      "~/Assets/EditSubSBUMasters.js"));
+
+
+            // Competency Master
+            bundles.Add(new ScriptBundle("~/Assets/CompetencyMasters").Include(
+                      "~/Assets/CompetencyMasters.js"));
+
+            //Edit Competency Master
+            bundles.Add(new ScriptBundle("~/Assets/EditCompetencyMasters").Include(
+                      "~/Assets/EditCompetencyMasters.js"));
+
+
             // Committee Master
             bundles.Add(new ScriptBundle("~/Assets/CommitteeMasters").Include(
                       "~/Assets/CommitteeMasters.js"));

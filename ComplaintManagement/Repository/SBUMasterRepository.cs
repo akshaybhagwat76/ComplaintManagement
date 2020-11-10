@@ -28,7 +28,8 @@ namespace ComplaintManagement.Repository
                 if (SBU == null)
                 {
                     SBUVM.IsActive = true;
-
+                    SBUVM.CreatedDate = DateTime.UtcNow;
+                    SBUVM.UserId = 1;
                     SBU = Mapper.Map<SBUMasterVM, SBUMaster>(SBUVM);
                     db.SBUMasters.Add(SBU);
                     db.SaveChanges();
@@ -37,6 +38,8 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     SBUVM.IsActive = true;
+                    SBUVM.UserId = 1; SBUVM.CreatedDate = SBU.CreatedDate;
+                    SBUVM.UpdatedDate = DateTime.UtcNow;
                     db.Entry(SBU).CurrentValues.SetValues(SBUVM);
                     db.SaveChanges();
                     return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
