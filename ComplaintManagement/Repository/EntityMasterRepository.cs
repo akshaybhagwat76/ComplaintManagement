@@ -29,7 +29,8 @@ namespace ComplaintManagement.Repository
                 if (Entity == null)
                 {
                     EntityVM.IsActive = true;
-
+                    EntityVM.CreatedDate = DateTime.UtcNow;
+                    EntityVM.UserId = 1;
                     Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
                     db.EntityMasters.Add(Entity);
                     db.SaveChanges();
@@ -38,6 +39,8 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     EntityVM.IsActive = true;
+                    EntityVM.UserId = 1; EntityVM.CreatedDate = Entity.CreatedDate;
+                    EntityVM.UpdatedDate = DateTime.UtcNow;
                     db.Entry(Entity).CurrentValues.SetValues(EntityVM);
                     db.SaveChanges();
                     return Mapper.Map<EntityMaster ,EntityMasterVM>(Entity);

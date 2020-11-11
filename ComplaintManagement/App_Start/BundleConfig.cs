@@ -150,6 +150,29 @@ namespace ComplaintManagement
                       "~/Assets/EditCompetencyMasters.js"));
 
 
+            // Location Master
+            bundles.Add(new ScriptBundle("~/Assets/LocationMasters").Include(
+                      "~/Assets/LocationMasters.js"));
+
+            //Edit Location Master
+            bundles.Add(new ScriptBundle("~/Assets/EditLocationMasters").Include(
+                      "~/Assets/EditLocationMasters.js"));
+
+            // Entity Master
+            bundles.Add(new ScriptBundle("~/Assets/EntityMasters").Include(
+                      "~/Assets/EntityMasters.js"));
+
+            //Edit Entity Master
+            bundles.Add(new ScriptBundle("~/Assets/EditEntityMasters").Include(
+                      "~/Assets/EditEntityMasters.js"));
+
+            // Region Master
+            bundles.Add(new ScriptBundle("~/Assets/RegionMasters").Include(
+                      "~/Assets/RegionMasters.js"));
+
+            //Edit Entity Master
+            bundles.Add(new ScriptBundle("~/Assets/EditRegionMasters").Include(
+                      "~/Assets/EditRegionMasters.js"));
             // Committee Master
             bundles.Add(new ScriptBundle("~/Assets/CommitteeMasters").Include(
                       "~/Assets/CommitteeMasters.js"));

@@ -250,9 +250,15 @@
     <Content Include="Assets\EditCommitteeMaster.js" />
     <Content Include="Assets\EditCompetencyMasters.js" />
     <Content Include="Assets\EditDesignationMasters.js" />
+    <Content Include="Assets\EditEntityMasters.js" />
+    <Content Include="Assets\EditLocationMasters.js" />
+    <Content Include="Assets\EditRegionMasters.js" />
     <Content Include="Assets\EditSBUMasters.js" />
     <Content Include="Assets\EditSubCategoryMasters.js" />
     <Content Include="Assets\EditSubSBUMasters.js" />
+    <Content Include="Assets\EntityMasters.js" />
+    <Content Include="Assets\LocationMasters.js" />
+    <Content Include="Assets\RegionMasters.js" />
     <Content Include="Assets\SBUMasters.js" />
     <Content Include="Assets\SubCategoryMasters.js" />
     <Content Include="Assets\SubSBUMasters.js" />
@@ -317,6 +323,7 @@
     <Content Include="Models\Model.edmx.diagram">
       <DependentUpon>Model.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

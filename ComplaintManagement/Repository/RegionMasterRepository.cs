@@ -29,7 +29,8 @@ namespace ComplaintManagement.Repository
                 if (Region == null)
                 {
                     RegionVM.IsActive = true;
-
+                    RegionVM.CreatedDate = DateTime.UtcNow;
+                    RegionVM.UserId = 1;
                     Region = Mapper.Map<RegionMasterVM, RegionMaster>(RegionVM);
                     db.RegionMasters.Add(Region);
                     db.SaveChanges();
@@ -38,7 +39,9 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     RegionVM.IsActive = true;
-                    db.Entry(RegionVM).CurrentValues.SetValues(RegionVM);
+                    RegionVM.UserId = 1; RegionVM.CreatedDate = Region.CreatedDate;
+                    RegionVM.UpdatedDate = DateTime.UtcNow;
+                    db.Entry(Region).CurrentValues.SetValues(RegionVM);
                     db.SaveChanges();
                     return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
 

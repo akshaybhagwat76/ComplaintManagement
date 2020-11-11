@@ -28,7 +28,8 @@ namespace ComplaintManagement.Repository
                 if (Location == null)
                 {
                     LocationVM.IsActive = true;
-
+                    LocationVM.CreatedDate = DateTime.UtcNow;
+                    LocationVM.UserId = 1;
                     Location = Mapper.Map<LocationMasterVM, LocationMaster>(LocationVM);
                     db.LocationMasters.Add(Location);
                     db.SaveChanges();
@@ -37,6 +38,8 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     LocationVM.IsActive = true;
+                    LocationVM.UserId = 1; LocationVM.CreatedDate = Location.CreatedDate;
+                    LocationVM.UpdatedDate = DateTime.UtcNow;
                     db.Entry(Location).CurrentValues.SetValues(LocationVM);
                     db.SaveChanges();
                     return Mapper.Map<LocationMaster, LocationMasterVM>(Location);

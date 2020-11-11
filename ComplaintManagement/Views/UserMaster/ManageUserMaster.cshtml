@@ -1,4 +1,4 @@
-﻿
+﻿@model ComplaintManagement.ViewModel.UserMasterVM
 @{
     ViewBag.Title = "ManageUserMaster";
 }
@@ -134,10 +134,13 @@
                             </div>
                             <form class="user">
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="exampleInputEmail" placeholder="Name">
+                                    @Html.LabelFor(model => model.EmployeeName, new { @class = "requiredLabel" })
+                                    @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @class = "form-control form-control-user required" , @placeholder = "Name" } })
+                                   
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="exampleInputEmail" placeholder="Employee ID">
+                                    @Html.EditorFor(model => model.EmployeeId, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Employee ID" } })
+
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0 text-center">
@@ -150,7 +153,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="exampleInputEmail" placeholder="Work Email">
+                                    @Html.EditorFor(model => model.WorkEmail, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Work Email" } })
+
                                 </div>
                             </form>
                         </div>
@@ -165,71 +169,118 @@
                                     <div class="col-sm-4 mb-3">
                                         <label>Time Type</label>
                                         <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
+                                            <option>Full Time</option>
+                                            <option>Part Time</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-4">
-                                        <label>Business Title</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </select>
+                                        @Html.LabelFor(model => model.BusinessTitle)
+                                       
+                                            @{
+                                                List<SelectListItem> listBusinessTitle = new List<SelectListItem>();
+                                                listBusinessTitle = new List<SelectListItem>();
+                                                listBusinessTitle.Add(new SelectListItem
+                                                {
+                                                    Text = "",
+                                                    Value = ""
+                                                });
+                                                listBusinessTitle.AddRange(ViewBag.lstUser);
+                                            }
+                                           
+                                                @Html.DropDownListFor(model => model.BusinessTitle, (List<SelectListItem>)listBusinessTitle, new { @class = "form-control required" })
+                                          
+                                            
                                     </div>
                                     <div class="col-sm-4">
-                                        <label>Company</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </select>
+                                        @Html.LabelFor(model => model.Company)
+
+                                        @{
+                                            List<SelectListItem> listCompany = new List<SelectListItem>();
+                                            listCompany = new List<SelectListItem>();
+                                            listCompany.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listCompany.AddRange(ViewBag.lstEntity);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.Company, (List<SelectListItem>)listCompany, new { @class = "form-control required" })
+
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-0">
-                                        <label>LOS</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </select>
+                                         @Html.LabelFor(model => model.LOSId)
+
+                                        @{
+                                            List<SelectListItem> listLOS = new List<SelectListItem>();
+                                            listLOS = new List<SelectListItem>();
+                                            listLOS.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listLOS.AddRange(ViewBag.lstLOS);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.LOSId, (List<SelectListItem>)listLOS, new { @class = "form-control required" })
+
                                     </div>
                                     <div class="col-sm-4">
-                                        <label>SBU</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </select>
+                                        @Html.LabelFor(model => model.SBUId)
+
+                                        @{
+                                            List<SelectListItem> listSBU = new List<SelectListItem>();
+                                            listSBU = new List<SelectListItem>();
+                                            listSBU.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listSBU.AddRange(ViewBag.lstSBU);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.SBUId, (List<SelectListItem>)listSBU, new { @class = "form-control required" })
+
                                     </div>
                                     <div class="col-sm-4">
-                                        <label>Sub SBU</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </select>
+                                        @Html.LabelFor(model => model.SubSBUId)
+
+                                        @{
+                                            List<SelectListItem> listSubSBU = new List<SelectListItem>();
+                                            listSubSBU = new List<SelectListItem>();
+                                            listSubSBU.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listSubSBU.AddRange(ViewBag.lstSBU);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.SubSBUId, (List<SelectListItem>)listSubSBU, new { @class = "form-control required" })
+
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-0">
-                                        <label>Competency</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </select>
+                                        @Html.LabelFor(model => model.CompentencyId)
+
+                                        @{
+                                            List<SelectListItem> listCompentency = new List<SelectListItem>();
+                                            listCompentency = new List<SelectListItem>();
+                                            listCompentency.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listCompentency.AddRange(ViewBag.lstCompetency);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.CompentencyId, (List<SelectListItem>)listCompentency, new { @class = "form-control required" })
+
                                     </div>
                                     <div class="col-sm-4">
                                         <label>Location</label>
