@@ -26,9 +26,9 @@ namespace ComplaintManagement.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
     
         public virtual CompetencyMaster CompetencyMaster { get; set; }
-        public virtual LOSMaster LOSMaster { get; set; }
         public virtual SBUMaster SBUMaster { get; set; }
         public virtual SubSBUMaster SubSBUMaster { get; set; }
         public virtual UserMaster UserMaster { get; set; }
+        public virtual LOSMaster LOSMaster { get; set; }
     }
 }

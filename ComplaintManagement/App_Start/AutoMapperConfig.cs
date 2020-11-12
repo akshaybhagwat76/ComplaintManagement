@@ -42,6 +42,9 @@ namespace ComplaintManagement.App_Start
 
                 cfg.CreateMap<UserMasterVM, UserMaster>();
                 cfg.CreateMap<UserMaster, UserMasterVM>();
+
+                cfg.CreateMap<LOSMasterVM, LOSMaster>();
+                cfg.CreateMap<LOSMaster, LOSMasterVM>();
             });
         }
     }

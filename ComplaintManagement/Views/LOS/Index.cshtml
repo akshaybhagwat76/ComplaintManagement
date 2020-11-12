@@ -161,62 +161,45 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table f-14">
-                                        <tr>
-                                            <td class="text-center">LOS</td>
-                                            <td class="text-center">SBU</td>
-                                            <td class="text-center">Sub-SBU</td>
-                                            <td class="text-center">Competency</td>
-                                            <td class="text-center">Status</td>
-                                            <td class="text-center">Action</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>Inactive</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>X</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
+                                        <thead>
+                                            <tr>
+                                                <td class="text-center">LOS</td>
+                                                <td class="text-center">SBU</td>
+                                                <td class="text-center">Sub-SBU</td>
+                                                <td class="text-center">Competency</td>
+                                                <td class="text-center">Status</td>
+                                                <td class="text-center">Action</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.lstLOS)
+                                            {
+                                                <tr>
+                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SBUId</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubSBUId</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CompetencyId</strong></td>
+
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.Status == true)
+                                                            {@Html.Raw("Active") }
+                                                        else
+                                                        { @Html.Raw("DeActive")}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/LOS/Edit/@item.Id" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="deleteLOS('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="viewCategory('@item.Id')" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+
+
+
+
                                     </table>
                                 </div>
                             </div>
@@ -283,4 +266,6 @@
         </div>
     </div>
 </div>
-
+@Scripts.Render("~/Assets/Common")
+@Html.Partial("_CommonDeleteModal")
+@Scripts.Render("~/Assets/LOSMasters")

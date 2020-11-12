@@ -34,6 +34,10 @@ namespace ComplaintManagement
             bundles.Add(new StyleBundle("~/sb-admin2/css").Include(
                      "~/Content/css/sb-admin-2.min.css"));
 
+            //select2
+            bundles.Add(new StyleBundle("~/Content/plugins/select2/select2Styles").Include(
+                     "~/Content/css/select2.min.css"));
+
             // SB-admin-2-style
             bundles.Add(new StyleBundle("~/sb-admin2/styles").Include(
                      "~/Content/css/styles.css"));
@@ -96,6 +100,10 @@ namespace ComplaintManagement
             // dataPicker 
             bundles.Add(new ScriptBundle("~/plugins/datePicker").Include(
                       "~/Scripts/plugins/datepicker/bootstrap-datepicker.js"));
+
+            // select2 
+            bundles.Add(new ScriptBundle("~/plugins/select2").Include(
+                      "~/Scripts/vendor/select2/select2.min.js"));
 
             //Common JS
             bundles.Add(new Bundle("~/Assets/Common").Include(
@@ -170,9 +178,24 @@ namespace ComplaintManagement
             bundles.Add(new ScriptBundle("~/Assets/RegionMasters").Include(
                       "~/Assets/RegionMasters.js"));
 
-            //Edit Entity Master
+            //Edit Regin Master
             bundles.Add(new ScriptBundle("~/Assets/EditRegionMasters").Include(
                       "~/Assets/EditRegionMasters.js"));
+            // LOS Master
+            bundles.Add(new ScriptBundle("~/Assets/LOSMasters").Include(
+                      "~/Assets/LOSMasters.js"));
+
+            //Edit LOS Master
+            bundles.Add(new ScriptBundle("~/Assets/EditLOSMasters").Include(
+                      "~/Assets/EditLOSMasters.js"));
+
+            // User Masters
+            bundles.Add(new ScriptBundle("~/Assets/UserMasters").Include(
+                      "~/Assets/UserMasters.js"));
+
+            //Edit User Masters
+            bundles.Add(new ScriptBundle("~/Assets/EditUserMasters").Include(
+                      "~/Assets/EditUserMasters.js"));
             // Committee Master
             bundles.Add(new ScriptBundle("~/Assets/CommitteeMasters").Include(
                       "~/Assets/CommitteeMasters.js"));

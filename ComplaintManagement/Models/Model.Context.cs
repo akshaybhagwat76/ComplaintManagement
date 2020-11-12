@@ -31,12 +31,12 @@ namespace ComplaintManagement.Models
         public virtual DbSet<DesignationMaster> DesignationMasters { get; set; }
         public virtual DbSet<EntityMaster> EntityMasters { get; set; }
         public virtual DbSet<LocationMaster> LocationMasters { get; set; }
-        public virtual DbSet<LOSMaster> LOSMasters { get; set; }
         public virtual DbSet<RegionMaster> RegionMasters { get; set; }
         public virtual DbSet<RoleMaster> RoleMasters { get; set; }
         public virtual DbSet<SBUMaster> SBUMasters { get; set; }
         public virtual DbSet<SubCategoryMaster> SubCategoryMasters { get; set; }
         public virtual DbSet<SubSBUMaster> SubSBUMasters { get; set; }
         public virtual DbSet<UserMaster> UserMasters { get; set; }
+        public virtual DbSet<LOSMaster> LOSMasters { get; set; }
     }
 }

@@ -26,7 +26,8 @@ namespace ComplaintManagement.Repository
                 if (LOS == null)
                 {
                     LOSVM.IsActive = true;
-
+                    LOSVM.CreatedDate = DateTime.UtcNow;
+                    LOSVM.UserId = 1;
                     LOS = Mapper.Map<LOSMasterVM, LOSMaster>(LOSVM);
                     db.LOSMasters.Add(LOS);
                     db.SaveChanges();
@@ -35,7 +36,9 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     LOSVM.IsActive = true;
-                    db.Entry(LOSVM).CurrentValues.SetValues(LOSVM);
+                    LOSVM.UserId = 1; LOSVM.CreatedDate = LOS.CreatedDate;
+                    LOSVM.UpdatedDate = DateTime.UtcNow;
+                    db.Entry(LOS).CurrentValues.SetValues(LOSVM);
                     db.SaveChanges();
                     return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
                 }
