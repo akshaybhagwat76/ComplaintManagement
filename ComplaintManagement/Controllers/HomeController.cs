@@ -26,5 +26,18 @@ namespace ComplaintManagement.Controllers
 
             return View();
         }
+
+        public Tuple<int, int> getDataTableDetail(string SessionName, int? default_number)
+        {
+            int PageLength = System.Web.HttpContext.Current.Session[SessionName + "PageLength"] != null && System.Web.HttpContext.Current.Session[SessionName + "PageLength"].ToString() != "" ? Convert.ToInt16(System.Web.HttpContext.Current.Session[SessionName + "PageLength"]) : 0;
+            int Page = System.Web.HttpContext.Current.Session[SessionName + "Page"] != null && System.Web.HttpContext.Current.Session[SessionName + "Page"].ToString() != "" ? Convert.ToInt16(System.Web.HttpContext.Current.Session[SessionName + "Page"]) : 0;
+            int PageIndex = PageLength == 0 ? (default_number.HasValue ? default_number.Value : 25) : PageLength;
+
+            System.Web.HttpContext.Current.Session[SessionName + "PageLength"] = null;
+            System.Web.HttpContext.Current.Session[SessionName + "Page"] = null;
+
+            return Tuple.Create<int, int>(Page, PageIndex);
+        }
+
     }
 }

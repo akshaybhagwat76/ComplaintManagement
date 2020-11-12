@@ -21,26 +21,29 @@ namespace ComplaintManagement.Repository
 
         }
 
-        public CategoryMasterVM AddOrUpdate(CategoryMasterVM categoryVM)
+        public EntityMasterVM AddOrUpdate(EntityMasterVM EntityVM)
         {
             try
             {
-                var category = db.CategoryMasters.FirstOrDefault(p => p.Id == categoryVM.Id);
-                if (category == null)
+                var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
+                if (Entity == null)
                 {
-                    categoryVM.IsActive = true;
-
-                    category = Mapper.Map<CategoryMasterVM, CategoryMaster>(categoryVM);
-                    db.CategoryMasters.Add(category);
+                    EntityVM.IsActive = true;
+                    EntityVM.CreatedDate = DateTime.UtcNow;
+                    EntityVM.UserId = 1;
+                    Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
+                    db.EntityMasters.Add(Entity);
                     db.SaveChanges();
-                    return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
+                    return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
                 }
                 else
                 {
-                    categoryVM.IsActive = true;
-                    db.Entry(category).CurrentValues.SetValues(categoryVM);
+                    EntityVM.IsActive = true;
+                    EntityVM.UserId = 1; EntityVM.CreatedDate = Entity.CreatedDate;
+                    EntityVM.UpdatedDate = DateTime.UtcNow;
+                    db.Entry(Entity).CurrentValues.SetValues(EntityVM);
                     db.SaveChanges();
-                    return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
+                    return Mapper.Map<EntityMaster ,EntityMasterVM>(Entity);
 
                 }
             }
@@ -56,28 +59,28 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public List<CategoryMasterVM> GetAll()
+        public List<EntityMasterVM> GetAll()
         {
-            List<CategoryMaster> category = new List<CategoryMaster>();
+            List<EntityMaster> Entity = new List<EntityMaster>();
             try
             {
-                category = db.CategoryMasters.Where(i => i.IsActive).ToList();
+                Entity = db.EntityMasters.Where(i => i.IsActive).ToList();
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<CategoryMaster>, List<CategoryMasterVM>>(category);
+            return Mapper.Map<List<EntityMaster>, List<EntityMasterVM>>(Entity);
         }
 
-        public CategoryMasterVM Get(int id)
+        public EntityMasterVM Get(int id)
         {
-            CategoryMaster category = new CategoryMaster();
+            EntityMaster Entity = new EntityMaster();
             try
             {
-                category = db.CategoryMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (category == null)
+                Entity = db.EntityMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                if (Entity == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
@@ -87,13 +90,13 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
+            return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
         }
 
 
         public bool Delete(int id)
         {
-            var data = db.CategoryMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.EntityMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;

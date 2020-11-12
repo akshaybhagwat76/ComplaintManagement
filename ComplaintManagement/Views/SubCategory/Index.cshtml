@@ -160,47 +160,36 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table f-14">
-                                        <tr>
-                                            <td class="text-center">Sub Category</td>
-                                            <td class="text-center">Status</td>
-                                            <td class="text-center">Action</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>R1</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>R1</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>R1</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>R1</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
+                                        <thead>
+                                            <tr>
+                                                <td class="text-center">Sub Category</td>
+                                                <td class="text-center">Status</td>
+                                                <td class="text-center">Action</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.lstSubCategory)
+                                            {
+                                                <tr>
+                                                    <td class="text-black text-center"><strong>@item.SubCategoryName</strong></td>
+
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.Status == true)
+                                                            {@Html.Raw("Active") }
+                                                        else
+                                                        { @Html.Raw("DeActive")}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/SubCategory/Edit/@item.Id" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="deleteSubCategory('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="viewCategory('@item.Id')" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+
                                     </table>
                                 </div>
                             </div>
@@ -238,3 +227,10 @@
                 </div>
             </div>
         </div>
+        @Scripts.Render("~/Assets/Common")
+        @Html.Partial("_CommonDeleteModal")
+        @Scripts.Render("~/Assets/SubCategoryMasters")
+        <script>
+    var pageLength=@ViewBag.PageIndex;
+    var page = @ViewBag.Page;
+        </script>

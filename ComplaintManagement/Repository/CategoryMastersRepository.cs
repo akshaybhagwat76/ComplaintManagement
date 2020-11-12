@@ -28,7 +28,8 @@ namespace ComplaintManagement.Repository
                 if (category == null)
                 {
                     categoryVM.IsActive = true;
-
+                    categoryVM.CreatedDate = DateTime.UtcNow;
+                    categoryVM.UserId = 1;
                     category = Mapper.Map<CategoryMasterVM, CategoryMaster>(categoryVM);
                     db.CategoryMasters.Add(category);
                     db.SaveChanges();
@@ -37,6 +38,8 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     categoryVM.IsActive = true;
+                    categoryVM.UserId = 1; categoryVM.CreatedDate = category.CreatedDate;
+                    categoryVM.UpdatedDate= DateTime.UtcNow;
                     db.Entry(category).CurrentValues.SetValues(categoryVM);
                     db.SaveChanges();
                     return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);

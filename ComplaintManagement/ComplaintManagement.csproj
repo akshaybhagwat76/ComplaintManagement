@@ -154,7 +154,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Common.cs" />
+    <Compile Include="Helpers\Infrastructure.cs" />
     <Compile Include="Helpers\Messages.cs" />
+    <Compile Include="Helpers\ReplyFormat.cs" />
     <Compile Include="Models\CategoryMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -215,19 +217,55 @@
     <Compile Include="Repository\CompetencyMastersRepository.cs" />
     <Compile Include="Repository\DesignationMasterRepository.cs" />
     <Compile Include="Repository\EntityMasterRepository.cs" />
+    <Compile Include="Repository\LocationMastersRepository.cs" />
+    <Compile Include="Repository\RegionMasterRepository.cs" />
+    <Compile Include="Repository\RoleMasterRepoitory.cs" />
+    <Compile Include="Repository\SBUMasterRepository.cs" />
+    <Compile Include="Repository\LOSMasterRepository.cs" />
     <Compile Include="Repository\SubCategoryMastersRepository.cs" />
+    <Compile Include="Repository\SubSBUMasterRepository.cs" />
+    <Compile Include="Repository\UserMastersRepository.cs" />
     <Compile Include="ViewModel\CategoryMasterVM.cs" />
     <Compile Include="ViewModel\CommitteeMasterVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
     <Compile Include="ViewModel\DesignationMasterVM.cs" />
     <Compile Include="ViewModel\EntityMasterVM.cs" />
+    <Compile Include="ViewModel\LocationMasterVM.cs" />
+    <Compile Include="ViewModel\RegionMasterVM.cs" />
+    <Compile Include="ViewModel\RoleMasterVM.cs" />
+    <Compile Include="ViewModel\SBUMasterVM.cs" />
+    <Compile Include="ViewModel\LOSMasterVM.cs" />
     <Compile Include="ViewModel\SubCategoryMasterVM.cs" />
+    <Compile Include="ViewModel\SubSBUMasterVM.cs" />
+    <Compile Include="ViewModel\UserMasterVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Assets\CategoryMasters.js" />
+    <Content Include="Assets\CommitteeMasters.js" />
     <Content Include="Assets\common.js" />
+    <Content Include="Assets\CompetencyMasters.js" />
+    <Content Include="Assets\DesignationMasters.js" />
     <Content Include="Assets\EditCategoryMaster.js" />
+    <Content Include="Assets\EditCommitteeMaster.js" />
+    <Content Include="Assets\EditCompetencyMasters.js" />
+    <Content Include="Assets\EditDesignationMasters.js" />
+    <Content Include="Assets\EditEntityMasters.js" />
+    <Content Include="Assets\EditLocationMasters.js" />
+    <Content Include="Assets\EditLOSMasters.js" />
+    <Content Include="Assets\EditRegionMasters.js" />
+    <Content Include="Assets\EditSBUMasters.js" />
+    <Content Include="Assets\EditSubCategoryMasters.js" />
+    <Content Include="Assets\EditSubSBUMasters.js" />
+    <Content Include="Assets\EditUserMasters.js" />
+    <Content Include="Assets\EntityMasters.js" />
+    <Content Include="Assets\LocationMasters.js" />
+    <Content Include="Assets\LOSMasters.js" />
+    <Content Include="Assets\RegionMasters.js" />
+    <Content Include="Assets\SBUMasters.js" />
+    <Content Include="Assets\SubCategoryMasters.js" />
+    <Content Include="Assets\SubSBUMasters.js" />
+    <Content Include="Assets\UserMasters.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -241,12 +279,13 @@
     <Content Include="Content\plugins\dataTables\datatables.min.css" />
     <Content Include="Content\plugins\dataTables\responsive.min.css" />
     <Content Include="Content\plugins\datepicker\datepicker3.css" />
+    <Content Include="Content\plugins\select2\select2.min.css" />
     <Content Include="Content\toastr\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Images\loading_light.GIF" />
+    <Content Include="images\loading_light.GIF" />
     <Content Include="Models\Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Model.Context.cs</LastGenOutput>
@@ -289,6 +328,7 @@
     <Content Include="Models\Model.edmx.diagram">
       <DependentUpon>Model.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -1973,6 +2013,7 @@
     <Content Include="Scripts\vendor\jquery\jquery.min.js" />
     <Content Include="Scripts\vendor\jquery\jquery.slim.js" />
     <Content Include="Scripts\vendor\jquery\jquery.slim.min.js" />
+    <Content Include="Scripts\vendor\select2\select2.min.js" />
     <Content Include="Scripts\vendor\toastr\toastr.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -2163,6 +2204,7 @@
     <Content Include="Views\Role\Index.cshtml" />
     <Content Include="Views\Committee\ManageCommitteeMaster.cshtml" />
     <Content Include="Views\Committee\Index.cshtml" />
+    <Content Include="Views\Shared\_CommonDeleteModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

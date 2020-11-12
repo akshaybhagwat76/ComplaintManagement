@@ -24,10 +24,11 @@ namespace ComplaintManagement.Repository
             try
             {
                 var Subcategory = db.SubCategoryMasters.FirstOrDefault(p => p.Id == SubcategoryVM.Id);
-                if (SubcategoryVM == null)
+                if (Subcategory == null)
                 {
                     SubcategoryVM.IsActive = true;
-
+                    SubcategoryVM.CreatedDate = DateTime.UtcNow;
+                    SubcategoryVM.UserId = 1;
                     Subcategory = Mapper.Map<SubCategoryMasterVM, SubCategoryMaster>(SubcategoryVM);
                     db.SubCategoryMasters.Add(Subcategory);
                     db.SaveChanges();
@@ -36,6 +37,8 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     SubcategoryVM.IsActive = true;
+                    SubcategoryVM.UserId = 1; SubcategoryVM.CreatedDate = Subcategory.CreatedDate;
+                    SubcategoryVM.UpdatedDate = DateTime.UtcNow;
                     db.Entry(Subcategory).CurrentValues.SetValues(SubcategoryVM);
                     db.SaveChanges();
                     return Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(Subcategory);
@@ -91,7 +94,7 @@ namespace ComplaintManagement.Repository
 
         public bool Delete(int id)
         {
-            var data = db.CategoryMasters.FirstOrDefault(p => p.Id == id);
+            var data = db.SubCategoryMasters.FirstOrDefault(p => p.Id == id);
             if (data != null)
             {
                 data.IsActive = false;

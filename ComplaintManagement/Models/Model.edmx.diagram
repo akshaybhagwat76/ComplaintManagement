@@ -11,7 +11,6 @@
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.DesignationMaster" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EntityMaster" Width="1.5" PointX="2.75" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LocationMaster" Width="1.5" PointX="6" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMaster" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMaster" Width="1.5" PointX="6" PointY="10.5" IsExpanded="true" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RoleMaster" Width="1.5" PointX="5.25" PointY="5.125" IsExpanded="true" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SBUMaster" Width="1.5" PointX="0.75" PointY="5.625" IsExpanded="true" />
@@ -19,20 +18,18 @@
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubSBUMaster" Width="1.5" PointX="0.75" PointY="9.5" IsExpanded="true" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.UserMaster" Width="1.5" PointX="8.25" PointY="3.75" IsExpanded="true" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_CommitteeMasters_UserMasters" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_LOSMasters_CompetencyMasters" ManuallyRouted="false" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_RoleMasters_CompetencyMasters" ManuallyRouted="false" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_CompetencyMasters" ManuallyRouted="false" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_LocationMasters" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_LOSMasters_SBUMasters" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_LOSMasters_SubSBUMasters" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_RoleMasters_LOSMasters" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" ManuallyRouted="false" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_RegionMasters" ManuallyRouted="false" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_RoleMasters_SBUMasters" ManuallyRouted="false" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_RoleMasters_SubSBUMasters" ManuallyRouted="false" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_RoleMasters_UserMasters" ManuallyRouted="false" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" ManuallyRouted="false" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMaster" Width="1.5" PointX="3" PointY="5.5" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_RoleMasters_LOSMasters" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

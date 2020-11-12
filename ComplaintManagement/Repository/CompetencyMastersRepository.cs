@@ -29,7 +29,8 @@ namespace ComplaintManagement.Repository
                 if (Competency == null)
                 {
                     CompetencyVM.IsActive = true;
-
+                    CompetencyVM.CreatedDate = DateTime.UtcNow;
+                    CompetencyVM.UserId = 1;
                     Competency = Mapper.Map<CompetencyMasterVM, CompetencyMaster>(CompetencyVM);
                     db.CompetencyMasters.Add(Competency);
                     db.SaveChanges();
@@ -38,6 +39,8 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     CompetencyVM.IsActive = true;
+                    CompetencyVM.UserId = 1; CompetencyVM.CreatedDate = Competency.CreatedDate;
+                    CompetencyVM.UpdatedDate = DateTime.UtcNow;
                     db.Entry(Competency).CurrentValues.SetValues(CompetencyVM);
                     db.SaveChanges();
                     return Mapper.Map<CompetencyMaster, CompetencyMasterVM>(Competency);

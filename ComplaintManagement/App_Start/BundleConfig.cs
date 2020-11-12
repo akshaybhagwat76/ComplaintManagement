@@ -34,6 +34,10 @@ namespace ComplaintManagement
             bundles.Add(new StyleBundle("~/sb-admin2/css").Include(
                      "~/Content/css/sb-admin-2.min.css"));
 
+            //select2
+            bundles.Add(new StyleBundle("~/Content/plugins/select2/select2Styles").Include(
+                     "~/Content/css/select2.min.css"));
+
             // SB-admin-2-style
             bundles.Add(new StyleBundle("~/sb-admin2/styles").Include(
                      "~/Content/css/styles.css"));
@@ -97,6 +101,10 @@ namespace ComplaintManagement
             bundles.Add(new ScriptBundle("~/plugins/datePicker").Include(
                       "~/Scripts/plugins/datepicker/bootstrap-datepicker.js"));
 
+            // select2 
+            bundles.Add(new ScriptBundle("~/plugins/select2").Include(
+                      "~/Scripts/vendor/select2/select2.min.js"));
+
             //Common JS
             bundles.Add(new Bundle("~/Assets/Common").Include(
                      "~/Assets/common.js"));
@@ -108,6 +116,89 @@ namespace ComplaintManagement
             //Edit Category Master
             bundles.Add(new ScriptBundle("~/Assets/EditCategoryMasters").Include(
                       "~/Assets/EditCategoryMaster.js"));
+
+            // SubCategory Master
+            bundles.Add(new ScriptBundle("~/Assets/SubCategoryMasters").Include(
+                      "~/Assets/SubCategoryMasters.js"));
+            //Edit SubCategory Master
+            bundles.Add(new ScriptBundle("~/Assets/EditSubCategoryMasters").Include(
+                      "~/Assets/EditSubCategoryMasters.js"));
+
+            // Designation Master
+            bundles.Add(new ScriptBundle("~/Assets/DesignationMasters").Include(
+                      "~/Assets/DesignationMasters.js"));
+
+            //Edit Designation Master
+            bundles.Add(new ScriptBundle("~/Assets/EditDesignationMasters").Include(
+                      "~/Assets/EditDesignationMasters.js"));
+
+            // SBU Master
+            bundles.Add(new ScriptBundle("~/Assets/SBUMasters").Include(
+                      "~/Assets/SBUMasters.js"));
+
+            //Edit SBU Master
+            bundles.Add(new ScriptBundle("~/Assets/EditSBUMasters").Include(
+                      "~/Assets/EditSBUMasters.js"));
+
+            // SubSBU Master
+            bundles.Add(new ScriptBundle("~/Assets/SubSBUMasters").Include(
+                      "~/Assets/SubSBUMasters.js"));
+
+            //Edit SubSBU Master
+            bundles.Add(new ScriptBundle("~/Assets/EditSubSBUMasters").Include(
+                      "~/Assets/EditSubSBUMasters.js"));
+
+
+            // Competency Master
+            bundles.Add(new ScriptBundle("~/Assets/CompetencyMasters").Include(
+                      "~/Assets/CompetencyMasters.js"));
+
+            //Edit Competency Master
+            bundles.Add(new ScriptBundle("~/Assets/EditCompetencyMasters").Include(
+                      "~/Assets/EditCompetencyMasters.js"));
+
+
+            // Location Master
+            bundles.Add(new ScriptBundle("~/Assets/LocationMasters").Include(
+                      "~/Assets/LocationMasters.js"));
+
+            //Edit Location Master
+            bundles.Add(new ScriptBundle("~/Assets/EditLocationMasters").Include(
+                      "~/Assets/EditLocationMasters.js"));
+
+            // Entity Master
+            bundles.Add(new ScriptBundle("~/Assets/EntityMasters").Include(
+                      "~/Assets/EntityMasters.js"));
+
+            //Edit Entity Master
+            bundles.Add(new ScriptBundle("~/Assets/EditEntityMasters").Include(
+                      "~/Assets/EditEntityMasters.js"));
+
+            // Region Master
+            bundles.Add(new ScriptBundle("~/Assets/RegionMasters").Include(
+                      "~/Assets/RegionMasters.js"));
+
+            //Edit Regin Master
+            bundles.Add(new ScriptBundle("~/Assets/EditRegionMasters").Include(
+                      "~/Assets/EditRegionMasters.js"));
+            // LOS Master
+            bundles.Add(new ScriptBundle("~/Assets/LOSMasters").Include(
+                      "~/Assets/LOSMasters.js"));
+
+            //Edit LOS Master
+            bundles.Add(new ScriptBundle("~/Assets/EditLOSMasters").Include(
+                      "~/Assets/EditLOSMasters.js"));
+
+            // User Masters
+            bundles.Add(new ScriptBundle("~/Assets/UserMasters").Include(
+                      "~/Assets/UserMasters.js"));
+
+            //Edit User Masters
+            bundles.Add(new ScriptBundle("~/Assets/EditUserMasters").Include(
+                      "~/Assets/EditUserMasters.js"));
+            // Committee Master
+            bundles.Add(new ScriptBundle("~/Assets/CommitteeMasters").Include(
+                      "~/Assets/CommitteeMasters.js"));
         }
     }
 }

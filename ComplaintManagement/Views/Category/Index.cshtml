@@ -160,48 +160,38 @@
                             <!-- Card Body -->
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table f-14">
-                                        <tr>
-                                            <td class="text-center">Category</td>
-                                            <td class="text-center">Status</td>
-                                            <td class="text-center">Action</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>R1</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>R1</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>R1</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-black text-center"><strong>R1</strong></td>
-                                            <td class="text-black text-center"><strong>Active</strong></td>
-                                            <td class="text-center">
-                                                <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                            </td>
-                                        </tr>
+                                    @*class="table f-14"*@
+                                    <table class="table f-14" width="100%" id="myTable">
+                                        <thead>
+                                            <tr>
+                                                <td class="text-center">Category</td>
+                                                <td class="text-center">Status</td>
+                                                <td class="text-center">Action</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.lstCategories)
+                                            {
+                                                <tr>
+                                                    <td class="text-black text-center"><strong>@item.CategoryName</strong></td>
+
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.Status == true)
+                                                            {@Html.Raw("Active") }
+                                                        else
+                                                        { @Html.Raw("DeActive")}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/Category/Edit/@item.Id" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="deleteCategory('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="viewCategory('@item.Id')" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -246,3 +236,32 @@
         </div>
     </div>
 </div>
+@Scripts.Render("~/Assets/Common")
+@Html.Partial("_CommonDeleteModal")
+@Scripts.Render("~/Assets/CategoryMasters")
+<script>
+    var pageLength=@ViewBag.PageIndex;
+    var page = @ViewBag.Page;
+</script>
+<style>
+    /* DATATABLES */
+    table.dataTable thead .sorting,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_desc,
+    table.dataTable thead .sorting_asc_disabled,
+    table.dataTable thead .sorting_desc_disabled {
+        background: transparent;
+    }
+
+    .dataTables_wrapper {
+        padding-bottom: 30px;
+    }
+
+    .dataTables_length {
+        float: left;
+    }
+
+    .dataTables_filter label {
+        margin-right: 5px;
+    }
+</style>

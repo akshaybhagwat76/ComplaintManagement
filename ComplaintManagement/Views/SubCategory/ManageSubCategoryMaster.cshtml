@@ -1,4 +1,4 @@
-﻿
+﻿@model ComplaintManagement.ViewModel.SubCategoryMasterVM
 @{
     ViewBag.Title = "ManageSubCategoryMaster";
 }
@@ -120,7 +120,7 @@
         <!-- End of Topbar -->
         <div class="container-fluid">
             <div class="page-title mb-3">
-                <h2 class="text-black">Add Sub Category Master</h2>
+                <h2 class="text-black">@ViewBag.PageType  Sub Category Master</h2>
             </div>
             <!-- Tab Bar -->
             <div class="row">
@@ -128,25 +128,46 @@
                     <div class="card shadow mb-4">
                         <!-- Card Body -->
                         <div class="card-body">
-                            <div class="form-group row">
-                                <div class="col-sm-9 mb-3">
-                                    <label>Sub Category</label>
-                                    <input type="text" class="form-control form-control-user" id="exampleFirstName">
+                            <form id="myForm" class="m-t" role="form" action="javascript:;">
+                                @Html.HiddenFor(model => model.Id)
+                                <div class="form-group row">
+                                    <div class="col-sm-9 mb-3">
+                                        @Html.LabelFor(model => model.SubCategoryName, new { @class = "requiredLabel" })
+                                        @Html.EditorFor(model => model.SubCategoryName, new { htmlAttributes = new { @class = "form-control form-control-user required" } })
+                                    </div>
+                                    <div class="col-sm-9 mb-3">
+
+                                        @Html.LabelFor(model => model.Status, new { @class = "requiredLabel" })
+                                        @{
+                                            List<SelectListItem> listItems = new List<SelectListItem>();
+                                            listItems = new List<SelectListItem>();
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Active",
+                                                Value = "true"
+                                            });
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Inactive",
+                                                Value = "false"
+                                            });
+                                        }
+                                        <div>
+                                            @Html.DropDownListFor(model => model.Status, (List<SelectListItem>)listItems, new { @class = "form-control required" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-12 text-right">
+                                        <a onclick="submitForm()" class="btn btn-danger">Save</a>
+                                        <a href="/SubCategory/Index" class="btn btn-white border">Cancel</a>
+                                        <label id="lblError" class="inline"></label>
+                                    </div>
                                 </div>
-                                <div class="col-sm-9 mb-3 mb-sm-0">
-                                    <label>Status</label>
-                                    <select class="form-control">
-                                        <option>Active</option>
-                                        <option>Inactive</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12 text-right">
-                                    <a href="login.html" class="btn btn-danger">Save</a>
-                                    <a href="login.html" class="btn btn-white border">Cancel</a>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @Scripts.Render("~/Assets/EditSubCategoryMasters")
+</div>
