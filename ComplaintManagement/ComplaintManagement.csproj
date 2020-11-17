@@ -254,6 +254,7 @@
     <Content Include="Assets\EditLocationMasters.js" />
     <Content Include="Assets\EditLOSMasters.js" />
     <Content Include="Assets\EditRegionMasters.js" />
+    <Content Include="Assets\EditRoleMaster.js" />
     <Content Include="Assets\EditSBUMasters.js" />
     <Content Include="Assets\EditSubCategoryMasters.js" />
     <Content Include="Assets\EditSubSBUMasters.js" />
@@ -262,6 +263,7 @@
     <Content Include="Assets\LocationMasters.js" />
     <Content Include="Assets\LOSMasters.js" />
     <Content Include="Assets\RegionMasters.js" />
+    <Content Include="Assets\RoleMaster.js" />
     <Content Include="Assets\SBUMasters.js" />
     <Content Include="Assets\SubCategoryMasters.js" />
     <Content Include="Assets\SubSBUMasters.js" />

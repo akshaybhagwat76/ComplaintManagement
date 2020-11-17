@@ -199,6 +199,18 @@ namespace ComplaintManagement
             // Committee Master
             bundles.Add(new ScriptBundle("~/Assets/CommitteeMasters").Include(
                       "~/Assets/CommitteeMasters.js"));
+
+            //Edit Committee Masters
+            bundles.Add(new ScriptBundle("~/Assets/EditCommitteeMaster").Include(
+                      "~/Assets/EditCommitteeMaster.js"));
+
+            // Role Master
+            bundles.Add(new ScriptBundle("~/Assets/RoleMaster").Include(
+                      "~/Assets/CommitteeMasters.js"));
+
+            //Edit Role Masters
+            bundles.Add(new ScriptBundle("~/Assets/EditRoleMaster").Include(
+                      "~/Assets/EditRoleMaster.js"));
         }
     }
 }

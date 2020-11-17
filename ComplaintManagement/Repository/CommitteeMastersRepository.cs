@@ -29,7 +29,8 @@ namespace ComplaintManagement.Repository
                 if (Committee == null)
                 {
                     CommitteeVM.IsActive = true;
-
+                    CommitteeVM.CreatedDate = DateTime.UtcNow;
+          
                     Committee = Mapper.Map<CommitteeMasterVM, CommitteeMaster>(CommitteeVM);
                     db.CommitteeMasters.Add(Committee);
                     db.SaveChanges();
@@ -38,6 +39,9 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     CommitteeVM.IsActive = true;
+                    
+                    CommitteeVM.CreatedDate = Committee.CreatedDate;
+                    CommitteeVM.UpdatedDate = DateTime.UtcNow;
                     db.Entry(Committee).CurrentValues.SetValues(CommitteeVM);
                     db.SaveChanges();
                     return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);

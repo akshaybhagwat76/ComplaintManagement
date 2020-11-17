@@ -1,4 +1,4 @@
-﻿
+﻿@model ComplaintManagement.ViewModel.RoleMasterVM
 @{
     ViewBag.Title = "ManageRoleMaster";
 }
@@ -122,7 +122,7 @@
         <!-- Begin Page Content -->
         <div class="container-fluid">
             <div class="page-title mb-3">
-                <h2 class="text-black">Add Role Master</h2>
+                <h2 class="text-black">@ViewBag.PageType Role Master</h2>
             </div>
             <!-- Tab Bar -->
             <div class="row">
@@ -130,52 +130,125 @@
                     <div class="card shadow mb-4">
                         <!-- Card Body -->
                         <div class="card-body">
-                            <div class="form-group row">
-                                <div class="col-sm-9 mb-3">
-                                    <label>User</label>
-                                    <select class="form-control">
-                                        <option></option>
-                                    </select>
+                            <form id="myForm" class="m-t" role="form" action="javascript:;">
+                                @Html.HiddenFor(model => model.Id)
+                                <div class="form-group row">
+                                    <div class="col-sm-9 mb-3">
+                                        @Html.LabelFor(model => model.UserId, new { @class = "requiredLabel" })
+                                        @{
+                                            List<SelectListItem> listUser = new List<SelectListItem>();
+                                            listUser = new List<SelectListItem>();
+                                            listUser.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listUser.AddRange(ViewBag.lstUser);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.UserId, (List<SelectListItem>)listUser, new { @class = "form-control required" })
+
+                                    </div>
+                                    <div class="col-sm-9 mb-3">
+                                        @Html.LabelFor(model => model.LOSId)
+
+                                        @{
+                                            List<SelectListItem> listLOS = new List<SelectListItem>();
+                                            listLOS = new List<SelectListItem>();
+                                            listLOS.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listLOS.AddRange(ViewBag.lstLOS);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.LOSId, (List<SelectListItem>)listLOS, new { @class = "form-control required" })
+
+                                    </div>
+                                    <div class="col-sm-9 mb-3">
+
+                                        @Html.LabelFor(model => model.SBUId)
+                                        @Html.Hidden("SBUIds", Model.SBUId)
+
+                                        @{
+                                            List<SelectListItem> listSBU = new List<SelectListItem>();
+                                            listSBU = new List<SelectListItem>();
+                                            listSBU.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listSBU.AddRange(ViewBag.lstSBU);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.SBUId, (List<SelectListItem>)listSBU, new { @class = "form-control required", @multiple = "multiple" })
+                                    </div>
+                                    <div class="col-sm-9 mb-3">
+                                        @Html.LabelFor(model => model.SubSBUId)
+                                        @Html.Hidden("SubSBUIds", Model.SubSBUId)
+
+                                        @{
+                                            List<SelectListItem> listSubSBU = new List<SelectListItem>();
+                                            listSubSBU = new List<SelectListItem>();
+                                            listSubSBU.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listSubSBU.AddRange(ViewBag.lstSubSBU);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.SubSBUId, (List<SelectListItem>)listSubSBU, new { @class = "form-control required", @multiple = "multiple" })
+
+                                    </div>
+                                    <div class="col-sm-9 mb-3">
+                                        @Html.LabelFor(model => model.CompetencyId)
+                                        @Html.Hidden("CompentencyIds", Model.CompetencyId)
+
+                                        @{
+                                            List<SelectListItem> listCompentency = new List<SelectListItem>();
+                                            listCompentency = new List<SelectListItem>();
+                                            listCompentency.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listCompentency.AddRange(ViewBag.lstCompetency);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.CompetencyId, (List<SelectListItem>)listCompentency, new { @class = "form-control required", @multiple = "multiple" })
+
+                                    </div>
+                                    <div class="col-sm-9 mb-3 mb-sm-0">
+                                        @Html.LabelFor(model => model.Status, new { @class = "requiredLabel" })
+                                        @{
+                                            List<SelectListItem> listItems = new List<SelectListItem>();
+                                            listItems = new List<SelectListItem>();
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Active",
+                                                Value = "true"
+                                            });
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Inactive",
+                                                Value = "false"
+                                            });
+                                        }
+                                        <div>
+                                            @Html.DropDownListFor(model => model.Status, (List<SelectListItem>)listItems, new { @class = "form-control required" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-12 text-right">
+                                        <a onclick="submitForm()" class="btn btn-danger">Save</a>
+                                        <a href="/LOS/Index" class="btn btn-white border">Cancel</a>
+                                        <label id="lblError" class="inline"></label>
+                                    </div>
                                 </div>
-                                <div class="col-sm-9 mb-3">
-                                    <label>LOS</label>
-                                    <select class="form-control select2" multiple="multiple">
-                                        <option>LOS1</option>
-                                        <option>LOS2</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-9 mb-3">
-                                    <label>SBU</label>
-                                    <select class="form-control select2" multiple="multiple">
-                                        <option>SBU1</option>
-                                        <option>SBU2</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-9 mb-3">
-                                    <label>Sub-SBU</label>
-                                    <select class="form-control select2" multiple="multiple">
-                                        <option>Sub-SBU1</option>
-                                        <option>Sub-SBU2</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-9 mb-3">
-                                    <label>Competency</label>
-                                    <select class="form-control select2" multiple="multiple">
-                                        <option>Competency1</option>
-                                        <option>Competency2</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-9 mb-3 mb-sm-0">
-                                    <label>Status</label>
-                                    <select class="form-control">
-                                        <option></option>
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12 text-right">
-                                    <a href="login.html" class="btn btn-danger">Save</a>
-                                    <a href="login.html" class="btn btn-white border">Cancel</a>
-                                </div>
+                            </form>
+                            
                             </div>
                         </div>
                     </div>
@@ -211,3 +284,4 @@
         </div>
     </div>
 </div>
+@Scripts.Render("~/Assets/EditRoleMaster")

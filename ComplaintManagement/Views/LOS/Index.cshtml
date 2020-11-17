@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "Index";
+    dynamic data = Json.Decode(ViewBag.lstLOS);
 }
 
 <div id="content-wrapper" class="d-flex flex-column">
@@ -172,13 +173,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var item in ViewBag.lstLOS)
+                                            @foreach (var item in data)
                                             {
                                                 <tr>
                                                     <td class="text-black text-center"><strong>@item.LOSName</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.SBUId</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.SubSBUId</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.CompetencyId</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CompetencyName</strong></td>
 
                                                     <td class="text-black text-center">
                                                         <strong>

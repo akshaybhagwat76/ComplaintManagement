@@ -129,9 +129,20 @@
                     <div class="card shadow mb-4 rounded-0">
                         <!-- Card Body -->
                         <div class="card-body">
+                            @Html.HiddenFor(model=>model.Id)
+                            @*<div class="text-center form-group">
+            <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
+        </div>*@
+                            <i class="fa fa-trash" style="margin-left: 180px; margin-top: 7px;" onclick="RemoveImage()"></i>
+                            <div class="text-center form-group ">
+                                <label title="Upload image file" for="inputImage">
 
-                            <div class="text-center form-group">
-                                <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
+                                    <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
+                                    <img id='profile_pic' data-src="" src="/Images/profile.png" style='cursor:pointer;height:auto;width:100%;max-width:120px' />
+                                </label>
+                                <div class="profile-img-i-container">
+                                    <i class="fa fa-remove"></i>
+                                </div>
                             </div>
                             <form id="myForm" class="m-t" role="form" action="javascript:;">
                                 <div class="form-group">
@@ -146,7 +157,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0 text-center">
 
-                                        @Html.DropDownListFor(model => model.Type,
+                                        @Html.DropDownListFor(model => model.Gender,
                  new List<SelectListItem> {
                       new SelectListItem { Value = "Male" , Text = "Male" },
                       new SelectListItem { Value = "Female" , Text = "Female" },
@@ -177,7 +188,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3">
                                         @Html.LabelFor(model => model.TimeType)
-                                        @Html.DropDownListFor(model => model.Type,
+                                        @Html.DropDownListFor(model => model.TimeType,
                  new List<SelectListItem> {
                       new SelectListItem { Value = "Full Time" , Text = "Full Time" },
                       new SelectListItem { Value = "Part Time" , Text = "Part Time" },
@@ -268,7 +279,7 @@
                                                 Text = "",
                                                 Value = ""
                                             });
-                                            listSubSBU.AddRange(ViewBag.lstSBU);
+                                            listSubSBU.AddRange(ViewBag.lstSubSBU);
                                         }
 
                                         @Html.DropDownListFor(model => model.SubSBUId, (List<SelectListItem>)listSubSBU, new { @class = "form-control required" })
@@ -341,13 +352,13 @@
                                     <div class="col-sm-4">
                                         @*<label>Mobile No.</label>*@
                                         @Html.LabelFor(model => model.MobileNo, new { @class = "requiredLabel" })
-                                        @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Name" } })
+                                        @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Mobile No" } })
 
                                     </div>
                                     <div class="col-sm-4">
                                         @*<label>Manager</label>*@
                                         @Html.LabelFor(model => model.Manager, new { @class = "requiredLabel" })
-                                        @Html.EditorFor(model => model.Manager, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Name" } })
+                                        @Html.EditorFor(model => model.Manager, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Manager" } })
 
                                     </div>
                                 </div>
@@ -386,11 +397,11 @@
 
                                     </div>
                                 </div>
-
+                                @Html.Hidden("Doj",Model.DateOfJoining)
 
                                 <div class="col-sm-12 text-right">
                                     <a onclick="submitForm()" class="btn btn-danger">Save</a>
-                                    <a href="/User/Index" class="btn btn-white border">Cancel</a>
+                                    <a href="/UserMaster/Index" class="btn btn-white border">Cancel</a>
                                     <label id="lblError" class="inline"></label>
                                 </div>
                             </form>

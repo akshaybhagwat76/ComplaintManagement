@@ -6,14 +6,14 @@ namespace ComplaintManagement.ViewModel
     public class LOSMasterVM
     {
         public int Id { get; set; }
-        [DisplayName("LOS Name")]
+        [DisplayName("LOS ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string LOSName { get; set; }
-        [DisplayName("SBU Name")]
+        [DisplayName("SBU ")]
         public string SBUId { get; set; }
-        [DisplayName("SubSBU Name")]
+        [DisplayName("SubSBU ")]
         public string SubSBUId { get; set; }
-        [DisplayName("Competency Name")]
+        [DisplayName("Competency ")]
         public string CompetencyId { get; set; }
         public bool Status { get; set; }
         public int UserId { get; set; }

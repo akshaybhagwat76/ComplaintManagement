@@ -14,25 +14,31 @@
     if (retval) {
         var data = {
             Id: $("#Id").val().trim(),
-            LOSName: $("#LOSName").val().trim(),
+            UserId: $("#UserId").val(),
+            LOSId: $("#LOSId").val(),
             SBUId: $("#SBUId").val().toString(),
             SubSBUId: $("#SubSBUId").val().toString(),
             CompetencyId: $("#CompetencyId").val().toString(),
             Status: $("#Status").val() == "true" ? true : false
         }
+        debugger
+        data = JSON.stringify(data);
         StartProcess();
         $.ajax({
             type: "POST",
-            url: "/LOS/AddOrUpdateLOS",
-            data: { LOSVM: data },
-            success: function (data) {
+            url: "/Role/AddOrUpdateRole",
+            data: { roleParams: data },
+            success: function (response) {
                 if (data.status == "Fail") {
                     StopProcess();
                     $("#lblError").addClass("adderror").text(data.error).show();
                 }
                 else {
-                    window.location.href = '/LOS/Index'
+                    window.location.href = '/Role/Index'
                 }
+            },
+            error: function (error) {
+                toastr.error(error)
             }
         });
     }
@@ -43,11 +49,11 @@ $(document).ready(function () {
         $("#Status").val("true");
     }
     else {
-        if ($("#sbuIds").val().includes(',')) {
-            $("#SBUId").val($("#sbuIds").val().split(','))  
+        if ($("#SBUIds").val().includes(',')) {
+            $("#SBUId").val($("#SBUIds").val().split(','))
         }
-        if ($("#SubsbuIds").val().includes(',')) {
-            $("#SubSBUId").val($("#SubsbuIds").val().split(','))
+        if ($("#SubSBUIds").val().includes(',')) {
+            $("#SubSBUId").val($("#SubSBUIds").val().split(','))
         }
         if ($("#CompentencyIds").val().includes(',')) {
 

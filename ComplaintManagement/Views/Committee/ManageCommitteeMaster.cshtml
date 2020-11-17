@@ -1,4 +1,4 @@
-﻿
+﻿@model ComplaintManagement.ViewModel.CommitteeMasterVM
 @{
     ViewBag.Title = "ManageCommitteeMaster";
 }
@@ -130,29 +130,60 @@
                     <div class="card shadow mb-4">
                         <!-- Card Body -->
                         <div class="card-body">
-                            <div class="form-group row">
-                                <div class="col-sm-9 mb-3">
-                                    <label>Committee</label>
-                                    <input type="text" class="form-control" />
+                            <form id="myForm" class="m-t" role="form" action="javascript:;">
+                              @Html.HiddenFor(model=>model.Id)
+                                <div class="form-group row">
+                                    <div class="col-sm-9 mb-3">
+                                        @Html.LabelFor(model => model.CommitteeName, new { @class = "requiredLabel" })
+                                        @Html.EditorFor(model => model.CommitteeName, new { htmlAttributes = new { @class = "form-control form-control-user required" } })
+                                    </div >
+                                    <div class="col-sm-9 mb-3">
+                                        @Html.LabelFor(model => model.UserId, new { @class = "requiredLabel" })
+                                        @{
+                                            List<SelectListItem> listUser = new List<SelectListItem>();
+                                            listUser = new List<SelectListItem>();
+                                            listUser.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listUser.AddRange(ViewBag.lstUser);
+                                        }
+
+                                        @Html.DropDownListFor(model => model.UserId, (List<SelectListItem>)listUser, new { @class = "form-control required" })
+
+                                       
+                                    </div>
+                                    <div class="col-sm-9 mb-3">
+
+                                        @Html.LabelFor(model => model.Status, new { @class = "requiredLabel" })
+                                        @{
+                                            List<SelectListItem> listItems = new List<SelectListItem>();
+                                            listItems = new List<SelectListItem>();
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Active",
+                                                Value = "true"
+                                            });
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = "Inactive",
+                                                Value = "false"
+                                            });
+                                        }
+                                        <div>
+                                            @Html.DropDownListFor(model => model.Status, (List<SelectListItem>)listItems, new { @class = "form-control required" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-12 text-right">
+                                        <a onclick="submitForm()" class="btn btn-danger">Save</a>
+                                        <a href="/Committee/Index" class="btn btn-white border">Cancel</a>
+                                        <label id="lblError" class="inline"></label>
+                                    </div>
                                 </div>
-                                <div class="col-sm-9 mb-3">
-                                    <label>User</label>
-                                    <select class="form-control">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-9 mb-3 mb-sm-0">
-                                    <label>Status</label>
-                                    <select class="form-control">
-                                        <option></option>
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12 text-right">
-                                    <a href="login.html" class="btn btn-danger">Save</a>
-                                    <a href="login.html" class="btn btn-white border">Cancel</a>
-                                </div>
-                            </div>
+                            </form>
+                            
                         </div>
                     </div>
                 </div>

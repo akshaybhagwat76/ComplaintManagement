@@ -17,7 +17,6 @@ namespace ComplaintManagement.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LOSMaster()
         {
-            this.RoleMasters = new HashSet<RoleMaster>();
             this.UserMasters = new HashSet<UserMaster>();
         }
     
@@ -32,8 +31,6 @@ namespace ComplaintManagement.Models
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RoleMaster> RoleMasters { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserMaster> UserMasters { get; set; }
     }

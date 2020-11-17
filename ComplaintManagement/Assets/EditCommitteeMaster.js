@@ -22,7 +22,7 @@
         $.ajax({
             type: "POST",
             url: "/Committee/AddOrUpdateCommittee",
-            data: { categoryVM: data },
+            data: { CommitteeVM: data },
             success: function (data) {
                 if (data.status == "Fail") {
                     StopProcess();
@@ -39,5 +39,8 @@
 $(document).ready(function () {
     if ($("#Id").val() === "0") {
         $("#Status").val("true");
+    }
+    else {
+
     }
 });

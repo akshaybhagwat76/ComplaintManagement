@@ -2,7 +2,11 @@
 using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
@@ -12,8 +16,28 @@ namespace ComplaintManagement.Controllers
         // GET: Committee
         public ActionResult Index()
         {
-            ViewBag.lstCommittee = new CommitteeMastersRepository().GetAll();
+            var lst = new CommitteeMastersRepository().GetAll();
+            dynamic output = new List<dynamic>();
+            var lstUsers = new UserMastersRepository().GetAll();
+            if (lst != null && lst.Count > 0)
+            {
+                foreach (CommitteeMasterVM com in lst)
+                {
+                    dynamic row = new ExpandoObject();
+                    if (com.UserId>0)
+                    {
+                        row.User = lstUsers.FirstOrDefault(x => x.Id == com.UserId);
+                    }
+                    row.Id = com.Id;
+                    row.LOSName = com.CommitteeName;
+                    row.Status = com.Status;
+
+                    output.Add(row);
+                }
+            }
+
             var DataTableDetail = new HomeController().getDataTableDetail("Committee", null);
+            ViewBag.lstCommittee = JsonConvert.SerializeObject(output);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
@@ -53,8 +77,10 @@ namespace ComplaintManagement.Controllers
         {
             CommitteeMasterVM CommitteeMasterVM = new CommitteeMasterVM();
             ViewBag.PageType = "Create";
+            ViewBag.lstUser = new UserMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+
             return View("ManageCommitteeMaster", CommitteeMasterVM);
-           
+
         }
 
         public ActionResult Edit(int id)
@@ -63,6 +89,9 @@ namespace ComplaintManagement.Controllers
             {
                 CommitteeMasterVM CommitteeVM = new CommitteeMastersRepository().Get(id);
                 ViewBag.PageType = "Edit";
+                ViewBag.lstUser = new UserMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+
+
                 return View("ManageCommitteeMaster", CommitteeVM);
             }
             catch (Exception ex)
@@ -70,7 +99,7 @@ namespace ComplaintManagement.Controllers
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return View();
-           
+
         }
     }
 }

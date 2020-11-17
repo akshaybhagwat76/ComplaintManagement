@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "Index";
+    dynamic data = Json.Decode(ViewBag.lstCommittee);
 }
 
 <!-- Content Wrapper -->
@@ -171,10 +172,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var item in ViewBag.lstCommittee)
+                                            @foreach (var item in data)
                                             {
                                                 <tr>
-                                                    <td class="text-black text-center"><strong>@item.UserId</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.User</strong></td>
                                                     <td class="text-black text-center"><strong>@item.CommitteeName</strong></td>
 
                                                     <td class="text-black text-center">
@@ -208,7 +209,6 @@
     <!-- End of Main Content -->
 </div>
 <!-- End of Content Wrapper -->
-    </div>
 <!-- End of Page Wrapper -->
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">

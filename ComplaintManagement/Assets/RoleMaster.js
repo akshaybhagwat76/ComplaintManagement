@@ -2,7 +2,7 @@
     $.noConflict();
     // $("#myTable").DataTable();
 });
-function deleteUser(id) {
+function deleteRole(id) {
 
     //$('#deleteModal').data('id', id).modal('show');
     //$('#deleteModal').modal('show');
@@ -44,10 +44,9 @@ function Confirm(title, msg, $true, $false, $link) { /*change*/
 }
 
 function deleteAction(id) {
-
     $.ajax({
         type: "POST",
-        url: "/UserMaster/Delete",
+        url: "/Role/Delete",
         data: { id: id },
         success: function (response) {
             if (response.status != "Fail") {

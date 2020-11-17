@@ -18,7 +18,6 @@ namespace ComplaintManagement.Models
         public UserMaster()
         {
             this.CommitteeMasters = new HashSet<CommitteeMaster>();
-            this.RoleMasters = new HashSet<RoleMaster>();
         }
     
         public int Id { get; set; }
@@ -50,8 +49,6 @@ namespace ComplaintManagement.Models
         public virtual CompetencyMaster CompetencyMaster { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
         public virtual RegionMaster RegionMaster { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RoleMaster> RoleMasters { get; set; }
         public virtual SBUMaster SBUMaster { get; set; }
         public virtual SubSBUMaster SubSBUMaster { get; set; }
         public virtual LOSMaster LOSMaster { get; set; }

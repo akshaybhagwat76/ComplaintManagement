@@ -29,9 +29,7 @@ namespace ComplaintManagement.Repository
                 if (Role == null)
                 {
                     RoleVM.IsActive = true;
-
-                    RoleVM.IsActive = true;
-
+                    RoleVM.CreatedDate = DateTime.UtcNow;
                     Role = Mapper.Map<RoleMasterVM, RoleMaster>(RoleVM);
                     db.RoleMasters.Add(Role);
                     db.SaveChanges();
@@ -40,6 +38,8 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     RoleVM.IsActive = true;
+                    RoleVM.CreatedDate = Role.CreatedDate;
+                    RoleVM.UpdatedDate = DateTime.UtcNow;
                     db.Entry(Role).CurrentValues.SetValues(RoleVM);
                     db.SaveChanges();
                     return Mapper.Map<RoleMaster, RoleMasterVM>(Role);

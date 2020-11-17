@@ -56,7 +56,7 @@ namespace ComplaintManagement.Controllers
                             {
                                 sbus.Add(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault().SBU);
                             }
-                            row.SubSBU = string.Join(",", sbus);
+                            row.SBU = string.Join(",", sbus);
                         }
                         else
                         {
@@ -83,6 +83,7 @@ namespace ComplaintManagement.Controllers
                     }
                     row.Id = los.Id;
                     row.LOSName = los.LOSName;
+                    row.Status = los.Status;
 
                     output.Add(row);
                 }
