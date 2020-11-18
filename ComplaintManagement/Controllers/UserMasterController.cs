@@ -2,10 +2,11 @@
 using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
@@ -15,11 +16,92 @@ namespace ComplaintManagement.Controllers
         // GET: User
         public ActionResult Index()
         {
-            ViewBag.lstUser = new UserMastersRepository().GetAll();
+            var lst = GetAll();
+            dynamic output = new List<dynamic>();
+            var lstSBU = new SBUMasterRepository().GetAll();
+            var lstSubSBU = new SubSBUMasterRepository().GetAll();
+            var lstLOS = new LOSMasterRepository().GetAll();
+            var lstCompetency = new CompetencyMastersRepository().GetAll();
+            var lstRegion = new RegionMasterRepository().GetAll();
+            var lstDesignation = new DesignationMasterRepository().GetAll();
+            var LstCompany = new EntityMasterRepository().GetAll();
+            if (lst != null && lst.Count > 0)
+            {
+                foreach (UserMasterVM com in lst)
+                {
+                    dynamic row = new ExpandoObject();
+                    if (com.SBUId > 0)
+                    {
+                        row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU;
+                    }
+                    if (com.SubSBUId > 0)
+                    {
+
+                        row.SubSBU = lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId) != null ? lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId).SubSBU : "";
+                    }
+                    if (com.LOSId > 0)
+                    {
+                        row.LOS = lstLOS.FirstOrDefault(x => x.Id == com.LOSId) != null ? lstLOS.FirstOrDefault(x => x.Id == com.LOSId).LOSName: "";
+                    }
+                    if (com.CompentencyId > 0)
+                    {
+                        row.Competency = lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId)!= null ? lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId).CompetencyName: "";
+                    }
+                    if (com.RegionId > 0)
+                    {
+                        row.Region = lstRegion.FirstOrDefault(x => x.Id == com.RegionId)!= null ? lstRegion.FirstOrDefault(x => x.Id == com.RegionId).Region: "";
+                    }
+                    if (com.BusinessTitle > 0)
+                    {
+                        row.BusinessTitle = lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle) != null ? lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle).Designation: "";
+                    }
+                    if (com.Company > 0)
+                    {
+                        row.Company = LstCompany.FirstOrDefault(x => x.Id == com.Company) != null ? LstCompany.FirstOrDefault(x => x.Id == com.Company).EntityName : "";
+                    }
+                    row.Id = com.Id;
+                    row.EmployeeName = com.EmployeeName;
+                    row.Status = com.Status;
+                    row.TimeType = com.TimeType;
+                    row.Manager = com.Manager;
+
+                    output.Add(row);
+                }
+            }
+
             var DataTableDetail = new HomeController().getDataTableDetail("User", null);
+            ViewBag.lstUser = JsonConvert.SerializeObject(output);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
+
+        }
+        public List<UserMasterVM> GetAll(string range = "")
+        {
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                return new UserMastersRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+            }
+            else
+            {
+                return new UserMastersRepository().GetAll();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetCategories(string range)
+        {
+            ViewBag.lstCategories = GetAll(range);
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+
+            var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View("Index");
         }
         [HttpPost]
         public ActionResult Delete(int id)
@@ -73,10 +155,10 @@ namespace ComplaintManagement.Controllers
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return View("ManageUserMaster", UserVM);
-            
+
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id,bool isView)
         {
             try
             {
@@ -89,9 +171,10 @@ namespace ComplaintManagement.Controllers
                 ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstLocation = new LocationMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.LocationName, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstRegion = new RegionMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.Region, Value = d.Id.ToString() }).ToList();
+                ViewBag.ViewState = isView;
 
                 UserMasterVM UserVM = new UserMastersRepository().Get(id);
-                ViewBag.PageType = "Edit";
+                ViewBag.PageType = !isView ?"Edit":"View";
                 return View("ManageUserMaster", UserVM);
             }
             catch (Exception ex)
@@ -99,7 +182,7 @@ namespace ComplaintManagement.Controllers
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return View();
-            
+
         }
     }
 }

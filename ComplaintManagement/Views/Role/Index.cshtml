@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "Index";
+    dynamic data = Json.Decode(ViewBag.lstRole);
 }
 
 <!-- Content Wrapper -->
@@ -173,14 +174,14 @@
                                         </tr>
                                         <tbody>
 
-                                            @foreach (var item in ViewBag.lstRole)
+                                            @foreach (var item in data)
                                             {
                                             <tr>
-                                                <td class="text-black text-center"><strong>@item.UserId</strong></td>
-                                                <td class="text-black text-center"><strong>@item.LOSId</strong></td>
-                                                <td class="text-black text-center"><strong>@item.SBUId</strong></td>
-                                                <td class="text-black text-center"><strong>@item.SubSBUId</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CompetencyId</strong></td>
+                                                <td class="text-black text-center"><strong>@item.UserName</strong></td>
+                                                <td class="text-black text-center"><strong>@item.LOS</strong></td>
+                                                <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
+                                                <td class="text-black text-center"><strong>@item.CompetencyName</strong></td>
 
 
                                                 <td class="text-black text-center">
@@ -192,9 +193,9 @@
                                                     </strong>
                                                 </td>
                                                 <td class="text-center">
-                                                    <a href="/Role/Edit/@item.Id" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                    <a onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
                                                     <a href="javascript:void(0)" onclick="deleteRole('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="viewCategory('@item.Id')" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                    <a onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
                                                 </td>
                                             </tr>
                                             }

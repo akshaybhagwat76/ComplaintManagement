@@ -59,12 +59,13 @@ namespace ComplaintManagement.Controllers
             
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, bool isView)
         {
             try
             {
                 LocationMasterVM LocationVM = new LocationMastersRepository().Get(id);
-                ViewBag.PageType = "Edit";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageLocationMaster", LocationVM);
             }
             catch (Exception ex)

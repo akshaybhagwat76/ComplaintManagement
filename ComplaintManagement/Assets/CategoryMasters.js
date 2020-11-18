@@ -62,3 +62,16 @@ function deleteAction(id) {
         }
     });
 };
+function performAction(id, isView) {
+    let url = `/Category/Edit?id=${id}&isView=${isView}`
+    location.href = url;
+}
+function filterGrid() {
+    var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val(); 
+    if (fromDate == "" || toDate == "") {
+        funToastr(false,"Please select from and to date."); return;
+    }
+    else {
+        location.href = '/Category/GetCategories?range=' + fromDate + ',' + toDate;
+    }
+}

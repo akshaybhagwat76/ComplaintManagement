@@ -10,7 +10,7 @@ namespace ComplaintManagement.ViewModel
     public class UserMasterVM
     {
         public int Id { get; set; }
-        [DisplayName("Employee Name")]
+        [DisplayName("Employee ")]
         public string EmployeeName { get; set; }
         [DisplayName("Employee Id")]
         public int EmployeeId { get; set; }
@@ -23,9 +23,9 @@ namespace ComplaintManagement.ViewModel
         [DisplayName("Time Type")]
         public string TimeType { get; set; }
         [DisplayName("Business Title")]
-        public string BusinessTitle { get; set; }
+        public int BusinessTitle { get; set; }
         [DisplayName("Company")]
-        public string Company { get; set; }
+        public int Company { get; set; }
         [DisplayName("LOS")]
         public int LOSId { get; set; }
         [DisplayName("SBU")]
@@ -54,6 +54,7 @@ namespace ComplaintManagement.ViewModel
         public string ImagePath { get; set; }
         [DisplayName("Status")]
         public bool Status { get; set; }
+        public System.DateTime CreatedDate { get; set; }
 
     }
 }

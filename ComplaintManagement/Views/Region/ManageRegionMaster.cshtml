@@ -3,6 +3,7 @@
     ViewBag.Title = "ManageRegionMaster";
 }
 
+@Html.Hidden("pageState", (object)ViewBag.ViewState)
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
     <!-- Main Content -->
@@ -130,12 +131,12 @@
                     <div class="card shadow mb-4">
                         <!-- Card Body -->
                         <div class="card-body">
-                           <form id="myForm" class="m-t" role="form" action="javascript:;">
+                            <form id="myForm" class="m-t" role="form" action="javascript:;">
                                 @Html.HiddenFor(model => model.Id)
                                 <div class="form-group row">
                                     <div class="col-sm-9 mb-3">
                                         @Html.LabelFor(model => model.Region, new { @class = "requiredLabel" })
-                                        @Html.EditorFor(model => model.Region, new { htmlAttributes = new { @class = "form-control form-control-user required" } })
+                                        @Html.EditorFor(model => model.Region, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Region" } })
                                     </div>
                                     <div class="col-sm-9 mb-3">
 
@@ -161,7 +162,7 @@
                                     </div>
                                     <div class="col-sm-12 text-right">
                                         <a onclick="submitForm()" class="btn btn-danger">Save</a>
-                                        <a href="/Category/Index" class="btn btn-white border">Cancel</a>
+                                        <a href="/Region/Index" class="btn btn-white border">Cancel</a>
                                         <label id="lblError" class="inline"></label>
                                     </div>
                                 </div>

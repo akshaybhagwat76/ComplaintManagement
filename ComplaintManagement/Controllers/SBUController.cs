@@ -15,11 +15,38 @@ namespace ComplaintManagement.Controllers
         // GET: SBU
         public ActionResult Index()
         {
-            ViewBag.lstSBU = new SBUMasterRepository().GetAll();
+            ViewBag.lstSBU = GetAll();
             var DataTableDetail = new HomeController().getDataTableDetail("SBU", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
+        }
+        public List<SBUMasterVM> GetAll(string range = "")
+        {
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                return new SBUMasterRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+            }
+            else
+            {
+                return new SBUMasterRepository().GetAll();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetSBU(string range)
+        {
+            ViewBag.lstSBU = GetAll(range);
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+
+            var DataTableDetail = new HomeController().getDataTableDetail("SBU", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View("Index");
         }
         [HttpPost]
         public ActionResult Delete(int id)
@@ -59,12 +86,13 @@ namespace ComplaintManagement.Controllers
            
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id,bool isView)
         {
             try
             {
                 SBUMasterVM SBUVM = new SBUMasterRepository().Get(id);
-                ViewBag.PageType = "Edit";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageSBUMaster", SBUVM);
             }
             catch (Exception ex)

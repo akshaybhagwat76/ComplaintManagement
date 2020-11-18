@@ -10,7 +10,7 @@ namespace ComplaintManagement.ViewModel
     public class LocationMasterVM
     {
         public int Id { get; set; }
-        [DisplayName("Location Name")]
+        [DisplayName("Location ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string LocationName { get; set; }
         [DisplayName("Status")]

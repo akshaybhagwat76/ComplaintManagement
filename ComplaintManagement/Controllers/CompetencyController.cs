@@ -61,12 +61,13 @@ namespace ComplaintManagement.Controllers
             
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id,bool isView)
         {
             try
             {
                 CompetencyMasterVM CompetencyVM = new CompetencyMastersRepository().Get(id);
-                ViewBag.PageType = "Edit";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageCompetencyMaster", CompetencyVM);
             }
             catch (Exception ex)

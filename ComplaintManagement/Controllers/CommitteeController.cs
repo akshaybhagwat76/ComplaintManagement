@@ -26,10 +26,17 @@ namespace ComplaintManagement.Controllers
                     dynamic row = new ExpandoObject();
                     if (com.UserId>0)
                     {
-                        row.User = lstUsers.FirstOrDefault(x => x.Id == com.UserId);
+                        if(lstUsers.FirstOrDefault(x => x.Id == com.UserId)!= null)
+                        {
+                            row.User = lstUsers.FirstOrDefault(x => x.Id == com.UserId).EmployeeName;
+                        }
+                        else
+                        {
+                            row.User = "";
+                        }
                     }
                     row.Id = com.Id;
-                    row.LOSName = com.CommitteeName;
+                    row.CommitteeName = com.CommitteeName;
                     row.Status = com.Status;
 
                     output.Add(row);
@@ -83,12 +90,13 @@ namespace ComplaintManagement.Controllers
 
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, bool isView)
         {
             try
             {
                 CommitteeMasterVM CommitteeVM = new CommitteeMastersRepository().Get(id);
-                ViewBag.PageType = "Edit";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 ViewBag.lstUser = new UserMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
 
 

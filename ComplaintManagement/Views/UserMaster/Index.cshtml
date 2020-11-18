@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "Index";
+    dynamic data = Json.Decode(ViewBag.lstUser);
 }
 <!-- Page Wrapper -->
 <div id="wrapper">
@@ -181,7 +182,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in ViewBag.lstUser)
+                                                @foreach (var item in data)
                                                 {
                                                 <tr>
                                                     <td class="text-black text-center"><strong>@item.EmployeeName</strong></td>
@@ -197,17 +198,17 @@
                                                     <td class="text-black text-center"><strong>@item.TimeType</strong></td>
                                                     <td class="text-black text-center"><strong>@item.BusinessTitle</strong></td>
                                                     <td class="text-black text-center"><strong>@item.Company</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.LOSId</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.SBUId</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.SubSBUId</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.CompentencyId</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.RegionId</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.LOS</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.Competency</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.Region</strong></td>
                                                     <td class="text-black text-center"><strong>@item.Manager</strong></td>
 
                                                     <td class="text-center">
-                                                        <a href="/UserMaster/Edit/@item.Id" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
                                                         <a href="javascript:void(0)" onclick="deleteUser('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                        <a href="javascript:void(0)" onclick="viewCategory('@item.Id')" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                        <a  onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
                                                     </td>
                                                 </tr>
                                                 }

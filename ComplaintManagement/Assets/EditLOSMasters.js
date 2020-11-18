@@ -54,4 +54,14 @@ $(document).ready(function () {
             $("#CompetencyId").val($("#CompentencyIds").val().split(','))
         }
     }
+    let page_state = JSON.parse($("#pageState").val().toLowerCase());
+    if (page_state) {
+        $(".text-right").addClass("hide")
+        $('.container-fluid').addClass("disabled-div");
+    }
+    else {
+        $(".text-right").removeClass("hide")
+
+        $('.container-fluid').removeClass("disabled-div");
+    }
 });

@@ -145,7 +145,7 @@ namespace ComplaintManagement.Controllers
 
 
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, bool isView)
         {
 
             try
@@ -155,7 +155,8 @@ namespace ComplaintManagement.Controllers
                 ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
 
                 LOSMasterVM LOSVM = new LOSMasterRepository().Get(id);
-                ViewBag.PageType = "Edit";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageLOSMaster", LOSVM);
             }
             catch (Exception ex)

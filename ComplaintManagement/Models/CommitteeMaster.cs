@@ -21,7 +21,5 @@ namespace ComplaintManagement.Models
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public System.DateTime CreatedDate { get; set; }
-    
-        public virtual UserMaster UserMaster { get; set; }
     }
 }

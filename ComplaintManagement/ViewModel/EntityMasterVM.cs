@@ -10,10 +10,10 @@ namespace ComplaintManagement.ViewModel
     public class EntityMasterVM
     {
         public int Id { get; set; }
-        [DisplayName("Category Name")]
+        [DisplayName("Entity ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string EntityName { get; set; }
-        [DisplayName("Category Name")]
+        [DisplayName("Status")]
         public bool Status { get; set; }
         public int UserId { get; set; }
         public System.DateTime CreatedDate { get; set; }

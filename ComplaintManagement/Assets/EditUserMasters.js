@@ -73,6 +73,16 @@ $(document).ready(function () {
     else {
         $("#DateOfJoining").val(new Date($("#Doj").val()).toISOString().split('T')[0]);
     }
+    let page_state = JSON.parse($("#pageState").val().toLowerCase());
+    if (page_state) {
+        $(".text-right").addClass("hide")
+        $('.container-fluid').addClass("disabled-div");
+    }
+    else {
+        $(".text-right").removeClass("hide")
+
+        $('.container-fluid').removeClass("disabled-div");
+    }
 });
 
 // Import image

@@ -58,12 +58,13 @@ namespace ComplaintManagement.Controllers
             return View("ManageRegionMaster", RegionMasterVM);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, bool isView)
         {
             try
             {
                 RegionMasterVM RegionVM = new RegionMasterRepository().Get(id);
-                ViewBag.PageType = "Edit";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageRegionMaster", RegionVM);
             }
             catch (Exception ex)

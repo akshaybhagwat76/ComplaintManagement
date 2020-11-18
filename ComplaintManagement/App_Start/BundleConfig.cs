@@ -206,7 +206,7 @@ namespace ComplaintManagement
 
             // Role Master
             bundles.Add(new ScriptBundle("~/Assets/RoleMaster").Include(
-                      "~/Assets/CommitteeMasters.js"));
+                      "~/Assets/RoleMaster.js"));
 
             //Edit Role Masters
             bundles.Add(new ScriptBundle("~/Assets/EditRoleMaster").Include(

@@ -10,7 +10,7 @@ namespace ComplaintManagement.ViewModel
     public class DesignationMasterVM
     {
         public int Id { get; set; }
-        [DisplayName("Designation Name")]
+        [DisplayName("Designation ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string Designation { get; set; }
         [DisplayName("Status")]

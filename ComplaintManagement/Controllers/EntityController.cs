@@ -58,12 +58,13 @@ namespace ComplaintManagement.Controllers
             return View("ManageEntityMaster", EntityMasterVM);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, bool isView)
         {
             try
             {
                 EntityMasterVM EntityVM = new EntityMasterRepository().Get(id);
-                ViewBag.PageType = "Edit";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageEntityMaster", EntityVM);
             }
             catch (Exception ex)

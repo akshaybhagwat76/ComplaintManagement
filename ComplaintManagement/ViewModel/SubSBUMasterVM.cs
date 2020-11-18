@@ -7,7 +7,7 @@ namespace ComplaintManagement.ViewModel
     public class SubSBUMasterVM
     {
         public int Id { get; set; }
-        [DisplayName("Sub SBU Name")]
+        [DisplayName("Sub SBU ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string SubSBU { get; set; }
         [DisplayName("Status")]

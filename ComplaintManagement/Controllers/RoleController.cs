@@ -5,6 +5,7 @@ using Elmah;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,11 +17,112 @@ namespace ComplaintManagement.Controllers
         // GET: Role
         public ActionResult Index()
         {
-            ViewBag.lstRole = new RoleMasterRepoitory().GetAll();
+            List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll();
+
+            List<RoleMasterVM> lst = new RoleMasterRepoitory().GetAll();
+            List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll();
+            List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll();
+            List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll();
+            List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll();
+
+            dynamic output = new List<dynamic>();
+            if (lst != null && lst.Count > 0)
+            {
+
+                foreach (RoleMasterVM Rol in lst)
+                {
+                    dynamic row = new ExpandoObject();
+                    if (!string.IsNullOrEmpty(Rol.SubSBUId))
+                    {
+                        if (Rol.SubSBUId.Contains(","))
+                        {
+                            string[] array = Rol.SubSBUId.Split(',');
+                            List<string> subsbus = new List<string>();
+                            foreach (string SubSBUIdItem in array)
+                            {
+                                subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU);
+                            }
+                            row.SubSBU = string.Join(",", subsbus);
+                        }
+                        else
+                        {
+                            row.SubSBU = lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SubSBUId)).FirstOrDefault().SubSBU;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(Rol.SBUId))
+                    {
+                        if (Rol.SBUId.Contains(","))
+                        {
+                            string[] array = Rol.SBUId.Split(',');
+                            List<string> sbus = new List<string>();
+                            foreach (string SBUIdItem in array)
+                            {
+                                sbus.Add(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault().SBU);
+                            }
+                            row.SBU = string.Join(",", sbus);
+                        }
+                        else
+                        {
+                            row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault().SBU;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(Rol.CompetencyId))
+                    {
+                        if (Rol.CompetencyId.Contains(","))
+                        {
+                            string[] array = Rol.CompetencyId.Split(',');
+                            List<string> CompetencyLst = new List<string>();
+                            foreach (string CompetencyItem in array)
+                            {
+                                CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+                            }
+                            row.CompetencyName = string.Join(",", CompetencyLst);
+                        }
+                        else
+                        {
+                            row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault().CompetencyName;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(Rol.LOSId))
+                    {
+
+                        if (Rol.LOSId.Contains(","))
+                        {
+                            string[] array = Rol.LOSId.Split(',');
+                            List<string> LOSIdLst = new List<string>();
+                            foreach (string LOSItem in array)
+                            {
+                                LOSIdLst.Add(lstLOS.Where(x => x.Id == Convert.ToInt32(LOSItem)).FirstOrDefault().LOSName);
+                            }
+                            row.LOS = string.Join(",", LOSIdLst);
+                        }
+                        else
+                        {
+                            row.LOS = lstLOS.Where(x => x.Id == Convert.ToInt32(Rol.LOSId)).FirstOrDefault().LOSName;
+                        }
+                    }
+
+                    if (Rol.UserId > 0)
+                    {
+                        row.UserName = lstUserMaster.FirstOrDefault(x => x.Id == Rol.UserId) != null ? lstUserMaster.FirstOrDefault(x => x.Id == Rol.UserId).EmployeeName : "";
+                    }
+                    row.Id = Rol.Id;
+                    
+                    row.Status = Rol.Status;
+
+                    output.Add(row);
+                }
+            }
+
+            ViewBag.lstRole = JsonConvert.SerializeObject(output);
             var DataTableDetail = new HomeController().getDataTableDetail("Role", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
+           
         }
         [HttpPost]
         public ActionResult Delete(int id)
@@ -81,13 +183,14 @@ namespace ComplaintManagement.Controllers
            
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, bool isView)
         {
             try
             {
                 RoleMasterVM RoleVM = new RoleMasterRepoitory().Get(id);
-                ViewBag.PageType = "Edit";
-                ViewBag.PageType = "Create";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
+
                 ViewBag.lstUser = new UserMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstSBU = new SBUMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();

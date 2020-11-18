@@ -18,6 +18,10 @@ input.adderror, select.adderror, div.adderror {
     border: 1px dotted #cc5965;
 }
 
+.disabled-div{
+    pointer-events:none !important;
+}
+
 label.success {
     color: #5cb85c;
     display: inline-block;

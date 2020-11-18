@@ -59,12 +59,14 @@ namespace ComplaintManagement.Controllers
             
         }
 
-        public ActionResult Edit(int Id)
+        public ActionResult Edit(int Id,bool isView)
         {
             try
             {
                 DesignationMasterVM DesignationVM= new DesignationMasterRepository().Get(Id);
                 ViewBag.PageType = "Edit";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageDesignationMaster", DesignationVM);
             }
             catch (Exception ex)

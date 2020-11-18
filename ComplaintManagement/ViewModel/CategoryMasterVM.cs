@@ -7,7 +7,7 @@ namespace ComplaintManagement.ViewModel
     public class CategoryMasterVM
     {
         public int Id { get; set; }
-        [DisplayName("Category Name")]
+        [DisplayName("Category ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string CategoryName { get; set; }
         [DisplayName("Status")]

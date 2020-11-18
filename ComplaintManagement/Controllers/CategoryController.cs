@@ -15,11 +15,38 @@ namespace ComplaintManagement.Controllers
         // GET: Category
         public ActionResult Index()
         {
-            ViewBag.lstCategories = new CategoryMastersRepository().GetAll();
+            ViewBag.lstCategories = GetAll();
             var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
+        }
+        public List<CategoryMasterVM> GetAll(string range = "")
+        {
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                return new CategoryMastersRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+            }
+            else
+            {
+                return new CategoryMastersRepository().GetAll();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetCategories(string range)
+        {
+            ViewBag.lstCategories = GetAll(range);
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+
+            var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View("Index");
         }
         [HttpPost]
         public ActionResult Delete(int id)
@@ -60,12 +87,13 @@ namespace ComplaintManagement.Controllers
             return View("ManageCategoryMaster", categoryMasterVM);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, bool isView)
         {
             try
             {
                 CategoryMasterVM categoryVM = new CategoryMastersRepository().Get(id);
-                ViewBag.PageType = "Edit";
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageCategoryMaster", categoryVM);
             }
             catch (Exception ex)

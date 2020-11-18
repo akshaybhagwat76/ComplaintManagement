@@ -6,7 +6,7 @@ namespace ComplaintManagement.ViewModel
     public class CompetencyMasterVM
     {
         public int Id { get; set; }
-        [DisplayName("Competency Name")]
+        [DisplayName("Competency ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string CompetencyName { get; set; }
         [DisplayName("Status")]

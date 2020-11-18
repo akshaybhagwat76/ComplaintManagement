@@ -15,7 +15,7 @@
         var data = {
             Id: $("#Id").val().trim(),
             UserId: $("#UserId").val(),
-            LOSId: $("#LOSId").val(),
+            LOSId: $("#LOSId").val().toString(),
             SBUId: $("#SBUId").val().toString(),
             SubSBUId: $("#SubSBUId").val().toString(),
             CompetencyId: $("#CompetencyId").val().toString(),
@@ -59,5 +59,18 @@ $(document).ready(function () {
 
             $("#CompetencyId").val($("#CompentencyIds").val().split(','))
         }
+        if ($("#LOSIds").val().includes(',')) {
+            $("#LOSId").val($("#LOSIds").val().split(','))
+        }
+    }
+    let page_state = JSON.parse($("#pageState").val().toLowerCase());
+    if (page_state) {
+        $(".text-right").addClass("hide")
+        $('.container-fluid').addClass("disabled-div");
+    }
+    else {
+        $(".text-right").removeClass("hide")
+
+        $('.container-fluid').removeClass("disabled-div");
     }
 });

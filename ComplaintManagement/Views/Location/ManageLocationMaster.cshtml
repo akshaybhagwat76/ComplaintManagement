@@ -4,6 +4,8 @@
 }
 
 <!-- Content Wrapper -->
+
+@Html.Hidden("pageState", (object)ViewBag.ViewState)
 <div id="content-wrapper" class="d-flex flex-column">
     <!-- Main Content -->
     <div id="content">
@@ -135,7 +137,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-9 mb-3">
                                         @Html.LabelFor(model => model.LocationName, new { @class = "requiredLabel" })
-                                        @Html.EditorFor(model => model.LocationName, new { htmlAttributes = new { @class = "form-control form-control-user required" } })
+                                        @Html.EditorFor(model => model.LocationName, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Location" } })
                                     </div>
                                     <div class="col-sm-9 mb-3">
 

@@ -14,12 +14,6 @@ namespace ComplaintManagement.Models
     
     public partial class UserMaster
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public UserMaster()
-        {
-            this.CommitteeMasters = new HashSet<CommitteeMaster>();
-        }
-    
         public int Id { get; set; }
         public string EmployeeName { get; set; }
         public int EmployeeId { get; set; }
@@ -43,14 +37,13 @@ namespace ComplaintManagement.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public string ImagePath { get; set; }
         public bool Status { get; set; }
+        public System.DateTime CreatedDate { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CommitteeMaster> CommitteeMasters { get; set; }
         public virtual CompetencyMaster CompetencyMaster { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
+        public virtual LOSMaster LOSMaster { get; set; }
         public virtual RegionMaster RegionMaster { get; set; }
         public virtual SBUMaster SBUMaster { get; set; }
         public virtual SubSBUMaster SubSBUMaster { get; set; }
-        public virtual LOSMaster LOSMaster { get; set; }
     }
 }

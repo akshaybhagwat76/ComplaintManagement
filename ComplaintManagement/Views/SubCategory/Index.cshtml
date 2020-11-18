@@ -128,13 +128,13 @@
                         <div class="col-md-8">
                             <ul class="nav">
                                 <li class="nav-item mr-3">
-                                    <input type="text" class="form-control" placeholder="From Date" />
+                                    <input type="date" id="fromDate" class="form-control" value="@ViewBag.startDate" placeholder="From Date" />
                                 </li>
                                 <li class="nav-item mr-3">
-                                    <input type="text" class="form-control" placeholder="To Date" />
+                                    <input type="date"  id="toDate"  class="form-control" value="@ViewBag.toDate" placeholder="To Date" />
                                 </li>
                                 <li class="nav-item">
-                                    <button type="submit" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                                    <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
                                 </li>
                             </ul>
                         </div>
@@ -182,9 +182,9 @@
                                                         </strong>
                                                     </td>
                                                     <td class="text-center">
-                                                        <a href="/SubCategory/Edit/@item.Id" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
                                                         <a href="javascript:void(0)" onclick="deleteSubCategory('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                        <a href="javascript:void(0)" onclick="viewCategory('@item.Id')" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                        <a onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
                                                     </td>
                                                 </tr>
                                             }

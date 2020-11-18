@@ -3,6 +3,7 @@
     ViewBag.Title = "ManageUserMaster";
 }
 
+@Html.Hidden("pageState", (object)ViewBag.ViewState)
 <div id="content-wrapper" class="d-flex flex-column">
     <!-- Main Content -->
     <div id="content">
@@ -129,10 +130,10 @@
                     <div class="card shadow mb-4 rounded-0">
                         <!-- Card Body -->
                         <div class="card-body">
-                            @Html.HiddenFor(model=>model.Id)
+                            @Html.HiddenFor(model => model.Id)
                             @*<div class="text-center form-group">
-            <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
-        </div>*@
+                                    <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
+                                </div>*@
                             <i class="fa fa-trash" style="margin-left: 180px; margin-top: 7px;" onclick="RemoveImage()"></i>
                             <div class="text-center form-group ">
                                 <label title="Upload image file" for="inputImage">
@@ -151,6 +152,7 @@
 
                                 </div>
                                 <div class="form-group">
+                                    @Html.LabelFor(model => model.EmployeeId, new { @class = "requiredLabel" })
                                     @Html.EditorFor(model => model.EmployeeId, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Employee ID" } })
 
                                 </div>
@@ -397,7 +399,7 @@
 
                                     </div>
                                 </div>
-                                @Html.Hidden("Doj",Model.DateOfJoining)
+                                @Html.Hidden("Doj", Model.DateOfJoining)
 
                                 <div class="col-sm-12 text-right">
                                     <a onclick="submitForm()" class="btn btn-danger">Save</a>

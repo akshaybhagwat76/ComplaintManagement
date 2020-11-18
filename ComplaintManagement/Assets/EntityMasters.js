@@ -62,3 +62,7 @@ function deleteAction(id) {
         }
     });
 };
+function performAction(id, isView) {
+    let url = `/Entity/Edit?id=${id}&isView=${isView}`
+    location.href = url;
+}
