@@ -133,13 +133,13 @@
                             <div class="col-md-8">
                                 <ul class="nav">
                                     <li class="nav-item mr-3">
-                                        <input type="text" class="form-control" placeholder="From Date" />
+                                        <input type="date" id="fromDate"  value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
                                     </li>
                                     <li class="nav-item mr-3">
-                                        <input type="text" class="form-control" placeholder="To Date" />
+                                        <input type="date" id="toDate"  value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
                                     </li>
                                     <li class="nav-item">
-                                        <button type="submit" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                                        <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
                                     </li>
                                 </ul>
                             </div>

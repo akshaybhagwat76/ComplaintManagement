@@ -66,3 +66,12 @@ function performAction(id, isView) {
     let url = `/Competency/Edit?id=${id}&isView=${isView}`
     location.href = url;
 }
+function filterGrid() {
+    var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+    if (fromDate == "" || toDate == "") {
+        funToastr(false, "Please select from and to date."); return;
+    }
+    else {
+        location.href = '/Competency/GetCompetency?range=' + fromDate + ',' + toDate;
+    }
+}

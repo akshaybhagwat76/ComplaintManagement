@@ -16,89 +16,144 @@ namespace ComplaintManagement.Controllers
         // GET: User
         public ActionResult Index()
         {
-            var lst = GetAll();
-            dynamic output = new List<dynamic>();
-            var lstSBU = new SBUMasterRepository().GetAll();
-            var lstSubSBU = new SubSBUMasterRepository().GetAll();
-            var lstLOS = new LOSMasterRepository().GetAll();
-            var lstCompetency = new CompetencyMastersRepository().GetAll();
-            var lstRegion = new RegionMasterRepository().GetAll();
-            var lstDesignation = new DesignationMasterRepository().GetAll();
-            var LstCompany = new EntityMasterRepository().GetAll();
-            if (lst != null && lst.Count > 0)
-            {
-                foreach (UserMasterVM com in lst)
-                {
-                    dynamic row = new ExpandoObject();
-                    if (com.SBUId > 0)
-                    {
-                        row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU;
-                    }
-                    if (com.SubSBUId > 0)
-                    {
-
-                        row.SubSBU = lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId) != null ? lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId).SubSBU : "";
-                    }
-                    if (com.LOSId > 0)
-                    {
-                        row.LOS = lstLOS.FirstOrDefault(x => x.Id == com.LOSId) != null ? lstLOS.FirstOrDefault(x => x.Id == com.LOSId).LOSName: "";
-                    }
-                    if (com.CompentencyId > 0)
-                    {
-                        row.Competency = lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId)!= null ? lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId).CompetencyName: "";
-                    }
-                    if (com.RegionId > 0)
-                    {
-                        row.Region = lstRegion.FirstOrDefault(x => x.Id == com.RegionId)!= null ? lstRegion.FirstOrDefault(x => x.Id == com.RegionId).Region: "";
-                    }
-                    if (com.BusinessTitle > 0)
-                    {
-                        row.BusinessTitle = lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle) != null ? lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle).Designation: "";
-                    }
-                    if (com.Company > 0)
-                    {
-                        row.Company = LstCompany.FirstOrDefault(x => x.Id == com.Company) != null ? LstCompany.FirstOrDefault(x => x.Id == com.Company).EntityName : "";
-                    }
-                    row.Id = com.Id;
-                    row.EmployeeName = com.EmployeeName;
-                    row.Status = com.Status;
-                    row.TimeType = com.TimeType;
-                    row.Manager = com.Manager;
-
-                    output.Add(row);
-                }
-            }
-
+            var lstUser = GetAll();
+           
             var DataTableDetail = new HomeController().getDataTableDetail("User", null);
-            ViewBag.lstUser = JsonConvert.SerializeObject(output);
+            ViewBag.lstUser = JsonConvert.SerializeObject(GetAll());
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
 
         }
-        public List<UserMasterVM> GetAll(string range = "")
+        public dynamic GetAll(string range = "")
         {
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
-                return new UserMastersRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                dynamic output = new List<dynamic>();
+                var lst = new UserMastersRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+                var lstSBU = new SBUMasterRepository().GetAll();
+                var lstSubSBU = new SubSBUMasterRepository().GetAll();
+                var lstLOS = new LOSMasterRepository().GetAll();
+                var lstCompetency = new CompetencyMastersRepository().GetAll();
+                var lstRegion = new RegionMasterRepository().GetAll();
+                var lstDesignation = new DesignationMasterRepository().GetAll();
+                var LstCompany = new EntityMasterRepository().GetAll();
+                if (lst != null && lst.Count > 0)
+                {
+                    foreach (UserMasterVM com in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (com.SBUId > 0)
+                        {
+                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU;
+                        }
+                        if (com.SubSBUId > 0)
+                        {
+
+                            row.SubSBU = lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId) != null ? lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId).SubSBU : "";
+                        }
+                        if (com.LOSId > 0)
+                        {
+                            row.LOS = lstLOS.FirstOrDefault(x => x.Id == com.LOSId) != null ? lstLOS.FirstOrDefault(x => x.Id == com.LOSId).LOSName : "";
+                        }
+                        if (com.CompentencyId > 0)
+                        {
+                            row.Competency = lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId) != null ? lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId).CompetencyName : "";
+                        }
+                        if (com.RegionId > 0)
+                        {
+                            row.Region = lstRegion.FirstOrDefault(x => x.Id == com.RegionId) != null ? lstRegion.FirstOrDefault(x => x.Id == com.RegionId).Region : "";
+                        }
+                        if (com.BusinessTitle > 0)
+                        {
+                            row.BusinessTitle = lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle) != null ? lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle).Designation : "";
+                        }
+                        if (com.Company > 0)
+                        {
+                            row.Company = LstCompany.FirstOrDefault(x => x.Id == com.Company) != null ? LstCompany.FirstOrDefault(x => x.Id == com.Company).EntityName : "";
+                        }
+                        row.Id = com.Id;
+                        row.EmployeeName = com.EmployeeName;
+                        row.Status = com.Status;
+                        row.TimeType = com.TimeType;
+                        row.Manager = com.Manager;
+
+                        output.Add(row);
+                    }
+                }
+                return output;
             }
             else
             {
-                return new UserMastersRepository().GetAll();
+
+                dynamic output = new List<dynamic>();
+                var lst = new UserMastersRepository().GetAll();
+                var lstSBU = new SBUMasterRepository().GetAll();
+                var lstSubSBU = new SubSBUMasterRepository().GetAll();
+                var lstLOS = new LOSMasterRepository().GetAll();
+                var lstCompetency = new CompetencyMastersRepository().GetAll();
+                var lstRegion = new RegionMasterRepository().GetAll();
+                var lstDesignation = new DesignationMasterRepository().GetAll();
+                var LstCompany = new EntityMasterRepository().GetAll();
+                if (lst != null && lst.Count > 0)
+                {
+                    foreach (UserMasterVM com in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (com.SBUId > 0)
+                        {
+                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU;
+                        }
+                        if (com.SubSBUId > 0)
+                        {
+
+                            row.SubSBU = lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId) != null ? lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId).SubSBU : "";
+                        }
+                        if (com.LOSId > 0)
+                        {
+                            row.LOS = lstLOS.FirstOrDefault(x => x.Id == com.LOSId) != null ? lstLOS.FirstOrDefault(x => x.Id == com.LOSId).LOSName : "";
+                        }
+                        if (com.CompentencyId > 0)
+                        {
+                            row.Competency = lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId) != null ? lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId).CompetencyName : "";
+                        }
+                        if (com.RegionId > 0)
+                        {
+                            row.Region = lstRegion.FirstOrDefault(x => x.Id == com.RegionId) != null ? lstRegion.FirstOrDefault(x => x.Id == com.RegionId).Region : "";
+                        }
+                        if (com.BusinessTitle > 0)
+                        {
+                            row.BusinessTitle = lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle) != null ? lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle).Designation : "";
+                        }
+                        if (com.Company > 0)
+                        {
+                            row.Company = LstCompany.FirstOrDefault(x => x.Id == com.Company) != null ? LstCompany.FirstOrDefault(x => x.Id == com.Company).EntityName : "";
+                        }
+                        row.Id = com.Id;
+                        row.EmployeeName = com.EmployeeName;
+                        row.Status = com.Status;
+                        row.TimeType = com.TimeType;
+                        row.Manager = com.Manager;
+
+                        output.Add(row);
+                    }
+                }
+                return output;
             }
         }
 
         [HttpGet]
-        public ActionResult GetCategories(string range)
+        public ActionResult GetUsers(string range)
         {
-            ViewBag.lstCategories = GetAll(range);
+            ViewBag.lstUser = JsonConvert.SerializeObject(GetAll(range));
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 
-            var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
+            var DataTableDetail = new HomeController().getDataTableDetail("User", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View("Index");

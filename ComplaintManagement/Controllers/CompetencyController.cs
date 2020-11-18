@@ -15,11 +15,38 @@ namespace ComplaintManagement.Controllers
         // GET: Competency
         public ActionResult Index()
         {
-            ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll();
+            ViewBag.lstCompetency = GetAll();
             var DataTableDetail = new HomeController().getDataTableDetail("Competency", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
+        }
+        public List<CompetencyMasterVM> GetAll(string range = "")
+        {
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                return new CompetencyMastersRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+            }
+            else
+            {
+                return new CompetencyMastersRepository().GetAll();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetCompetency(string range)
+        {
+            ViewBag.lstCompetency = GetAll(range);
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+
+            var DataTableDetail = new HomeController().getDataTableDetail("Competency", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View("Index");
         }
         [HttpPost]
         public ActionResult Delete(int id)

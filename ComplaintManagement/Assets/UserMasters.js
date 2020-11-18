@@ -75,6 +75,6 @@ function filterGrid() {
         funToastr(false, "Please select from and to date."); return;
     }
     else {
-        location.href = '/UserMaster/Get?range=' + fromDate + ',' + toDate;
+        location.href = '/UserMaster/GetUsers?range=' + fromDate + ',' + toDate;
     }
 }

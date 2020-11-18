@@ -15,11 +15,38 @@ namespace ComplaintManagement.Controllers
         // GET: Designation
         public ActionResult Index()
         {
-            ViewBag.lstDesignatio = new DesignationMasterRepository().GetAll();
+            ViewBag.lstDesignation = GetAll();
             var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
+        }
+        public List<DesignationMasterVM> GetAll(string range = "")
+        {
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                return new DesignationMasterRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+            }
+            else
+            {
+                return new DesignationMasterRepository().GetAll();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetDesignation(string range)
+        {
+            ViewBag.lstDesignation = GetAll(range);
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+
+            var DataTableDetail = new HomeController().getDataTableDetail("Designatio", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View("Index");
         }
         [HttpPost]
         public ActionResult Delete(int id)

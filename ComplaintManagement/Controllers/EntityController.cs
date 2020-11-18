@@ -15,11 +15,38 @@ namespace ComplaintManagement.Controllers
         // GET: Entity
         public ActionResult Index()
         {
-            ViewBag.lstEntity = new EntityMasterRepository().GetAll();
+            ViewBag.lstEntity = GetAll();
             var DataTableDetail = new HomeController().getDataTableDetail("Entity", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
+        }
+        public List<EntityMasterVM> GetAll(string range = "")
+        {
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                return new EntityMasterRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+            }
+            else
+            {
+                return new EntityMasterRepository().GetAll();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetEntity(string range)
+        {
+            ViewBag.lstEntity = GetAll(range);
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+
+            var DataTableDetail = new HomeController().getDataTableDetail("Entity", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View("Index");
         }
         [HttpPost]
         public ActionResult Delete(int id)
