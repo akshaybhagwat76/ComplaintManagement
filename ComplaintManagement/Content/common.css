@@ -72,4 +72,24 @@ label.success {
             width: 100%; 
             padding: 10px; 
             text-align: center; 
-        } 
+        }
+table#paginator {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+    table#paginator th {
+        background-color: #B8DBFD;
+        color: #333;
+        font-weight: bold;
+    }
+
+    table#paginator th, table#paginator td {
+        padding: 5px;
+        border: 1px solid #ccc;
+    }
+
+    table#paginator, table#paginator table#paginator td {
+        border: 0px solid #ccc;
+    }

@@ -28,7 +28,7 @@
                     $("#lblError").addClass("adderror").text(data.error).show();
                 }
                 else {
-                    window.location.href = '/Category/Index'
+                    window.location.href = '/Entity/Index'
                 }
             }
         });

@@ -131,13 +131,13 @@
                         <div class="col-md-8">
                             <ul class="nav">
                                 <li class="nav-item mr-3">
-                                    <input type="text" class="form-control" placeholder="From Date" />
+                                    <input type="date"id="fromDate"  value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
                                 </li>
                                 <li class="nav-item mr-3">
-                                    <input type="text" class="form-control" placeholder="To Date" />
+                                    <input type="date" id="toDate"  value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
                                 </li>
                                 <li class="nav-item">
-                                    <button type="submit" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                                    <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
                                 </li>
                             </ul>
                         </div>
@@ -197,6 +197,25 @@
                                         </tbody>
 
                                     </table>
+                                    <br />
+                                    <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            @for (int i = 1; i <= ViewBag.PageCount; i++)
+                                            {
+                                                <td>
+                                                    @if (i != ViewBag.CurrentPageIndex)
+                                                    {
+                                                        <a href="javascript:PagerClick(@i);">@i</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@i</span>
+                                                    }
+                                                </td>
+                                            }
+                                        </tr>
+                                    </table>
+                                    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
                                 </div>
                             </div>
                         </div>

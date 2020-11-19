@@ -29,7 +29,7 @@ namespace ComplaintManagement.Repository
                 if (User == null)
                 {
                     UserVM.IsActive = true;
-
+                    UserVM.CreatedDate = DateTime.UtcNow;
                     User = Mapper.Map<UserMasterVM, UserMaster>(UserVM);
                     db.UserMasters.Add(User);
                     db.SaveChanges();
@@ -38,6 +38,8 @@ namespace ComplaintManagement.Repository
                 else
                 {
                     UserVM.IsActive = true;
+                    UserVM.CreatedDate = User.CreatedDate;
+                    UserVM.UpdatedDate = DateTime.UtcNow;
                     db.Entry(User).CurrentValues.SetValues(UserVM);
                     db.SaveChanges();
                     return Mapper.Map<UserMaster, UserMasterVM>(User);

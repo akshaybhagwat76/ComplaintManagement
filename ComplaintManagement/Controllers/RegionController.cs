@@ -15,31 +15,69 @@ namespace ComplaintManagement.Controllers
         // GET: Region
         public ActionResult Index()
         {
-            ViewBag.lstRegion = GetAll();
+            ViewBag.lstRegion = GetAll(1);
             var DataTableDetail = new HomeController().getDataTableDetail("Region", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
-        public List<RegionMasterVM> GetAll(string range = "")
+        [HttpGet]
+        public ActionResult LoadRegion(int currentPageIndex, string range = "")
         {
+            ViewBag.lstRegion = GetAll(currentPageIndex, range);
+            if (!string.IsNullOrEmpty(range))
+            {
+                ViewBag.startDate = range.Split(',')[0];
+                ViewBag.toDate = range.Split(',')[1];
+            }
+            return View("Index");
+        }
+        public List<RegionMasterVM> GetAll(int currentPage, string range = "")
+        {
+            int maxRows = 10; int lstCount = 0;
+            var lst = new RegionMasterRepository().GetAll();
+            lstCount = lst.Count;
+
+
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
-                return new RegionMasterRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+                lst = (from Region in lst
+                       where Region.CreatedDate >= fromDate && Region.CreatedDate <= toDate
+                       select Region).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderBy(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
             else
             {
-                return new RegionMasterRepository().GetAll();
+                lst = (from Region in lst
+                       select Region)
+             .OrderBy(customer => customer.Id)
+             .Skip((currentPage - 1) * maxRows)
+             .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
         }
 
         [HttpGet]
-        public ActionResult GetRegion(string range)
+        public ActionResult GetRegion( int currentPage,string range)
         {
-            ViewBag.lstRegion = GetAll(range);
+            ViewBag.lstRegion = GetAll(currentPage,range);
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 

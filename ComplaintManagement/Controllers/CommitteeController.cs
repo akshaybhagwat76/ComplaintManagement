@@ -16,38 +16,133 @@ namespace ComplaintManagement.Controllers
         // GET: Committee
         public ActionResult Index()
         {
-            var lst = new CommitteeMastersRepository().GetAll();
-            dynamic output = new List<dynamic>();
-            var lstUsers = new UserMastersRepository().GetAll();
-            if (lst != null && lst.Count > 0)
-            {
-                foreach (CommitteeMasterVM com in lst)
-                {
-                    dynamic row = new ExpandoObject();
-                    if (com.UserId>0)
-                    {
-                        if(lstUsers.FirstOrDefault(x => x.Id == com.UserId)!= null)
-                        {
-                            row.User = lstUsers.FirstOrDefault(x => x.Id == com.UserId).EmployeeName;
-                        }
-                        else
-                        {
-                            row.User = "";
-                        }
-                    }
-                    row.Id = com.Id;
-                    row.CommitteeName = com.CommitteeName;
-                    row.Status = com.Status;
-
-                    output.Add(row);
-                }
-            }
-
+            var lst = GetAll(1);
+           
             var DataTableDetail = new HomeController().getDataTableDetail("Committee", null);
-            ViewBag.lstCommittee = JsonConvert.SerializeObject(output);
+            ViewBag.lstCommittee = JsonConvert.SerializeObject(lst);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
+        }
+        [HttpGet]
+        public ActionResult LoadCommittee(int currentPageIndex, string range = "")
+        {
+            ViewBag.lstCommittee = JsonConvert.SerializeObject(GetAll(currentPageIndex, range));
+            if (!string.IsNullOrEmpty(range))
+            {
+                ViewBag.startDate = range.Split(',')[0];
+                ViewBag.toDate = range.Split(',')[1];
+            }
+            return View("Index");
+        }
+        public dynamic GetAll(int currentPage, string range = "")
+        {
+            int maxRows = 2; int lstCount = 0;
+            var lst = new CommitteeMastersRepository().GetAll();
+            lstCount = lst.Count;
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from Committee in lst
+                       where Committee.CreatedDate >= fromDate && Committee.CreatedDate <= toDate
+                       select Committee).ToList();
+
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderBy(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                dynamic output = new List<dynamic>();
+                var lstUsers = new UserMastersRepository().GetAll();
+                if (lst != null && lst.Count > 0)
+                {
+                    foreach (CommitteeMasterVM com in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (com.UserId > 0)
+                        {
+                            if (lstUsers.FirstOrDefault(x => x.Id == com.UserId) != null)
+                            {
+                                row.User = lstUsers.FirstOrDefault(x => x.Id == com.UserId).EmployeeName;
+                            }
+                            else
+                            {
+                                row.User = "";
+                            }
+                        }
+                        row.Id = com.Id;
+                        row.CommitteeName = com.CommitteeName;
+                        row.Status = com.Status;
+
+                        output.Add(row);
+                    }
+                }
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return output;
+            }
+            else
+            {
+                dynamic output = new List<dynamic>();
+
+                lst = (from Committee in lst
+                       select Committee)
+           .OrderBy(user => user.Id)
+           .Skip((currentPage - 1) * maxRows)
+           .Take(maxRows).ToList();
+                var lstUsers = new UserMastersRepository().GetAll();
+                
+
+                if (lst != null && lst.Count > 0)
+                {
+                    foreach (CommitteeMasterVM com in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (com.UserId > 0)
+                        {
+                            if (lstUsers.FirstOrDefault(x => x.Id == com.UserId) != null)
+                            {
+                                row.User = lstUsers.FirstOrDefault(x => x.Id == com.UserId).EmployeeName;
+                            }
+                            else
+                            {
+                                row.User = "";
+                            }
+                        }
+                        row.Id = com.Id;
+                        row.CommitteeName = com.CommitteeName;
+                        row.Status = com.Status;
+
+                        output.Add(row);
+                    }
+                }
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+                return output;
+
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetCommittee(string range, int currentPage)
+        {
+            ViewBag.lstCommittee = JsonConvert.SerializeObject(GetAll(currentPage,range));
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+
+            var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View("Index");
         }
         [HttpPost]
         public ActionResult Delete(int id)

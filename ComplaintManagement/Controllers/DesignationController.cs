@@ -15,31 +15,68 @@ namespace ComplaintManagement.Controllers
         // GET: Designation
         public ActionResult Index()
         {
-            ViewBag.lstDesignation = GetAll();
+            ViewBag.lstDesignation = GetAll(1);
             var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
-        public List<DesignationMasterVM> GetAll(string range = "")
+        [HttpGet]
+        public ActionResult LoadDesignations(int currentPageIndex, string range = "")
         {
+            ViewBag.lstDesignation = GetAll(currentPageIndex, range);
+            if (!string.IsNullOrEmpty(range))
+            {
+                ViewBag.startDate = range.Split(',')[0];
+                ViewBag.toDate = range.Split(',')[1];
+            }
+            return View("Index");
+        }
+        public List<DesignationMasterVM> GetAll(int currentPage, string range = "")
+        {
+            int maxRows = 10; int lstCount = 0;
+            var lst = new DesignationMasterRepository().GetAll();
+            lstCount = lst.Count;
+
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
-                return new DesignationMasterRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+                lst = (from Designation in lst
+                       where Designation.CreatedDate >= fromDate && Designation.CreatedDate <= toDate
+                       select Designation).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderBy(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
             else
             {
-                return new DesignationMasterRepository().GetAll();
+                lst = (from Designation in lst
+                       select Designation)
+             .OrderBy(customer => customer.Id)
+             .Skip((currentPage - 1) * maxRows)
+             .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
         }
 
         [HttpGet]
-        public ActionResult GetDesignation(string range)
+        public ActionResult GetDesignation(string range, int currentPage)
         {
-            ViewBag.lstDesignation = GetAll(range);
+            ViewBag.lstDesignation = GetAll(currentPage,range);
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 

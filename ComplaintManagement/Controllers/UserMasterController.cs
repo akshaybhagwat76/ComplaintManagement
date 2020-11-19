@@ -16,25 +16,50 @@ namespace ComplaintManagement.Controllers
         // GET: User
         public ActionResult Index()
         {
-            var lstUser = GetAll();
-           
             var DataTableDetail = new HomeController().getDataTableDetail("User", null);
-            ViewBag.lstUser = JsonConvert.SerializeObject(GetAll());
+            ViewBag.lstUser = JsonConvert.SerializeObject(GetAll(1));
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
 
         }
-        public dynamic GetAll(string range = "")
+
+        [HttpGet]
+        public ActionResult LoadUserMasters(int currentPageIndex, string range = "")
         {
+            ViewBag.lstUser = JsonConvert.SerializeObject(GetAll(currentPageIndex, range));
+            if (!string.IsNullOrEmpty(range))
+            {
+                ViewBag.startDate = range.Split(',')[0];
+                ViewBag.toDate = range.Split(',')[1];
+            }
+            return View("Index");
+        }
+
+        public dynamic GetAll(int currentPage, string range = "")
+        {
+            int maxRows = 10; int lstCount = 0;
+            var lst = new UserMastersRepository().GetAll();
+            lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from user in lst
+                       where user.CreatedDate >= fromDate && user.CreatedDate <= toDate
+                       select user).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderBy(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
 
+               
                 dynamic output = new List<dynamic>();
-                var lst = new UserMastersRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                #region Other logics
+                lst = lst.Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
                 var lstSBU = new SBUMasterRepository().GetAll();
                 var lstSubSBU = new SubSBUMasterRepository().GetAll();
                 var lstLOS = new LOSMasterRepository().GetAll();
@@ -85,13 +110,27 @@ namespace ComplaintManagement.Controllers
                         output.Add(row);
                     }
                 }
+
+                #endregion
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
                 return output;
             }
             else
             {
 
                 dynamic output = new List<dynamic>();
-                var lst = new UserMastersRepository().GetAll();
+
+                lst = (from user in lst
+                       select user)
+           .OrderBy(user => user.Id)
+           .Skip((currentPage - 1) * maxRows)
+           .Take(maxRows).ToList();
+
+                #region Other joining logics
                 var lstSBU = new SBUMasterRepository().GetAll();
                 var lstSubSBU = new SubSBUMasterRepository().GetAll();
                 var lstLOS = new LOSMasterRepository().GetAll();
@@ -142,14 +181,21 @@ namespace ComplaintManagement.Controllers
                         output.Add(row);
                     }
                 }
+                #endregion
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
                 return output;
             }
         }
 
         [HttpGet]
-        public ActionResult GetUsers(string range)
+        public ActionResult GetUsers(string range, int currentPage)
         {
-            ViewBag.lstUser = JsonConvert.SerializeObject(GetAll(range));
+            ViewBag.lstUser = JsonConvert.SerializeObject(GetAll(currentPage,range));
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 

@@ -15,31 +15,67 @@ namespace ComplaintManagement.Controllers
         // GET: Entity
         public ActionResult Index()
         {
-            ViewBag.lstEntity = GetAll();
+            ViewBag.lstEntity = GetAll(1);
             var DataTableDetail = new HomeController().getDataTableDetail("Entity", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
-        public List<EntityMasterVM> GetAll(string range = "")
+        [HttpGet]
+        public ActionResult LoadEntity(int currentPageIndex, string range = "")
         {
+            ViewBag.lstEntity = GetAll(currentPageIndex, range);
+            if (!string.IsNullOrEmpty(range))
+            {
+                ViewBag.startDate = range.Split(',')[0];
+                ViewBag.toDate = range.Split(',')[1];
+            }
+            return View("Index");
+        }
+        public List<EntityMasterVM> GetAll(int currentPage, string range = "")
+        {
+            int maxRows = 1; int lstCount = 0;
+            var lst = new EntityMasterRepository().GetAll();
+            lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
-                return new EntityMasterRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+                lst = (from Entity in lst
+                       where Entity.CreatedDate >= fromDate && Entity.CreatedDate <= toDate
+                       select Entity).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderBy(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
             else
             {
-                return new EntityMasterRepository().GetAll();
+                lst = (from Entity in lst
+                       select Entity)
+             .OrderBy(customer => customer.Id)
+             .Skip((currentPage - 1) * maxRows)
+             .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
         }
 
         [HttpGet]
-        public ActionResult GetEntity(string range)
+        public ActionResult GetEntity(string range, int currentPage)
         {
-            ViewBag.lstEntity = GetAll(range);
+            ViewBag.lstEntity = GetAll(currentPage,range);
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 

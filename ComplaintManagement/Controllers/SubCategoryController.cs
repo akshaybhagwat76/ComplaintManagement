@@ -15,31 +15,67 @@ namespace ComplaintManagement.Controllers
         // GET: SubCategory
         public ActionResult Index()
         {
-            ViewBag.lstSubCategory = GetAll();
+            ViewBag.lstSubCategory = GetAll(1);
             var DataTableDetail = new HomeController().getDataTableDetail("SubCategory", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
-        public List<SubCategoryMasterVM> GetAll(string range = "")
+        [HttpGet]
+        public ActionResult LoadSubCategories(int currentPageIndex, string range = "")
         {
+            ViewBag.lstSubCategory = GetAll(currentPageIndex, range);
+            if (!string.IsNullOrEmpty(range))
+            {
+                ViewBag.startDate = range.Split(',')[0];
+                ViewBag.toDate = range.Split(',')[1];
+            }
+            return View("Index");
+        }
+        public List<SubCategoryMasterVM> GetAll(int currentPage, string range = "")
+        {
+            int maxRows = 10; int lstCount = 0;
+            var lst = new SubCategoryMastersRepository().GetAll();
+            lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
-                return new SubCategoryMastersRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+                lst = (from Subcategory in lst
+                       where Subcategory.CreatedDate >= fromDate && Subcategory.CreatedDate <= toDate
+                       select Subcategory).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderBy(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
             else
             {
-                return new SubCategoryMastersRepository().GetAll();
+                lst = (from Subcategory in lst
+                       select Subcategory)
+            .OrderBy(customer => customer.Id)
+            .Skip((currentPage - 1) * maxRows)
+            .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
         }
 
         [HttpGet]
-        public ActionResult GetSubCategories(string range)
+        public ActionResult GetSubCategories(string range, int currentPage)
         {
-            ViewBag.lstSubCategory = GetAll(range);
+            ViewBag.lstSubCategory = GetAll(currentPage, range);
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 

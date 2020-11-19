@@ -15,31 +15,68 @@ namespace ComplaintManagement.Controllers
         // GET: Competency
         public ActionResult Index()
         {
-            ViewBag.lstCompetency = GetAll();
+            ViewBag.lstCompetency = GetAll(1);
             var DataTableDetail = new HomeController().getDataTableDetail("Competency", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
-        public List<CompetencyMasterVM> GetAll(string range = "")
+        [HttpGet]
+        public ActionResult LoadCompetency(int currentPageIndex, string range = "")
         {
+            ViewBag.lstCompetency = GetAll(currentPageIndex, range);
+            if (!string.IsNullOrEmpty(range))
+            {
+                ViewBag.startDate = range.Split(',')[0];
+                ViewBag.toDate = range.Split(',')[1];
+            }
+            return View("Index");
+        }
+        public List<CompetencyMasterVM> GetAll(int currentPage, string range = "")
+        {
+            int maxRows = 10; int lstCount = 0;
+            var lst = new CompetencyMastersRepository().GetAll();
+            lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
-                return new CompetencyMastersRepository().GetAll().Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+             
+                lst = (from Competency in lst
+                       where Competency.CreatedDate >= fromDate && Competency.CreatedDate <= toDate
+                       select Competency).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderBy(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
             else
             {
-                return new CompetencyMastersRepository().GetAll();
+                lst = (from Competency in lst
+                       select Competency)
+             .OrderBy(customer => customer.Id)
+             .Skip((currentPage - 1) * maxRows)
+             .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
             }
         }
 
         [HttpGet]
-        public ActionResult GetCompetency(string range)
+        public ActionResult GetCompetency(string range, int currentPage)
         {
-            ViewBag.lstCompetency = GetAll(range);
+            ViewBag.lstCompetency = GetAll(currentPage,range);
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 

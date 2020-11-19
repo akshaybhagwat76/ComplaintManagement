@@ -66,3 +66,24 @@ function performAction(id, isView) {
     let url = `/Committee/Edit?id=${id}&isView=${isView}`
     location.href = url;
 }
+function filterGrid() {
+    var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+    if (fromDate == "" || toDate == "") {
+        funToastr(false, "Please select from and to date."); return;
+    }
+    else {
+        if ($("#hfCurrentPageIndex").val() == "") {
+            $("#hfCurrentPageIndex").val("1");
+        }
+        location.href = '/Committee/GetCommittee?range=' + fromDate + ',' + toDate + '&currentPage=' + $("#hfCurrentPageIndex").val();
+    }
+}
+function PagerClick(index) {
+    $("#hfCurrentPageIndex").val(index);
+    var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : ""; var toDate = $("#toDate").val() == undefined ? "" : $("#toDate").val();
+    var range = "";
+    if (fromDate !== "" && toDate !== "") {
+        range = fromDate + ',' + toDate;
+    }
+    location.href = '/Committee/LoadCommittee?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+}

@@ -1,9 +1,9 @@
 ﻿$(document).ready(function () {
     $.noConflict();
-   // $("#myTable").DataTable();
+    // $("#myTable").DataTable();
 });
 function deleteCategory(id) {
-    
+
     //$('#deleteModal').data('id', id).modal('show');
     //$('#deleteModal').modal('show');
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
@@ -67,11 +67,23 @@ function performAction(id, isView) {
     location.href = url;
 }
 function filterGrid() {
-    var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val(); 
+    var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
     if (fromDate == "" || toDate == "") {
-        funToastr(false,"Please select from and to date."); return;
+        funToastr(false, "Please select from and to date."); return;
     }
     else {
-        location.href = '/Category/GetCategories?range=' + fromDate + ',' + toDate;
+        if ($("#hfCurrentPageIndex").val() == "") {
+            $("#hfCurrentPageIndex").val("1");
+        }
+        location.href = '/Category/GetCategories?range=' + fromDate + ',' + toDate + '&currentPage=' + $("#hfCurrentPageIndex").val();
     }
+}
+function PagerClick(index) {
+    $("#hfCurrentPageIndex").val(index);
+    var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : ""; var toDate = $("#toDate").val() == undefined ? "" : $("#toDate").val();
+    var range = "";
+    if (fromDate !== "" && toDate !== "") {
+        range = fromDate + ',' + toDate;
+    }
+    location.href = '/Category/LoadCategories?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range='+range;
 }

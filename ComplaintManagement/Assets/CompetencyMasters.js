@@ -72,6 +72,18 @@ function filterGrid() {
         funToastr(false, "Please select from and to date."); return;
     }
     else {
-        location.href = '/Competency/GetCompetency?range=' + fromDate + ',' + toDate;
+        if ($("#hfCurrentPageIndex").val() == "") {
+            $("#hfCurrentPageIndex").val("1");
+        }
+        location.href = '/Competency/GetCompetency?range=' + fromDate + ',' + toDate + '&currentPage=' + $("#hfCurrentPageIndex").val();
     }
+}
+function PagerClick(index) {
+    $("#hfCurrentPageIndex").val(index);
+    var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : ""; var toDate = $("#toDate").val() == undefined ? "" : $("#toDate").val();
+    var range = "";
+    if (fromDate !== "" && toDate !== "") {
+        range = fromDate + ',' + toDate;
+    }
+    location.href = '/Competency/LoadCompetency?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
 }
