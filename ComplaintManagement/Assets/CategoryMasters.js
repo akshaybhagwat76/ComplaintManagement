@@ -44,7 +44,7 @@ function Confirm(title, msg, $true, $false, $link) { /*change*/
 }
 
 function deleteAction(id) {
-    StartProcess()
+    StartProcess();
     $.ajax({
         type: "POST",
         url: "/Category/Delete",

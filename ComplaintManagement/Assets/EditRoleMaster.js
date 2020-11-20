@@ -21,7 +21,7 @@
             CompetencyId: $("#CompetencyId").val().toString(),
             Status: $("#Status").val() == "true" ? true : false
         }
-        debugger
+       
         data = JSON.stringify(data);
         StartProcess();
         $.ajax({
@@ -63,14 +63,16 @@ $(document).ready(function () {
             $("#LOSId").val($("#LOSIds").val().split(','))
         }
     }
-    let page_state = JSON.parse($("#pageState").val().toLowerCase());
-    if (page_state) {
-        $(".text-right").addClass("hide")
-        $('.container-fluid').addClass("disabled-div");
-    }
-    else {
-        $(".text-right").removeClass("hide")
+    if ($("#pageState").val() != null && $("#pageState").val() != "") {
+        let page_state = JSON.parse($("#pageState").val().toLowerCase());
+        if (page_state) {
+            $(".text-right").addClass("hide")
+            $('.container-fluid').addClass("disabled-div");
+        }
+        else {
+            $(".text-right").removeClass("hide")
 
-        $('.container-fluid').removeClass("disabled-div");
+            $('.container-fluid').removeClass("disabled-div");
+        }
     }
 });

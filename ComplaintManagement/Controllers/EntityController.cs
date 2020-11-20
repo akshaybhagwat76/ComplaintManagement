@@ -34,7 +34,7 @@ namespace ComplaintManagement.Controllers
         }
         public List<EntityMasterVM> GetAll(int currentPage, string range = "")
         {
-            int maxRows = 1; int lstCount = 0;
+            int maxRows = 10; int lstCount = 0;
             var lst = new EntityMasterRepository().GetAll();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))

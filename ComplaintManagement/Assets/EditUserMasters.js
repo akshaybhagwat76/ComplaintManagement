@@ -1,7 +1,8 @@
-﻿function submitForm() {
+﻿var isValidEmail = false; var isValidEmp = false;
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
-  
+
     $("#myForm .required").each(function () {
         if (!$(this).val()) {
             $(this).addClass("adderror");
@@ -17,12 +18,12 @@
         retval = false;
     }
 
-    if (retval) {
+    if (retval && !isValidEmail && !isValidEmp) {
         var documentFile = $("#inputImage").get(0).files;
         var docfile = "";
         if (documentFile.length > 0) {
             var documentFileExt = documentFile[0].name.split('.').pop();
-             docfile = $("#inputImage").attr('data-base64string');
+            docfile = $("#inputImage").attr('data-base64string');
             docfile = docfile + ',' + documentFileExt;
         }
         var data = {
@@ -107,12 +108,13 @@ function Confirm(title, msg, $true, $false, $link) { /*change*/
 }
 function deleteAction(fileName) {
     if (fileName != "" && fileName != undefined) {
-
+        StartProcess();
         $.ajax({
             type: "POST",
             url: "/UserMaster/RemoveProfile",
             data: { fileName: fileName },
             success: function (response) {
+                StopProcess()
                 if (response.status != "Fail") {
                     funToastr(true, response.msg);
                     $("#profile_pic").attr('src', '/Images/profile.png');
@@ -134,7 +136,7 @@ $(document).ready(function () {
         $("#Status").val("true");
     }
     else {
-        $("#DateOfJoining").val($("#Doj").val())
+        $("#DateOfJoining").val($("#Doj").val().replaceAll("/", "-"))
     }
     if ($("#pageState").val() != null && $("#pageState").val() != "") {
         let page_state = JSON.parse($("#pageState").val().toLowerCase());
@@ -142,7 +144,7 @@ $(document).ready(function () {
             $(".text-right").addClass("hide")
             $('.container-fluid').addClass("disabled-div");
         }
-       
+
     }
     else {
         $(".text-right").removeClass("hide")
@@ -162,7 +164,7 @@ inputImage.onchange = function () {
         const filename = file.name;
 
         let last_dot = filename.lastIndexOf('.')
-        let ext = "."+filename.slice(last_dot + 1);
+        let ext = "." + filename.slice(last_dot + 1);
         if (bytesToSize(file.size) >= 500) {
             funToastr(false, 'The maximum file size for an image is 500 KB. Please reduce your file size and try again');
         }
@@ -172,7 +174,7 @@ inputImage.onchange = function () {
                 reader.onloadend = function () {
                     $('#profile_pic').attr('src', reader.result);
                     $(inputImage).attr("data-base64string", reader.result);
-                    $(inputImage).attr("data-extension",  ext);
+                    $(inputImage).attr("data-extension", ext);
                     //PreviewBase64Image(reader.result, $this.id + "Preview");
                 }
                 reader.readAsDataURL(file);
@@ -184,4 +186,71 @@ inputImage.onchange = function () {
         }
     }
 };
+
+function checkDuplicate() {
+    var workemail = $("#WorkEmail").val();
+    var EmployeeId = $("#EmployeeId").val();
+    var Id = $("#Id").val();
+    if (workemail != "" || EmployeeId != "") {
+        var data = {
+            Id: Id,
+            EmployeeId: EmployeeId,
+            WorkEmail: workemail
+        }
+        $.ajax({
+            type: "POST",
+            url: "/UserMaster/IsExist/",
+            data: { UserVM: data },
+            success: function (data) {
+                if (data != null) {
+                    if (data.msg != null && data.msg != "") {
+                        if (data.msg.includes("Employee Id")) {
+                            $("#EmployeeId").addClass("adderror");
+                            isValidEmp = true;
+                        }
+                        else {
+                            isValidEmp = false;
+                            $("#EmployeeId").removeClass("adderror");
+                        }
+                        if (data.msg.includes("Work")) {
+                            $("#WorkEmail").addClass("adderror");
+                            isValidEmail = true;
+                        }
+                        else {
+                            $("#WorkEmail").removeClass("adderror");
+                            isValidEmail = false;
+                        }
+                        funToastr(false, data.msg);
+                    }
+                }
+            }
+
+        })
+    }
+
+}
+//var ExalFile = document.getElementById('ExalFile');
+
+//ExalFile.onchange = function () {
+//    var files = this.files;
+//    var file;
+   
+//        let last_dot = filename.lastIndexOf('.')
+//        let ext = "." + filename.slice(last_dot + 1);
+//        if (ext != "Xlsx" || ext != "Xls") {
+//            funToastr(false, 'Pleace Select Exale File');
+//        }
+//        else {
+//            $.ajax({
+//                type: "POST",
+//                url: "/UserMaster/ExalUploadFile/",
+//                success: function (data) {
+
+//                }
+//            })
+//            }
+//        }
+    
+//};
+
 

@@ -16,13 +16,13 @@ namespace ComplaintManagement.Models
     {
         public int Id { get; set; }
         public string EmployeeName { get; set; }
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public string Gender { get; set; }
         public int Age { get; set; }
         public string WorkEmail { get; set; }
         public string TimeType { get; set; }
-        public string BusinessTitle { get; set; }
-        public string Company { get; set; }
+        public int BusinessTitle { get; set; }
+        public int Company { get; set; }
         public int LOSId { get; set; }
         public int SBUId { get; set; }
         public int SubSBUId { get; set; }

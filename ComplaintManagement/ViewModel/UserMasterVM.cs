@@ -12,7 +12,7 @@ namespace ComplaintManagement.ViewModel
         public int Id { get; set; }
         public string EmployeeName { get; set; }
         
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         [DisplayName("Gender")]
         public string Gender { get; set; }
         [DisplayName("Age")]

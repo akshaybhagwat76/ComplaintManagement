@@ -44,11 +44,13 @@ function Confirm(title, msg, $true, $false, $link) { /*change*/
 }
 
 function deleteAction(id) {
+    StartProcess();
     $.ajax({
         type: "POST",
         url: "/Location/Delete",
         data: { id: id },
         success: function (response) {
+            StopProcess()
             if (response.status != "Fail") {
                 location.reload();
             }
@@ -72,6 +74,7 @@ function filterGrid() {
         funToastr(false, "Please select from and to date."); return;
     }
     else {
+        StartProcess();
         if ($("#hfCurrentPageIndex").val() == "") {
             $("#hfCurrentPageIndex").val("1");
         }
@@ -79,6 +82,7 @@ function filterGrid() {
     }
 }
 function PagerClick(index) {
+    StartProcess();
     $("#hfCurrentPageIndex").val(index);
     var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : ""; var toDate = $("#toDate").val() == undefined ? "" : $("#toDate").val();
     var range = "";

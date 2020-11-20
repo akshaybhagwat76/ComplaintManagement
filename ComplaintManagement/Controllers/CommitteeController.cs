@@ -37,7 +37,7 @@ namespace ComplaintManagement.Controllers
         }
         public dynamic GetAll(int currentPage, string range = "")
         {
-            int maxRows = 2; int lstCount = 0;
+            int maxRows = 10; int lstCount = 0;
             var lst = new CommitteeMastersRepository().GetAll();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))

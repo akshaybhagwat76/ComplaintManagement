@@ -133,28 +133,27 @@
                         <div class="card-body">
                             @Html.HiddenFor(model => model.Id)
                             @*<div class="text-center form-group">
-                        <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
-                    </div>*@
+            <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
+        </div>*@
                             <i class="fa fa-trash" style="margin-left: 180px; margin-top: 7px;" onclick="RemoveImage('@Model.ImagePath')"></i>
                             <div class="text-center form-group ">
                                 <label title="Upload image file" for="inputImage">
 
-                                    <input type="file" accept="image/*" name="file" id="inputImage" onchange="encodeImagetoBase64($event)" class="hide">
+                                    <input type="file" accept="image/*" name="file" id="inputImage" onchange="encodeImagetoBase64($event)" onfocus="" class="hide">
                                     <img id='profile_pic' data-src="" src="@(!string.IsNullOrEmpty(Model.ImagePath)? "/Images/profile_pics/"+Model.ImagePath : "/Images/profile.png")" style='cursor:pointer;height:auto;width:100%;max-width:120px' />
                                 </label>
                                 <div class="profile-img-i-container">
                                     <i class="fa fa-remove"></i>
                                 </div>
                             </div>
+                            
                             <form id="myForm" class="m-t" role="form" action="javascript:;">
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.EmployeeName, new { @class = "requiredLabel" })
                                     @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Name" } })
 
                                 </div>
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.EmployeeId, new { @class = "requiredLabel" })
-                                    @Html.EditorFor(model => model.EmployeeId, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Employee ID" } })
+                                    @Html.EditorFor(model => model.EmployeeId, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Employee ID", @onfocusout = "checkDuplicate()" } })
 
                                 </div>
                                 <div class="form-group row">
@@ -176,7 +175,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.EditorFor(model => model.WorkEmail, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Work Email" } })
+                                    @Html.EditorFor(model => model.WorkEmail, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Work Email", @onfocusout = "checkDuplicate()" } })
 
                                 </div>
                             </form>
@@ -401,6 +400,7 @@
                                     </div>
                                 </div>
                                 @Html.Hidden("Doj", Model.DateOfJoining.ToString("yyyy/MM/dd"))
+
 
                                 <div class="col-sm-12 text-right">
                                     <a onclick="submitForm()" class="btn btn-danger">Save</a>

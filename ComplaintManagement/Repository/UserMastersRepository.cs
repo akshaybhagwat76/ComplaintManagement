@@ -30,9 +30,9 @@ namespace ComplaintManagement.Repository
                 {
                     UserVM.IsActive = true;
                     UserVM.CreatedDate = DateTime.UtcNow;
-                    if(!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
+                    if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
                     {
-                        UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath):"";
+                        UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
                     }
                     User = Mapper.Map<UserMasterVM, UserMaster>(UserVM);
                     db.UserMasters.Add(User);
@@ -115,6 +115,65 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<UserMaster, UserMasterVM>(User);
         }
 
+        public string IsExist(UserMasterVM userMasterVM)
+        {
+            string response = string.Empty;
+            try
+            {
+                var lstUsers = GetAll();
+                if (userMasterVM != null)
+                {
+                    string workEmail = userMasterVM.WorkEmail; string empId = userMasterVM.EmployeeId;
+                    int UserId = userMasterVM.Id;
+                    if (!string.IsNullOrEmpty(workEmail) || !string.IsNullOrEmpty(empId))
+                    {
+                        if (UserId > 0 && !string.IsNullOrEmpty(workEmail))
+                        {
+                            bool workEmailExist = lstUsers.Count(x => x.Id != UserId && x.WorkEmail == workEmail) > 0;
+                            if (workEmailExist)
+                            {
+                                response += Messages.WORK_EMAIL_EXIST;
+                            }
+                        }
+                        else if(!string.IsNullOrEmpty(workEmail))
+                        {
+                            bool workEmailExist = lstUsers.Count(x=>x.WorkEmail == workEmail) > 0;
+                            if (workEmailExist)
+                            {
+                                response += Messages.WORK_EMAIL_EXIST;
+                            }
+                        }
+
+                         if (UserId > 0 && !string.IsNullOrEmpty(empId))
+                        {
+                            bool empIdExist = lstUsers.Count(x => x.Id != UserId && x.EmployeeId == empId) > 0;
+                            if (empIdExist)
+                            {
+                                response += Messages.EMP_ID_EXIST;
+                            }
+                        }
+                        else if (!string.IsNullOrEmpty(empId))
+                        {
+                            bool empIdExist = lstUsers.Count(x => x.EmployeeId == empId) > 0;
+                            if (empIdExist)
+                            {
+                                response += Messages.EMP_ID_EXIST;
+                            }
+                        }
+                        else
+                        {
+                            //Nothing to do here.
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return response;
+        }
 
         public bool Delete(int id)
         {

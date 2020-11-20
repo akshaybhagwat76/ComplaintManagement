@@ -161,13 +161,13 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EmployeeName" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="EmployeeId" Type="int" Nullable="false" />
+          <Property Name="EmployeeId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Gender" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Age" Type="int" Nullable="false" />
           <Property Name="WorkEmail" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="TimeType" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="BusinessTitle" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="Company" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="BusinessTitle" Type="int" Nullable="false" />
+          <Property Name="Company" Type="int" Nullable="false" />
           <Property Name="LOSId" Type="int" Nullable="false" />
           <Property Name="SBUId" Type="int" Nullable="false" />
           <Property Name="SubSBUId" Type="int" Nullable="false" />
@@ -500,13 +500,13 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EmployeeName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+          <Property Name="EmployeeId" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Gender" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Age" Type="Int32" Nullable="false" />
           <Property Name="WorkEmail" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="TimeType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="BusinessTitle" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Company" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessTitle" Type="Int32" Nullable="false" />
+          <Property Name="Company" Type="Int32" Nullable="false" />
           <Property Name="LOSId" Type="Int32" Nullable="false" />
           <Property Name="SBUId" Type="Int32" Nullable="false" />
           <Property Name="SubSBUId" Type="Int32" Nullable="false" />

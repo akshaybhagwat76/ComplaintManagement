@@ -141,6 +141,7 @@
     <Compile Include="Controllers\CompetencyController.cs" />
     <Compile Include="Controllers\DesignationController.cs" />
     <Compile Include="Controllers\EntityController.cs" />
+    <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
     <Compile Include="Controllers\LOSController.cs" />
@@ -330,6 +331,18 @@
     <Content Include="Models\Model.edmx.diagram">
       <DependentUpon>Model.edmx</DependentUpon>
     </Content>
+    <Content Include="Imports\Samples\Category\Category.xlsx" />
+    <Content Include="Imports\Samples\Committee\Committee.xlsx" />
+    <Content Include="Imports\Samples\Competency\Competency.xlsx" />
+    <Content Include="Imports\Samples\Designation\Designation.xlsx" />
+    <Content Include="Imports\Samples\Entity\Entity.xlsx" />
+    <Content Include="Imports\Samples\Location\Location.xlsx" />
+    <Content Include="Imports\Samples\Region\Region.xlsx" />
+    <Content Include="Imports\Samples\SBU\SBU.xlsx" />
+    <Content Include="Imports\Samples\SubCategory\SubCategory.xlsx" />
+    <Content Include="Imports\Samples\SubSBU\SubSBU.xlsx" />
+    <Content Include="Imports\Samples\Role\Category.xlsx" />
+    <Content Include="Imports\Samples\User\Category.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -2210,7 +2223,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Imports\Samples\LOS\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\Files\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

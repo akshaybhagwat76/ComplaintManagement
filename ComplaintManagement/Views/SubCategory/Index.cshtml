@@ -119,6 +119,7 @@
         </nav>
         <!-- End of Topbar -->
         <div class="container-fluid">
+            <div class="preloader"></div>
             <div class="page-title">
                 <h2 class="text-black">Sub Category Master</h2>
             </div>
@@ -131,7 +132,7 @@
                                     <input type="date" id="fromDate" class="form-control" value="@ViewBag.startDate" placeholder="From Date" />
                                 </li>
                                 <li class="nav-item mr-3">
-                                    <input type="date"  id="toDate"  class="form-control" value="@ViewBag.toDate" placeholder="To Date" />
+                                    <input type="date" id="toDate" class="form-control" value="@ViewBag.toDate" placeholder="To Date" />
                                 </li>
                                 <li class="nav-item">
                                     <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>

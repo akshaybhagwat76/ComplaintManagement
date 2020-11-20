@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
@@ -302,5 +303,58 @@ namespace ComplaintManagement.Controllers
             return View();
 
         }
+        [HttpPost]
+        public ActionResult IsExist(UserMasterVM UserVM)
+        {
+            try
+            {
+                var data = new UserMastersRepository().IsExist(UserVM);
+                return new ReplyFormat().Success(data);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+        //public ActionResult ExalUploadFile(FormCollection formCollection)
+        //{
+        //    var usersList = new List<User>();
+        //    if (Request != null)
+        //    {
+        //        HttpPostedFileBase file = Request.Files["UploadedFile"];
+        //        if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName))
+        //        {
+        //            string fileName = file.FileName;
+        //            string fileContentType = file.ContentType;
+        //            byte[] fileBytes = new byte[file.ContentLength];
+        //            var data = file.InputStream.Read(fileBytes, 0, Convert.ToInt32(file.ContentLength));
+        //            using (var package = new ExcelPackage(file.InputStream))
+        //            {
+        //                var currentSheet = package.Workbook.Worksheets;
+        //                var workSheet = currentSheet.First();
+        //                var noOfCol = workSheet.Dimension.End.Column;
+        //                var noOfRow = workSheet.Dimension.End.Row;
+        //                for (int rowIterator = 2; rowIterator <= noOfRow; rowIterator++)
+        //                {
+        //                    var user = new User();
+        //                    user.SNo = Convert.ToInt32(workSheet.Cells[rowIterator, 1].Value);
+        //                    user.Name = workSheet.Cells[rowIterator, 2].Value.ToString();
+        //                    user.Age = Convert.ToInt32(workSheet.Cells[rowIterator, 3].Value);
+        //                    usersList.Add(user);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    using (ExcelImportDBEntities excelImportDBEntities = new ExcelImportDBEntities())
+        //    {
+        //        foreach (var item in usersList)
+        //        {
+        //            excelImportDBEntities.Users.Add(item);
+        //        }
+        //        excelImportDBEntities.SaveChanges();
+        //    }
+        //    return View("Index");
+        //}
     }
 }

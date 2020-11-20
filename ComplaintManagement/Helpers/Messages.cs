@@ -10,6 +10,8 @@
         public const string USER_EXISTS = "User already exists";
         public const string LOGIN_TYPE_FACEBOOK = "Facebook";
         public const string LOGIN_TYPE_LOCAL = "Local";
+        public const string WORK_EMAIL_EXIST = "Work email is already exist.";
+        public const string EMP_ID_EXIST = "Employee Id is already exist.";
 
         public const string USER_ALREADY_REWARDED = "User is already rewarded";
         public const string USER_DONT_HAVE_ENOUGH_AMOUNT = "User have not wallet amount in his account";
