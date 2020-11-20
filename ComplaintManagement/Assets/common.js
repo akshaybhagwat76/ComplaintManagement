@@ -131,7 +131,7 @@ function prepareDatatable(pageLength, selector, options, datatable_options, Extr
     var _options = $.extend(defOptions, datatable_options);
 
     var $tab,
-       tabApi;
+        tabApi;
     $tab = $(selector);
     tabApi = $tab.DataTable(_options);
     tabApi.reloadGridData = function (callback, data) {
@@ -206,9 +206,15 @@ function matchPassword(field, rules, i, options) {
 
 function encodeImagetoBase64($this) {
     var file = $this.files[0];
+    const filename = file.name;
+
+    let last_dot = filename.lastIndexOf('.')
+    let ext = filename.slice(last_dot + 1);
+    debugger
     var reader = new FileReader();
     reader.onloadend = function () {
         $($this).attr("data-base64string", reader.result);
+        $($this).attr("data-extension", "." + ext);
         //PreviewBase64Image(reader.result, $this.id + "Preview");
     }
     reader.readAsDataURL(file);

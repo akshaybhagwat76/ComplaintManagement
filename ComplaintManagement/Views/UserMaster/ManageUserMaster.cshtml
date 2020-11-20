@@ -126,20 +126,21 @@
             </div>
             <!-- Tab Bar -->
             <div class="row">
+                <div class="preloader"></div>
                 <div class="col-xl-4 col-lg-5">
                     <div class="card shadow mb-4 rounded-0">
                         <!-- Card Body -->
                         <div class="card-body">
                             @Html.HiddenFor(model => model.Id)
                             @*<div class="text-center form-group">
-                                    <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
-                                </div>*@
-                            <i class="fa fa-trash" style="margin-left: 180px; margin-top: 7px;" onclick="RemoveImage()"></i>
+                        <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
+                    </div>*@
+                            <i class="fa fa-trash" style="margin-left: 180px; margin-top: 7px;" onclick="RemoveImage('@Model.ImagePath')"></i>
                             <div class="text-center form-group ">
                                 <label title="Upload image file" for="inputImage">
 
-                                    <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
-                                    <img id='profile_pic' data-src="" src="/Images/profile.png" style='cursor:pointer;height:auto;width:100%;max-width:120px' />
+                                    <input type="file" accept="image/*" name="file" id="inputImage" onchange="encodeImagetoBase64($event)" class="hide">
+                                    <img id='profile_pic' data-src="" src="@(!string.IsNullOrEmpty(Model.ImagePath)? "/Images/profile_pics/"+Model.ImagePath : "/Images/profile.png")" style='cursor:pointer;height:auto;width:100%;max-width:120px' />
                                 </label>
                                 <div class="profile-img-i-container">
                                     <i class="fa fa-remove"></i>
@@ -170,7 +171,7 @@
                                     </div>
                                     <div class="col-sm-6 text-center">
 
-                                        @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control form-control-user required mt-2", @placeholder = "Age" } })
+                                        @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control form-control-user required mt-2", @placeholder = "Age", @min = "0" } })
                                         @Html.LabelFor(model => model.Age, new { @class = "requiredLabel" })
                                     </div>
                                 </div>
@@ -399,7 +400,7 @@
 
                                     </div>
                                 </div>
-                                @Html.Hidden("Doj", Model.DateOfJoining)
+                                @Html.Hidden("Doj", Model.DateOfJoining.ToString("yyyy/MM/dd"))
 
                                 <div class="col-sm-12 text-right">
                                     <a onclick="submitForm()" class="btn btn-danger">Save</a>
@@ -418,4 +419,6 @@
 </div>
 <!-- End of Main Content -->
 <!-- End of Content Wrapper -->
+@Html.Partial("_CommonDeleteModal")
+
 @Scripts.Render("~/Assets/EditUserMasters")

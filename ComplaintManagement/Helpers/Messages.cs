@@ -35,6 +35,7 @@
         public const string UPDATE_MESSAGE = "Successfully updated {0} detail";
 
         public const string DELETE_MESSAGE = "Successfully deleted {0} detail";
+        public const string DELETE_MESSAGE_FILE = "Successfully deleted file.";
 
         public const string COMMENT_APPROVED_MESSAGE = "Successfully published {0} detail";
 

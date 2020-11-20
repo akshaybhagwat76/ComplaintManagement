@@ -30,6 +30,10 @@ namespace ComplaintManagement.Repository
                 {
                     UserVM.IsActive = true;
                     UserVM.CreatedDate = DateTime.UtcNow;
+                    if(!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
+                    {
+                        UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath):"";
+                    }
                     User = Mapper.Map<UserMasterVM, UserMaster>(UserVM);
                     db.UserMasters.Add(User);
                     db.SaveChanges();
@@ -37,6 +41,11 @@ namespace ComplaintManagement.Repository
                 }
                 else
                 {
+                    if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
+                    {
+                        new Common().RemoveFile(User.ImagePath);
+                        UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
+                    }
                     UserVM.IsActive = true;
                     UserVM.CreatedDate = User.CreatedDate;
                     UserVM.UpdatedDate = DateTime.UtcNow;
@@ -55,6 +64,20 @@ namespace ComplaintManagement.Repository
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
+            }
+        }
+
+        public void RemoveProfilePic(string fileName)
+        {
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var user = db.UserMasters.Where(x => x.ImagePath == fileName).FirstOrDefault();
+                if (user != null)
+                {
+                    user.ImagePath = string.Empty;
+                    db.SaveChanges();
+                }
+                new Common().RemoveFile(fileName);
             }
         }
 

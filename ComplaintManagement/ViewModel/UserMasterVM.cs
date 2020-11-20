@@ -10,9 +10,8 @@ namespace ComplaintManagement.ViewModel
     public class UserMasterVM
     {
         public int Id { get; set; }
-        [DisplayName("Employee ")]
         public string EmployeeName { get; set; }
-        [DisplayName("Employee Id")]
+        
         public int EmployeeId { get; set; }
         [DisplayName("Gender")]
         public string Gender { get; set; }

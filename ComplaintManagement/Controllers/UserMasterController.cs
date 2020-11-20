@@ -220,6 +220,23 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+
+        [HttpPost]
+        public ActionResult RemoveProfile(string fileName)
+        {
+            try
+            {
+                new UserMastersRepository().RemoveProfilePic(fileName);
+                return new ReplyFormat().Success(Messages.DELETE_MESSAGE_FILE);
+            }
+            catch (Exception ex)
+            {
+
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
         [HttpPost]
         public ActionResult AddOrUpdateUser(UserMasterVM UserVM)
         {

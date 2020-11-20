@@ -65,18 +65,84 @@
         });
     }
 }
+function RemoveImage(id) {
+
+    //$('#deleteModal').data('id', id).modal('show');
+    //$('#deleteModal').modal('show');
+    Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
+
+}
+
+
+function Confirm(title, msg, $true, $false, $link) { /*change*/
+    var $content = "<div class='dialog-ovelay'>" +
+        "<div class='dialog'><header>" +
+        " <h3> " + title + " </h3> " +
+        "<i class='fa fa-close'></i>" +
+        "</header>" +
+        "<div class='dialog-msg'>" +
+        " <p> " + msg + " </p> " +
+        "</div>" +
+        "<footer>" +
+        "<div class='controls' style='margin-left: 235px;'>" +
+        " <button class='button button-danger doAction'>" + $true + "</button> " +
+        " <button class='button button-default cancelAction'>" + $false + "</button> " +
+        "</div>" +
+        "</footer>" +
+        "</div>" +
+        "</div>";
+    $('body').prepend($content);
+    $('.doAction').click(function () {
+        deleteAction($link);
+        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
+            $(this).remove();
+        });
+    });
+    $('.cancelAction, .fa-close').click(function () {
+        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
+            $(this).remove();
+        });
+    });
+
+}
+function deleteAction(fileName) {
+    if (fileName != "" && fileName != undefined) {
+
+        $.ajax({
+            type: "POST",
+            url: "/UserMaster/RemoveProfile",
+            data: { fileName: fileName },
+            success: function (response) {
+                if (response.status != "Fail") {
+                    funToastr(true, response.msg);
+                    $("#profile_pic").attr('src', '/Images/profile.png');
+                }
+                else {
+                    funToastr(false, response.error);
+                }
+            },
+            error: function (error) {
+                toastr.error(error)
+            }
+        });
+    }
+}
+
 
 $(document).ready(function () {
     if ($("#Id").val() === "0") {
         $("#Status").val("true");
     }
     else {
-        $("#DateOfJoining").val(new Date($("#Doj").val()).toISOString().split('T')[0]);
+        $("#DateOfJoining").val($("#Doj").val())
     }
-    let page_state = JSON.parse($("#pageState").val().toLowerCase());
-    if (page_state) {
-        $(".text-right").addClass("hide")
-        $('.container-fluid').addClass("disabled-div");
+    if ($("#pageState").val() != null && $("#pageState").val() != "") {
+        let page_state = JSON.parse($("#pageState").val().toLowerCase());
+        if (page_state) {
+            $(".text-right").addClass("hide")
+            $('.container-fluid').addClass("disabled-div");
+        }
+       
     }
     else {
         $(".text-right").removeClass("hide")
@@ -93,6 +159,10 @@ inputImage.onchange = function () {
     var file;
     if (files && files.length) {
         file = files[0];
+        const filename = file.name;
+
+        let last_dot = filename.lastIndexOf('.')
+        let ext = "."+filename.slice(last_dot + 1);
         if (bytesToSize(file.size) >= 500) {
             funToastr(false, 'The maximum file size for an image is 500 KB. Please reduce your file size and try again');
         }
@@ -102,6 +172,7 @@ inputImage.onchange = function () {
                 reader.onloadend = function () {
                     $('#profile_pic').attr('src', reader.result);
                     $(inputImage).attr("data-base64string", reader.result);
+                    $(inputImage).attr("data-extension",  ext);
                     //PreviewBase64Image(reader.result, $this.id + "Preview");
                 }
                 reader.readAsDataURL(file);
@@ -114,38 +185,3 @@ inputImage.onchange = function () {
     }
 };
 
-$("#btnUpload").on("click", function () {
-    var documentFile = $("#inputImage").get(0).files;
-
-        var documentFileExt = documentFile[0].name.split('.').pop();
-    var docfile = $("#inputImage").attr('data-base64string');
-        docfile = docfile + ',' + documentFileExt;
-        var data = {    
-            Id: orderitem,
-            OrderId: orderid,
-            UserId: userid,
-            VideoFile: $("#videoFile").attr('data-base64string'),
-            DocumentFile: docfile,
-
-            ZipFile: $("#zipFile").attr('data-base64string'),
-            OrderStatus: $('#orderstatus').val()
-        }
-
-        StartProcess();
-        $.ajax({
-            url: '/Orders/UploadVideo',
-            type: "POST",
-            data: { orderitemsVM: data },
-            success: function (result) {
-                StopProcess();
-                $("#btnUpload").prop('disabled', true)
-                $("#lblError").addClass("success").text(result.status).show();
-            },
-            error: function (err) {
-                StopProcess();
-                $("#lblError").addClass("error").text(err.status).show();
-            }
-        });
-    
-
-});
