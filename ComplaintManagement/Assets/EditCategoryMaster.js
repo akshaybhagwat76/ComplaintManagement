@@ -64,7 +64,6 @@ $(document).ready(function () {
     }
 });
 
-
 function checkDuplicate() {
     var CategoryName = $("#CategoryName").val();
     var Id = $("#Id").val();

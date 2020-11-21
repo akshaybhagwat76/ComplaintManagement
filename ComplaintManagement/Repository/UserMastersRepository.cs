@@ -208,7 +208,8 @@ namespace ComplaintManagement.Repository
 
             string[] genders = { "male", "female" };
             string[] timeType = { "full time", "part time" };
-            string[] managers = { "normal", "admin","hr" };
+            string[] managers = { "normal", "admin", "hr" };
+            string[] statuses = { "active", "inactive" };
 
             int number;
 
@@ -524,6 +525,57 @@ namespace ComplaintManagement.Repository
                         else
                         {
                             throw new Exception(string.Format(Messages.MobileNumberInvalidFormat, new object[] { i, DateOfJoiningIndex }));
+                        }
+                    }
+
+                    //Manager check
+                    if (!string.IsNullOrEmpty(workSheet.Cells[i, ManagerIndex].Value?.ToString()))
+                    {
+                        string mgr = workSheet.Cells[i, ManagerIndex].Value?.ToString();
+                        UserMasterDto.Manager = workSheet.Cells[i, ManagerIndex].Value?.ToString();
+                        ///Already created employees check.
+
+                        //if (managers.Any(mgr.ToLower().Contains))
+                        //{
+                        //}
+                        //else
+                        //{
+                        //    throw new Exception(string.Format(Messages.ManagerInvalid, new object[] { i, ManagerIndex }));
+                        //}
+                    }
+
+                    //Type check
+                    if (!string.IsNullOrEmpty(workSheet.Cells[i, TypeIndex].Value?.ToString()))
+                    {
+                        string Type = workSheet.Cells[i, TypeIndex].Value?.ToString();
+                        if (managers.Any(Type.ToLower().Contains))
+                        {
+                            UserMasterDto.Type = workSheet.Cells[i, TypeIndex].Value?.ToString();
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format(Messages.TypeInvalid, new object[] { i, TypeIndex }));
+                        }
+                    }
+
+                    //Image check
+                    if (!string.IsNullOrEmpty(workSheet.Cells[i, ImagePathIndex].Value?.ToString()))
+                    {
+                        string IMG = workSheet.Cells[i, ImagePathIndex].Value?.ToString();
+                        UserMasterDto.ImagePath = IMG;
+                    }
+
+                    //Status check
+                    if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
+                    {
+                        string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
+                        if (statuses.Any(Status.ToLower().Contains))
+                        {
+                            UserMasterDto.Status = Convert.ToBoolean(workSheet.Cells[i, StatusIndex].Value?.ToString());
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
                         }
                     }
                 }

@@ -141,7 +141,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-9 mb-3">
                                         @Html.LabelFor(model => model.SBU, new { @class = "requiredLabel" })
-                                        @Html.EditorFor(model => model.SBU, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "SBU" } })
+                                        @Html.EditorFor(model => model.SBU, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "SBU", @onfocusout = "checkDuplicate()" } })
                                     </div>
                                     <div class="col-sm-9 mb-3">
 

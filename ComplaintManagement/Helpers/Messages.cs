@@ -48,6 +48,10 @@
         public const string FieldIsRequired = "{0} is required - Row No. {1} and Column No. {2}";
         public const string GenderInvalid = "Please select gender Male or Female - Row No. {1} and Column No. {2}";
         public const string TimeTypeInvalid = "Please select time type part time or full time - Row No. {1} and Column No. {2}";
+        public const string ManagerInvalid = "Please select time type normal or admin or hr - Row No. {1} and Column No. {2}";
+        public const string TypeInvalid = "Please select time type normal or admin or hr - Row No. {1} and Column No. {2}";
+        public const string StatusInvalid = "Please select status active or inactive - Row No. {1} and Column No. {2}";
+        public const string EmpManagerPattern = "Employee ID or name or email";
         public const string DataEmpNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
         public const string EmailFormat = "Please work email in email format - Row No. {1} and Column No. {2}";
         public const string AgeInvalid = "Please select age in digit only - Row No. {1} and Column No. {2}";
