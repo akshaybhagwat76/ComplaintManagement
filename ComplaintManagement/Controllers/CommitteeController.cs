@@ -35,6 +35,35 @@ namespace ComplaintManagement.Controllers
             }
             return View("Index");
         }
+        [HttpPost]
+        public JsonResult CheckIfExist(CommitteeMasterVM data)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(data.CommitteeName))
+                {
+                    var Committee = false;
+                    if (data.Id == 0)
+                    {
+                        Committee = new CommitteeMastersRepository().IsExist(data.CommitteeName);
+                    }
+                    else
+                    {
+                        Committee = new CommitteeMastersRepository().IsExist(data.CommitteeName, data.Id);
+                    }
+                    return new ReplyFormat().Success(Messages.SUCCESS, Committee);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
         public dynamic GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;

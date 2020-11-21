@@ -32,6 +32,35 @@ namespace ComplaintManagement.Controllers
             }
             return View("Index");
         }
+        [HttpPost]
+        public JsonResult CheckIfExist(SubCategoryMasterVM data)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(data.SubCategoryName))
+                {
+                    var Subcategory = false;
+                    if (data.Id == 0)
+                    {
+                        Subcategory = new SubCategoryMastersRepository().IsExist(data.SubCategoryName);
+                    }
+                    else
+                    {
+                        Subcategory = new SubCategoryMastersRepository().IsExist(data.SubCategoryName, data.Id);
+                    }
+                    return new ReplyFormat().Success(Messages.SUCCESS, Subcategory);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
         public List<SubCategoryMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
@@ -71,6 +100,7 @@ namespace ComplaintManagement.Controllers
                 return lst;
             }
         }
+
 
         [HttpGet]
         public ActionResult GetSubCategories(string range, int currentPage)

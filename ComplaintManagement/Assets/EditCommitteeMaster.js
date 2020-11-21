@@ -1,4 +1,5 @@
-﻿function submitForm() {
+﻿var isValidCommittee = false;
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -10,6 +11,13 @@
             $(this).removeClass("adderror");
         }
     });
+    if (isValidCommittee) {
+        $("#CommitteeName").addClass("adderror");
+        funToastr(false, "This Committee is already exist."); return;
+    }
+    else {
+        $("#CommitteeName").removeClass("adderror");
+    }
 
     if (retval) {
         var data = {
@@ -53,3 +61,26 @@ $(document).ready(function () {
         }
     }
 });
+function checkDuplicate() {
+  
+    var CommitteeName = $("#CommitteeName").val();
+    var Id = $("#Id").val();
+    var data = { CommitteeName: CommitteeName, Id: Id }
+    if (CommitteeName !== "") {
+        $.post("/Committee/CheckIfExist", { data: data }, function (data) {
+            
+            if (data != null) {
+                if (data.data) {
+                    isValidCommittee = true;
+                    $("#CommitteeName").addClass("adderror");
+                    funToastr(false, 'This Committee is already exist.');
+                }
+                else {
+                    isValidCommittee = false;
+                    $("#CommitteeName").removeClass("adderror");
+                }
+            }
+        })
+
+    }
+}

@@ -32,6 +32,35 @@ namespace ComplaintManagement.Controllers
             }
             return View("Index");
         }
+        [HttpPost]
+        public JsonResult CheckIfExist(DesignationMasterVM data)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(data.Designation))
+                {
+                    var Designation = false;
+                    if (data.Id == 0)
+                    {
+                        Designation = new DesignationMasterRepository().IsExist(data.Designation);
+                    }
+                    else
+                    {
+                        Designation = new DesignationMasterRepository().IsExist(data.Designation, data.Id);
+                    }
+                    return new ReplyFormat().Success(Messages.SUCCESS, Designation);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
         public List<DesignationMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;

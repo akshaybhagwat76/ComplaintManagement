@@ -1,4 +1,5 @@
-﻿function submitForm() {
+﻿var isValidCompetency = false;
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -10,6 +11,13 @@
             $(this).removeClass("adderror");
         }
     });
+    if (isValidCompetency) {
+        $("#CompetencyName").addClass("adderror");
+        funToastr(false, "This category is already exist."); return;
+    }
+    else {
+        $("#CompetencyName").removeClass("adderror");
+    }
 
     if (retval) {
         var data = {
@@ -52,3 +60,24 @@ $(document).ready(function () {
         }
     }
 });
+function checkDuplicate() {
+    var CompetencyName = $("#CompetencyName").val();
+    var Id = $("#Id").val();
+    var data = { CompetencyName: CompetencyName, Id: Id }
+    if (CompetencyName !== "") {
+        $.post("/Competency/CheckIfExist", { data: data }, function (data) {
+            if (data != null) {
+                if (data.data) {
+                    isValidCompetency = true;
+                    $("#CompetencyName").addClass("adderror");
+                    funToastr(false, 'This Competency is already exist.');
+                }
+                else {
+                    isValidCompetency = false;
+                    $("#CompetencyName").removeClass("adderror");
+                }
+            }
+        })
+
+    }
+}

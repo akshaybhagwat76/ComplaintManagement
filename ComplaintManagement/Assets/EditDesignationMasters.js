@@ -1,4 +1,5 @@
-﻿function submitForm() {
+﻿var isValidDesignation = false;
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -10,6 +11,13 @@
             $(this).removeClass("adderror");
         }
     });
+    if (isValidDesignation) {
+        $("#Designation").addClass("adderror");
+        funToastr(false, "This Designation is already exist."); return;
+    }
+    else {
+        $("#Designation").removeClass("adderror");
+    }
 
     if (retval) {
         var data = {
@@ -52,3 +60,24 @@ $(document).ready(function () {
         }
     }
 });
+function checkDuplicate() {
+    var Designation = $("#Designation").val();
+    var Id = $("#Id").val();
+    var data = { Designation: Designation, Id: Id }
+    if (Designation !== "") {
+        $.post("/Designation/CheckIfExist", { data: data }, function (data) {
+            if (data != null) {
+                if (data.data) {
+                    isValidDesignation = true;
+                    $("#Designation").addClass("adderror");
+                    funToastr(false, 'This Designation is already exist.');
+                }
+                else {
+                    isValidDesignation = false;
+                    $("#Designation").removeClass("adderror");
+                }
+            }
+        })
+
+    }
+}
