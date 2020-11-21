@@ -1,4 +1,5 @@
-﻿function submitForm() {
+﻿var isValidRegion = false
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -10,6 +11,13 @@
             $(this).removeClass("adderror");
         }
     });
+    if (isValidRegion) {
+        $("#Region").addClass("adderror");
+        funToastr(false, "This Region is already exist."); return;
+    }
+    else {
+        $("#Region").removeClass("adderror");
+    }
 
     if (retval) {
         var data = {
@@ -52,3 +60,25 @@ $(document).ready(function () {
         }
     }
 });
+function checkDuplicate() {
+   
+    var Region = $("#Region").val();
+    var Id = $("#Id").val();
+    var data = { Region: Region, Id: Id };
+    if (Region !== "") {
+        $.post("/Region/CheckIfExist", { data: data }, function (data) {
+            if (data != null) {
+                if (data.data) {
+                    isValidRegion = true;
+                    $("#Region").addClass("adderror");
+                    funToastr(false, 'This Region is already exist.');
+                }
+                else {
+                    isValidRegion = false;
+                    $("#Region").removeClass("adderror");
+                }
+            }
+        })
+
+    }
+}

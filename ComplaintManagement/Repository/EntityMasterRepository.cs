@@ -103,5 +103,14 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
+        public bool IsExist(string EntityName)
+        {
+            return db.EntityMasters.Count(x => x.IsActive && x.EntityName.ToUpper() == EntityName.ToUpper()) > 0;
+        }
+
+        public bool IsExist(string EntityName, int id)
+        {
+            return db.EntityMasters.Count(x => x.IsActive && x.EntityName.ToUpper() == EntityName.ToUpper() && x.Id != id) > 0;
+        }
     }
 }

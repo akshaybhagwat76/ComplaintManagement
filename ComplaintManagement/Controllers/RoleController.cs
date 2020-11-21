@@ -222,7 +222,12 @@ namespace ComplaintManagement.Controllers
                             }
                             else
                             {
-                                row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault().SBU;
+                                if(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault()!= null)
+                                {
+                                    row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault().SBU;
+
+                                }
+
                             }
                         }
 

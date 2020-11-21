@@ -103,5 +103,14 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
+        public bool IsExist(string Region)
+        {
+            return db.RegionMasters.Count(x => x.IsActive && x.Region.ToUpper() == Region.ToUpper()) > 0;
+        }
+
+        public bool IsExist(string Region, int id)
+        {
+            return db.RegionMasters.Count(x => x.IsActive && x.Region.ToUpper() == Region.ToUpper() && x.Id != id) > 0;
+        }
     }
 }

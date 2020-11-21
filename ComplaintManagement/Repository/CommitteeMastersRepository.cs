@@ -104,5 +104,14 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
+        public bool IsExist(string CommitteeName)
+        {
+            return db.CommitteeMasters.Count(x => x.IsActive && x.CommitteeName.ToUpper() == CommitteeName.ToUpper()) > 0;
+        }
+
+        public bool IsExist(string CommitteeName, int id)
+        {
+            return db.CommitteeMasters.Count(x => x.IsActive && x.CommitteeName.ToUpper() == CommitteeName.ToUpper() && x.Id != id) > 0;
+        }
     }
 }

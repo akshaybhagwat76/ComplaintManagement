@@ -1,4 +1,5 @@
-﻿function submitForm() {
+﻿var isValidEntity = false
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -10,6 +11,13 @@
             $(this).removeClass("adderror");
         }
     });
+    if (isValidEntity) {
+        $("#EntityName").addClass("adderror");
+        funToastr(false, "This Entity is already exist."); return;
+    }
+    else {
+        $("#EntityName").removeClass("adderror");
+    }
 
     if (retval) {
         var data = {
@@ -52,3 +60,25 @@ $(document).ready(function () {
         }
     }
 });
+
+function checkDuplicate() {
+    var EntityName = $("#EntityName").val();
+    var Id = $("#Id").val();
+    var data = { EntityName: EntityName, Id: Id }
+    if (EntityName !== "") {
+        $.post("/Entity/CheckIfExist", { data: data }, function (data) {
+            if (data != null) {
+                if (data.data) {
+                    isValidEntity = true;
+                    $("#EntityName").addClass("adderror");
+                    funToastr(false, 'This Entity is already exist.');
+                }
+                else {
+                    isValidEntity = false;
+                    $("#EntityName").removeClass("adderror");
+                }
+            }
+        })
+
+    }
+}
