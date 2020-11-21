@@ -1,4 +1,5 @@
-﻿function submitForm() {
+﻿var isValidLocation = false;
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -10,6 +11,13 @@
             $(this).removeClass("adderror");
         }
     });
+    if (isValidLocation) {
+        $("#LocationName").addClass("adderror");
+        funToastr(false, "This Location is already exist."); return;
+    }
+    else {
+        $("#LocationName").removeClass("adderror");
+    }
 
     if (retval) {
         var data = {
@@ -52,3 +60,24 @@ $(document).ready(function () {
         }
     }
 });
+function checkDuplicate() {
+    var LocationName = $("#LocationName").val();
+    var Id = $("#Id").val();
+    var data = { LocationName: LocationName, Id: Id }
+    if (LocationName !== "") {
+        $.post("/Location/CheckIfExist", { data: data }, function (data) {
+            if (data != null) {
+                if (data.data) {
+                    isValidLocation = true;
+                    $("#LocationName").addClass("adderror");
+                    funToastr(false, 'This category is already exist.');
+                }
+                else {
+                    isValidLocation = false;
+                    $("#LocationName").removeClass("adderror");
+                }
+            }
+        })
+
+    }
+}

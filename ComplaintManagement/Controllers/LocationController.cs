@@ -140,5 +140,35 @@ namespace ComplaintManagement.Controllers
             return View();
            
         }
+        [HttpPost]
+        public JsonResult CheckIfExist(LocationMasterVM data)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(data.LocationName))
+                {
+                    var Location = false;
+                    if (data.Id == 0)
+                    {
+                        Location = new LocationMastersRepository().IsExist(data.LocationName);
+                    }
+                    else
+                    {
+                        Location = new LocationMastersRepository().IsExist(data.LocationName, data.Id);
+                    }
+                    return new ReplyFormat().Success(Messages.SUCCESS, Location);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
     }
 }

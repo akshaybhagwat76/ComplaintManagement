@@ -1,4 +1,5 @@
-﻿function submitForm() {
+﻿var isValidLOS = false;
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -10,7 +11,13 @@
             $(this).removeClass("adderror");
         }
     });
-
+    if (isValidLOS) {
+        $("#LOSName").addClass("adderror");
+        funToastr(false, "This LOS is already exist."); return;
+    }
+    else {
+        $("#LOSName").removeClass("adderror");
+    }
     if (retval) {
         var data = {
             Id: $("#Id").val().trim(),
@@ -67,3 +74,24 @@ $(document).ready(function () {
         }
     }
 });
+function checkDuplicate() {
+    var LOSName = $("#LOSName").val();
+    var Id = $("#Id").val();
+    var data = { LOSName: LOSName, Id: Id }
+    if (LOSName !== "") {
+        $.post("/LOS/CheckIfExist", { data: data }, function (data) {
+            if (data != null) {
+                if (data.data) {
+                    isValidLOS = true;
+                    $("#LOSName").addClass("adderror");
+                    funToastr(false, 'This LOS is already exist.');
+                }
+                else {
+                    isValidLOS = false;
+                    $("#LOSName").removeClass("adderror");
+                }
+            }
+        })
+
+    }
+}

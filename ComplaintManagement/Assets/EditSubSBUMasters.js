@@ -1,4 +1,6 @@
-﻿function submitForm() {
+﻿var isValidSubSBU = false;
+
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -10,6 +12,13 @@
             $(this).removeClass("adderror");
         }
     });
+    if (isValidSubSBU) {
+        $("#SubSBU").addClass("adderror");
+        funToastr(false, "This SubSBU is already exist."); return;
+    }
+    else {
+        $("#SubSBU").removeClass("adderror");
+    }
 
     if (retval) {
         var data = {
@@ -52,3 +61,26 @@ $(document).ready(function () {
         }
     }
 });
+function checkDuplicate() {
+    var SubSBU = $("#SubSBU").val();
+    var Id = $("#Id").val();
+    var data = { SubSBU: SubSBU, Id: Id }
+    if (SubSBU !== "") {
+        $.post("/SubSBU/CheckIfExist", { data: data }, function (data) {
+            if (data != null) {
+                if (data.data) {
+                   
+           
+                    isValidSubSBU = true;
+                    $("#SubSBU").addClass("adderror");
+                    funToastr(false, 'This SubSBU is already exist.');
+                }
+                else {
+                    isValidSubSBU = false;
+                    $("#SubSBU").removeClass("adderror");
+                }
+            }
+        })
+
+    }
+}
