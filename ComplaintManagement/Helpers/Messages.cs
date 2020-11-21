@@ -43,6 +43,18 @@
 
         public const string PRODUCT_IMAGE = "Product";
 
+        public const string DataEmpAlreadyExists = "This Employee {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string FieldCannotBeBlankOrEmpty = "{0} cannot be blank or contain white space.";
+        public const string FieldIsRequired = "{0} is required - Row No. {1} and Column No. {2}";
+        public const string GenderInvalid = "Please select gender Male or Female - Row No. {1} and Column No. {2}";
+        public const string TimeTypeInvalid = "Please select time type part time or full time - Row No. {1} and Column No. {2}";
+        public const string DataEmpNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
+        public const string EmailFormat = "Please work email in email format - Row No. {1} and Column No. {2}";
+        public const string AgeInvalid = "Please select age in digit only - Row No. {1} and Column No. {2}";
+        public const string DOJInvalid = "Please enter valid date of joining - Row No. {1} and Column No. {2}";
+        public const string MobileNumberInvalid = "Please enter valid mobile number - Row No. {1} and Column No. {2}";
+        public const string MobileNumberInvalidFormat = "Mobile number should not contain char - Row No. {1} and Column No. {2}";
+
         public const string LOGO = "Logo";
 
         public const string ORDER_NOT_REVISION_YET = "Order Not Delivered";
