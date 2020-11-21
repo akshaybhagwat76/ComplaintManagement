@@ -99,5 +99,14 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
+        public bool IsExist(string LOSName)
+        {
+            return db.LOSMasters.Count(x => x.IsActive && x.LOSName.ToUpper() == LOSName.ToUpper()) > 0;
+        }
+
+        public bool IsExist(string LOSName, int id)
+        {
+            return db.LOSMasters.Count(x => x.IsActive && x.LOSName.ToUpper() == LOSName.ToUpper() && x.Id != id) > 0;
+        }
     }
 }

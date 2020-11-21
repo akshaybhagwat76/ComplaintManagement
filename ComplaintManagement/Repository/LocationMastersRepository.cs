@@ -102,5 +102,14 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
+        public bool IsExist(string LocationName)
+        {
+            return db.LocationMasters.Count(x => x.IsActive && x.LocationName.ToUpper() == LocationName.ToUpper()) > 0;
+        }
+
+        public bool IsExist(string LocationName, int id)
+        {
+            return db.LocationMasters.Count(x => x.IsActive && x.LocationName.ToUpper() == LocationName.ToUpper() && x.Id != id) > 0;
+        }
     }
 }

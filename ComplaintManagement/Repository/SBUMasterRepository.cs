@@ -104,9 +104,9 @@ namespace ComplaintManagement.Repository
         }
         
 
-        public bool IsExist(string SBU,int id)
+        public bool IsExist(string SBU)
         {
-            return db.SBUMasters.Count(x => x.IsActive && x.SBU.ToUpper() == SBU.ToUpper() && x.Id!=id) > 0;
+            return db.SBUMasters.Count(x => x.IsActive && x.SBU.ToUpper() == SBU.ToUpper()) > 0;
         }
       
         public bool IsExist(string SBU,int id)

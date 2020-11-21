@@ -137,7 +137,37 @@ namespace ComplaintManagement.Controllers
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return View();
-           
+
         }
+        [HttpPost]
+        public JsonResult CheckIfExist(SubSBUMasterVM data)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(data.SubSBU))
+                {
+                    var SubSBU = false;
+                    if (data.Id == 0)
+                    {
+                        SubSBU = new SubSBUMasterRepository().IsExist(data.SubSBU);
+                    }
+                    else
+                    {
+                        SubSBU = new SubSBUMasterRepository().IsExist(data.SubSBU, data.Id);
+                    }
+                    return new ReplyFormat().Success(Messages.SUCCESS, SubSBU);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
     }
 }

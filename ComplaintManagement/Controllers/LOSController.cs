@@ -311,5 +311,34 @@ namespace ComplaintManagement.Controllers
             return View();
 
         }
+        [HttpPost]
+        public JsonResult CheckIfExist(LOSMasterVM data)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(data.LOSName))
+                {
+                    var LOS = false;
+                    if (data.Id == 0)
+                    {
+                        LOS = new LOSMasterRepository().IsExist(data.LOSName);
+                    }
+                    else
+                    {
+                        LOS = new LOSMasterRepository().IsExist(data.LOSName, data.Id);
+                    }
+                    return new ReplyFormat().Success(Messages.SUCCESS, LOS);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
     }
 }
