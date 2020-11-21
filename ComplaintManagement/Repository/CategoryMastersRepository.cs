@@ -5,6 +5,7 @@ using ComplaintManagement.ViewModel;
 using Elmah;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
@@ -31,6 +32,10 @@ namespace ComplaintManagement.Repository
                     categoryVM.CreatedDate = DateTime.UtcNow;
                     categoryVM.UserId = 1;
                     category = Mapper.Map<CategoryMasterVM, CategoryMaster>(categoryVM);
+                    if (IsExist(category.CategoryName))
+                    {
+                        throw new Exception(Messages.ALREADY_EXISTS);
+                    }
                     db.CategoryMasters.Add(category);
                     db.SaveChanges();
                     return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
@@ -41,6 +46,10 @@ namespace ComplaintManagement.Repository
                     categoryVM.UserId = 1; categoryVM.CreatedDate = category.CreatedDate;
                     categoryVM.UpdatedDate= DateTime.UtcNow;
                     db.Entry(category).CurrentValues.SetValues(categoryVM);
+                    if (IsExist(category.CategoryName,category.Id))
+                    {
+                        throw new Exception(Messages.ALREADY_EXISTS);
+                    }
                     db.SaveChanges();
                     return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
 
@@ -92,7 +101,6 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
         }
 
-
         public bool Delete(int id)
         {
             var data = db.CategoryMasters.FirstOrDefault(p => p.Id == id);
@@ -101,6 +109,16 @@ namespace ComplaintManagement.Repository
                 data.IsActive = false;
             }
             return db.SaveChanges() > 0;
+        }
+
+        public bool IsExist(string categoryName)
+        {
+            return db.CategoryMasters.Count(x => x.IsActive && x.CategoryName.ToUpper() == categoryName.ToUpper()) > 0;
+        }
+
+        public bool IsExist(string categoryName,int id)
+        {
+            return db.CategoryMasters.Count(x => x.IsActive && x.CategoryName.ToUpper() == categoryName.ToUpper() && x.Id!=id) > 0;
         }
     }
 }

@@ -43,5 +43,29 @@ namespace ComplaintManagement.Helpers
             File.WriteAllBytes(filePath, imageBytes);
             return NewFileName;
         }
+        public string SaveExcelFromBase64(string filename)
+        {
+
+            try
+            {
+                string filePath = "";
+                string[] pd = filename.Split(',');
+                string NewFileName = RandomString(3) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + "." + pd[2];
+                byte[] imageBytes = Convert.FromBase64String(pd[1]);
+                if (!Directory.Exists("~/Imports/temps"))
+                {
+                    Directory.CreateDirectory(HttpContext.Current.Server.MapPath("~/Imports/temps"));
+                }
+                filePath = System.Web.HttpContext.Current.Server.MapPath("~/Imports/temps/" + NewFileName);
+                File.WriteAllBytes(filePath, imageBytes);
+                return System.Web.HttpContext.Current.Server.MapPath("~/Imports/temps/" + NewFileName);
+                
+            }
+            catch (Exception ex)
+            {
+
+                return string.Empty;
+            }
+        }
     }
 }

@@ -200,14 +200,16 @@
                                             @for (int i = 1; i <= ViewBag.PageCount; i++)
                                             {
                                                 <td>
-                                                    @if (i != ViewBag.CurrentPageIndex)
-                                                    {
-                                                        <a href="javascript:PagerClick(@i);">@i</a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span>@i</span>
-                                                    }
+                                                    <div class="pagination">
+                                                        @if (i != ViewBag.CurrentPageIndex)
+                                                        {
+                                                            <a href="javascript:PagerClick(@i);">@i</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@i</span>
+                                                        }
+                                                    </div>
                                                 </td>
                                             }
                                         </tr>
@@ -225,7 +227,6 @@
     <!-- End of Main Content -->
 </div>
 <!-- End of Content Wrapper -->
-    
 <!-- End of Page Wrapper -->
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
@@ -263,6 +264,7 @@
 
                             <div class="input-group">
                                 <div class="custom-file">
+                                    
                                     <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
                                     <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                 </div>

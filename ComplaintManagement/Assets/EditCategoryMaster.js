@@ -1,4 +1,6 @@
-﻿function submitForm() {
+﻿var isValidCategory = false;
+
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -11,6 +13,14 @@
         }
       
     });
+
+    if (isValidCategory) {
+        $("#CategoryName").addClass("adderror");
+        funToastr(false, "This category is already exist."); return;
+    }
+    else {
+        $("#CategoryName").removeClass("adderror");
+    }
 
     if (retval) {
         var data = {
@@ -40,15 +50,39 @@ $(document).ready(function () {
     if ($("#Id").val() === "0") {
         $("#Status").val("true");
     }
-   
-    let page_state = JSON.parse($("#pageState").val().toLowerCase());
-    if (page_state) {
-        $(".text-right").addClass("hide")
-        $('.container-fluid').addClass("disabled-div");
-    }
-    else {
-        $(".text-right").removeClass("hide")
+    if ($("#pageState").val() != null && $("#pageState").val() != "") {
+        let page_state = JSON.parse($("#pageState").val().toLowerCase());
+        if (page_state) {
+            $(".text-right").addClass("hide")
+            $('.container-fluid').addClass("disabled-div");
+        }
+        else {
+            $(".text-right").removeClass("hide")
 
-        $('.container-fluid').removeClass("disabled-div");
+            $('.container-fluid').removeClass("disabled-div");
+        }
     }
 });
+
+
+function checkDuplicate() {
+    var CategoryName = $("#CategoryName").val();
+    var Id = $("#Id").val();
+    var data = { CategoryName: CategoryName ,Id:Id}
+    if (CategoryName !== "") {
+        $.post("/Category/CheckIfExist", { data: data }, function (data) {
+            if (data != null) {
+                if (data.data) {
+                    isValidCategory = true;
+                    $("#CategoryName").addClass("adderror");
+                    funToastr(false, 'This category is already exist.');
+                }
+                else {
+                    isValidCategory = false;
+                    $("#CategoryName").removeClass("adderror");
+                }
+            }
+        })
+      
+    }
+}

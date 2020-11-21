@@ -227,30 +227,7 @@ function checkDuplicate() {
 
         })
     }
-
 }
-//var ExalFile = document.getElementById('ExalFile');
 
-//ExalFile.onchange = function () {
-//    var files = this.files;
-//    var file;
-   
-//        let last_dot = filename.lastIndexOf('.')
-//        let ext = "." + filename.slice(last_dot + 1);
-//        if (ext != "Xlsx" || ext != "Xls") {
-//            funToastr(false, 'Pleace Select Exale File');
-//        }
-//        else {
-//            $.ajax({
-//                type: "POST",
-//                url: "/UserMaster/ExalUploadFile/",
-//                success: function (data) {
-
-//                }
-//            })
-//            }
-//        }
-    
-//};
 
 

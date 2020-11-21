@@ -56,7 +56,7 @@ namespace ComplaintManagement.Controllers
                         .Skip((currentPage - 1) * maxRows)
                         .Take(maxRows).ToList();
 
-               
+
                 dynamic output = new List<dynamic>();
 
                 #region Other logics
@@ -146,7 +146,8 @@ namespace ComplaintManagement.Controllers
                         dynamic row = new ExpandoObject();
                         if (com.SBUId > 0)
                         {
-                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU;
+                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId) != null ? lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU : "";
+
                         }
                         if (com.SubSBUId > 0)
                         {
@@ -196,7 +197,7 @@ namespace ComplaintManagement.Controllers
         [HttpGet]
         public ActionResult GetUsers(string range, int currentPage)
         {
-            ViewBag.lstUser = JsonConvert.SerializeObject(GetAll(currentPage,range));
+            ViewBag.lstUser = JsonConvert.SerializeObject(GetAll(currentPage, range));
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 
@@ -277,7 +278,7 @@ namespace ComplaintManagement.Controllers
 
         }
 
-        public ActionResult Edit(int id,bool isView)
+        public ActionResult Edit(int id, bool isView)
         {
             try
             {
@@ -293,7 +294,7 @@ namespace ComplaintManagement.Controllers
                 ViewBag.ViewState = isView;
 
                 UserMasterVM UserVM = new UserMastersRepository().Get(id);
-                ViewBag.PageType = !isView ?"Edit":"View";
+                ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageUserMaster", UserVM);
             }
             catch (Exception ex)
@@ -317,44 +318,24 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
-        //public ActionResult ExalUploadFile(FormCollection formCollection)
-        //{
-        //    var usersList = new List<User>();
-        //    if (Request != null)
-        //    {
-        //        HttpPostedFileBase file = Request.Files["UploadedFile"];
-        //        if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName))
-        //        {
-        //            string fileName = file.FileName;
-        //            string fileContentType = file.ContentType;
-        //            byte[] fileBytes = new byte[file.ContentLength];
-        //            var data = file.InputStream.Read(fileBytes, 0, Convert.ToInt32(file.ContentLength));
-        //            using (var package = new ExcelPackage(file.InputStream))
-        //            {
-        //                var currentSheet = package.Workbook.Worksheets;
-        //                var workSheet = currentSheet.First();
-        //                var noOfCol = workSheet.Dimension.End.Column;
-        //                var noOfRow = workSheet.Dimension.End.Row;
-        //                for (int rowIterator = 2; rowIterator <= noOfRow; rowIterator++)
-        //                {
-        //                    var user = new User();
-        //                    user.SNo = Convert.ToInt32(workSheet.Cells[rowIterator, 1].Value);
-        //                    user.Name = workSheet.Cells[rowIterator, 2].Value.ToString();
-        //                    user.Age = Convert.ToInt32(workSheet.Cells[rowIterator, 3].Value);
-        //                    usersList.Add(user);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    using (ExcelImportDBEntities excelImportDBEntities = new ExcelImportDBEntities())
-        //    {
-        //        foreach (var item in usersList)
-        //        {
-        //            excelImportDBEntities.Users.Add(item);
-        //        }
-        //        excelImportDBEntities.SaveChanges();
-        //    }
-        //    return View("Index");
-        //}
+        [HttpPost]
+        public ActionResult ImportUsers(string file)
+        {
+            try
+            {
+              string  retval = new UserMastersRepository().UploadImportUsers(file);
+                if(!string.IsNullOrEmpty(retval))
+                {
+                    int count = new UserMastersRepository().ImportUsers(retval);
+                }
+                return new ReplyFormat().Success(retval);
+            }
+            catch (Exception ex)
+            {
+
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
     }
 }

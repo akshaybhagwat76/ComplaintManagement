@@ -151,7 +151,7 @@
 
                                 </li>
                             </ul>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -204,14 +204,16 @@
                                             @for (int i = 1; i <= ViewBag.PageCount; i++)
                                             {
                                                 <td>
-                                                    @if (i != ViewBag.CurrentPageIndex)
-                                                    {
-                                                        <a href="javascript:PagerClick(@i);">@i</a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span>@i</span>
-                                                    }
+                                                    <div class="pagination">
+                                                        @if (i != ViewBag.CurrentPageIndex)
+                                                        {
+                                                            <a href="javascript:PagerClick(@i);">@i</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@i</span>
+                                                        }
+                                                    </div>
                                                 </td>
                                             }
                                         </tr>

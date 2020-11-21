@@ -181,7 +181,10 @@ namespace ComplaintManagement.Controllers
                                 List<string> sbus = new List<string>();
                                 foreach (string SBUIdItem in array)
                                 {
-                                    sbus.Add(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault().SBU);
+                                    if (lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault() != null)
+                                    {
+                                        sbus.Add(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault().SBU);
+                                    }
                                 }
                                 row.SBU = string.Join(",", sbus);
                             }

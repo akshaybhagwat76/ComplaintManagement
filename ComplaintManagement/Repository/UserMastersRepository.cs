@@ -3,9 +3,11 @@ using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -135,16 +137,16 @@ namespace ComplaintManagement.Repository
                                 response += Messages.WORK_EMAIL_EXIST;
                             }
                         }
-                        else if(!string.IsNullOrEmpty(workEmail))
+                        else if (!string.IsNullOrEmpty(workEmail))
                         {
-                            bool workEmailExist = lstUsers.Count(x=>x.WorkEmail == workEmail) > 0;
+                            bool workEmailExist = lstUsers.Count(x => x.WorkEmail == workEmail) > 0;
                             if (workEmailExist)
                             {
                                 response += Messages.WORK_EMAIL_EXIST;
                             }
                         }
 
-                         if (UserId > 0 && !string.IsNullOrEmpty(empId))
+                        if (UserId > 0 && !string.IsNullOrEmpty(empId))
                         {
                             bool empIdExist = lstUsers.Count(x => x.Id != UserId && x.EmployeeId == empId) > 0;
                             if (empIdExist)
@@ -183,6 +185,56 @@ namespace ComplaintManagement.Repository
                 data.IsActive = false;
             }
             return db.SaveChanges() > 0;
+        }
+        public string UploadImportUsers(string file)
+        {
+            string response = string.Empty;
+            return new Common().SaveExcelFromBase64(file);
+
+
+        }
+        public int ImportUsers(string file)
+        {
+            List<UserMaster> importUsers = new List<UserMaster>();
+            UserMaster UserMasterDto = null;
+            int count = 0;
+            #region Indexes 
+            int EmployeeNameIndex = 2; int EmployeeIdIndex = 3; int GenderIndex = 4; int AgeIndex = 5;
+            int WorkEmailIndex = 6; int TimeTypeIndex = 7; int BusinessTitleIndex = 8; int CompanyIndex = 9; int LOSIdIndex = 10;
+            int SBUIdIndex = 11; int SubSBUIdIndex = 12; int CompentencyIdIndex = 13; int LocationIdIndex = 14; int RegionIdIndex = 15;
+            int DateOfJoiningIndex = 16; int MobileNoIndex = 17; int newICIndex = 18; int ManagerIndex = 19; int TypeIndex = 20;
+            int IsActiveIndex = 21; int ImagePathIndex = 22; int StatusIndex = 23;
+
+
+            #endregion
+            if (Path.GetExtension(file) == ".xlsx")
+            {
+                ExcelPackage package = new ExcelPackage(new FileInfo(file));
+                ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+
+                for (int i = 1; i <= workSheet.Dimension.Rows; i++)
+                {
+                    if (i == 1) //skip header row if its there
+                    {
+                        continue;
+                    }
+                    UserMasterDto = new UserMaster();
+                    //Validate initial 
+                    //if (!string.IsNullOrEmpty(workSheet.Cells[i, initalIndex].Value?.ToString()))
+                    //{
+                    //    if (_customItemManager.GetItemListByType(FlexiCloud.Common.ItemListConst.Initial).Where(ini => ini.Name == workSheet.Cells[i, initalIndex].Value?.ToString()).ToList().Count == 0)
+                    //    {
+                    //        throw new UserFriendlyException(L("InvalidInitial", "Initial", i, initalIndex));
+                    //    }
+                    //    else
+                    //    {
+                    //        empPersonalDetailDto.Initial = workSheet.Cells[i, initalIndex].Value?.ToString();
+                    //    }
+                    //}
+
+                }
+            }
+            return count;
         }
     }
 }

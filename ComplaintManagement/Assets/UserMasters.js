@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿var isValidExcel = false;
+$(document).ready(function () {
     $.noConflict();
     // $("#myTable").DataTable();
   
@@ -93,3 +94,70 @@ function PagerClick(index) {
     }
     location.href = '/UserMaster/LoadUserMasters?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
 }
+var ExcelFile = document.getElementById('ExcelFile');
+
+ExcelFile.onchange = function () {
+    var files = this.files;
+    var file = files[0];
+    var filename = file.name
+    var acceptedFiles = ["xlsx", "xls"];
+    debugger
+    let last_dot = filename.lastIndexOf('.')
+    let ext = filename.slice(last_dot + 1);
+    var isAcceptedExcelFormat = ($.inArray(ext, acceptedFiles)) !== -1;
+    if (!isAcceptedExcelFormat) {
+        isValidExcel = false;
+        funToastr(false, 'Please select excel file');
+    }
+    else {
+        isValidExcel = true;
+        var reader = new FileReader();
+        reader.onloadend = function () {
+           
+            $(ExcelFile).attr("data-base64string", reader.result);
+            $(ExcelFile).attr("data-extension", ext);
+            //PreviewBase64Image(reader.result, $this.id + "Preview");
+        }
+        reader.readAsDataURL(file);
+       
+    }
+}
+function ImportExcelFile() {
+    if (!isValidExcel) {
+        funToastr(false, 'Please select excel file first.');
+
+    }
+    else {
+        var documentFile = $("#ExcelFile").get(0).files;
+        var docfile = "";
+        if (documentFile.length > 0) {
+            var documentFileExt = documentFile[0].name.split('.').pop();
+            docfile = $("#ExcelFile").attr('data-base64string');
+            docfile = docfile + ',' + documentFileExt;
+        }
+       debugger
+        StartProcess();
+        $.ajax({
+            type: "POST",
+            url: "/UserMaster/ImportUsers",
+            data: { file: docfile },
+            success: function (data) {
+                StopProcess();
+                console.log(data);
+                if (data.status == "Fail") {
+                    
+                    $("#lblError").addClass("adderror").text(data.error).show();
+                }
+                else {
+                   
+                }
+            }
+        });
+    }
+}
+    
+
+    
+
+
+

@@ -3,6 +3,7 @@
     ViewBag.Title = "Index";
     dynamic data = Json.Decode(ViewBag.lstUser);
 }
+
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -221,14 +222,16 @@
                                                 @for (int i = 1; i <= ViewBag.PageCount; i++)
                                                 {
                                                     <td>
-                                                        @if (i != ViewBag.CurrentPageIndex)
-                                                        {
-                                                            <a href="javascript:PagerClick(@i);">@i</a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span>@i</span>
-                                                        }
+                                                        <div class="pagination">
+                                                            @if (i != ViewBag.CurrentPageIndex)
+                                                            {
+                                                                <a href="javascript:PagerClick(@i);">@i</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>@i</span>
+                                                            }
+                                                        </div>
                                                     </td>
                                                 }
                                             </tr>
@@ -262,14 +265,14 @@
 
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="ExalFile" aria-describedby="inputGroupFileAddon01">
+                                    <input type="file" class="custom-file-input" id="ExcelFile" aria-describedby="inputGroupFileAddon01">
                                     <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <a href="#" class="btn btn-danger btn-user btn-sm">Upload</a>
+                        <a href="javascript:void(0)" class="btn btn-danger btn-user btn-sm"  onclick="ImportExcelFile()">Upload</a>
                         <a href="#" class="btn bg-white border btn-user btn-sm">Cancel</a>
                     </div>
                 </div>

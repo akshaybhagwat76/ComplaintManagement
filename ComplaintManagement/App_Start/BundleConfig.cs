@@ -10,7 +10,7 @@ namespace ComplaintManagement
         {
             // CSS style (bootstrap/inspinia)
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/common.css"));
+                      "~/Content/common.css", new CssRewriteUrlTransform()));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
@@ -28,7 +28,7 @@ namespace ComplaintManagement
 
             // Font Awesome All
             bundles.Add(new StyleBundle("~/font-awesome/all").Include(
-                      "~/Scripts/vendor/fontawesome-free/css/all.min.css"));
+                      "~/Scripts/vendor/fontawesome-free/css/all.min.css", new CssRewriteUrlTransform()));
 
             // SB-admin-2
             bundles.Add(new StyleBundle("~/sb-admin2/css").Include(

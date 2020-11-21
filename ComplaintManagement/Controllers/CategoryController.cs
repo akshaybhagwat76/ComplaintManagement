@@ -2,6 +2,7 @@
 using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,36 @@ namespace ComplaintManagement.Controllers
 
                 ViewBag.CurrentPageIndex = currentPage;
                 return lst;
+            }
+        }
+
+        [HttpPost]
+        public JsonResult CheckIfExist(CategoryMasterVM data)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(data.CategoryName))
+                {
+                    var category = false;
+                    if (data.Id == 0)
+                    {
+                         category = new CategoryMastersRepository().IsExist(data.CategoryName);
+                    }
+                    else
+                    {
+                        category = new CategoryMastersRepository().IsExist(data.CategoryName, data.Id);
+                    }
+                    return new ReplyFormat().Success(Messages.SUCCESS, category);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
 
