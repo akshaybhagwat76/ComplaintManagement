@@ -119,6 +119,10 @@
 
         </nav>
         <!-- End of Topbar -->
+        @if (ViewBag.ViewState != null && ViewBag.ViewState == true)
+        {
+            <a href="/SubCategory/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+        }
         <div class="container-fluid">
             <div class="page-title mb-3">
                 <h2 class="text-black">@ViewBag.PageType  Sub Category Master</h2>

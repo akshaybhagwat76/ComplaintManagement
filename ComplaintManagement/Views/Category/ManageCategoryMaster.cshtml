@@ -118,6 +118,10 @@
             </ul>
 
         </nav>
+        @if (ViewBag.ViewState != null && ViewBag.ViewState == true)
+        {
+            <a href="/Category/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+        }
         <div class="container-fluid">
             <div class="page-title mb-3">
                 <h2 class="text-black">@ViewBag.PageType Category Master</h2>
@@ -175,4 +179,4 @@
 
         @Scripts.Render("~/Assets/EditCategoryMasters")
 
-</div>
+    </div>
