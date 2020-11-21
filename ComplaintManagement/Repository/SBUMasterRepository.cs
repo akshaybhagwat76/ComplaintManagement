@@ -102,5 +102,16 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
+        
+
+        public bool IsExist(string SBU,int id)
+        {
+            return db.SBUMasters.Count(x => x.IsActive && x.SBU.ToUpper() == SBU.ToUpper() && x.Id!=id) > 0;
+        }
+      
+        public bool IsExist(string SBU,int id)
+        {
+            return db.SBUMasters.Count(x => x.IsActive && x.SBU.ToUpper() == SBU.ToUpper() && x.Id!=id) > 0;
+        }
     }
 }
