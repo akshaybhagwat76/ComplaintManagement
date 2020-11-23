@@ -90,4 +90,20 @@ function PagerClick(index) {
         range = fromDate + ',' + toDate;
     }
     location.href = '/SubCategory/LoadSubCategories?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+} function column_sort() {
+    getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+    comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+        v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+    table = $(this).closest('table')[0];
+    tbody = $(table).find('tbody')[0];
+
+    elm = $(this)[0];
+    children = elm.parentNode.children;
+    Array.from(tbody.querySelectorAll('tr')).sort(comparer(
+        Array.from(children).indexOf(elm), table.asc = !table.asc))
+        .forEach(tr => tbody.appendChild(tr));
 }
+
+$("#myTable").find('thead td').on('click', column_sort);
