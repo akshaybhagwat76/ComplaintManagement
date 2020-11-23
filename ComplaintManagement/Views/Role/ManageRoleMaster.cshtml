@@ -121,6 +121,10 @@
         </nav>
         <!-- End of Topbar -->
         <!-- Begin Page Content -->
+        @if (ViewBag.ViewState != null && ViewBag.ViewState == true)
+        {
+            <a href="/Role/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+        }
         <div class="container-fluid">
             <div class="page-title mb-3">
                 <h2 class="text-black">@ViewBag.PageType Role Master</h2>

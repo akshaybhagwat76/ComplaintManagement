@@ -120,6 +120,10 @@
         </nav>
         <!-- End of Topbar -->
         <!-- Begin Page Content -->
+        @if (ViewBag.ViewState != null && ViewBag.ViewState == true)
+        {
+            <a href="/UserMaster/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+        }
         <div class="container-fluid">
             <div class="page-title mb-3">
                 <h2 class="text-black">@ViewBag.PageType User Master</h2>
@@ -133,8 +137,8 @@
                         <div class="card-body">
                             @Html.HiddenFor(model => model.Id)
                             @*<div class="text-center form-group">
-            <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
-        </div>*@
+                                <i class="far fa-user-circle f-s-100 text-danger f-111"></i>
+                            </div>*@
                             <i class="fa fa-trash" style="margin-left: 180px; margin-top: 7px;" onclick="RemoveImage('@Model.ImagePath')"></i>
                             <div class="text-center form-group ">
                                 <label title="Upload image file" for="inputImage">
@@ -146,7 +150,7 @@
                                     <i class="fa fa-remove"></i>
                                 </div>
                             </div>
-                            
+
                             <form id="myForm" class="m-t" role="form" action="javascript:;">
                                 <div class="form-group">
                                     @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Name" } })
