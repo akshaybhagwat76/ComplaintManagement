@@ -64,7 +64,7 @@ namespace ComplaintManagement.Repository
             List<EntityMaster> Entity = new List<EntityMaster>();
             try
             {
-                Entity = db.EntityMasters.Where(i => i.IsActive).ToList();
+                Entity = db.EntityMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {

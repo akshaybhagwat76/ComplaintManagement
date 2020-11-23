@@ -63,7 +63,7 @@ namespace ComplaintManagement.Repository
             List<RoleMaster> Role= new List<RoleMaster>();
             try
             {
-                Role = db.RoleMasters.Where(i => i.IsActive).ToList();
+                Role = db.RoleMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {

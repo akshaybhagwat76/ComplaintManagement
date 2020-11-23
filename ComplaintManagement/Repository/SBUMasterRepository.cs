@@ -63,7 +63,7 @@ namespace ComplaintManagement.Repository
             List<SBUMaster> SBU = new List<SBUMaster>();
             try
             {
-              SBU = db.SBUMasters.Where(i => i.IsActive).ToList();
+              SBU = db.SBUMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {

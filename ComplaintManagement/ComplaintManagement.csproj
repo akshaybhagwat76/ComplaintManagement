@@ -159,7 +159,9 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CommitteeController.cs" />
     <Compile Include="Controllers\CompetencyController.cs" />
+    <Compile Include="Controllers\CompliantController.cs" />
     <Compile Include="Controllers\DesignationController.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\EntityController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -2240,6 +2242,11 @@
     <Content Include="Views\Committee\ManageCommitteeMaster.cshtml" />
     <Content Include="Views\Committee\Index.cshtml" />
     <Content Include="Views\Shared\_CommonDeleteModal.cshtml" />
+    <Content Include="Views\Employee\Index.cshtml" />
+    <Content Include="Views\Compliant\Compliant_one.cshtml" />
+    <Content Include="Views\Compliant\Compliant_two.cshtml" />
+    <Content Include="Views\Compliant\Compliant_three.cshtml" />
+    <Content Include="Views\Compliant\_Compliant.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -60,7 +60,7 @@ namespace ComplaintManagement.Repository
             List<LOSMaster> los = new List<LOSMaster>();
             try
             {
-                los = db.LOSMasters.Where(i => i.IsActive).ToList();
+                los = db.LOSMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {

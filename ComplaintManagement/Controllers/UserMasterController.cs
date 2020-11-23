@@ -40,7 +40,7 @@ namespace ComplaintManagement.Controllers
         public dynamic GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
-            var lst = new UserMastersRepository().GetAll();
+            var lst = new UserMastersRepository().GetAll().ToList();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
             {
@@ -75,7 +75,7 @@ namespace ComplaintManagement.Controllers
                         dynamic row = new ExpandoObject();
                         if (com.SBUId > 0)
                         {
-                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU;
+                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId)!=null?lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU:"";
                         }
                         if (com.SubSBUId > 0)
                         {

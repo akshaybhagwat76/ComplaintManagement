@@ -64,7 +64,7 @@ namespace ComplaintManagement.Repository
             List<RegionMaster> Region = new List<RegionMaster>();
             try
             {
-                Region = db.RegionMasters.Where(i => i.IsActive).ToList();
+                Region = db.RegionMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {

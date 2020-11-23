@@ -64,7 +64,7 @@ namespace ComplaintManagement.Repository
             List<CompetencyMaster> Competency= new List<CompetencyMaster>();
             try
             {
-                Competency = db.CompetencyMasters.Where(i => i.IsActive).ToList();
+                Competency = db.CompetencyMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {

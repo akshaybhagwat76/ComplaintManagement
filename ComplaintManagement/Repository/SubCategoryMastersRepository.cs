@@ -62,7 +62,7 @@ namespace ComplaintManagement.Repository
             List<SubCategoryMaster> Subcategory = new List<SubCategoryMaster>();
             try
             {
-                Subcategory = db.SubCategoryMasters.Where(i => i.IsActive).ToList();
+                Subcategory = db.SubCategoryMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {

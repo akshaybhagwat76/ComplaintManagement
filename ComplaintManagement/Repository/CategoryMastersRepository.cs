@@ -72,7 +72,7 @@ namespace ComplaintManagement.Repository
             List<CategoryMaster> category = new List<CategoryMaster>();
             try
             {
-                category = db.CategoryMasters.Where(i => i.IsActive).ToList();
+                category = db.CategoryMasters.Where(i => i.IsActive).ToList().OrderByDescending(x=>x.CreatedDate).OrderByDescending(x=>x.Id).ToList();
             }
             catch (Exception ex)
             {

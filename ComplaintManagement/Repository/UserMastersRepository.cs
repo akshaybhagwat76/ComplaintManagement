@@ -89,7 +89,7 @@ namespace ComplaintManagement.Repository
             List<UserMaster> User = new List<UserMaster>();
             try
             {
-                User = db.UserMasters.Where(i => i.IsActive).ToList();
+                User = db.UserMasters.Where(i => i.IsActive).OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {

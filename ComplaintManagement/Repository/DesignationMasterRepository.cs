@@ -65,7 +65,7 @@ namespace ComplaintManagement.Repository
             List<DesignationMaster> Designation = new List<DesignationMaster>();
             try
             {
-                Designation = db.DesignationMasters.Where(i => i.IsActive).ToList();
+                Designation = db.DesignationMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
             }
             catch (Exception ex)
             {
