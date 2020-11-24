@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         // GET: Employee

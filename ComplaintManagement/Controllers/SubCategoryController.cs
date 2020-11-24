@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
 {
+    [Authorize]
     public class SubCategoryController : Controller
     {
         // GET: SubCategory
@@ -99,7 +100,7 @@ namespace ComplaintManagement.Controllers
                        select Subcategory).ToList();
                 lstCount = lst.Count;
                 lst = (lst)
-                        .OrderBy(customer => customer.Id)
+                        .OrderByDescending(customer => customer.Id)
                         .Skip((currentPage - 1) * maxRows)
                         .Take(maxRows).ToList();
 
@@ -113,7 +114,7 @@ namespace ComplaintManagement.Controllers
             {
                 lst = (from Subcategory in lst
                        select Subcategory)
-            .OrderBy(customer => customer.Id)
+            .OrderByDescending(customer => customer.Id)
             .Skip((currentPage - 1) * maxRows)
             .Take(maxRows).ToList();
                 double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));

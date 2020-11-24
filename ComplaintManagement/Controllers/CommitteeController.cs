@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
 {
+    [Authorize]
     public class CommitteeController : Controller
     {
         // GET: Committee

@@ -69,6 +69,35 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
+        public UserMaster Login(LoginVM LoginVM)
+        {
+            UserMaster user = new UserMaster();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(LoginVM.Email) && string.IsNullOrWhiteSpace(LoginVM.Password))
+                {
+                    throw new Exception(Messages.BAD_DATA);
+                }
+                user = (from u in db.UserMasters
+                        where u.EmployeeName == LoginVM.Email || u.WorkEmail == LoginVM.Email && u.IsActive 
+                        select u).FirstOrDefault();
+                if (user == null)
+                {
+                    throw new Exception(Messages.INVALID_USER_PASS);
+                }
+                if (!user.IsActive )
+                {
+                    throw new Exception(Messages.NOT_ACTIVE);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            
+            return user;
+        }
 
         public void RemoveProfilePic(string fileName)
         {

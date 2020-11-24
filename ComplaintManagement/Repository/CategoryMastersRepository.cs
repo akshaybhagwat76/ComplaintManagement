@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 
 namespace ComplaintManagement.Repository
@@ -25,35 +27,43 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var category = db.CategoryMasters.FirstOrDefault(p => p.Id == categoryVM.Id);
-                if (category == null)
-                {
-                    categoryVM.IsActive = true;
-                    categoryVM.CreatedDate = DateTime.UtcNow;
-                    categoryVM.UserId = 1;
-                    category = Mapper.Map<CategoryMasterVM, CategoryMaster>(categoryVM);
-                    if (IsExist(category.CategoryName))
-                    {
-                        throw new Exception(Messages.ALREADY_EXISTS);
-                    }
-                    db.CategoryMasters.Add(category);
-                    db.SaveChanges();
-                    return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
-                }
-                else
-                {
-                    categoryVM.IsActive = true;
-                    categoryVM.UserId = 1; categoryVM.CreatedDate = category.CreatedDate;
-                    categoryVM.UpdatedDate= DateTime.UtcNow;
-                    db.Entry(category).CurrentValues.SetValues(categoryVM);
-                    if (IsExist(category.CategoryName,category.Id))
-                    {
-                        throw new Exception(Messages.ALREADY_EXISTS);
-                    }
-                    db.SaveChanges();
-                    return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var category = db.CategoryMasters.FirstOrDefault(p => p.Id == categoryVM.Id);
+                    if (category == null)
+                    {
+                        categoryVM.IsActive = true;
+                        categoryVM.CreatedDate = DateTime.UtcNow;
+                        categoryVM.CreatedBy = Convert.ToInt32(sid);
+                        category = Mapper.Map<CategoryMasterVM, CategoryMaster>(categoryVM);
+                        if (IsExist(category.CategoryName))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.CategoryMasters.Add(category);
+                        db.SaveChanges();
+                        return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
+                    }
+                    else
+                    {
+                        categoryVM.IsActive = true;
+                        categoryVM.UserId = 1; categoryVM.CreatedDate = category.CreatedDate;
+                        categoryVM.UpdatedDate = DateTime.UtcNow;
+                        db.Entry(category).CurrentValues.SetValues(categoryVM);
+                        if (IsExist(category.CategoryName, category.Id))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
+                    }
                 }
+                return new CategoryMasterVM();
             }
             catch (DbEntityValidationException dve)
             {

@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
 {
+    [Authorize]
     public class CompetencyController : Controller
     {
         // GET: Competency

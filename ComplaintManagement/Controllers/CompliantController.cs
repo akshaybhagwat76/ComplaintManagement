@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
 {
+    [Authorize]
     public class CompliantController : Controller
     {
         // GET: Compliant

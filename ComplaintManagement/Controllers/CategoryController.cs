@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         // GET: Category

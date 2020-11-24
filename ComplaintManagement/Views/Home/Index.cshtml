@@ -1,4 +1,24 @@
 ﻿@{
+    var user = ""; var userImage = string.Empty;
+    int userId = 0;
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+    if (claimsIdentity != null)
+    {
+        var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Name);
+        var cI = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.UserData);
+        var userIDInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Sid);
+
+        if (c != null && cI != null && userIDInfo != null)
+        {
+
+            user = c.Value.ToString();
+            userImage = cI.Value.ToString();
+            userId = Convert.ToInt32(userIDInfo.Value.ToString());
+        }
+    }
+}
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -94,12 +114,12 @@
                 <!-- Nav Item - User Information -->
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-white small">P Goswami</span>
-                        <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                        <span class="mr-2 d-none d-lg-inline text-white small">@user</span>
+                        <img class="img-profile rounded-circle" src="@userImage">
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="user-profile.html">
+                        <a class="dropdown-item" href="/UserMaster/Edit?id=@userId&isView=false">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>
@@ -217,131 +237,131 @@
 <script src="https://www.chartjs.org/dist/2.9.4/Chart.min.js"></script>
 <!--<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>-->
 <script>
-        var ctx = document.getElementById("categoryChart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            position: 'right',
-            type: 'pie',
-            data: {
-                labels: ["", "", "", "", ""],
-                datasets: [{
-                    backgroundColor: [
-                        "#be5168",
-                        "#993767",
-                        "#3c8e9d",
-                        "#e9d78e",
-                        "#e2975d",
-                        "#e16552"
-                    ],
-                    data: [50, 55, 60, 33, 45, 60]
-                }]
+    var ctx = document.getElementById("categoryChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        position: 'right',
+        type: 'pie',
+        data: {
+            labels: ["", "", "", "", ""],
+            datasets: [{
+                backgroundColor: [
+                    "#be5168",
+                    "#993767",
+                    "#3c8e9d",
+                    "#e9d78e",
+                    "#e2975d",
+                    "#e16552"
+                ],
+                data: [50, 55, 60, 33, 45, 60]
+            }]
+        },
+        // Configuration options go here
+        options: {
+            legend: {
+                position: 'right'
             },
-            // Configuration options go here
-            options: {
-                legend: {
-                    position: 'right'
-                },
-                tooltips: {
-                    enabled: false
+            tooltips: {
+                enabled: false
+            }
+        },
+        //plugins: {
+        //   datalabels: {
+        //        formatter: (value, ctx) => {
+        //           let datasets = ctx.chart.data.datasets;
+        //           if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
+        //               let sum = datasets[0].data.reduce((a, b) => a + b, 0);
+        //               let percentage = Math.round((value / sum) * 100) + '%';
+        //               return percentage;
+        //           } else {
+        //               return percentage;
+        //           }
+        //        }
+        //    }
+        //}
+    });
+
+
+    var ctx = document.getElementById("subcategoryChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        position: 'right',
+        type: 'pie',
+        data: {
+            labels: ["Reyas", "Chu", "Williams"],
+            datasets: [{
+                backgroundColor: [
+                    "#7a61ba",
+                    "#d8b655",
+                    "#4198d7"
+                ],
+                data: [50, 55, 60]
+            }]
+        },
+        // Configuration options go here
+        options: {
+            legend: {
+                position: 'right',
+                labels: {
+                    usePointStyle: true
                 }
             },
-            //plugins: {
-            //   datalabels: {
-            //        formatter: (value, ctx) => {
-            //           let datasets = ctx.chart.data.datasets;
-            //           if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
-            //               let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-            //               let percentage = Math.round((value / sum) * 100) + '%';
-            //               return percentage;
-            //           } else {
-            //               return percentage;
-            //           }
-            //        }
-            //    }
-            //}
-        });
+            tooltips: {
+                enabled: false
+            }
+        },
+    });
 
 
-        var ctx = document.getElementById("subcategoryChart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            position: 'right',
-            type: 'pie',
-            data: {
-                labels: ["Reyas", "Chu", "Williams"],
-                datasets: [{
-                    backgroundColor: [
-                        "#7a61ba",
-                        "#d8b655",
-                        "#4198d7"
-                    ],
-                    data: [50, 55, 60]
-                }]
+    var ctx = document.getElementById("losChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        position: 'right',
+        type: 'pie',
+        data: {
+            labels: ["Green", "Blue", "Purple", "Purple"],
+            datasets: [{
+                backgroundColor: [
+                    "#50514f",
+                    "#eec683",
+                    "#81ddc6",
+                    "#f45e58"
+                ],
+                data: [50, 55, 60, 55]
+            }]
+        },
+        // Configuration options go here
+        options: {
+            legend: {
+                display: false
             },
-            // Configuration options go here
-            options: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        usePointStyle: true
-                    }
-                },
-                tooltips: {
-                    enabled: false
-                }
-            },
-        });
+            tooltips: {
+                enabled: false
+            }
+        },
+    });
 
 
-        var ctx = document.getElementById("losChart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            position: 'right',
-            type: 'pie',
-            data: {
-                labels: ["Green", "Blue", "Purple", "Purple"],
-                datasets: [{
-                    backgroundColor: [
-                        "#50514f",
-                        "#eec683",
-                        "#81ddc6",
-                        "#f45e58"
-                    ],
-                    data: [50, 55, 60, 55]
-                }]
+    var ctx = document.getElementById("overallChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        position: 'right',
+        type: 'pie',
+        data: {
+            datasets: [{
+                backgroundColor: [
+                    "#5a9bd5",
+                    "#4472c5",
+                    "#ed7d32",
+                    "#a5a5a5",
+                    "#ffc100"
+                ],
+                data: [50, 55, 60, 55, 50]
+            }]
+        },
+        // Configuration options go here
+        options: {
+            legend: {
+                display: false
             },
-            // Configuration options go here
-            options: {
-                legend: {
-                    display: false
-                },
-                tooltips: {
-                    enabled: false
-                }
-            },
-        });
-
-
-        var ctx = document.getElementById("overallChart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            position: 'right',
-            type: 'pie',
-            data: {
-                datasets: [{
-                    backgroundColor: [
-                        "#5a9bd5",
-                        "#4472c5",
-                        "#ed7d32",
-                        "#a5a5a5",
-                        "#ffc100"
-                    ],
-                    data: [50, 55, 60, 55, 50]
-                }]
-            },
-            // Configuration options go here
-            options: {
-                legend: {
-                    display: false
-                },
-                tooltips: {
-                    enabled: false
-                }
-            },
-        });</script>    
+            tooltips: {
+                enabled: false
+            }
+        },
+    });</script>    

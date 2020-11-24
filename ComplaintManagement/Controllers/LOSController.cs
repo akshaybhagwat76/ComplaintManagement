@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 namespace ComplaintManagement.Controllers
 {
+    [Authorize]
     public class LOSController : Controller
     {
         // GET: LOS
