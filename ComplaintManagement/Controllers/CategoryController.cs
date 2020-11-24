@@ -76,7 +76,7 @@ namespace ComplaintManagement.Controllers
                        select category).ToList();
                 lstCount = lst.Count;
                 lst = (lst)
-                        .OrderBy(customer => customer.Id)
+                        .OrderByDescending(customer => customer.Id)
                         .Skip((currentPage - 1) * maxRows)
                         .Take(maxRows).ToList();
 
@@ -90,7 +90,7 @@ namespace ComplaintManagement.Controllers
             {
                 lst = (from category in lst
                        select category)
-             .OrderBy(customer => customer.Id)
+             .OrderByDescending(customer => customer.Id)
              .Skip((currentPage - 1) * maxRows)
              .Take(maxRows).ToList();
                 double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));

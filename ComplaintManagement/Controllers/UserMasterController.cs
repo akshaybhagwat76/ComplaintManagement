@@ -75,7 +75,7 @@ namespace ComplaintManagement.Controllers
                         dynamic row = new ExpandoObject();
                         if (com.SBUId > 0)
                         {
-                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId)!=null?lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU:"";
+                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId) != null ? lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU : "";
                         }
                         if (com.SubSBUId > 0)
                         {
@@ -294,6 +294,14 @@ namespace ComplaintManagement.Controllers
                 ViewBag.ViewState = isView;
 
                 UserMasterVM UserVM = new UserMastersRepository().Get(id);
+                if (!string.IsNullOrEmpty(UserVM.ImagePath))
+                {
+                    if (!new Common().GetFilePathExist(UserVM.ImagePath))
+                    {
+                        UserVM.ImagePath = string.Empty;
+                    }
+                }
+
                 ViewBag.PageType = !isView ? "Edit" : "View";
                 return View("ManageUserMaster", UserVM);
             }
@@ -323,8 +331,8 @@ namespace ComplaintManagement.Controllers
         {
             try
             {
-              string  retval = new UserMastersRepository().UploadImportUsers(file);
-                if(!string.IsNullOrEmpty(retval))
+                string retval = new UserMastersRepository().UploadImportUsers(file);
+                if (!string.IsNullOrEmpty(retval))
                 {
                     int count = new UserMastersRepository().ImportUsers(retval);
                 }

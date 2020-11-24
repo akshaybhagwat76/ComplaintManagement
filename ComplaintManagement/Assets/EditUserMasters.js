@@ -18,6 +18,14 @@ function submitForm() {
         retval = false;
     }
 
+    var mobile = $("#MobileNo").val();
+    if (mobile.length < 10) {
+        $("#MobileNo").addClass("adderror");
+        funToastr(false, "Please enter mobile number atleast 10 digits");
+        retval = false;
+    }
+
+
     if (retval && !isValidEmail && !isValidEmp) {
         var documentFile = $("#inputImage").get(0).files;
         var docfile = "";
@@ -67,11 +75,7 @@ function submitForm() {
     }
 }
 function RemoveImage(id) {
-
-    //$('#deleteModal').data('id', id).modal('show');
-    //$('#deleteModal').modal('show');
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
-
 }
 
 

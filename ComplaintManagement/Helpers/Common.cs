@@ -29,6 +29,25 @@ namespace ComplaintManagement.Helpers
                 File.Delete(HttpContext.Current.Server.MapPath(filePath));
             }
         }
+
+        public bool GetFilePathExist(string fileName)
+        {
+            try
+            {
+                string filePath = "~/Images/profile_pics/" + fileName;
+
+                if (File.Exists(HttpContext.Current.Server.MapPath(filePath)))
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public string SaveImageFromBase64(string filename)
         {
             string filePath = "";
