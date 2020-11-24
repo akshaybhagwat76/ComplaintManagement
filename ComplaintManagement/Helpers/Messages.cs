@@ -44,6 +44,7 @@
         public const string PRODUCT_IMAGE = "Product";
         public const string Active = "Active";
         public const string Inactive = "Inactive";
+        public const string Status = "Status";
 
         public const string DataEmpAlreadyExists = "This Employee {0} already exists! - Row No. {1} and Column No. {2}";
         public const string FieldCannotBeBlankOrEmpty = "{0} cannot be blank or contain white space.";
