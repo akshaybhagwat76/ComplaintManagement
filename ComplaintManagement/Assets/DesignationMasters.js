@@ -9,6 +9,22 @@ function deleteDesignation(id) {
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
 
 }
+function searchKeyPress(e) {
+    // look for window.event in case event isn't passed in
+    e = e || window.event;
+    if (e.keyCode == 13) {
+        searchDesignation(e.target.value);
+        return false;
+    }
+    return true;
+}
+
+function searchDesignation(searchText) {
+    if (searchText !== null && searchText !== "") {
+        location.href = "/Designation/searchDesignation?search=" + searchText;
+    }
+
+}
 
 
 function Confirm(title, msg, $true, $false, $link) { /*change*/

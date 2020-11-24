@@ -3,7 +3,7 @@
 function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
-    debugger
+
     $("#myForm .required").each(function () {
         if (!$(this).val()) {
             $(this).addClass("adderror");

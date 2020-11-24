@@ -9,6 +9,22 @@ function deleteCompetency(id) {
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
 
 }
+function searchKeyPress(e) {
+    // look for window.event in case event isn't passed in
+    e = e || window.event;
+    if (e.keyCode == 13) {
+        searchCompetency(e.target.value);
+        return false;
+    }
+    return true;
+}
+
+function searchCompetency(searchText) {
+    if (searchText !== null && searchText !== "") {
+        location.href = "/Competency/searchCompetency?search=" + searchText;
+    }
+
+}
 
 
 function Confirm(title, msg, $true, $false, $link) { /*change*/

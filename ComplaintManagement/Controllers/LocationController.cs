@@ -21,6 +21,29 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+        public ActionResult SearchLocation(string search)
+        {
+            if (!string.IsNullOrEmpty(search))
+            {
+                if (search.ToLower() == Messages.Inactive.ToLower())
+                {
+                    ViewBag.lstLocation = GetAll(1).ToList().Where(x => !x.Status).ToList();
+                }
+                if (search.ToLower() == Messages.Active.ToLower())
+                {
+                    ViewBag.lstLocation = GetAll(1).ToList().Where(x => x.Status).ToList();
+                }
+                if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
+                {
+                    ViewBag.lstLocation = GetAll(1).ToList().Where(x => x.LocationName.Contains(search)).ToList();
+                }
+
+                var DataTableDetail = new HomeController().getDataTableDetail("Location", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+            }
+            return View("Index");
+        }
         [HttpGet]
         public ActionResult LoadLocation(int currentPageIndex, string range = "")
         {

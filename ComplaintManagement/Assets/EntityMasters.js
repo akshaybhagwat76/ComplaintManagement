@@ -9,6 +9,22 @@ function deleteEntity(id) {
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
 
 }
+function searchKeyPress(e) {
+    // look for window.event in case event isn't passed in
+    e = e || window.event;
+    if (e.keyCode == 13) {
+        searchEntity(e.target.value);
+        return false;
+    }
+    return true;
+}
+
+function searchEntity(searchText) {
+    if (searchText !== null && searchText !== "") {
+        location.href = "/Entity/searchEntity?search=" + searchText;
+    }
+
+}
 
 function column_sort() {
     getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;

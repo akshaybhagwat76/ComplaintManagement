@@ -9,6 +9,22 @@ function deleteSBU(id) {
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
 
 }
+function searchKeyPress(e) {
+    // look for window.event in case event isn't passed in
+    e = e || window.event;
+    if (e.keyCode == 13) {
+        searchSBU(e.target.value);
+        return false;
+    }
+    return true;
+}
+
+function searchSBU(searchText) {
+    if (searchText !== null && searchText !== "") {
+        location.href = "/SBU/searchSBU?search=" + searchText;
+    }
+
+}
 
 
 function Confirm(title, msg, $true, $false, $link) { /*change*/

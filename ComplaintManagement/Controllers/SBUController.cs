@@ -21,6 +21,29 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+        public ActionResult searchSBU(string search)
+        {
+            if (!string.IsNullOrEmpty(search))
+            {
+                if (search.ToLower() == Messages.Inactive.ToLower())
+                {
+                    ViewBag.lstSBU = GetAll(1).ToList().Where(x => !x.Status).ToList();
+                }
+                if (search.ToLower() == Messages.Active.ToLower())
+                {
+                    ViewBag.lstSBU = GetAll(1).ToList().Where(x => x.Status).ToList();
+                }
+                if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
+                {
+                    ViewBag.lstSBU = GetAll(1).ToList().Where(x => x.SBU.Contains(search)).ToList();
+                }
+
+                var DataTableDetail = new HomeController().getDataTableDetail("SBU", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+            }
+            return View("Index");
+        }
         [HttpGet]
         public ActionResult LoadSBU(int currentPageIndex, string range = "")
         {
