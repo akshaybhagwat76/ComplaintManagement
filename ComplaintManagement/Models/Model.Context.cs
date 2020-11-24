@@ -25,18 +25,19 @@ namespace ComplaintManagement.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AzureFile> AzureFiles { get; set; }
         public virtual DbSet<CategoryMaster> CategoryMasters { get; set; }
         public virtual DbSet<CommitteeMaster> CommitteeMasters { get; set; }
         public virtual DbSet<CompetencyMaster> CompetencyMasters { get; set; }
         public virtual DbSet<DesignationMaster> DesignationMasters { get; set; }
         public virtual DbSet<EntityMaster> EntityMasters { get; set; }
         public virtual DbSet<LocationMaster> LocationMasters { get; set; }
+        public virtual DbSet<LOSMaster> LOSMasters { get; set; }
         public virtual DbSet<RegionMaster> RegionMasters { get; set; }
+        public virtual DbSet<RoleMaster> RoleMasters { get; set; }
         public virtual DbSet<SBUMaster> SBUMasters { get; set; }
         public virtual DbSet<SubCategoryMaster> SubCategoryMasters { get; set; }
         public virtual DbSet<SubSBUMaster> SubSBUMasters { get; set; }
-        public virtual DbSet<LOSMaster> LOSMasters { get; set; }
-        public virtual DbSet<RoleMaster> RoleMasters { get; set; }
         public virtual DbSet<UserMaster> UserMasters { get; set; }
     }
 }

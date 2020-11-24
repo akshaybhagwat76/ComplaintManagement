@@ -12,16 +12,10 @@ namespace ComplaintManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DesignationMaster
+    public partial class AzureFile
     {
-        public int Id { get; set; }
-        public string Designation { get; set; }
-        public bool Status { get; set; }
-        public int UserId { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public bool IsActive { get; set; }
-        public Nullable<System.DateTime> UpdatedDate { get; set; }
-        public int CreatedBy { get; set; }
-        public int modifiedby { get; set; }
+        public int id { get; set; }
+        public Nullable<int> meetingid { get; set; }
+        public string empname { get; set; }
     }
 }

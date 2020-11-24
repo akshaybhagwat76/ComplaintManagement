@@ -38,6 +38,8 @@ namespace ComplaintManagement.Models
         public string ImagePath { get; set; }
         public bool Status { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public int CreatedBy { get; set; }
+        public int modifiedby { get; set; }
     
         public virtual CompetencyMaster CompetencyMaster { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
