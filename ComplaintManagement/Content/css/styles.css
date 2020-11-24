@@ -22,7 +22,7 @@ form.user .form-control-user {
 }
 
 .bg-login-image {
-    background: url('../img/login.png');
+    background: url('../../Content/img/login.png');
     background-position: center;
     background-size: cover;
 }
