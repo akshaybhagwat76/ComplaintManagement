@@ -61,23 +61,23 @@ $(document).ready(function () {
     }
 });
 function checkDuplicate() {
-    var SBU = $("#SBU").val();
-    var Id = $("#Id").val();
-    var data = { SBU: SBU, Id: Id }
-    if (SBU !== "") {
-        $.post("/SBU/CheckIfExist", { data: data }, function (data) {
-            if (data != null) {
-                if (data.data) {
-                    isValidSBU = true;
-                    $("#SBU").addClass("adderror");
-                    funToastr(false, 'This SBU is already exist.');
-                }
-                else {
-                    isValidSBU = false;
-                    $("#SBU").removeClass("adderror");
-                }
-            }
-        })
+    //var SBU = $("#SBU").val();
+    //var Id = $("#Id").val();
+    //var data = { SBU: SBU, Id: Id }
+    //if (SBU !== "") {
+    //    $.post("/SBU/CheckIfExist", { data: data }, function (data) {
+    //        if (data != null) {
+    //            if (data.data) {
+    //                isValidSBU = true;
+    //                $("#SBU").addClass("adderror");
+    //                funToastr(false, 'This SBU is already exist.');
+    //            }
+    //            else {
+    //                isValidSBU = false;
+    //                $("#SBU").removeClass("adderror");
+    //            }
+    //        }
+    //    })
 
-    }
+    //}
 }

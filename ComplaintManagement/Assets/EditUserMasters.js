@@ -1,5 +1,6 @@
 ﻿var isValidEmail = false; var isValidEmp = false;
 function submitForm() {
+   
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
 
@@ -17,7 +18,7 @@ function submitForm() {
         $("#WorkEmail").addClass("adderror");
         retval = false;
     }
-
+    
     if (retval && !isValidEmail && !isValidEmp) {
         var documentFile = $("#inputImage").get(0).files;
         var docfile = "";
@@ -26,6 +27,7 @@ function submitForm() {
             docfile = $("#inputImage").attr('data-base64string');
             docfile = docfile + ',' + documentFileExt;
         }
+        debugger
         var data = {
             Id: $("#Id").val(),
             EmployeeName: $("#EmployeeName").val().trim(),
@@ -64,6 +66,13 @@ function submitForm() {
                 }
             }
         });
+    }
+    if (isValidEmail) {
+        $("#WorkEmail").addClass("adderror");
+    }
+    if (isValidEmp) {
+        $("#EmployeeId").addClass("adderror");
+
     }
 }
 function RemoveImage(id) {
@@ -202,6 +211,7 @@ function checkDuplicate() {
             url: "/UserMaster/IsExist/",
             data: { UserVM: data },
             success: function (data) {
+                debugger
                 if (data != null) {
                     if (data.msg != null && data.msg != "") {
                         if (data.msg.includes("Employee Id")) {
@@ -221,6 +231,12 @@ function checkDuplicate() {
                             isValidEmail = false;
                         }
                         funToastr(false, data.msg);
+                    }
+                    else {
+                        $("#WorkEmail").removeClass("adderror");
+                        isValidEmail = false;
+                        isValidEmp = false;
+                        $("#EmployeeId").removeClass("adderror");
                     }
                 }
             }
