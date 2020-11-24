@@ -24,6 +24,37 @@ namespace ComplaintManagement.Controllers
             return View();
            
         }
+        public ActionResult SearchRole(string search)
+        {
+            var originalList = GetAll(1);
+            dynamic output = new List<dynamic>();
+
+            foreach (var item in originalList)
+            {
+                var itemIndex = (IDictionary<string, object>)item;
+                foreach (var kvp in itemIndex)
+                {
+                    if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
+                    {
+                        output.Add(item);
+                    }
+                    if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
+                    {
+                        bool Status = Convert.ToBoolean(kvp.Value);
+                        if (Status && search.ToLower() == Messages.Active.ToLower())
+                        {
+                            output.Add(item);
+                        }
+                        if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                        {
+                            output.Add(item);
+                        }
+                    }
+                }
+            }
+            ViewBag.lstRole = JsonConvert.SerializeObject(output);
+            return View("Index");
+        }
         public ActionResult LoadRole(int currentPageIndex, string range = "")
         {
             ViewBag.lstRole = JsonConvert.SerializeObject(GetAll(currentPageIndex, range));

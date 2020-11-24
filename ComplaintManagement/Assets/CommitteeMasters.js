@@ -2,6 +2,23 @@
     $.noConflict();
     // $("#myTable").DataTable();
 });
+function searchKeyPress(e) {
+  
+    // look for window.event in case event isn't passed in
+    e = e || window.event;
+    if (e.keyCode == 13) {
+        search(e.target.value);
+        return false;
+    }
+    return true;
+}
+
+function search(searchText) {
+    if (searchText !== null && searchText !== "") {
+        location.href = "/Committee/SearchCommittee?search=" + searchText;
+    }
+
+}
 function deleteCommittee(id) {
 
     //$('#deleteModal').data('id', id).modal('show');

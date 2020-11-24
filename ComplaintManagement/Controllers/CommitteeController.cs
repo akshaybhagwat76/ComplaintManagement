@@ -24,29 +24,37 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
-        //public ActionResult SearchCategories(string search)
-        //{
-        //    if (!string.IsNullOrEmpty(search))
-        //    {
-        //        if (search.ToLower() == Messages.Inactive.ToLower())
-        //        {
-        //            ViewBag.lstCategories = GetAll(1).ToList().Where(x => !x.Status).ToList();
-        //        }
-        //        if (search.ToLower() == Messages.Active.ToLower())
-        //        {
-        //            ViewBag.lstCategories = GetAll(1).ToList().Where(x => x.Status).ToList();
-        //        }
-        //        if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
-        //        {
-        //            ViewBag.lstCategories = GetAll(1).ToList().Where(x => x.CategoryName.Contains(search)).ToList();
-        //        }
+        public ActionResult SearchCommittee(string search)
+        {
+            var originalList = GetAll(1);
+            dynamic output = new List<dynamic>();
 
-        //        var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
-        //        ViewBag.Page = DataTableDetail.Item1;
-        //        ViewBag.PageIndex = DataTableDetail.Item2;
-        //    }
-        //    return View("Index");
-        //}
+            foreach (var item in originalList)
+            {
+                var itemIndex = (IDictionary<string, object>)item;
+                foreach (var kvp in itemIndex)
+                {
+                    if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
+                    {
+                        output.Add(item);
+                    }
+                    if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
+                    {
+                        bool Status = Convert.ToBoolean(kvp.Value);
+                        if (Status && search.ToLower() == Messages.Active.ToLower())
+                        {
+                            output.Add(item);
+                        }
+                        if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                        {
+                            output.Add(item);
+                        }
+                    }
+                }
+            }
+            ViewBag.lstCommittee = JsonConvert.SerializeObject(output);
+            return View("Index");
+        }
         [HttpGet]
         public ActionResult LoadCommittee(int currentPageIndex, string range = "")
         {
