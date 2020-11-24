@@ -265,7 +265,7 @@ label.adderror {
 }
 
 input.adderror, select.adderror, div.adderror {
-    border: 1px dotted #cc5965;
+    border: 2px dotted #cc5965;
 }
 
 .disabled-div {
