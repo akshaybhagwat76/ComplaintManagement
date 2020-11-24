@@ -9,6 +9,24 @@ function deleteCategory(id) {
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
 
 }
+function searchKeyPress(e) {
+    debugger
+    // look for window.event in case event isn't passed in
+    e = e || window.event;
+    if (e.keyCode == 13) {
+        searchCategries(e.target.value);
+        return false;
+    }
+    return true;
+}
+
+function searchCategries(searchText) {
+    if (searchText !== null && searchText !== "") {
+        location.href = "/Category/SearchCategories?search=" + searchText;
+    }
+
+}
+
 function column_sort() {
     getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
     comparer = (idx, asc) => (a, b) => ((v1, v2) =>
@@ -98,12 +116,12 @@ function filterGrid() {
     }
 }
 function PagerClick(index) {
-        StartProcess();
+    StartProcess();
     $("#hfCurrentPageIndex").val(index);
     var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : ""; var toDate = $("#toDate").val() == undefined ? "" : $("#toDate").val();
     var range = "";
     if (fromDate !== "" && toDate !== "") {
         range = fromDate + ',' + toDate;
     }
-    location.href = '/Category/LoadCategories?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range='+range;
+    location.href = '/Category/LoadCategories?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
 }

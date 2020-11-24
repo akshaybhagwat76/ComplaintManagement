@@ -23,10 +23,35 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+
+        public ActionResult SearchCategories(string search)
+        {
+            if (!string.IsNullOrEmpty(search))
+            {
+                if (search.ToLower() == Messages.Inactive.ToLower())
+                {
+                    ViewBag.lstCategories = GetAll(1).ToList().Where(x => !x.Status).ToList();
+                }
+                if (search.ToLower() == Messages.Active.ToLower())
+                {
+                    ViewBag.lstCategories = GetAll(1).ToList().Where(x => x.Status).ToList();
+                }
+                if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
+                {
+                    ViewBag.lstCategories = GetAll(1).ToList().Where(x => x.CategoryName.Contains(search)).ToList();
+                }
+
+                var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+            }
+            return View("Index");
+        }
+
         [HttpGet]
         public ActionResult LoadCategories(int currentPageIndex, string range = "")
         {
-            ViewBag.lstCategories = GetAll(currentPageIndex,range);
+            ViewBag.lstCategories = GetAll(currentPageIndex, range);
             if (!string.IsNullOrEmpty(range))
             {
                 ViewBag.startDate = range.Split(',')[0];
@@ -39,7 +64,7 @@ namespace ComplaintManagement.Controllers
             int maxRows = 10; int lstCount = 0;
             var lst = new CategoryMastersRepository().GetAll();
             lstCount = lst.Count;
-          
+
 
             if (!string.IsNullOrEmpty(range))
             {
@@ -86,7 +111,7 @@ namespace ComplaintManagement.Controllers
                     var category = false;
                     if (data.Id == 0)
                     {
-                         category = new CategoryMastersRepository().IsExist(data.CategoryName);
+                        category = new CategoryMastersRepository().IsExist(data.CategoryName);
                     }
                     else
                     {
@@ -107,7 +132,7 @@ namespace ComplaintManagement.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetCategories(string range,int currentPage)
+        public ActionResult GetCategories(string range, int currentPage)
         {
             ViewBag.lstCategories = GetAll(currentPage, range);
             ViewBag.startDate = range.Split(',')[0];
