@@ -15,11 +15,8 @@ function submitForm() {
         $("#Designation").addClass("adderror");
         funToastr(false, "This Designation is already exist."); return;
     }
-    else {
-        $("#Designation").removeClass("adderror");
-    }
 
-    if (retval) {
+    if (retval && !isValidDesignation) {
         var data = {
             Id: $("#Id").val().trim(),
             Designation: $("#Designation").val().trim(),

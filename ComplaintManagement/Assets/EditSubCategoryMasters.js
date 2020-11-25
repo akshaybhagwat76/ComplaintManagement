@@ -1,4 +1,6 @@
-﻿function submitForm() {
+﻿var isValidSubCategory = false; 
+
+function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -11,7 +13,12 @@
         }
     });
 
-    if (retval) {
+    if (isValidSubCategory) {
+        $("#SubCategoryName").addClass("adderror");
+        funToastr(false, "This sub category is already exist."); return;
+    }
+
+    if (retval && !isValidSubCategory) {
         var data = {
             Id: $("#Id").val().trim(),
             SubCategoryName: $("#SubCategoryName").val().trim(),
@@ -52,3 +59,27 @@ $(document).ready(function () {
         }
     }
 });
+
+
+function checkDuplicate() {
+    var SubCategoryName = $("#SubCategoryName").val();
+    var Id = $("#Id").val();
+    var data = { SubCategoryName: SubCategoryName, Id: Id }
+    if (SubCategoryName !== "") {
+        $.post("/SubCategory/CheckIfExist", { data: data }, function (data) {
+            debugger
+            if (data != null) {
+                if (data.data) {
+                    isValidSubCategory = true;
+                    $("#SubCategoryName").addClass("adderror");
+                    funToastr(false, 'This sub category is already exist.');
+                }
+                else {
+                    isValidSubCategory = false;
+                    $("#SubCategoryName").removeClass("adderror");
+                }
+            }
+        })
+
+    }
+}

@@ -11,14 +11,13 @@ function submitForm() {
             $(this).removeClass("adderror");
         }
     });
+
     if (isValidLOS) {
         $("#LOSName").addClass("adderror");
         funToastr(false, "This LOS is already exist."); return;
     }
-    else {
-        $("#LOSName").removeClass("adderror");
-    }
-    if (retval) {
+  
+    if (retval && !isValidLOS) {
         var data = {
             Id: $("#Id").val().trim(),
             LOSName: $("#LOSName").val().trim(),

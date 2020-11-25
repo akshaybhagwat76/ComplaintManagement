@@ -15,11 +15,8 @@ function submitForm() {
         $("#EntityName").addClass("adderror");
         funToastr(false, "This Entity is already exist."); return;
     }
-    else {
-        $("#EntityName").removeClass("adderror");
-    }
-
-    if (retval) {
+ 
+    if (retval && !isValidEntity) {
         var data = {
             Id: $("#Id").val().trim(),
             EntityName: $("#EntityName").val().trim(),

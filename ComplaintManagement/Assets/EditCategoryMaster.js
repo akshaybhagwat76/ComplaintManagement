@@ -1,9 +1,8 @@
-﻿var isValidCategory = false;
+﻿var isValidCategory = false; 
 
 function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
-
     $("#myForm .required").each(function () {
         if (!$(this).val()) {
             $(this).addClass("adderror");
@@ -12,22 +11,18 @@ function submitForm() {
         else {
             $(this).removeClass("adderror");
         }
-      
     });
 
     if (isValidCategory) {
         $("#CategoryName").addClass("adderror");
         funToastr(false, "This category is already exist."); return;
     }
-    else {
-        $("#CategoryName").removeClass("adderror");
-    }
 
-    if (retval) {
+    if (retval && !isValidCategory) {
         var data = {
             id: $("#Id").val().trim(),
             CategoryName: $("#CategoryName").val().trim(),
-            Status: $("#Status").val() == "true" ? true: false
+            Status: $("#Status").val() == "true" ? true : false
         }
         StartProcess();
         $.ajax({
@@ -68,9 +63,10 @@ $(document).ready(function () {
 function checkDuplicate() {
     var CategoryName = $("#CategoryName").val();
     var Id = $("#Id").val();
-    var data = { CategoryName: CategoryName ,Id:Id}
+    var data = { CategoryName: CategoryName, Id: Id }
     if (CategoryName !== "") {
         $.post("/Category/CheckIfExist", { data: data }, function (data) {
+            debugger
             if (data != null) {
                 if (data.data) {
                     isValidCategory = true;
@@ -83,6 +79,6 @@ function checkDuplicate() {
                 }
             }
         })
-      
+
     }
 }

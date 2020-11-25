@@ -15,11 +15,8 @@ function submitForm() {
         $("#Region").addClass("adderror");
         funToastr(false, "This Region is already exist."); return;
     }
-    else {
-        $("#Region").removeClass("adderror");
-    }
-
-    if (retval) {
+ 
+    if (retval && !isValidRegion) {
         var data = {
             Id: $("#Id").val().trim(),
             Region: $("#Region").val().trim(),
