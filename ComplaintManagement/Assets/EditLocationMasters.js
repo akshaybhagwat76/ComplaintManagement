@@ -15,11 +15,8 @@ function submitForm() {
         $("#LocationName").addClass("adderror");
         funToastr(false, "This Location is already exist."); return;
     }
-    else {
-        $("#LocationName").removeClass("adderror");
-    }
 
-    if (retval) {
+    if (retval && !isValidLocation) {
         var data = {
             Id: $("#Id").val().trim(),
             LocationName: $("#LocationName").val().trim(),

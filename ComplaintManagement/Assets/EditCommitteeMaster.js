@@ -15,11 +15,8 @@ function submitForm() {
         $("#CommitteeName").addClass("adderror");
         funToastr(false, "This Committee is already exist."); return;
     }
-    else {
-        $("#CommitteeName").removeClass("adderror");
-    }
 
-    if (retval) {
+    if (retval && !isValidCommittee) {
         var data = {
             id: $("#Id").val().trim(),
             UserId  : $("#UserId").val().trim(),
@@ -62,7 +59,6 @@ $(document).ready(function () {
     }
 });
 function checkDuplicate() {
-  
     var CommitteeName = $("#CommitteeName").val();
     var Id = $("#Id").val();
     var data = { CommitteeName: CommitteeName, Id: Id }

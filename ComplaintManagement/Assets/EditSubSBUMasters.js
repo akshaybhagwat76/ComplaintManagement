@@ -16,11 +16,8 @@ function submitForm() {
         $("#SubSBU").addClass("adderror");
         funToastr(false, "This SubSBU is already exist."); return;
     }
-    else {
-        $("#SubSBU").removeClass("adderror");
-    }
 
-    if (retval) {
+    if (retval && !isValidSubSBU) {
         var data = {
             Id: $("#Id").val().trim(),
             SubSBU: $("#SubSBU").val().trim(),

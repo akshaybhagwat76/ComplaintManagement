@@ -106,7 +106,7 @@ namespace ComplaintManagement.Repository
         }
         public bool IsExist(string CommitteeName)
         {
-            return db.CommitteeMasters.Count(x => x.IsActive && x.CommitteeName.ToUpper() == CommitteeName.ToUpper()) > 0;
+            return db.CommitteeMasters.Count(x => x.IsActive && x.CommitteeName.ToLower() == CommitteeName.ToLower()) > 0;
         }
 
         public bool IsExist(string CommitteeName, int id)

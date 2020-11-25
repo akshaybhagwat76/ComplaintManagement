@@ -15,11 +15,8 @@ function submitForm() {
         $("#CompetencyName").addClass("adderror");
         funToastr(false, "This category is already exist."); return;
     }
-    else {
-        $("#CompetencyName").removeClass("adderror");
-    }
-
-    if (retval) {
+    
+    if (retval && !isValidCompetency) {
         var data = {
             Id: $("#Id").val().trim(),
             CompetencyName: $("#CompetencyName").val().trim(),

@@ -15,11 +15,8 @@ function submitForm() {
         $("#SBU").addClass("adderror");
         funToastr(false, "This SBU is already exist."); return;
     }
-    else {
-        $("#SBU").removeClass("adderror");
-    }
 
-    if (retval) {
+    if (retval && !isValidSBU) {
         var data = {
             Id: $("#Id").val().trim(),
             SBU: $("#SBU").val().trim(),
