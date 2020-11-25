@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 namespace ComplaintManagement.Repository
 {
@@ -24,27 +26,46 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var SBU = db.SBUMasters.FirstOrDefault(p => p.Id == SBUVM.Id);
-                if (SBU == null)
-                {
-                    SBUVM.IsActive = true;
-                    SBUVM.CreatedDate = DateTime.UtcNow;
-                    SBUVM.UserId = 1;
-                    SBU = Mapper.Map<SBUMasterVM, SBUMaster>(SBUVM);
-                    db.SBUMasters.Add(SBU);
-                    db.SaveChanges();
-                    return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
-                }
-                else
-                {
-                    SBUVM.IsActive = true;
-                    SBUVM.UserId = 1; SBUVM.CreatedDate = SBU.CreatedDate;
-                    SBUVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(SBU).CurrentValues.SetValues(SBUVM);
-                    db.SaveChanges();
-                    return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var SBU = db.SBUMasters.FirstOrDefault(p => p.Id == SBUVM.Id);
+                    if (SBU == null)
+                    {
+                        SBUVM.IsActive = true;
+                        SBUVM.CreatedDate = DateTime.UtcNow;
+                        SBUVM.UserId = 1;
+                        SBUVM.CreatedBy = Convert.ToInt32(sid);
+                        SBU = Mapper.Map<SBUMasterVM, SBUMaster>(SBUVM);
+                        if (IsExist(SBU.SBU))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SBUMasters.Add(SBU);
+                        db.SaveChanges();
+                        return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
+                    }
+                    else
+                    {
+                        SBUVM.IsActive = true;
+                        SBUVM.UserId = 1; SBUVM.CreatedDate = SBU.CreatedDate;
+                        SBUVM.UpdatedDate = DateTime.UtcNow;
+                        SBUVM.ModifiedBy = Convert.ToInt32(sid);
+                        db.Entry(SBU).CurrentValues.SetValues(SBUVM);
+                        if (IsExist(SBU.SBU,SBU.Id))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
+
+                    }
                 }
+                return new SBUMasterVM();
             }
             catch (DbEntityValidationException dve)
             {

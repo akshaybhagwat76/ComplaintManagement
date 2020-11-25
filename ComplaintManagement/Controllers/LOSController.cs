@@ -81,7 +81,7 @@ namespace ComplaintManagement.Controllers
                        select LOS).ToList();
                 lstCount = lst.Count;
                 lst = (lst)
-                        .OrderBy(customer => customer.Id)
+                        .OrderByDescending(customer => customer.Id)
                         .Skip((currentPage - 1) * maxRows)
                         .Take(maxRows).ToList();
 
@@ -171,7 +171,7 @@ namespace ComplaintManagement.Controllers
 
                 lst = (from LOS in lst
                        select LOS)
-           .OrderBy(LOS => LOS.Id)
+           .OrderByDescending(LOS => LOS.Id)
            .Skip((currentPage - 1) * maxRows)
            .Take(maxRows).ToList();
 

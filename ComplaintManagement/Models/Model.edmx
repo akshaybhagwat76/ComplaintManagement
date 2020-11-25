@@ -25,7 +25,7 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="CommitteeMasters">
           <Key>
@@ -39,7 +39,7 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="CompetencyMasters">
           <Key>
@@ -52,7 +52,7 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DesignationMasters">
           <Key>
@@ -66,7 +66,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="EntityMasters">
           <Key>
@@ -80,7 +80,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="LocationMasters">
           <Key>
@@ -94,7 +94,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="LOSMasters">
           <Key>
@@ -111,7 +111,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="RegionMasters">
           <Key>
@@ -125,7 +125,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="RoleMasters">
           <Key>
@@ -142,7 +142,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SBUMasters">
           <Key>
@@ -156,7 +156,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SubCategoryMasters">
           <Key>
@@ -184,7 +184,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="UserMasters">
           <Key>
@@ -215,7 +215,7 @@
           <Property Name="Status" Type="bit" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="modifiedby" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_UserMasters_CompetencyMasters">
           <End Role="CompetencyMasters" Type="Self.CompetencyMasters" Multiplicity="1" />
@@ -393,7 +393,7 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="CommitteeMaster">
           <Key>
@@ -407,7 +407,7 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="CompetencyMaster">
           <Key>
@@ -420,7 +420,7 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_CompetencyMasters" FromRole="CompetencyMaster" ToRole="UserMaster" />
         </EntityType>
         <EntityType Name="DesignationMaster">
@@ -435,7 +435,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="EntityMaster">
           <Key>
@@ -449,7 +449,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="LocationMaster">
           <Key>
@@ -463,7 +463,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_LocationMasters" FromRole="LocationMaster" ToRole="UserMaster" />
         </EntityType>
         <EntityType Name="LOSMaster">
@@ -481,7 +481,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" FromRole="LOSMaster" ToRole="UserMaster" />
         </EntityType>
         <EntityType Name="RegionMaster">
@@ -496,7 +496,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_RegionMasters" FromRole="RegionMaster" ToRole="UserMaster" />
         </EntityType>
         <EntityType Name="RoleMaster">
@@ -514,7 +514,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="SBUMaster">
           <Key>
@@ -528,7 +528,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" FromRole="SBUMaster" ToRole="UserMaster" />
         </EntityType>
         <EntityType Name="SubCategoryMaster">
@@ -557,7 +557,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" FromRole="SubSBUMaster" ToRole="UserMaster" />
         </EntityType>
         <EntityType Name="UserMaster">
@@ -589,7 +589,7 @@
           <Property Name="Status" Type="Boolean" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="modifiedby" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="CompetencyMaster" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_CompetencyMasters" FromRole="UserMaster" ToRole="CompetencyMaster" />
           <NavigationProperty Name="LocationMaster" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_LocationMasters" FromRole="UserMaster" ToRole="LocationMaster" />
           <NavigationProperty Name="LOSMaster" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" FromRole="UserMaster" ToRole="LOSMaster" />
@@ -687,7 +687,7 @@
           <EntitySetMapping Name="CategoryMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CategoryMaster">
               <MappingFragment StoreEntitySet="CategoryMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
@@ -702,7 +702,7 @@
           <EntitySetMapping Name="CommitteeMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CommitteeMaster">
               <MappingFragment StoreEntitySet="CommitteeMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
@@ -717,7 +717,7 @@
           <EntitySetMapping Name="CompetencyMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CompetencyMaster">
               <MappingFragment StoreEntitySet="CompetencyMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
@@ -731,7 +731,7 @@
           <EntitySetMapping Name="DesignationMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.DesignationMaster">
               <MappingFragment StoreEntitySet="DesignationMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -746,7 +746,7 @@
           <EntitySetMapping Name="EntityMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EntityMaster">
               <MappingFragment StoreEntitySet="EntityMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -761,7 +761,7 @@
           <EntitySetMapping Name="LocationMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.LocationMaster">
               <MappingFragment StoreEntitySet="LocationMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -776,7 +776,7 @@
           <EntitySetMapping Name="LOSMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.LOSMaster">
               <MappingFragment StoreEntitySet="LOSMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -794,7 +794,7 @@
           <EntitySetMapping Name="RegionMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.RegionMaster">
               <MappingFragment StoreEntitySet="RegionMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -809,7 +809,7 @@
           <EntitySetMapping Name="RoleMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.RoleMaster">
               <MappingFragment StoreEntitySet="RoleMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -827,7 +827,7 @@
           <EntitySetMapping Name="SBUMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.SBUMaster">
               <MappingFragment StoreEntitySet="SBUMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -857,7 +857,7 @@
           <EntitySetMapping Name="SubSBUMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.SubSBUMaster">
               <MappingFragment StoreEntitySet="SubSBUMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -872,7 +872,7 @@
           <EntitySetMapping Name="UserMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.UserMaster">
               <MappingFragment StoreEntitySet="UserMasters">
-                <ScalarProperty Name="modifiedby" ColumnName="modifiedby" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />

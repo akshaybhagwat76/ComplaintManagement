@@ -54,6 +54,7 @@ namespace ComplaintManagement.Repository
                         categoryVM.IsActive = true;
                         categoryVM.UserId = 1; categoryVM.CreatedDate = category.CreatedDate;
                         categoryVM.UpdatedDate = DateTime.UtcNow;
+                        categoryVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(category).CurrentValues.SetValues(categoryVM);
                         if (IsExist(category.CategoryName, category.Id))
                         {

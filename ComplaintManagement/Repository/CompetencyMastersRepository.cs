@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ComplaintManagement.Controllers;
 using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
@@ -25,27 +26,46 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var Competency = db.CompetencyMasters.FirstOrDefault(p => p.Id == CompetencyVM.Id);
-                if (Competency == null)
-                {
-                    CompetencyVM.IsActive = true;
-                    CompetencyVM.CreatedDate = DateTime.UtcNow;
-                    CompetencyVM.UserId = 1;
-                    Competency = Mapper.Map<CompetencyMasterVM, CompetencyMaster>(CompetencyVM);
-                    db.CompetencyMasters.Add(Competency);
-                    db.SaveChanges();
-                    return Mapper.Map<CompetencyMaster, CompetencyMasterVM>(Competency);
-                }
-                else
-                {
-                    CompetencyVM.IsActive = true;
-                    CompetencyVM.UserId = 1; CompetencyVM.CreatedDate = Competency.CreatedDate;
-                    CompetencyVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(Competency).CurrentValues.SetValues(CompetencyVM);
-                    db.SaveChanges();
-                    return Mapper.Map<CompetencyMaster, CompetencyMasterVM>(Competency);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var Competency = db.CompetencyMasters.FirstOrDefault(p => p.Id == CompetencyVM.Id);
+                    if (Competency == null)
+                    {
+                        CompetencyVM.IsActive = true;
+                        CompetencyVM.CreatedDate = DateTime.UtcNow;
+                        CompetencyVM.UserId = 1;
+                        CompetencyVM.CreatedBy = Convert.ToInt32(sid);
+                        Competency = Mapper.Map<CompetencyMasterVM, CompetencyMaster>(CompetencyVM);
+                        if (IsExist(Competency.CompetencyName))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.CompetencyMasters.Add(Competency);
+                        db.SaveChanges();
+                        return Mapper.Map<CompetencyMaster, CompetencyMasterVM>(Competency);
+                    }
+                    else
+                    {
+                        CompetencyVM.IsActive = true;
+                        CompetencyVM.UserId = 1; CompetencyVM.CreatedDate = Competency.CreatedDate;
+                        CompetencyVM.UpdatedDate = DateTime.UtcNow;
+                        CompetencyVM.ModifiedBy = Convert.ToInt32(sid);
+                        db.Entry(Competency).CurrentValues.SetValues(CompetencyVM);
+                        if (IsExist(Competency.CompetencyName,Competency.Id))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<CompetencyMaster, CompetencyMasterVM>(Competency);
+
+                    }
                 }
+                return new CompetencyMasterVM();
             }
             catch (DbEntityValidationException dve)
             {

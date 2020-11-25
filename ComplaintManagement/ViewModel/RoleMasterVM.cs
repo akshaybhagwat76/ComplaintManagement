@@ -25,7 +25,9 @@ namespace ComplaintManagement.ViewModel
             [DisplayName("Competency ")]
             [StringLength(100, ErrorMessage = "Max 128 characters")]
             public string CompetencyId { get; set; }
-            public bool Status { get; set; }
+        public int CreatedBy { get; set; }
+        public int ModifiedBy { get; set; }
+        public bool Status { get; set; }
             public System.DateTime CreatedDate { get; set; }
             public bool IsActive { get; set; }
             public Nullable<System.DateTime> UpdatedDate { get; set; }

@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 
 
@@ -28,35 +30,54 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var User = db.UserMasters.FirstOrDefault(p => p.Id == UserVM.Id);
-                if (User == null)
-                {
-                    UserVM.IsActive = true;
-                    UserVM.CreatedDate = DateTime.UtcNow;
-                    if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
-                    {
-                        UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
-                    }
-                    User = Mapper.Map<UserMasterVM, UserMaster>(UserVM);
-                    db.UserMasters.Add(User);
-                    db.SaveChanges();
-                    return Mapper.Map<UserMaster, UserMasterVM>(User);
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
-                    {
-                        new Common().RemoveFile(User.ImagePath);
-                        UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
-                    }
-                    UserVM.IsActive = true;
-                    UserVM.CreatedDate = User.CreatedDate;
-                    UserVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(User).CurrentValues.SetValues(UserVM);
-                    db.SaveChanges();
-                    return Mapper.Map<UserMaster, UserMasterVM>(User);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var User = db.UserMasters.FirstOrDefault(p => p.Id == UserVM.Id);
+                    if (User == null)
+                    {
+                        UserVM.IsActive = true;
+                        UserVM.CreatedDate = DateTime.UtcNow;
+                        UserVM.CreatedBy = Convert.ToInt32(sid);
+                        if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
+                        {
+                            UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
+                        }
+                        User = Mapper.Map<UserMasterVM, UserMaster>(UserVM);
+                        if(!string.IsNullOrEmpty(IsExist(UserVM)))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.UserMasters.Add(User);
+                        db.SaveChanges();
+                        return Mapper.Map<UserMaster, UserMasterVM>(User);
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
+                        {
+                            new Common().RemoveFile(User.ImagePath);
+                            UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
+                        }
+                        UserVM.IsActive = true;
+                        UserVM.CreatedDate = User.CreatedDate;
+                        UserVM.UpdatedDate = DateTime.UtcNow;
+                        UserVM.ModifiedBy = Convert.ToInt32(sid);
+                        db.Entry(User).CurrentValues.SetValues(UserVM);
+                        if (!string.IsNullOrEmpty(IsExist(UserVM)))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<UserMaster, UserMasterVM>(User);
+
+                    }
                 }
+                return new UserMasterVM();
             }
             catch (DbEntityValidationException dve)
             {

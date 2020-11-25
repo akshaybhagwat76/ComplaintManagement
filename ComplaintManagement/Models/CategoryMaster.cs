@@ -22,6 +22,6 @@ namespace ComplaintManagement.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public int CreatedBy { get; set; }
-        public int modifiedby { get; set; }
+        public int ModifiedBy { get; set; }
     }
 }

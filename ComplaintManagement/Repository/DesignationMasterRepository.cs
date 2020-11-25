@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 
 
@@ -26,27 +28,46 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var Designation = db.DesignationMasters.FirstOrDefault(p => p.Id == DesignationVM.Id);
-                if (Designation == null)
-                {
-                    DesignationVM.IsActive = true;
-                    DesignationVM.CreatedDate = DateTime.UtcNow;
-                    DesignationVM.UserId = 1;
-                    Designation = Mapper.Map<DesignationMasterVM, DesignationMaster>(DesignationVM);
-                    db.DesignationMasters.Add(Designation);
-                    db.SaveChanges();
-                    return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
-                }
-                else
-                {
-                    DesignationVM.IsActive = true;
-                    DesignationVM.UserId = 1; DesignationVM.CreatedDate = Designation.CreatedDate;
-                    DesignationVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(Designation).CurrentValues.SetValues(DesignationVM);
-                    db.SaveChanges();
-                    return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var Designation = db.DesignationMasters.FirstOrDefault(p => p.Id == DesignationVM.Id);
+                    if (Designation == null)
+                    {
+                        DesignationVM.IsActive = true;
+                        DesignationVM.CreatedDate = DateTime.UtcNow;
+                        DesignationVM.UserId = 1;
+                        Designation = Mapper.Map<DesignationMasterVM, DesignationMaster>(DesignationVM);
+                        if (IsExist(Designation.Designation))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.DesignationMasters.Add(Designation);
+                        db.SaveChanges();
+                        return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
+                    }
+                    else
+                    {
+                        DesignationVM.IsActive = true;
+                        DesignationVM.UserId = 1; DesignationVM.CreatedDate = Designation.CreatedDate;
+                        DesignationVM.UpdatedDate = DateTime.UtcNow;
+                        
+                        DesignationVM.CreatedBy = Convert.ToInt32(sid);
+                        db.Entry(Designation).CurrentValues.SetValues(DesignationVM);
+                        if (IsExist(Designation.Designation,Designation.Id))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
+
+                    }
                 }
+                return new DesignationMasterVM();
             }
             catch (DbEntityValidationException dve)
             {

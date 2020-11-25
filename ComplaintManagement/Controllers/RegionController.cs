@@ -102,7 +102,7 @@ namespace ComplaintManagement.Controllers
                        select Region).ToList();
                 lstCount = lst.Count;
                 lst = (lst)
-                        .OrderBy(customer => customer.Id)
+                        .OrderByDescending(customer => customer.Id)
                         .Skip((currentPage - 1) * maxRows)
                         .Take(maxRows).ToList();
 
@@ -116,7 +116,7 @@ namespace ComplaintManagement.Controllers
             {
                 lst = (from Region in lst
                        select Region)
-             .OrderBy(customer => customer.Id)
+             .OrderByDescending(customer => customer.Id)
              .Skip((currentPage - 1) * maxRows)
              .Take(maxRows).ToList();
                 double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
