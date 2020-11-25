@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 
 namespace ComplaintManagement.Repository
@@ -25,26 +27,38 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var Role = db.RoleMasters.FirstOrDefault(p => p.Id == RoleVM.Id);
-                if (Role == null)
-                {
-                    RoleVM.IsActive = true;
-                    RoleVM.CreatedDate = DateTime.UtcNow;
-                    Role = Mapper.Map<RoleMasterVM, RoleMaster>(RoleVM);
-                    db.RoleMasters.Add(Role);
-                    db.SaveChanges();
-                    return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
-                }
-                else
-                {
-                    RoleVM.IsActive = true;
-                    RoleVM.CreatedDate = Role.CreatedDate;
-                    RoleVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(Role).CurrentValues.SetValues(RoleVM);
-                    db.SaveChanges();
-                    return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var Role = db.RoleMasters.FirstOrDefault(p => p.Id == RoleVM.Id);
+                    if (Role == null)
+                    {
+                        RoleVM.IsActive = true;
+                        RoleVM.CreatedDate = DateTime.UtcNow;
+                        RoleVM.CreatedBy = Convert.ToInt32(sid);
+                        Role = Mapper.Map<RoleMasterVM, RoleMaster>(RoleVM);
+                      
+                        db.RoleMasters.Add(Role);
+                        db.SaveChanges();
+                        return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
+                    }
+                    else
+                    {
+                        RoleVM.IsActive = true;
+                        RoleVM.CreatedDate = Role.CreatedDate;
+                        RoleVM.UpdatedDate = DateTime.UtcNow;
+                        RoleVM.ModifiedBy = Convert.ToInt32(sid);
+                        db.Entry(Role).CurrentValues.SetValues(RoleVM);
+                        db.SaveChanges();
+                        return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
+
+                    }
                 }
+                return new RoleMasterVM();
             }
             catch (DbEntityValidationException dve)
             {

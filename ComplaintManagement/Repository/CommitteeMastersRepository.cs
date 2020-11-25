@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 
 namespace ComplaintManagement.Repository
@@ -25,28 +27,46 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var Committee = db.CommitteeMasters.FirstOrDefault(p => p.Id == CommitteeVM.Id);
-                if (Committee == null)
-                {
-                    CommitteeVM.IsActive = true;
-                    CommitteeVM.CreatedDate = DateTime.UtcNow;
-          
-                    Committee = Mapper.Map<CommitteeMasterVM, CommitteeMaster>(CommitteeVM);
-                    db.CommitteeMasters.Add(Committee);
-                    db.SaveChanges();
-                    return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
-                }
-                else
-                {
-                    CommitteeVM.IsActive = true;
-                    
-                    CommitteeVM.CreatedDate = Committee.CreatedDate;
-                    CommitteeVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(Committee).CurrentValues.SetValues(CommitteeVM);
-                    db.SaveChanges();
-                    return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var Committee = db.CommitteeMasters.FirstOrDefault(p => p.Id == CommitteeVM.Id);
+                    if (Committee == null)
+                    {
+                        CommitteeVM.IsActive = true;
+                        CommitteeVM.CreatedDate = DateTime.UtcNow;
+                        CommitteeVM.CreatedBy = Convert.ToInt32(sid);
+                        Committee = Mapper.Map<CommitteeMasterVM, CommitteeMaster>(CommitteeVM);
+                        if (IsExist(Committee.CommitteeName))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.CommitteeMasters.Add(Committee);
+                        db.SaveChanges();
+                        return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                    }
+                    else
+                    {
+                        CommitteeVM.IsActive = true;
+
+                        CommitteeVM.CreatedDate = Committee.CreatedDate;
+                        CommitteeVM.UpdatedDate = DateTime.UtcNow;
+                        CommitteeVM.ModifiedBy = Convert.ToInt32(sid);
+                        db.Entry(Committee).CurrentValues.SetValues(CommitteeVM);
+                        if (IsExist(Committee.CommitteeName, Committee.Id))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+
+                    }
                 }
+                return new CommitteeMasterVM();
             }
             catch (DbEntityValidationException dve)
             {

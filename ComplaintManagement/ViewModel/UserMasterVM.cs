@@ -31,6 +31,7 @@ namespace ComplaintManagement.ViewModel
         public int SBUId { get; set; }
         [DisplayName("SubSBU")]
         public int SubSBUId { get; set; }
+
         [DisplayName("Compentency")]
         public int CompentencyId { get; set; }
         [DisplayName("Location")]
@@ -53,6 +54,8 @@ namespace ComplaintManagement.ViewModel
         public string ImagePath { get; set; }
         [DisplayName("Status")]
         public bool Status { get; set; }
+        public int CreatedBy { get; set; }
+        public int ModifiedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
 
     }

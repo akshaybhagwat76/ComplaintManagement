@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 
 namespace ComplaintManagement.Repository
@@ -25,27 +27,46 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
-                if (Entity == null)
-                {
-                    EntityVM.IsActive = true;
-                    EntityVM.CreatedDate = DateTime.UtcNow;
-                    EntityVM.UserId = 1;
-                    Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
-                    db.EntityMasters.Add(Entity);
-                    db.SaveChanges();
-                    return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
-                }
-                else
-                {
-                    EntityVM.IsActive = true;
-                    EntityVM.UserId = 1; EntityVM.CreatedDate = Entity.CreatedDate;
-                    EntityVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(Entity).CurrentValues.SetValues(EntityVM);
-                    db.SaveChanges();
-                    return Mapper.Map<EntityMaster ,EntityMasterVM>(Entity);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
+                    if (Entity == null)
+                    {
+                        EntityVM.IsActive = true;
+                        EntityVM.CreatedDate = DateTime.UtcNow;
+                        EntityVM.UserId = 1;
+                        EntityVM.CreatedBy = Convert.ToInt32(sid);
+                        Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
+                        if (IsExist(Entity.EntityName))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.EntityMasters.Add(Entity);
+                        db.SaveChanges();
+                        return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+                    }
+                    else
+                    {
+                        EntityVM.IsActive = true;
+                        EntityVM.UserId = 1; EntityVM.CreatedDate = Entity.CreatedDate;
+                        EntityVM.UpdatedDate = DateTime.UtcNow;
+                        EntityVM.ModifiedBy = Convert.ToInt32(sid);
+                        db.Entry(Entity).CurrentValues.SetValues(EntityVM);
+                        if (IsExist(Entity.EntityName,Entity.Id))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+
+                    }
                 }
+                return new EntityMasterVM();
             }
             catch (DbEntityValidationException dve)
             {

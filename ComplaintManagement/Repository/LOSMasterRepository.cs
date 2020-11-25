@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 namespace ComplaintManagement.Repository
 {
@@ -22,26 +24,45 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var LOS = db.LOSMasters.FirstOrDefault(p => p.Id == LOSVM.Id);
-                if (LOS == null)
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
                 {
-                    LOSVM.IsActive = true;
-                    LOSVM.CreatedDate = DateTime.UtcNow;
-                    LOSVM.UserId = 1;
-                    LOS = Mapper.Map<LOSMasterVM, LOSMaster>(LOSVM);
-                    db.LOSMasters.Add(LOS);
-                    db.SaveChanges();
-                    return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
+                    var LOS = db.LOSMasters.FirstOrDefault(p => p.Id == LOSVM.Id);
+                    if (LOS == null)
+                    {
+                        LOSVM.IsActive = true;
+                        LOSVM.CreatedDate = DateTime.UtcNow;
+                        LOSVM.UserId = 1;
+                        LOSVM.CreatedBy = Convert.ToInt32(sid);
+                        LOS = Mapper.Map<LOSMasterVM, LOSMaster>(LOSVM);
+                        if (IsExist(LOS.LOSName))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.LOSMasters.Add(LOS);
+                        db.SaveChanges();
+                        return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
+                    }
+                    else
+                    {
+                        LOSVM.IsActive = true;
+                        LOSVM.UserId = 1; LOSVM.CreatedDate = LOS.CreatedDate;
+                        LOSVM.UpdatedDate = DateTime.UtcNow;
+                        LOSVM.ModifiedBy = Convert.ToInt32(sid);
+                        db.Entry(LOS).CurrentValues.SetValues(LOSVM);
+                        if (IsExist(LOS.LOSName,LOS.Id))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
+                    }
                 }
-                else
-                {
-                    LOSVM.IsActive = true;
-                    LOSVM.UserId = 1; LOSVM.CreatedDate = LOS.CreatedDate;
-                    LOSVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(LOS).CurrentValues.SetValues(LOSVM);
-                    db.SaveChanges();
-                    return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
-                }
+                return new LOSMasterVM();
             }
             catch (DbEntityValidationException dve)
             { 

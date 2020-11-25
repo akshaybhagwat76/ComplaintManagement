@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 
 namespace ComplaintManagement.Repository
@@ -24,27 +26,46 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var Location = db.LocationMasters.FirstOrDefault(p => p.Id == LocationVM.Id);
-                if (Location == null)
-                {
-                    LocationVM.IsActive = true;
-                    LocationVM.CreatedDate = DateTime.UtcNow;
-                    LocationVM.UserId = 1;
-                    Location = Mapper.Map<LocationMasterVM, LocationMaster>(LocationVM);
-                    db.LocationMasters.Add(Location);
-                    db.SaveChanges();
-                    return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
-                }
-                else
-                {
-                    LocationVM.IsActive = true;
-                    LocationVM.UserId = 1; LocationVM.CreatedDate = Location.CreatedDate;
-                    LocationVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(Location).CurrentValues.SetValues(LocationVM);
-                    db.SaveChanges();
-                    return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var Location = db.LocationMasters.FirstOrDefault(p => p.Id == LocationVM.Id);
+                    if (Location == null)
+                    {
+                        LocationVM.IsActive = true;
+                        LocationVM.CreatedDate = DateTime.UtcNow;
+                        LocationVM.UserId = 1;
+                        LocationVM.CreatedBy = Convert.ToInt32(sid);
+                        Location = Mapper.Map<LocationMasterVM, LocationMaster>(LocationVM);
+                        if (IsExist(Location.LocationName))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.LocationMasters.Add(Location);
+                        db.SaveChanges();
+                        return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
+                    }
+                    else
+                    {
+                        LocationVM.IsActive = true;
+                        LocationVM.UserId = 1; LocationVM.CreatedDate = Location.CreatedDate;
+                        LocationVM.UpdatedDate = DateTime.UtcNow;
+                        LocationVM.ModifiedBy = Convert.ToInt32(sid);
+                        db.Entry(Location).CurrentValues.SetValues(LocationVM);
+                        if (IsExist(Location.LocationName,Location.Id))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
+
+                    }
                 }
+                return new LocationMasterVM();
             }
             catch (DbEntityValidationException dve)
             {

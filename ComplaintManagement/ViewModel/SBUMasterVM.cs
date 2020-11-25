@@ -18,6 +18,8 @@ namespace ComplaintManagement.ViewModel
         public int UserId { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public bool IsActive { get; set; }
+        public int CreatedBy { get; set; }
+        public int ModifiedBy { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
     }
 }

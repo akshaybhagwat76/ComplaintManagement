@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 
 namespace ComplaintManagement.Repository
@@ -25,27 +27,46 @@ namespace ComplaintManagement.Repository
         {
             try
             {
-                var Region = db.RegionMasters.FirstOrDefault(p => p.Id == RegionVM.Id);
-                if (Region == null)
-                {
-                    RegionVM.IsActive = true;
-                    RegionVM.CreatedDate = DateTime.UtcNow;
-                    RegionVM.UserId = 1;
-                    Region = Mapper.Map<RegionMasterVM, RegionMaster>(RegionVM);
-                    db.RegionMasters.Add(Region);
-                    db.SaveChanges();
-                    return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
-                }
-                else
-                {
-                    RegionVM.IsActive = true;
-                    RegionVM.UserId = 1; RegionVM.CreatedDate = Region.CreatedDate;
-                    RegionVM.UpdatedDate = DateTime.UtcNow;
-                    db.Entry(Region).CurrentValues.SetValues(RegionVM);
-                    db.SaveChanges();
-                    return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    var Region = db.RegionMasters.FirstOrDefault(p => p.Id == RegionVM.Id);
+                    if (Region == null)
+                    {
+                        RegionVM.IsActive = true;
+                        RegionVM.CreatedDate = DateTime.UtcNow;
+                        RegionVM.UserId = 1;
+                        RegionVM.CreatedBy = Convert.ToInt32(sid);
+                        Region = Mapper.Map<RegionMasterVM, RegionMaster>(RegionVM);
+                        if (IsExist(Region.Region))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.RegionMasters.Add(Region);
+                        db.SaveChanges();
+                        return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
+                    }
+                    else
+                    {
+                        RegionVM.IsActive = true;
+                        RegionVM.UserId = 1; RegionVM.CreatedDate = Region.CreatedDate;
+                        RegionVM.UpdatedDate = DateTime.UtcNow;
+                        RegionVM.ModifiedBy = Convert.ToInt32(sid);
+                        db.Entry(Region).CurrentValues.SetValues(RegionVM);
+                        if (IsExist(Region.Region,Region.Id))
+                        {
+                            throw new Exception(Messages.ALREADY_EXISTS);
+                        }
+                        db.SaveChanges();
+                        return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
+
+                    }
                 }
+                return new RegionMasterVM();
             }
             catch (DbEntityValidationException dve)
             {
