@@ -3,10 +3,16 @@
     var retval = true;
     $("#myForm .required").each(function () {
         if (!$(this).val()) {
-            $(this).addClass("adderror");
+            var $label = $("<label class='adderror'>").text('This field is required:');
+            if ($(this).parent().find("label").length == 1) {
+                $(this).parent().append($label);
+
+                $(this).addClass("adderror");
+            }
             retval = false;
         }
         else {
+            $(this).parent().find("label").remove();
             $(this).removeClass("adderror");
         }
     });
