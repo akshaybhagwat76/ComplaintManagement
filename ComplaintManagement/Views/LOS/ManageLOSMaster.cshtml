@@ -148,55 +148,61 @@
                                             @Html.Hidden("sbuIds", Model.SBUId)
                                             @Html.LabelFor(model => model.SBUId)
 
-                                            @{
-                                                List<SelectListItem> listSBU = new List<SelectListItem>();
-                                                listSBU = new List<SelectListItem>();
-                                                listSBU.Add(new SelectListItem
-                                                {
-                                                    Text = "",
-                                                    Value = ""
-                                                });
-                                                listSBU.AddRange(ViewBag.lstSBU);
-                                            }
-
-                                            @Html.DropDownListFor(model => model.SBUId, (List<SelectListItem>)listSBU, new { @class = "form-control required", @multiple = "multiple" })
+                                            <div class="container">
+                                                <div class="row justify-content-md-right">
+                                                    <div class="col col-lg-6">
+                                                        @{
+                                                            foreach (var priv in ViewBag.lstSBU)
+                                                            {
+                                                                <label class="checkbox-inline"><input name="sbuList" id="@string.Format("sbu-"+priv.Value)" type="checkbox" value="@priv.Value" class="checks-sbu">&nbsp; @priv.Text</label>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label id="lblErrorSbu" class="inline"></label>
                                         </div>
+
                                         <div class="col-sm-9 mb-3">
                                             @Html.Hidden("SubsbuIds", Model.SubSBUId)
                                             @Html.LabelFor(model => model.SubSBUId)
 
-                                            @{
-                                                List<SelectListItem> listSubSBU = new List<SelectListItem>();
-                                                listSubSBU = new List<SelectListItem>();
-                                                listSubSBU.Add(new SelectListItem
-                                                {
-                                                    Text = "",
-                                                    Value = ""
-                                                });
-                                                listSubSBU.AddRange(ViewBag.lstSubSBU);
-                                            }
-
-                                            @Html.DropDownListFor(model => model.SubSBUId, (List<SelectListItem>)listSubSBU, new { @class = "form-control required", @multiple = "multiple" })
-
+                                            <div class="container">
+                                                <div class="row justify-content-md-right">
+                                                    <div class="col col-lg-6">
+                                                        @{
+                                                            foreach (var priv in ViewBag.lstSubSBU)
+                                                            {
+                                                                <label class="checkbox-inline"><input name="subsbuList" id="@string.Format("subsbu-"+priv.Value)" type="checkbox" value="@priv.Value" class="checks-subsbu">&nbsp; @priv.Text</label>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label id="lblErrorSubSbu" class="inline"></label>
                                         </div>
+
+
                                         <div class="col-sm-9 mb-3">
                                             @Html.Hidden("CompentencyIds", Model.CompetencyId)
                                             @Html.LabelFor(model => model.CompetencyId)
 
-                                            @{
-                                                List<SelectListItem> listCompentency = new List<SelectListItem>();
-                                                listCompentency = new List<SelectListItem>();
-                                                listCompentency.Add(new SelectListItem
-                                                {
-                                                    Text = "",
-                                                    Value = ""
-                                                });
-                                                listCompentency.AddRange(ViewBag.lstCompetency);
-                                            }
-
-                                            @Html.DropDownListFor(model => model.CompetencyId, (List<SelectListItem>)listCompentency, new { @class = "form-control required", @multiple = "multiple" })
-
+                                            <div class="container">
+                                                <div class="row justify-content-md-right">
+                                                    <div class="col col-lg-6">
+                                                        @{
+                                                            foreach (var priv in ViewBag.lstCompetency)
+                                                            {
+                                                                <label class="checkbox-inline"><input name="CompetencyList" id="@string.Format("Competency-"+priv.Value)" type="checkbox" value="@priv.Value" class="checks-Competency">&nbsp; @priv.Text</label>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label id="lblErrorCompetency" class="inline"></label>
                                         </div>
+
+
                                         <div class="col-sm-9 mb-3 mb-sm-0">
                                             @Html.LabelFor(model => model.Status, new { @class = "requiredLabel" })
                                             @{
@@ -261,10 +267,3 @@
     </div>
 </div>
 @Scripts.Render("~/Assets/EditLOSMasters")
-@*@Scripts.Render("~/plugins/select2")
-    <script>
-
-
-                $('.select2').select2();
-
-    </script>*@

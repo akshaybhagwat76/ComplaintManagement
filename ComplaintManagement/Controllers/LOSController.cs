@@ -202,7 +202,7 @@ namespace ComplaintManagement.Controllers
                             }
                             else
                             {
-                                row.SubSBU = lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SubSBUId)).FirstOrDefault().SubSBU;
+                                row.SubSBU = lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SubSBUId)).FirstOrDefault()!=null? lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SubSBUId)).FirstOrDefault().SubSBU:string.Empty;
                             }
                         }
 
@@ -223,7 +223,7 @@ namespace ComplaintManagement.Controllers
                             }
                             else
                             {
-                                row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SBUId)).FirstOrDefault().SBU;
+                                row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SBUId)).FirstOrDefault()!=null ? lstSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SBUId)).FirstOrDefault().SBU:string.Empty;
                             }
                         }
 
@@ -241,7 +241,7 @@ namespace ComplaintManagement.Controllers
                             }
                             else
                             {
-                                row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault().CompetencyName;
+                                row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault()!=null? lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault().CompetencyName:string.Empty;
                             }
                         }
                         row.Id = los.Id;
