@@ -22,7 +22,7 @@ function submitForm() {
         $("#LOSName").addClass("adderror");
         funToastr(false, "This LOS is already exist."); return;
     }
-    
+
     var sbufields = $("input[name='sbuList']").serializeArray();
     if (sbufields.length === 0) {
         $("#lblErrorSbu").addClass("adderror").text('Please select atleast one SBU.');
@@ -47,7 +47,7 @@ function submitForm() {
         $("#lblErrorCompetency").removeClass("adderror").text('');
     }
 
-    if (retval && !isValidLOS && sbufields.length > 0 && subsbufields.length > 0 && Competencyfields.length>0) {
+    if (retval && !isValidLOS && sbufields.length > 0 && subsbufields.length > 0 && Competencyfields.length > 0) {
         var data = {
             Id: $("#Id").val().trim(),
             LOSName: $("#LOSName").val().trim(),
@@ -99,7 +99,7 @@ $(document).ready(function () {
                 }
             }
         }
-     
+
         if ($("#SubsbuIds").val().includes(',')) {
             var subsbuIds = $('#SubsbuIds').val().split(",")
 
@@ -141,7 +141,7 @@ $(document).ready(function () {
                 }
             }
         }
-      
+
     }
     if ($("#pageState").val() != null && $("#pageState").val() != "") {
         let page_state = JSON.parse($("#pageState").val().toLowerCase());
@@ -179,7 +179,7 @@ $('.checks-Competency').change(function () {
     $('#CompentencyIds').val(values);
 });
 
-    
+
 function checkDuplicate() {
     var LOSName = $("#LOSName").val();
     var Id = $("#Id").val();
@@ -201,3 +201,7 @@ function checkDuplicate() {
 
     }
 }
+
+
+
+

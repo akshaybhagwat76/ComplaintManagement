@@ -323,7 +323,7 @@ namespace ComplaintManagement.Controllers
                             }
                             else
                             {
-                                row.LOS = lstLOS.Where(x => x.Id == Convert.ToInt32(Rol.LOSId)).FirstOrDefault().LOSName;
+                                row.LOS = lstLOS.Where(x => x.Id == Convert.ToInt32(Rol.LOSId)).FirstOrDefault()!=null? lstLOS.Where(x => x.Id == Convert.ToInt32(Rol.LOSId)).FirstOrDefault().LOSName:String.Empty;
                             }
                         }
 
