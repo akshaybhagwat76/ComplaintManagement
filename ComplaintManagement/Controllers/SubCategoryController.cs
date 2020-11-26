@@ -96,7 +96,7 @@ namespace ComplaintManagement.Controllers
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from Subcategory in lst
-                       where Subcategory.CreatedDate >= fromDate && Subcategory.CreatedDate <= toDate
+                       where Subcategory.CreatedDate.Date >= fromDate.Date && Subcategory.CreatedDate.Date <= toDate.Date
                        select Subcategory).ToList();
                 lstCount = lst.Count;
                 lst = (lst)

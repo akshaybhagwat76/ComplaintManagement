@@ -53,6 +53,7 @@ namespace ComplaintManagement.Repository
                     {
                         categoryVM.IsActive = true;
                         categoryVM.UserId = 1; categoryVM.CreatedDate = category.CreatedDate;
+                        categoryVM.CreatedBy = category.CreatedBy;
                         categoryVM.UpdatedDate = DateTime.UtcNow;
                         categoryVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(category).CurrentValues.SetValues(categoryVM);
@@ -81,16 +82,32 @@ namespace ComplaintManagement.Repository
         public List<CategoryMasterVM> GetAll()
         {
             List<CategoryMaster> category = new List<CategoryMaster>();
+            List<CategoryMasterVM> categoryList = new List<CategoryMasterVM>();
             try
             {
-                category = db.CategoryMasters.Where(i => i.IsActive).ToList().OrderByDescending(x=>x.CreatedDate).OrderByDescending(x=>x.Id).ToList();
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                category = db.CategoryMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (category != null && category.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (CategoryMaster item in category)
+                    {
+                        CategoryMasterVM catObj = Mapper.Map<CategoryMaster, CategoryMasterVM>(item);
+                        if (catObj != null)
+                        {
+                            
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            categoryList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<CategoryMaster>, List<CategoryMasterVM>>(category);
+            return categoryList;
         }
 
         public CategoryMasterVM Get(int id)
@@ -127,9 +144,9 @@ namespace ComplaintManagement.Repository
             return db.CategoryMasters.Count(x => x.IsActive && x.CategoryName.ToUpper() == categoryName.ToUpper()) > 0;
         }
 
-        public bool IsExist(string categoryName,int id)
+        public bool IsExist(string categoryName, int id)
         {
-            return db.CategoryMasters.Count(x => x.IsActive && x.CategoryName.ToUpper() == categoryName.ToUpper() && x.Id!=id) > 0;
+            return db.CategoryMasters.Count(x => x.IsActive && x.CategoryName.ToUpper() == categoryName.ToUpper() && x.Id != id) > 0;
         }
     }
 }

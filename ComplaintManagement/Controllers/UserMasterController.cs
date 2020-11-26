@@ -27,7 +27,7 @@ namespace ComplaintManagement.Controllers
         }
         public ActionResult SearchUser(string search)
         {
-            var originalList = GetAll(1);
+            var originalList = GetAll(0);
             dynamic output = new List<dynamic>();
 
             foreach (var item in originalList)
@@ -72,6 +72,10 @@ namespace ComplaintManagement.Controllers
         public dynamic GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
             var lst = new UserMastersRepository().GetAll().ToList();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
@@ -80,7 +84,7 @@ namespace ComplaintManagement.Controllers
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from user in lst
-                       where user.CreatedDate >= fromDate && user.CreatedDate <= toDate
+                       where user.CreatedDate.Date >= fromDate.Date && user.CreatedDate.Date <= toDate.Date
                        select user).ToList();
                 lstCount = lst.Count;
                 lst = (lst)
@@ -92,7 +96,7 @@ namespace ComplaintManagement.Controllers
                 dynamic output = new List<dynamic>();
 
                 #region Other logics
-                lst = lst.Where(x => x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+                lst = lst.Where(x => x.CreatedDate.Date >= fromDate && x.CreatedDate <= toDate.Date).ToList();
                 var lstSBU = new SBUMasterRepository().GetAll();
                 var lstSubSBU = new SubSBUMasterRepository().GetAll();
                 var lstLOS = new LOSMasterRepository().GetAll();

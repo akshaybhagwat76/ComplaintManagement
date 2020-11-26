@@ -69,7 +69,7 @@ namespace ComplaintManagement.Controllers
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from Location in lst
-                       where Location.CreatedDate >= fromDate && Location.CreatedDate <= toDate
+                       where Location.CreatedDate.Date >= fromDate.Date && Location.CreatedDate.Date <= toDate.Date
                        select Location).ToList();
                 lstCount = lst.Count;
                 lst = (lst)

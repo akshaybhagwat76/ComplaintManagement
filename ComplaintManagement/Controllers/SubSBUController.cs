@@ -68,7 +68,7 @@ namespace ComplaintManagement.Controllers
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from SubSBU in lst
-                       where SubSBU.CreatedDate >= fromDate && SubSBU.CreatedDate <= toDate
+                       where SubSBU.CreatedDate.Date >= fromDate.Date && SubSBU.CreatedDate.Date <= toDate.Date
                        select SubSBU).ToList();
                 lstCount = lst.Count;
                 lst = (lst)

@@ -97,7 +97,7 @@ namespace ComplaintManagement.Controllers
                 DateTime toDate = Convert.ToDateTime(dates[1]);
              
                 lst = (from Competency in lst
-                       where Competency.CreatedDate >= fromDate && Competency.CreatedDate <= toDate
+                       where Competency.CreatedDate.Date >= fromDate.Date && Competency.CreatedDate.Date <= toDate.Date
                        select Competency).ToList();
                 lstCount = lst.Count;
                 lst = (lst)

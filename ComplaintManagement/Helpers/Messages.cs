@@ -67,7 +67,7 @@
         public const string ORDER_NOT_REVISION_YET = "Order Not Delivered";
 
 
-        public const string ABOUT_ORDER = "ABOUT YOUR ORDER";
+        public const string NotAvailable = "N/A";
         public const string ABOUT_ORDER_NO = "ABOUT YOUR ORDER {0}";
         public const string ORDER_NEW_NOTIFICATION_USER = "Sub-Order Id-{0}";
         public const string ORDER_UPDATE_NOTIFICATION_USER = "SUB- ABOUT YOUR ORDER ID--{0}";
