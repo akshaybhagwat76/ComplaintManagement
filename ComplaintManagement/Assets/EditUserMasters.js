@@ -6,7 +6,7 @@ function submitForm() {
 
     $("#myForm .required").each(function () {
         if (!$(this).val()) {
-            var $label = $("<label class='adderror'>").text('This field is required:');
+            var $label = $("<label class='adderror'>").text('This field is required.');
             if ($(this).parent().find("label").length == 1) {
                 $(this).parent().append($label);
 
