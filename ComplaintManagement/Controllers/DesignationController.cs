@@ -97,7 +97,7 @@ namespace ComplaintManagement.Controllers
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from Designation in lst
-                       where Designation.CreatedDate >= fromDate && Designation.CreatedDate <= toDate
+                       where Designation.CreatedDate.Date >= fromDate.Date && Designation.CreatedDate.Date <= toDate.Date
                        select Designation).ToList();
                 lstCount = lst.Count;
                 lst = (lst)

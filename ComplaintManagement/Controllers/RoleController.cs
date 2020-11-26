@@ -77,7 +77,7 @@ namespace ComplaintManagement.Controllers
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from Role in lst
-                       where Role.CreatedDate >= fromDate && Role.CreatedDate <= toDate
+                       where Role.CreatedDate.Date >= fromDate.Date && Role.CreatedDate.Date <= toDate.Date
                        select Role).ToList();
                 lstCount = lst.Count;
 

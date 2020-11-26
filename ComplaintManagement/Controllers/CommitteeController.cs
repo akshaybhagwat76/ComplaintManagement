@@ -107,7 +107,7 @@ namespace ComplaintManagement.Controllers
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from Committee in lst
-                       where Committee.CreatedDate >= fromDate && Committee.CreatedDate <= toDate
+                       where Committee.CreatedDate.Date >= fromDate.Date && Committee.CreatedDate.Date <= toDate.Date
                        select Committee).ToList();
 
                 lstCount = lst.Count;

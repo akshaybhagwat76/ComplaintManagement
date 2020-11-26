@@ -57,7 +57,7 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
 
-   [HttpPost]
+        [HttpPost]
         public JsonResult CheckIfExist(SBUMasterVM data)
         {
             try
@@ -67,7 +67,7 @@ namespace ComplaintManagement.Controllers
                     var SBU = false;
                     if (data.Id == 0)
                     {
-                         SBU = new SBUMasterRepository().IsExist(data.SBU);
+                        SBU = new SBUMasterRepository().IsExist(data.SBU);
                     }
                     else
                     {
@@ -100,7 +100,7 @@ namespace ComplaintManagement.Controllers
                 DateTime fromDate = Convert.ToDateTime(dates[0]);
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from SBU in lst
-                       where SBU.CreatedDate >= fromDate && SBU.CreatedDate <= toDate
+                       where SBU.CreatedDate.Date >= fromDate.Date && SBU.CreatedDate.Date <= toDate.Date
                        select SBU).ToList();
                 lstCount = lst.Count;
                 lst = (lst)
@@ -132,7 +132,7 @@ namespace ComplaintManagement.Controllers
         [HttpGet]
         public ActionResult GetSBU(string range, int currentPage)
         {
-            ViewBag.lstSBU = GetAll(currentPage,range);
+            ViewBag.lstSBU = GetAll(currentPage, range);
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 
@@ -176,10 +176,10 @@ namespace ComplaintManagement.Controllers
             SBUMasterVM SBUMasterVM = new SBUMasterVM();
             ViewBag.PageType = "Create";
             return View("ManageSBUMaster", SBUMasterVM);
-           
+
         }
 
-        public ActionResult Edit(int id,bool isView)
+        public ActionResult Edit(int id, bool isView)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace ComplaintManagement.Controllers
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return View();
-           
+
         }
     }
 }
