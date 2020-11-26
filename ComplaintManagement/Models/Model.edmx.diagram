@@ -4,27 +4,26 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f40dc273f8fa4feda3eec956556685c7" Name="Diagram1" ZoomLevel="94">
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.AzureFile" Width="1.5" PointX="5.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CategoryMaster" Width="1.5" PointX="5.75" PointY="3.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeMaster" Width="1.5" PointX="7.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CompetencyMaster" Width="1.5" PointX="0.75" PointY="12.125" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.DesignationMaster" Width="1.5" PointX="7.75" PointY="4.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EntityMaster" Width="1.5" PointX="5.75" PointY="8.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LocationMaster" Width="1.5" PointX="0.75" PointY="15.625" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMaster" Width="1.5" PointX="0.75" PointY="19.375" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMaster" Width="1.5" PointX="0.75" PointY="3.25" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RoleMaster" Width="1.5" PointX="7.75" PointY="8.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SBUMaster" Width="1.5" PointX="0.75" PointY="8.5" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubCategoryMaster" Width="1.5" PointX="9.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubSBUMaster" Width="1.5" PointX="0.75" PointY="23.625" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.UserMaster" Width="1.5" PointX="3" PointY="1.125" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_CompetencyMasters" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_LocationMasters" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_RegionMasters" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" />
+      <Diagram DiagramId="c1d4e34d98e247d08f21874b74160844" Name="Diagram1" ZoomLevel="81">
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CategoryMaster" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeMaster" Width="1.5" PointX="5.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CompetencyMaster" Width="1.5" PointX="0.75" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.DesignationMaster" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EntityMaster" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LocationMaster" Width="1.5" PointX="0.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMaster" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMaster" Width="1.5" PointX="0.75" PointY="15.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RoleMaster" Width="1.5" PointX="5.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SBUMaster" Width="1.5" PointX="0.75" PointY="19.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubCategoryMaster" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubSBUMaster" Width="1.5" PointX="0.75" PointY="22.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.UserMaster" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_CompetencyMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_LocationMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_RegionMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

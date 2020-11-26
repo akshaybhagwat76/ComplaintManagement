@@ -27,15 +27,15 @@ namespace ComplaintManagement.Controllers
             {
                 if (search.ToLower() == Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstSubSBU = GetAll(1).ToList().Where(x => !x.Status).ToList();
+                    ViewBag.lstSubSBU = GetAll(0).ToList().Where(x => !x.Status).ToList();
                 }
                 if (search.ToLower() == Messages.Active.ToLower())
                 {
-                    ViewBag.lstSubSBU = GetAll(1).ToList().Where(x => x.Status).ToList();
+                    ViewBag.lstSubSBU = GetAll(0).ToList().Where(x => x.Status).ToList();
                 }
                 if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstSubSBU = GetAll(1).ToList().Where(x => x.SubSBU.Contains(search)).ToList();
+                    ViewBag.lstSubSBU = GetAll(0).ToList().Where(x => x.SubSBU.Contains(search)).ToList();
                 }
 
                 var DataTableDetail = new HomeController().getDataTableDetail("SubSBU", null);
@@ -58,6 +58,10 @@ namespace ComplaintManagement.Controllers
         public List<SubSBUMasterVM> GetAll(int currentPage,string range = "")
         {
             int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
             var lst = new SubSBUMasterRepository().GetAll();
             lstCount = lst.Count;
 

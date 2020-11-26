@@ -83,7 +83,7 @@ function deleteAction(id) {
         url: "/Category/Delete",
         data: { id: id },
         success: function (response) {
-            StopProcess()
+            
             if (response.status != "Fail") {
                 location.reload();
             }

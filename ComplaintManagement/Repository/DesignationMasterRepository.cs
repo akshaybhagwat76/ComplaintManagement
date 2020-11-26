@@ -40,7 +40,8 @@ namespace ComplaintManagement.Repository
                     {
                         DesignationVM.IsActive = true;
                         DesignationVM.CreatedDate = DateTime.UtcNow;
-                        DesignationVM.UserId = 1;
+                        DesignationVM.CreatedBy = Convert.ToInt32(sid);
+                       
                         Designation = Mapper.Map<DesignationMasterVM, DesignationMaster>(DesignationVM);
                         if (IsExist(Designation.Designation))
                         {
@@ -53,10 +54,10 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         DesignationVM.IsActive = true;
-                        DesignationVM.UserId = 1; DesignationVM.CreatedDate = Designation.CreatedDate;
+                       DesignationVM.CreatedDate = Designation.CreatedDate;
                         DesignationVM.UpdatedDate = DateTime.UtcNow;
-                        
-                        DesignationVM.CreatedBy = Convert.ToInt32(sid);
+                        DesignationVM.CreatedBy = Designation.CreatedBy;
+                        DesignationVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(Designation).CurrentValues.SetValues(DesignationVM);
                         if (IsExist(Designation.Designation,Designation.Id))
                         {
@@ -84,16 +85,32 @@ namespace ComplaintManagement.Repository
         public List<DesignationMasterVM> GetAll()
         {
             List<DesignationMaster> Designation = new List<DesignationMaster>();
+            List<DesignationMasterVM> DesignationList = new List<DesignationMasterVM>();
             try
             {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
                 Designation = db.DesignationMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (Designation != null && Designation.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (DesignationMaster item in Designation)
+                    {
+                        DesignationMasterVM catObj = Mapper.Map<DesignationMaster, DesignationMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            DesignationList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<DesignationMaster>, List<DesignationMasterVM>>(Designation);
+            return DesignationList;
         }
 
         public DesignationMasterVM Get(int id)

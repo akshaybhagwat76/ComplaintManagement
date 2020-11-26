@@ -68,7 +68,7 @@ function deleteAction(id) {
         url: "/LOS/Delete",
         data: { id: id },
         success: function (response) {
-            StopProcess()
+           
             if (response.status != "Fail") {
                 location.reload();
             }

@@ -39,7 +39,7 @@ namespace ComplaintManagement.Repository
                         SubSBUVM.IsActive = true;
                         SubSBUVM.CreatedDate = DateTime.UtcNow;
                         SubSBUVM.UserId = 1;
-                        SubSBU.CreatedBy = Convert.ToInt32(sid);
+                        SubSBUVM.CreatedBy = Convert.ToInt32(sid);
                         SubSBU = Mapper.Map<SubSBUMasterVM, SubSBUMaster>(SubSBUVM);
                         if (IsExist(SubSBU.SubSBU))
                         {
@@ -52,9 +52,10 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         SubSBUVM.IsActive = true;
-                        SubSBUVM.UserId = 1; SubSBUVM.CreatedDate = SubSBU.CreatedDate;
+                         SubSBUVM.CreatedDate = SubSBU.CreatedDate;
+                        SubSBUVM.CreatedBy = SubSBU.CreatedBy;
                         SubSBUVM.UpdatedDate = DateTime.UtcNow;
-                        SubSBU.ModifiedBy = Convert.ToInt32(sid);
+                        SubSBUVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(SubSBU).CurrentValues.SetValues(SubSBUVM);
                         if (IsExist(SubSBU.SubSBU,SubSBU.Id))
                         {
@@ -82,16 +83,32 @@ namespace ComplaintManagement.Repository
         public List<SubSBUMasterVM> GetAll()
         {
             List<SubSBUMaster> SubSBU = new List<SubSBUMaster>();
+            List<SubSBUMasterVM> SubSBUList = new List<SubSBUMasterVM>();
             try
             {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
                 SubSBU = db.SubSBUMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (SubSBU != null && SubSBU.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (SubSBUMaster item in SubSBU)
+                    {
+                        SubSBUMasterVM catObj = Mapper.Map<SubSBUMaster, SubSBUMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            SubSBUList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<SubSBUMaster>, List<SubSBUMasterVM>>(SubSBU);
+            return SubSBUList;
         }
 
         public SubSBUMasterVM Get(int id)

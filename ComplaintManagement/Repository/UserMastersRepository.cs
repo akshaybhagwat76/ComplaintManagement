@@ -67,6 +67,7 @@ namespace ComplaintManagement.Repository
                         UserVM.CreatedDate = User.CreatedDate;
                         UserVM.UpdatedDate = DateTime.UtcNow;
                         UserVM.ModifiedBy = Convert.ToInt32(sid);
+                        UserVM.CreatedBy = User.CreatedBy;
                         db.Entry(User).CurrentValues.SetValues(UserVM);
                         if (!string.IsNullOrEmpty(IsExist(UserVM)))
                         {

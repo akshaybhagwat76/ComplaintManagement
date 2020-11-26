@@ -66,7 +66,7 @@ function deleteAction(id) {
         url: "/Region/Delete",
         data: { id: id },
         success: function (response) {
-            StopProcess()
+           
             if (response.status != "Fail") {
                 location.reload();
             }

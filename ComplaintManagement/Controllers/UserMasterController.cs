@@ -35,20 +35,23 @@ namespace ComplaintManagement.Controllers
                 var itemIndex = (IDictionary<string, object>)item;
                 foreach (var kvp in itemIndex)
                 {
-                    if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
+                    if (kvp.Value != null)
                     {
-                        output.Add(item);
-                    }
-                    if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
-                    {
-                        bool Status = Convert.ToBoolean(kvp.Value);
-                        if (Status && search.ToLower() == Messages.Active.ToLower())
+                        if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
                         {
                             output.Add(item);
                         }
-                        if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                        if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
                         {
-                            output.Add(item);
+                            bool Status = Convert.ToBoolean(kvp.Value);
+                            if (Status && search.ToLower() == Messages.Active.ToLower())
+                            {
+                                output.Add(item);
+                            }
+                            if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                            {
+                                output.Add(item);
+                            }
                         }
                     }
                 }
@@ -143,6 +146,10 @@ namespace ComplaintManagement.Controllers
                         row.Status = com.Status;
                         row.TimeType = com.TimeType;
                         row.Manager = com.Manager;
+                        row.CreatedByName = com.EmployeeName;
+                        row.UpdatedByName = com.EmployeeName;
+
+                        row.UpdatedDate = com.UpdatedDate; row.CreatedDate = com.CreatedDate;
 
                         output.Add(row);
                     }
@@ -215,7 +222,9 @@ namespace ComplaintManagement.Controllers
                         row.Status = com.Status;
                         row.TimeType = com.TimeType;
                         row.Manager = com.Manager;
-
+                        row.UpdatedDate = com.UpdatedDate; row.CreatedDate = com.CreatedDate;
+                        row.CreatedByName = com.EmployeeName;
+                        row.UpdatedByName = com.EmployeeName;
                         output.Add(row);
                     }
                 }

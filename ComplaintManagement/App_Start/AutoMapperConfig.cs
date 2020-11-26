@@ -45,6 +45,9 @@ namespace ComplaintManagement.App_Start
 
                 cfg.CreateMap<LOSMasterVM, LOSMaster>();
                 cfg.CreateMap<LOSMaster, LOSMasterVM>();
+
+                cfg.CreateMap<RoleMasterVM, RoleMaster>();
+                cfg.CreateMap<RoleMaster, RoleMasterVM>();
             });
         }
     }

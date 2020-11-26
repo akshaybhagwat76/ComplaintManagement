@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Web;
+using System.Web.ModelBinding;
 using System.Web.Mvc;
 
 namespace ComplaintManagement.Controllers
@@ -23,11 +24,11 @@ namespace ComplaintManagement.Controllers
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
-           
+
         }
         public ActionResult SearchRole(string search)
         {
-            var originalList = GetAll(1);
+            var originalList = GetAll(0);
             dynamic output = new List<dynamic>();
 
             foreach (var item in originalList)
@@ -35,20 +36,29 @@ namespace ComplaintManagement.Controllers
                 var itemIndex = (IDictionary<string, object>)item;
                 foreach (var kvp in itemIndex)
                 {
-                    if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
+
+                    if (kvp.Value != null)
                     {
-                        output.Add(item);
-                    }
-                    if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
-                    {
-                        bool Status = Convert.ToBoolean(kvp.Value);
-                        if (Status && search.ToLower() == Messages.Active.ToLower())
+
+                        if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
                         {
-                            output.Add(item);
+                            if (kvp.Value != null)
+                            {
+                                output.Add(item);
+                            }
+
                         }
-                        if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                        if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
                         {
-                            output.Add(item);
+                            bool Status = Convert.ToBoolean(kvp.Value);
+                            if (Status && search.ToLower() == Messages.Active.ToLower())
+                            {
+                                output.Add(item);
+                            }
+                            if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                            {
+                                output.Add(item);
+                            }
                         }
                     }
                 }
@@ -69,6 +79,11 @@ namespace ComplaintManagement.Controllers
         public dynamic GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
             var lst = new RoleMasterRepoitory().GetAll();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
@@ -86,10 +101,10 @@ namespace ComplaintManagement.Controllers
                         .Skip((currentPage - 1) * maxRows)
                         .Take(maxRows).ToList();
 
-                
+
                 dynamic output = new List<dynamic>();
 
-               
+
                 var lstUsers = new UserMastersRepository().GetAll();
                 List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll();
                 List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll();
@@ -97,7 +112,7 @@ namespace ComplaintManagement.Controllers
                 List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll();
                 List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll();
 
-               
+
                 if (lst != null && lst.Count > 0)
                 {
 
@@ -184,6 +199,12 @@ namespace ComplaintManagement.Controllers
                         row.Id = Rol.Id;
 
                         row.Status = Rol.Status;
+                        row.UpdatedByName = Rol.UpdatedByName;
+                        row.CreatedByName = Rol.CreatedByName;
+                        row.ModifiedBy = Rol.ModifiedBy;
+                        row.CreatedBy = Rol.CreatedBy;
+                        row.UpdatedDate = Rol.UpdatedDate;
+                        row.CreatedDate = Rol.CreatedDate;
 
                         output.Add(row);
                     }
@@ -203,9 +224,9 @@ namespace ComplaintManagement.Controllers
            .OrderByDescending(Role => Role.Id)
            .Skip((currentPage - 1) * maxRows)
            .Take(maxRows).ToList();
-                
+
                 var lstUsers = new UserMastersRepository().GetAll();
-                
+
                 List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll();
                 List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll();
                 List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll();
@@ -245,7 +266,7 @@ namespace ComplaintManagement.Controllers
                                 List<string> sbus = new List<string>();
                                 foreach (string SBUIdItem in array)
                                 {
-                                    if (lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault()!=null)
+                                    if (lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault() != null)
                                     {
                                         sbus.Add(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault().SBU);
                                     }
@@ -254,7 +275,7 @@ namespace ComplaintManagement.Controllers
                             }
                             else
                             {
-                                if(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault()!= null)
+                                if (lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault() != null)
                                 {
                                     row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault().SBU;
 
@@ -290,9 +311,15 @@ namespace ComplaintManagement.Controllers
                                 List<string> LOSIdLst = new List<string>();
                                 foreach (string LOSItem in array)
                                 {
-                                    LOSIdLst.Add(lstLOS.Where(x => x.Id == Convert.ToInt32(LOSItem)).FirstOrDefault().LOSName);
+                                    if (!string.IsNullOrEmpty(LOSItem))
+                                    {
+                                        LOSIdLst.Add(lstLOS.Where(x => x.Id == Convert.ToInt32(LOSItem)).FirstOrDefault().LOSName);
+                                    }
                                 }
-                                row.LOS = string.Join(",", LOSIdLst);
+                                if (LOSIdLst.Count > 0)
+                                {
+                                    row.LOS = string.Join(",", LOSIdLst);
+                                }
                             }
                             else
                             {
@@ -305,7 +332,12 @@ namespace ComplaintManagement.Controllers
                             row.UserName = lstUserMaster.FirstOrDefault(x => x.Id == Rol.UserId) != null ? lstUserMaster.FirstOrDefault(x => x.Id == Rol.UserId).EmployeeName : "";
                         }
                         row.Id = Rol.Id;
-
+                        row.UpdatedByName = Rol.UpdatedByName;
+                        row.CreatedByName = Rol.CreatedByName;
+                        row.ModifiedBy = Rol.ModifiedBy;
+                        row.CreatedBy = Rol.CreatedBy;
+                        row.UpdatedDate = Rol.UpdatedDate;
+                        row.CreatedDate = Rol.CreatedDate;
                         row.Status = Rol.Status;
 
                         output.Add(row);
@@ -324,7 +356,7 @@ namespace ComplaintManagement.Controllers
         [HttpGet]
         public ActionResult GetRole(string range, int currentPage)
         {
-            ViewBag.lstRole = JsonConvert.SerializeObject(GetAll(currentPage,range));
+            ViewBag.lstRole = JsonConvert.SerializeObject(GetAll(currentPage, range));
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 
@@ -389,7 +421,7 @@ namespace ComplaintManagement.Controllers
             ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
 
             return View("ManageRoleMaster", RoleMasterVM);
-           
+
         }
 
         public ActionResult Edit(int id, bool isView)
@@ -413,7 +445,7 @@ namespace ComplaintManagement.Controllers
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return View();
-            
+
         }
     }
 }

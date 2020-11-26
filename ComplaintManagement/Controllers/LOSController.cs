@@ -25,7 +25,7 @@ namespace ComplaintManagement.Controllers
         }
         public ActionResult SearchLOS(string search)
         {
-            var originalList = GetAll(1);
+            var originalList = GetAll(0);
             dynamic output = new List<dynamic>();
 
             foreach (var item in originalList)
@@ -33,20 +33,23 @@ namespace ComplaintManagement.Controllers
                 var itemIndex = (IDictionary<string, object>)item;
                 foreach (var kvp in itemIndex)
                 {
-                    if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
+                    if (kvp.Value != null)
                     {
-                        output.Add(item);
-                    }
-                    if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
-                    {
-                        bool Status = Convert.ToBoolean(kvp.Value);
-                        if (Status && search.ToLower() == Messages.Active.ToLower())
+                        if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
                         {
                             output.Add(item);
                         }
-                        if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                        if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
                         {
-                            output.Add(item);
+                            bool Status = Convert.ToBoolean(kvp.Value);
+                            if (Status && search.ToLower() == Messages.Active.ToLower())
+                            {
+                                output.Add(item);
+                            }
+                            if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                            {
+                                output.Add(item);
+                            }
                         }
                     }
                 }
@@ -69,6 +72,11 @@ namespace ComplaintManagement.Controllers
         public dynamic GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+           
             var lst = new LOSMasterRepository().GetAll();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
@@ -153,6 +161,12 @@ namespace ComplaintManagement.Controllers
                         }
                         row.Id = los.Id;
                         row.LOSName = los.LOSName;
+                        row.UpdatedByName = los.UpdatedByName;
+                        row.CreatedByName = los.CreatedByName;
+                        row.ModifiedBy = los.ModifiedBy;
+                        row.CreatedBy = los.CreatedBy;
+                        row.UpdatedDate = los.UpdatedDate;
+                        row.CreatedDate = los.CreatedDate;
                         row.Status = los.Status;
 
                         output.Add(row);
@@ -246,6 +260,12 @@ namespace ComplaintManagement.Controllers
                         }
                         row.Id = los.Id;
                         row.LOSName = los.LOSName;
+                        row.UpdatedByName = los.UpdatedByName;
+                        row.CreatedByName = los.CreatedByName;
+                        row.ModifiedBy = los.ModifiedBy;
+                        row.CreatedBy = los.CreatedBy;
+                        row.UpdatedDate = los.UpdatedDate;
+                        row.CreatedDate = los.CreatedDate;
                         row.Status = los.Status;
 
                         output.Add(row);

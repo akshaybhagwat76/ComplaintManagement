@@ -28,15 +28,15 @@ namespace ComplaintManagement.Controllers
             {
                 if (search.ToLower() == Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstDesignation = GetAll(1).ToList().Where(x => !x.Status).ToList();
+                    ViewBag.lstDesignation = GetAll(0).ToList().Where(x => !x.Status).ToList();
                 }
                 if (search.ToLower() == Messages.Active.ToLower())
                 {
-                    ViewBag.lstDesignation = GetAll(1).ToList().Where(x => x.Status).ToList();
+                    ViewBag.lstDesignation = GetAll(0).ToList().Where(x => x.Status).ToList();
                 }
                 if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstDesignation = GetAll(1).ToList().Where(x => x.Designation.Contains(search)).ToList();
+                    ViewBag.lstDesignation = GetAll(0).ToList().Where(x => x.Designation.Contains(search)).ToList();
                 }
 
                 var DataTableDetail = new HomeController().getDataTableDetail("Designation", null);
@@ -88,6 +88,11 @@ namespace ComplaintManagement.Controllers
         public List<DesignationMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+            
             var lst = new DesignationMasterRepository().GetAll();
             lstCount = lst.Count;
 

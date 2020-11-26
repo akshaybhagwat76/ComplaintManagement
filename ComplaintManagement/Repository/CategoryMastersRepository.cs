@@ -52,7 +52,7 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         categoryVM.IsActive = true;
-                        categoryVM.UserId = 1; categoryVM.CreatedDate = category.CreatedDate;
+                        categoryVM.CreatedDate = category.CreatedDate;
                         categoryVM.CreatedBy = category.CreatedBy;
                         categoryVM.UpdatedDate = DateTime.UtcNow;
                         categoryVM.ModifiedBy = Convert.ToInt32(sid);

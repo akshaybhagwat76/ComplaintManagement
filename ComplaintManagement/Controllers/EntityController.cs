@@ -28,15 +28,15 @@ namespace ComplaintManagement.Controllers
             {
                 if (search.ToLower() == Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstEntity = GetAll(1).ToList().Where(x => !x.Status).ToList();
+                    ViewBag.lstEntity = GetAll(0).ToList().Where(x => !x.Status).ToList();
                 }
                 if (search.ToLower() == Messages.Active.ToLower())
                 {
-                    ViewBag.lstEntity = GetAll(1).ToList().Where(x => x.Status).ToList();
+                    ViewBag.lstEntity = GetAll(0).ToList().Where(x => x.Status).ToList();
                 }
                 if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstEntity = GetAll(1).ToList().Where(x => x.EntityName.Contains(search)).ToList();
+                    ViewBag.lstEntity = GetAll(0).ToList().Where(x => x.EntityName.Contains(search)).ToList();
                 }
 
                 var DataTableDetail = new HomeController().getDataTableDetail("Entity", null);
@@ -88,6 +88,11 @@ namespace ComplaintManagement.Controllers
         public List<EntityMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+            
             var lst = new EntityMasterRepository().GetAll();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
