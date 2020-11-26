@@ -291,14 +291,14 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageType = "Create";
             try
             {
-                ViewBag.lstDesignation = new DesignationMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.Designation, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstEntity = new EntityMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.EntityName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstSBU = new SBUMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstLOS = new LOSMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstLocation = new LocationMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.LocationName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstRegion = new RegionMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.Region, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstDesignation = new DesignationMasterRepository().GetAll().Where(c=>c.Status).ToList().Select(d => new SelectListItem { Text = d.Designation, Value = d.Id.ToString()}).ToList();
+                ViewBag.lstEntity = new EntityMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EntityName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstSBU = new SBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstLOS = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstLocation = new LocationMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LocationName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstRegion = new RegionMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.Region, Value = d.Id.ToString() }).ToList();
 
 
             }
@@ -315,14 +315,14 @@ namespace ComplaintManagement.Controllers
             try
             {
 
-                ViewBag.lstDesignation = new DesignationMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.Designation, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstEntity = new EntityMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.EntityName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstSBU = new SBUMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstLOS = new LOSMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstLocation = new LocationMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.LocationName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstRegion = new RegionMasterRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.Region, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstDesignation = new DesignationMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.Designation, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstEntity = new EntityMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EntityName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstSBU = new SBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstLOS = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstLocation = new LocationMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LocationName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstRegion = new RegionMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.Region, Value = d.Id.ToString() }).ToList();
                 ViewBag.ViewState = isView;
 
                 UserMasterVM UserVM = new UserMastersRepository().Get(id);

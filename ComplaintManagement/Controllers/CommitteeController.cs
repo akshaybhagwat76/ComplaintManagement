@@ -240,7 +240,7 @@ namespace ComplaintManagement.Controllers
         {
             CommitteeMasterVM CommitteeMasterVM = new CommitteeMasterVM();
             ViewBag.PageType = "Create";
-            ViewBag.lstUser = new UserMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
 
             return View("ManageCommitteeMaster", CommitteeMasterVM);
 
@@ -253,7 +253,7 @@ namespace ComplaintManagement.Controllers
                 CommitteeMasterVM CommitteeVM = new CommitteeMastersRepository().Get(id);
                 ViewBag.ViewState = isView;
                 ViewBag.PageType = !isView ? "Edit" : "View";
-                ViewBag.lstUser = new UserMastersRepository().GetAll().ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
 
 
                 return View("ManageCommitteeMaster", CommitteeVM);
