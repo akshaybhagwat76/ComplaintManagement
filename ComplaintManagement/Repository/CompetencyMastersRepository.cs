@@ -54,7 +54,8 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         CompetencyVM.IsActive = true;
-                        CompetencyVM.UserId = 1; CompetencyVM.CreatedDate = Competency.CreatedDate;
+                        CompetencyVM.CreatedDate = Competency.CreatedDate;
+                        CompetencyVM.CreatedBy = Competency.CreatedBy;
                         CompetencyVM.UpdatedDate = DateTime.UtcNow;
                         CompetencyVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(Competency).CurrentValues.SetValues(CompetencyVM);
@@ -83,18 +84,34 @@ namespace ComplaintManagement.Repository
 
         public List<CompetencyMasterVM> GetAll()
         {
-            List<CompetencyMaster> Competency= new List<CompetencyMaster>();
+            List<CompetencyMaster> Competency = new List<CompetencyMaster>();
+            List<CompetencyMasterVM> CompetencyList = new List<CompetencyMasterVM>();
             try
             {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
                 Competency = db.CompetencyMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (Competency != null && Competency.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (CompetencyMaster item in Competency)
+                    {
+                        CompetencyMasterVM catObj = Mapper.Map<CompetencyMaster, CompetencyMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            CompetencyList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<CompetencyMaster>, List<CompetencyMasterVM>>(Competency);
-        }
+            return CompetencyList;
+        }   
 
         public CompetencyMasterVM Get(int id)
         {

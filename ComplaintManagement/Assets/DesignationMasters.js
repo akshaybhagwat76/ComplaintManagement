@@ -66,7 +66,7 @@ function deleteAction(id) {
         url: "/Designation/Delete",
         data: { id: id },
         success: function (response) {
-            StopProcess()
+            
             if (response.status != "Fail") {
                 location.reload();
             }

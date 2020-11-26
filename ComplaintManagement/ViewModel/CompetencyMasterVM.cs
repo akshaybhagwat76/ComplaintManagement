@@ -17,5 +17,7 @@ namespace ComplaintManagement.ViewModel
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public int CreatedBy { get; set; }
         public int ModifiedBy { get; set; }
+        public string CreatedByName { get; set; }
+        public string UpdatedByName { get; set; }
     }
 }

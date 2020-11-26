@@ -31,15 +31,15 @@ namespace ComplaintManagement.Controllers
             {
                 if (search.ToLower() == Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstCategories = GetAll(1).ToList().Where(x => !x.Status).ToList();
+                    ViewBag.lstCategories = GetAll(0).ToList().Where(x => !x.Status).ToList();
                 }
                 if (search.ToLower() == Messages.Active.ToLower())
                 {
-                    ViewBag.lstCategories = GetAll(1).ToList().Where(x => x.Status).ToList();
+                    ViewBag.lstCategories = GetAll(0).ToList().Where(x => x.Status).ToList();
                 }
                 if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstCategories = GetAll(1).ToList().Where(x => x.CategoryName.Contains(search)).ToList();
+                    ViewBag.lstCategories = GetAll(0).ToList().Where(x => x.CategoryName.Contains(search)).ToList();
                 }
 
                 var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
@@ -63,6 +63,11 @@ namespace ComplaintManagement.Controllers
         public List<CategoryMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+           
             var lst = new CategoryMastersRepository().GetAll();
             lstCount = lst.Count;
 

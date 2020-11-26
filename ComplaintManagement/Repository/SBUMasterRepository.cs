@@ -52,7 +52,8 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         SBUVM.IsActive = true;
-                        SBUVM.UserId = 1; SBUVM.CreatedDate = SBU.CreatedDate;
+                        SBUVM.CreatedDate = SBU.CreatedDate;
+                        SBUVM.CreatedBy = SBU.CreatedBy;
                         SBUVM.UpdatedDate = DateTime.UtcNow;
                         SBUVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(SBU).CurrentValues.SetValues(SBUVM);
@@ -81,17 +82,34 @@ namespace ComplaintManagement.Repository
 
         public List<SBUMasterVM> GetAll()
         {
+
             List<SBUMaster> SBU = new List<SBUMaster>();
+            List<SBUMasterVM> SBUList = new List<SBUMasterVM>();
             try
             {
-              SBU = db.SBUMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                SBU = db.SBUMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (SBU != null && SBU.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (SBUMaster item in SBU)
+                    {
+                        SBUMasterVM catObj = Mapper.Map<SBUMaster, SBUMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            SBUList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<SBUMaster>, List<SBUMasterVM>>(SBU);
+            return SBUList;
         }
 
         public SBUMasterVM Get(int id)

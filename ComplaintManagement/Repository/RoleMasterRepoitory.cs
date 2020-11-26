@@ -50,6 +50,7 @@ namespace ComplaintManagement.Repository
                     {
                         RoleVM.IsActive = true;
                         RoleVM.CreatedDate = Role.CreatedDate;
+                        RoleVM.CreatedBy = Role.CreatedBy;
                         RoleVM.UpdatedDate = DateTime.UtcNow;
                         RoleVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(Role).CurrentValues.SetValues(RoleVM);
@@ -74,17 +75,33 @@ namespace ComplaintManagement.Repository
 
         public List<RoleMasterVM> GetAll()
         {
-            List<RoleMaster> Role= new List<RoleMaster>();
+            List<RoleMaster> Role = new List<RoleMaster>();
+            List<RoleMasterVM> RoleList = new List<RoleMasterVM>();
             try
             {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
                 Role = db.RoleMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (Role != null && Role.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (RoleMaster item in Role)
+                    {
+                        RoleMasterVM catObj = Mapper.Map<RoleMaster, RoleMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            RoleList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<RoleMaster>, List<RoleMasterVM>>(Role);
+            return RoleList;
         }
 
         public RoleMasterVM Get(int id)

@@ -206,9 +206,6 @@
     <Compile Include="Helpers\Infrastructure.cs" />
     <Compile Include="Helpers\Messages.cs" />
     <Compile Include="Helpers\ReplyFormat.cs" />
-    <Compile Include="Models\AzureFile.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\CategoryMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -346,8 +343,8 @@
     <Content Include="images\loading_light.GIF" />
     <Content Include="Models\Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model.Context.cs</LastGenOutput>
       <DependentUpon>Model.edmx</DependentUpon>
+      <LastGenOutput>Model.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\Model.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -379,13 +376,6 @@
     <Content Include="Content\scss\_navs.scss" />
     <Content Include="Content\scss\_utilities.scss" />
     <Content Include="Content\scss\_variables.scss" />
-    <EntityDeploy Include="Models\Model.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Model.edmx.diagram">
-      <DependentUpon>Model.edmx</DependentUpon>
-    </Content>
     <Content Include="Imports\Samples\Category\Category.xlsx" />
     <Content Include="Imports\Samples\Committee\Committee.xlsx" />
     <Content Include="Imports\Samples\Competency\Competency.xlsx" />
@@ -398,6 +388,13 @@
     <Content Include="Imports\Samples\SubSBU\SubSBU.xlsx" />
     <Content Include="Imports\Samples\Role\Category.xlsx" />
     <Content Include="Imports\Samples\User\Category.xlsx" />
+    <EntityDeploy Include="Models\Model.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Model.edmx.diagram">
+      <DependentUpon>Model.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

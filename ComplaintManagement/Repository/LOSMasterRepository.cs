@@ -50,7 +50,8 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         LOSVM.IsActive = true;
-                        LOSVM.UserId = 1; LOSVM.CreatedDate = LOS.CreatedDate;
+                         LOSVM.CreatedDate = LOS.CreatedDate;
+                        LOSVM.CreatedBy = LOS.CreatedBy;
                         LOSVM.UpdatedDate = DateTime.UtcNow;
                         LOSVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(LOS).CurrentValues.SetValues(LOSVM);
@@ -78,17 +79,33 @@ namespace ComplaintManagement.Repository
 
         public List<LOSMasterVM> GetAll()
         {
-            List<LOSMaster> los = new List<LOSMaster>();
+            List<LOSMaster> LOS = new List<LOSMaster>();
+            List<LOSMasterVM> LOSList = new List<LOSMasterVM>();
             try
             {
-                los = db.LOSMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                LOS = db.LOSMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (LOS != null && LOS.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (LOSMaster item in LOS)
+                    {
+                        LOSMasterVM catObj = Mapper.Map<LOSMaster, LOSMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            LOSList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<LOSMaster>, List<LOSMasterVM>>(los);
+            return LOSList;
         }
 
         public LOSMasterVM Get(int id)

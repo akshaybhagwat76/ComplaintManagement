@@ -28,15 +28,15 @@ namespace ComplaintManagement.Controllers
             {
                 if (search.ToLower() == Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstSubCategory = GetAll(1).ToList().Where(x => !x.Status).ToList();
+                    ViewBag.lstSubCategory = GetAll(0).ToList().Where(x => !x.Status).ToList();
                 }
                 if (search.ToLower() == Messages.Active.ToLower())
                 {
-                    ViewBag.lstSubCategory = GetAll(1).ToList().Where(x => x.Status).ToList();
+                    ViewBag.lstSubCategory = GetAll(0).ToList().Where(x => x.Status).ToList();
                 }
                 if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstSubCategory = GetAll(1).ToList().Where(x => x.SubCategoryName.Contains(search)).ToList();
+                    ViewBag.lstSubCategory = GetAll(0).ToList().Where(x => x.SubCategoryName.Contains(search)).ToList();
                 }
 
                 var DataTableDetail = new HomeController().getDataTableDetail("SubCategory", null);
@@ -88,6 +88,11 @@ namespace ComplaintManagement.Controllers
         public List<SubCategoryMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+           
             var lst = new SubCategoryMastersRepository().GetAll();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))

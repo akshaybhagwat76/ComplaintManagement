@@ -15,7 +15,6 @@ namespace ComplaintManagement.Models
     public partial class CommitteeMaster
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
         public string CommitteeName { get; set; }
         public bool Status { get; set; }
         public bool IsActive { get; set; }
@@ -23,5 +22,6 @@ namespace ComplaintManagement.Models
         public System.DateTime CreatedDate { get; set; }
         public int CreatedBy { get; set; }
         public int ModifiedBy { get; set; }
+        public int UserId { get; set; }
     }
 }

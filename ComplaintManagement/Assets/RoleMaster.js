@@ -67,7 +67,7 @@ function deleteAction(id) {
         url: "/Role/Delete",
         data: { id: id },
         success: function (response) {
-            StopProcess()
+            
             if (response.status != "Fail") {
                 location.reload();
             }

@@ -40,6 +40,7 @@ namespace ComplaintManagement.Repository
                         CommitteeVM.IsActive = true;
                         CommitteeVM.CreatedDate = DateTime.UtcNow;
                         CommitteeVM.CreatedBy = Convert.ToInt32(sid);
+                        
                         Committee = Mapper.Map<CommitteeMasterVM, CommitteeMaster>(CommitteeVM);
                         if (IsExist(Committee.CommitteeName))
                         {
@@ -55,6 +56,7 @@ namespace ComplaintManagement.Repository
 
                         CommitteeVM.CreatedDate = Committee.CreatedDate;
                         CommitteeVM.UpdatedDate = DateTime.UtcNow;
+                        CommitteeVM.CreatedBy = Committee.CreatedBy;
                         CommitteeVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(Committee).CurrentValues.SetValues(CommitteeVM);
                         if (IsExist(Committee.CommitteeName, Committee.Id))
@@ -83,16 +85,32 @@ namespace ComplaintManagement.Repository
         public List<CommitteeMasterVM> GetAll()
         {
             List<CommitteeMaster> Committee = new List<CommitteeMaster>();
+            List<CommitteeMasterVM> CommitteeList = new List<CommitteeMasterVM>();
             try
             {
-                Committee = db.CommitteeMasters.Where(i => i.IsActive).ToList();
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                Committee = db.CommitteeMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (Committee != null && Committee.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (CommitteeMaster item in Committee)
+                    {
+                        CommitteeMasterVM catObj = Mapper.Map<CommitteeMaster, CommitteeMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            CommitteeList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<CommitteeMaster>, List<CommitteeMasterVM>>(Committee);
+            return CommitteeList;
         }
 
         public CommitteeMasterVM Get(int id)

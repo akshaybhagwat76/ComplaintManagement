@@ -53,7 +53,8 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         EntityVM.IsActive = true;
-                        EntityVM.UserId = 1; EntityVM.CreatedDate = Entity.CreatedDate;
+                         EntityVM.CreatedDate = Entity.CreatedDate;
+                        EntityVM.CreatedBy = Entity.CreatedBy;
                         EntityVM.UpdatedDate = DateTime.UtcNow;
                         EntityVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(Entity).CurrentValues.SetValues(EntityVM);
@@ -82,17 +83,34 @@ namespace ComplaintManagement.Repository
 
         public List<EntityMasterVM> GetAll()
         {
+
             List<EntityMaster> Entity = new List<EntityMaster>();
+            List<EntityMasterVM> EntityList = new List<EntityMasterVM>();
             try
             {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
                 Entity = db.EntityMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (Entity != null && Entity.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (EntityMaster item in Entity)
+                    {
+                        EntityMasterVM catObj = Mapper.Map<EntityMaster, EntityMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            EntityList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<EntityMaster>, List<EntityMasterVM>>(Entity);
+            return EntityList;
         }
 
         public EntityMasterVM Get(int id)

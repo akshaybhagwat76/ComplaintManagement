@@ -53,7 +53,8 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         RegionVM.IsActive = true;
-                        RegionVM.UserId = 1; RegionVM.CreatedDate = Region.CreatedDate;
+                        RegionVM.CreatedDate = Region.CreatedDate;
+                        RegionVM.CreatedBy = Region.CreatedBy;
                         RegionVM.UpdatedDate = DateTime.UtcNow;
                         RegionVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(Region).CurrentValues.SetValues(RegionVM);
@@ -82,17 +83,34 @@ namespace ComplaintManagement.Repository
 
         public List<RegionMasterVM> GetAll()
         {
+
             List<RegionMaster> Region = new List<RegionMaster>();
+            List<RegionMasterVM> RegionList = new List<RegionMasterVM>();
             try
             {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
                 Region = db.RegionMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (Region != null && Region.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (RegionMaster item in Region)
+                    {
+                        RegionMasterVM catObj = Mapper.Map<RegionMaster, RegionMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            RegionList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<RegionMaster>, List<RegionMasterVM>>(Region);
+            return RegionList;
         }
 
         public RegionMasterVM Get(int id)

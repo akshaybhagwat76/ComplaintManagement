@@ -1,4 +1,5 @@
-﻿@{
+﻿@using ComplaintManagement.Helpers
+@{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
     var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
@@ -184,6 +185,10 @@
                                         <thead>
                                             <tr>
                                                 <td class="text-center">Sub SBU</td>
+                                                <td class="text-center">Created Date</td>
+                                                <td class="text-center">Created By</td>
+                                                <td class="text-center">Modified Date</td>
+                                                <td class="text-center">Modified By</td>
                                                 <td class="text-center">Status</td>
                                                 <td class="text-center">Action</td>
                                             </tr>
@@ -191,23 +196,37 @@
                                         <tbody>
                                             @foreach (var item in ViewBag.lstSubSBU)
                                             {
-                                                <tr>
-                                                    <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
-
-                                                    <td class="text-black text-center">
-                                                        <strong>
-                                                            @if (item.Status == true)
-                                                            {@Html.Raw("Active") }
+                                            <tr>
+                                                <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
+                                                <td class="text-black text-center"><strong>@item.CreatedDate.ToShortDateString()</strong></td>
+                                                <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                <td class="text-black text-center">
+                                                    <strong>
+                                                        @if (item.UpdatedDate != null)
+                                                        {
+                                                            @Html.Raw(item.UpdatedDate.ToShortDateString())
+                                                        }
                                                         else
-                                                        { @Html.Raw("Inactive")}
-                                                        </strong>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                        <a href="javascript:void(0)" onclick="deleteSubSBU('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                    </td>
-                                                </tr>
+                                                        {
+                                                            @Html.Raw(Messages.NotAvailable.ToString())
+                                                        }
+                                                    </strong>
+                                                </td>
+                                                <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+                                                <td class="text-black text-center">
+                                                    <strong>
+                                                        @if (item.Status == true)
+                                                        {@Html.Raw("Active") }
+                                                    else
+                                                    { @Html.Raw("Inactive")}
+                                                    </strong>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                    <a href="javascript:void(0)" onclick="deleteSubSBU('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                    <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                </td>
+                                            </tr>
                                             }
                                         </tbody>
                                     </table>

@@ -25,7 +25,6 @@ namespace ComplaintManagement.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<AzureFile> AzureFiles { get; set; }
         public virtual DbSet<CategoryMaster> CategoryMasters { get; set; }
         public virtual DbSet<CommitteeMaster> CommitteeMasters { get; set; }
         public virtual DbSet<CompetencyMaster> CompetencyMasters { get; set; }

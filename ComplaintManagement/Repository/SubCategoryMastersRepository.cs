@@ -51,7 +51,8 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         SubcategoryVM.IsActive = true;
-                        SubcategoryVM.UserId = 1; SubcategoryVM.CreatedDate = Subcategory.CreatedDate;
+                         SubcategoryVM.CreatedDate = Subcategory.CreatedDate;
+                        SubcategoryVM.CreatedBy = Subcategory.CreatedBy;
                         SubcategoryVM.UpdatedDate = DateTime.UtcNow;
                         SubcategoryVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(Subcategory).CurrentValues.SetValues(SubcategoryVM);
@@ -80,17 +81,34 @@ namespace ComplaintManagement.Repository
 
         public List<SubCategoryMasterVM> GetAll()
         {
+
             List<SubCategoryMaster> Subcategory = new List<SubCategoryMaster>();
+            List<SubCategoryMasterVM> SubcategoryList = new List<SubCategoryMasterVM>();
             try
             {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
                 Subcategory = db.SubCategoryMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (Subcategory != null && Subcategory.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (SubCategoryMaster item in Subcategory)
+                    {
+                        SubCategoryMasterVM catObj = Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            SubcategoryList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<SubCategoryMaster>, List<SubCategoryMasterVM>>(Subcategory);
+            return SubcategoryList;
         }
 
         public SubCategoryMasterVM Get(int id)

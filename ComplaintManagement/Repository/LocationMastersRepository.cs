@@ -52,7 +52,8 @@ namespace ComplaintManagement.Repository
                     else
                     {
                         LocationVM.IsActive = true;
-                        LocationVM.UserId = 1; LocationVM.CreatedDate = Location.CreatedDate;
+                      LocationVM.CreatedDate = Location.CreatedDate;
+                        LocationVM.CreatedBy = Location.CreatedBy;
                         LocationVM.UpdatedDate = DateTime.UtcNow;
                         LocationVM.ModifiedBy = Convert.ToInt32(sid);
                         db.Entry(Location).CurrentValues.SetValues(LocationVM);
@@ -81,17 +82,34 @@ namespace ComplaintManagement.Repository
 
         public List<LocationMasterVM> GetAll()
         {
+
             List<LocationMaster> Location = new List<LocationMaster>();
+            List<LocationMasterVM> LocationList = new List<LocationMasterVM>();
             try
             {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
                 Location = db.LocationMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (Location != null && Location.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (LocationMaster item in Location)
+                    {
+                        LocationMasterVM catObj = Mapper.Map<LocationMaster, LocationMasterVM>(item);
+                        if (catObj != null)
+                        {
+
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            LocationList.Add(catObj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<LocationMaster>, List<LocationMasterVM>>(Location);
+            return LocationList;
         }
 
         public LocationMasterVM Get(int id)

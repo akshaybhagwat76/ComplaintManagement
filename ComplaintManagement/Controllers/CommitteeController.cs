@@ -18,7 +18,7 @@ namespace ComplaintManagement.Controllers
         public ActionResult Index()
         {
             var lst = GetAll(1);
-           
+
             var DataTableDetail = new HomeController().getDataTableDetail("Committee", null);
             ViewBag.lstCommittee = JsonConvert.SerializeObject(lst);
             ViewBag.Page = DataTableDetail.Item1;
@@ -27,7 +27,7 @@ namespace ComplaintManagement.Controllers
         }
         public ActionResult SearchCommittee(string search)
         {
-            var originalList = GetAll(1);
+            var originalList = GetAll(0);
             dynamic output = new List<dynamic>();
 
             foreach (var item in originalList)
@@ -35,20 +35,26 @@ namespace ComplaintManagement.Controllers
                 var itemIndex = (IDictionary<string, object>)item;
                 foreach (var kvp in itemIndex)
                 {
-                    if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
+                    if (kvp.Value != null)
                     {
-                        output.Add(item);
-                    }
-                    if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
-                    {
-                        bool Status = Convert.ToBoolean(kvp.Value);
-                        if (Status && search.ToLower() == Messages.Active.ToLower())
+
+
+                        if (kvp.Value.ToString().ToLower().Contains(search.ToLower()))
                         {
+
                             output.Add(item);
                         }
-                        if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                        if (kvp.Key.ToString() == Messages.Status.ToString() && (search.ToLower() == Messages.Active.ToLower() || search.ToLower() == Messages.Inactive.ToLower()))
                         {
-                            output.Add(item);
+                            bool Status = Convert.ToBoolean(kvp.Value);
+                            if (Status && search.ToLower() == Messages.Active.ToLower())
+                            {
+                                output.Add(item);
+                            }
+                            if (!Status && search.ToLower() == Messages.Inactive.ToLower())
+                            {
+                                output.Add(item);
+                            }
                         }
                     }
                 }
@@ -99,6 +105,11 @@ namespace ComplaintManagement.Controllers
         public dynamic GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
             var lst = new CommitteeMastersRepository().GetAll();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
@@ -136,6 +147,13 @@ namespace ComplaintManagement.Controllers
                         }
                         row.Id = com.Id;
                         row.CommitteeName = com.CommitteeName;
+                        row.UpdatedByName = com.UpdatedByName;
+                        row.CreatedByName = com.CreatedByName;
+                        row.ModifiedBy = com.ModifiedBy;
+                        row.CreatedBy = com.CreatedBy;
+                        row.UpdatedDate = com.UpdatedDate;
+                        row.CreatedDate = com.CreatedDate;
+
                         row.Status = com.Status;
 
                         output.Add(row);
@@ -158,7 +176,7 @@ namespace ComplaintManagement.Controllers
            .Skip((currentPage - 1) * maxRows)
            .Take(maxRows).ToList();
                 var lstUsers = new UserMastersRepository().GetAll();
-                
+
 
                 if (lst != null && lst.Count > 0)
                 {
@@ -179,7 +197,12 @@ namespace ComplaintManagement.Controllers
                         row.Id = com.Id;
                         row.CommitteeName = com.CommitteeName;
                         row.Status = com.Status;
-
+                        row.UpdatedByName = com.UpdatedByName;
+                        row.CreatedByName = com.CreatedByName;
+                        row.ModifiedBy = com.ModifiedBy;
+                        row.CreatedBy = com.CreatedBy;
+                        row.UpdatedDate = com.UpdatedDate;
+                        row.CreatedDate = com.CreatedDate;
                         output.Add(row);
                     }
                 }
@@ -196,7 +219,7 @@ namespace ComplaintManagement.Controllers
         [HttpGet]
         public ActionResult GetCommittee(string range, int currentPage)
         {
-            ViewBag.lstCommittee = JsonConvert.SerializeObject(GetAll(currentPage,range));
+            ViewBag.lstCommittee = JsonConvert.SerializeObject(GetAll(currentPage, range));
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 
