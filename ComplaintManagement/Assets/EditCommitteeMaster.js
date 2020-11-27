@@ -1,22 +1,23 @@
 ﻿var isValidCommittee = false;
 function submitForm() {
-    debugger
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
       $("#myForm .required").each(function () {
-        if (!$(this).val()) {
-            var $label = $("<label class='adderror'>").text('This field is required.');
-            if ($(this).parent().find("label").length == 1) {
-                $(this).parent().append($label);
+          if (!$(this).val()) {
+              var $label = $("<label class='adderror'>").text('This field is required.');
+              if ($(this).parent().find("label").length == 1) {
+                  $(this).parent().append($label);
 
-                $(this).addClass("adderror");
-            }
-                retval = false;
-        }
-        else {
-            $(this).parent().find("label").remove();
-            $(this).removeClass("adderror");
-        }
+                  $(this).addClass("adderror");
+              }
+              retval = false;
+          }
+          else {
+              if ($(this).parent().find("label").length > 1) {
+                  $(this).parent().find("label:eq(1)").remove();
+                  $(this).removeClass("adderror");
+              }
+          }
     });
     if (isValidCommittee) {
         $("#CommitteeName").addClass("adderror");

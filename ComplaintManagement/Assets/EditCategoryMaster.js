@@ -11,11 +11,13 @@ function submitForm() {
 
                 $(this).addClass("adderror");
             }
-                retval = false;
+            retval = false;
         }
         else {
-            $(this).parent().find("label").remove();
-            $(this).removeClass("adderror");
+            if ($(this).parent().find("label").length > 1) {
+                $(this).parent().find("label:eq(1)").remove();
+                $(this).removeClass("adderror");
+            }
         }
     });
 

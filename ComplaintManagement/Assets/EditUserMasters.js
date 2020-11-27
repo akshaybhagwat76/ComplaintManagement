@@ -15,8 +15,10 @@ function submitForm() {
             retval = false;
         }
         else {
-            $(this).parent().find("label").remove();
-            $(this).removeClass("adderror");
+            if ($(this).parent().find("label").length > 1) {
+                $(this).parent().find("label:eq(1)").remove();
+                $(this).removeClass("adderror");
+            }
         }
     });
     var email = $("#WorkEmail").val().trim();
@@ -26,7 +28,7 @@ function submitForm() {
     }
 
     var mobile = $("#MobileNo").val();
-    if (mobile.length < 10) {
+    if ($("#MobileNo").val() !="" && mobile.length < 10) {
         $("#MobileNo").addClass("adderror");
         funToastr(false, "Please enter mobile number atleast 10 digits");
         retval = false;
@@ -257,20 +259,67 @@ function GetLOSSettings() {
     var LOSId = $("#LOSId").val();
 
     if (LOSId != "") {
-        var data={
-            LOSId:LOSId
-        }
+        var data = { LOSId: LOSId };
         $.ajax({
             type: "POST",
             url: "/UserMaster/GetLOSSettings/",
             data: { UserVM: data },
-            success: function (data) {
-                if (data != null) {
-                    console.log(data);
-                    console.log('subList', JSON.parse($("#hdnSBUList").val()))
-                    console.log('hdnSubSBUList', JSON.parse($("#hdnSubSBUList").val()))
-                    console.log('hdnCompentencyList', JSON.parse($("#hdnCompentencyList").val()))
+            success: function (response) {
+                if (response != null) {
+                    console.log(response);
+                    var data = response.data;
+                    var dataOfCompentency = JSON.parse($("#hdnCompentencyList").val());
+                    var dataOfsubList = JSON.parse($("#hdnSBUList").val());
+                    var dataOfSubSBUList = JSON.parse($("#hdnSubSBUList").val());
+                    debugger
+                    if (data.CompetencyId != "" || data.CompetencyId != null) {
+                        var lstCompentency = data.CompetencyId.split(",");
+                        var losBaseCompantency = [];
+                        $.each(lstCompentency, function (key, ctcId) {
+                            if (ctcId > 0) {
+                                var ctcObj = dataOfCompentency.find(x => x.Value === ctcId);
+                                if (ctcObj !== null || ctcObj !== undefined) {
+                                    losBaseCompantency.push(ctcObj);
+                                }
+                            }
+                        })
+                        losBaseCompantency = [{ Text: "", Value: "" }, ...losBaseCompantency];
+                        let optionHtml = losBaseCompantency.map(x => `<option value='${x.Value}'>${x.Text}</option>`);
+                        $("#CompentencyId").html(optionHtml)
+                    }
 
+                    if (data.SBUId != "" || data.SBUId != null) {
+                        var lstSBU = data.SBUId.split(",");
+                        var losBaseSBU = [];
+                        $.each(lstSBU, function (key, sbuId) {
+                            if (sbuId > 0) {
+                                var losSBUObj = dataOfsubList.find(x => x.Value === sbuId);
+                                if (losSBUObj !== null || losSBUObj !== undefined) {
+                                    losBaseSBU.push(losSBUObj);
+                                }
+                            }
+                        })
+                        losBaseSBU = [{ Text: "", Value: "" }, ...losBaseSBU];
+                        let optionHtml = losBaseSBU.map(x => `<option value='${x.Value}'>${x.Text}</option>`);
+                        $("#SBUId").html(optionHtml)
+                    }
+
+
+                    if (data.SubSBUId != "" || data.SubSBUId != null) {
+                        var lstSubSBU = data.SubSBUId.split(",");
+                        var losBaseSubSBU = [];
+                        $.each(lstSubSBU, function (key, subSbuId) {
+                            if (subSbuId > 0) {
+                                var losSubSBUObj = dataOfsubList.find(x => x.Value === subSbuId);
+                                if (losSubSBUObj !== null || losSubSBUObj !== undefined) {
+                                    losBaseSubSBU.push(losSubSBUObj);
+                                }
+                            }
+                        })
+                        losBaseSubSBU = [{ Text: "", Value: "" }, ...losBaseSubSBU];
+                        let optionHtml = losBaseSubSBU.map(x => `<option value='${x.Value}'>${x.Text}</option>`);
+                        $("#SubSBUId").html(optionHtml)
+                    }
                 }
             }
         })
