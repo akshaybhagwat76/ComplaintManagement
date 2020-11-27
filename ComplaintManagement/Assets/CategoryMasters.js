@@ -2,6 +2,7 @@
     $.noConflict();
     // $("#myTable").DataTable();
 });
+
 function deleteCategory(id) {
 
     //$('#deleteModal').data('id', id).modal('show');
@@ -9,6 +10,7 @@ function deleteCategory(id) {
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
 
 }
+
 function searchKeyPress(e) {
     // look for window.event in case event isn't passed in
     e = e || window.event;
@@ -83,7 +85,7 @@ function deleteAction(id) {
         url: "/Category/Delete",
         data: { id: id },
         success: function (response) {
-            
+
             if (response.status != "Fail") {
                 location.reload();
             }
@@ -97,10 +99,12 @@ function deleteAction(id) {
         }
     });
 };
+
 function performAction(id, isView) {
     let url = `/Category/Edit?id=${id}&isView=${isView}`
     location.href = url;
 }
+
 function filterGrid() {
     var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
     if (fromDate == "" || toDate == "") {
@@ -114,6 +118,7 @@ function filterGrid() {
         location.href = '/Category/GetCategories?range=' + fromDate + ',' + toDate + '&currentPage=' + $("#hfCurrentPageIndex").val();
     }
 }
+
 function PagerClick(index) {
     StartProcess();
     $("#hfCurrentPageIndex").val(index);
@@ -124,3 +129,69 @@ function PagerClick(index) {
     }
     location.href = '/Category/LoadCategories?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
 }
+
+// Import excel
+var inputImage = document.getElementById('excelFile');
+
+$("#excelFile").on('change', function () {
+    var files = this.files;
+    var file;
+    if (files && files.length) {
+        file = files[0];
+        const filename = file.name;
+        let last_dot = filename.lastIndexOf('.')
+        let ext = "." + filename.slice(last_dot + 1);
+        if (ext.toLowerCase() == '.xlsx' || ext.toLowerCase() == '.xlsm' || ext.toLowerCase() == '.xltx' || ext.toLowerCase() == '.xltm' || ext.toLowerCase() == '.xls') {
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                $(inputImage).attr('src', '');
+                $(inputImage).attr("data-base64string", '');
+                $(inputImage).attr("data-extension", '');
+
+                $(inputImage).attr('src', reader.result);
+                $(inputImage).attr("data-base64string", reader.result);
+                $(inputImage).attr("data-extension", ext);
+            }
+            reader.readAsDataURL(file);
+        } else {
+            funToastr(false, 'Please choose an excel file');
+        }
+
+    }
+});
+
+$("#btnUpload").on("click", function () {
+    var excelFile = $("#excelFile").get(0).files;
+    var excelUploadedFile = "";
+    if (excelFile.length > 0) {
+        var excelFileExt = excelFile[0].name.split('.').pop();
+        excelUploadedFile = $("#excelFile").attr('data-base64string');
+        excelUploadedFile = excelUploadedFile + ',' + excelFileExt;
+    }
+    else {
+        funToastr(false, "Please upload file."); return;
+    }
+    StartProcess();
+    $.ajax({
+        type: "POST",
+        url: "/Category/ImportCategories",
+        data: { file: excelUploadedFile },
+        success: function (data) {
+            if (data.status == "Fail") {
+                StopProcess();
+                funToastr(false, data.error);
+                $("#lblError").addClass("adderror").text(data.error).show();
+            }
+            else {
+                StopProcess();
+                funToastr(true, data.msg +  " Records imported." + " Please reload page to refresh changes.")
+                $("#lblError").removeClass("adderror").addClass("success").text(data.msg+ " Records imported." + " Please reload page to refresh changes.").show();
+            }
+        }, error: function (response) {
+            funToastr(false, response.responseText);
+        },
+        failure: function (response) {
+            funToastr(false, response.responseText);
+        }
+    });
+})

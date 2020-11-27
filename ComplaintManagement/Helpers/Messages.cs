@@ -46,6 +46,7 @@
         public const string Inactive = "Inactive";
         public const string Status = "Status";
 
+        public const string DataCategoryAlreadyExists = "This Category {0} already exists! - Row No. {1} and Column No. {2}";
         public const string DataEmpAlreadyExists = "This Employee {0} already exists! - Row No. {1} and Column No. {2}";
         public const string FieldCannotBeBlankOrEmpty = "{0} cannot be blank or contain white space.";
         public const string FieldIsRequired = "{0} is required - Row No. {1} and Column No. {2}";

@@ -254,6 +254,7 @@ function checkDuplicate() {
         })
     }
 }
+
 function GetLOSSettings() {
     var LOSId = $("#LOSId").val();
 

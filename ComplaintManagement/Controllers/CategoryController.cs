@@ -60,6 +60,7 @@ namespace ComplaintManagement.Controllers
             }
             return View("Index");
         }
+
         public List<CategoryMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
@@ -149,6 +150,7 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View("Index");
         }
+
         [HttpPost]
         public ActionResult Delete(int id)
         {
@@ -202,6 +204,26 @@ namespace ComplaintManagement.Controllers
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult ImportCategories(string file)
+        {
+            try
+            {
+                string retval = new CategoryMastersRepository().UploadImportCategories(file);
+                if (!string.IsNullOrEmpty(retval))
+                {
+                    int count = new CategoryMastersRepository().ImportCategories(retval);
+                    return new ReplyFormat().Success(count.ToString());
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
         }
     }
 }
