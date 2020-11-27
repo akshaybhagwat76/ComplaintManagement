@@ -1,6 +1,6 @@
 ﻿var isValidEmail = false; var isValidEmp = false;
 function submitForm() {
-   
+
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
 
@@ -28,7 +28,7 @@ function submitForm() {
     }
 
     var mobile = $("#MobileNo").val();
-    if ($("#MobileNo").val() !="" && mobile.length < 10) {
+    if ($("#MobileNo").val() != "" && mobile.length < 10) {
         $("#MobileNo").addClass("adderror");
         funToastr(false, "Please enter mobile number atleast 10 digits");
         retval = false;
@@ -283,8 +283,11 @@ function GetLOSSettings() {
                         })
                         $("#CompentencyId").empty();
                         losBaseCompantency = [{ Text: "", Value: "" }, ...losBaseCompantency];
-                        let optionHtml = losBaseCompantency.map(x => `<option value='${x.Value}'>${x.Text}</option>`);
-                        $("#CompentencyId").html(optionHtml)
+                        $.each(losBaseCompantency, function (key, item) {
+                            if (item != undefined || item != null) {
+                                $("#CompentencyId").append(`<option value='${item.Value}'>${item.Text}</option>`)
+                            }
+                        })
                     }
 
                     if (data.SBUId != "" || data.SBUId != null && dataOfsubList.length > 0) {
@@ -301,12 +304,15 @@ function GetLOSSettings() {
                         $("#SBUId").empty();
 
                         losBaseSBU = [{ Text: "", Value: "" }, ...losBaseSBU];
-                        let optionHtml = losBaseSBU.map(x => `<option value='${x.Value}'>${x.Text}</option>`);
-                        $("#SBUId").html(optionHtml)
+                        $.each(losBaseSBU, function (key, item) {
+                            if (item != undefined || item != null) {
+                                $("#SBUId").append(`<option value='${item.Value}'>${item.Text}</option>`)
+                            }
+                        })
                     }
 
 
-                    if (data.SubSBUId != "" || data.SubSBUId != null && dataOfSubSBUList.length>0) {
+                    if (data.SubSBUId != "" || data.SubSBUId != null && dataOfSubSBUList.length > 0) {
                         var lstSubSBU = data.SubSBUId.split(",");
                         var losBaseSubSBU = [];
                         $.each(lstSubSBU, function (key, subSbuId) {
@@ -320,8 +326,11 @@ function GetLOSSettings() {
                         $("#SubSBUId").empty();
 
                         losBaseSubSBU = [{ Text: "", Value: "" }, ...losBaseSubSBU];
-                        let optionHtml = losBaseSubSBU.map(x => `<option value='${x.Value}'>${x.Text}</option>`);
-                        $("#SubSBUId").html(optionHtml)
+                        $.each(losBaseSubSBU, function (key, item) {
+                            if (item != undefined || item != null) {
+                                $("#SubSBUId").append(`<option value='${item.Value}'>${item.Text}</option>`)
+                            }
+                        })
                     }
                 }
             }
