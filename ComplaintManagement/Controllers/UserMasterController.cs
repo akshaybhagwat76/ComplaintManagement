@@ -56,7 +56,10 @@ namespace ComplaintManagement.Controllers
                     }
                 }
             }
-            ViewBag.lstUser = JsonConvert.SerializeObject(output);
+
+            List<dynamic> data = output;
+            ViewBag.lstUser = JsonConvert.SerializeObject(data.Distinct().ToList());
+
             return View("Index");
         }
 
@@ -99,7 +102,6 @@ namespace ComplaintManagement.Controllers
                 dynamic output = new List<dynamic>();
 
                 #region Other logics
-                lst = lst.Where(x => x.CreatedDate.Date >= fromDate && x.CreatedDate <= toDate.Date).ToList();
                 var lstSBU = new SBUMasterRepository().GetAll();
                 var lstSubSBU = new SubSBUMasterRepository().GetAll();
                 var lstLOS = new LOSMasterRepository().GetAll();
@@ -304,7 +306,7 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageType = "Create";
             try
             {
-                ViewBag.lstDesignation = new DesignationMasterRepository().GetAll().Where(c=>c.Status).ToList().Select(d => new SelectListItem { Text = d.Designation, Value = d.Id.ToString()}).ToList();
+                ViewBag.lstDesignation = new DesignationMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.Designation, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstEntity = new EntityMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EntityName, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstSBU = new SBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
@@ -386,6 +388,21 @@ namespace ComplaintManagement.Controllers
             catch (Exception ex)
             {
 
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
+        [HttpPost]
+        public ActionResult GetLOSSettings(UserMasterVM UserVM)
+        {
+            try
+            {
+                var data = new LOSMasterRepository().Get(UserVM.LOSId);
+                return new ReplyFormat().Success(Messages.SUCCESS, data);
+            }
+            catch (Exception ex)
+            {
                 ErrorSignal.FromCurrentContext().Raise(ex);
                 return new ReplyFormat().Error(ex.Message.ToString());
             }

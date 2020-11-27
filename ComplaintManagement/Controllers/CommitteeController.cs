@@ -1,4 +1,5 @@
 ﻿using ComplaintManagement.Helpers;
+using ComplaintManagement.Models;
 using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
@@ -59,7 +60,8 @@ namespace ComplaintManagement.Controllers
                     }
                 }
             }
-            ViewBag.lstCommittee = JsonConvert.SerializeObject(output);
+            List<dynamic> data = output;
+            ViewBag.lstCommittee = JsonConvert.SerializeObject(data.Distinct().ToList());
             return View("Index");
         }
         [HttpGet]
@@ -128,21 +130,31 @@ namespace ComplaintManagement.Controllers
                         .Take(maxRows).ToList();
 
                 dynamic output = new List<dynamic>();
-                var lstUsers = new UserMastersRepository().GetAll();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll();
                 if (lst != null && lst.Count > 0)
                 {
                     foreach (CommitteeMasterVM com in lst)
                     {
                         dynamic row = new ExpandoObject();
-                        if (com.UserId > 0)
+                       
+                        if (!string.IsNullOrEmpty(com.UserId))
                         {
-                            if (lstUsers.FirstOrDefault(x => x.Id == com.UserId) != null)
+                            if (com.UserId.Contains(","))
                             {
-                                row.User = lstUsers.FirstOrDefault(x => x.Id == com.UserId).EmployeeName;
+                                string[] array = com.UserId.Split(',');
+                                List<string> users = new List<string>();
+                                foreach (string UserItem in array)
+                                {
+                                    if (lstUserMaster.Where(x => x.Id == Convert.ToInt32(UserItem)).FirstOrDefault() != null)
+                                    {
+                                        users.Add(lstUserMaster.Where(x => x.Id == Convert.ToInt32(UserItem)).FirstOrDefault().EmployeeName);
+                                    }
+                                }
+                                row.User = string.Join(",", users);
                             }
                             else
                             {
-                                row.User = "";
+                                row.User = lstUserMaster.Where(x => x.Id == Convert.ToInt32(com.UserId)).FirstOrDefault() != null ? lstUserMaster.Where(x => x.Id == Convert.ToInt32(com.UserId)).FirstOrDefault().EmployeeName : string.Empty;
                             }
                         }
                         row.Id = com.Id;
@@ -175,7 +187,8 @@ namespace ComplaintManagement.Controllers
            .OrderByDescending(user => user.Id)
            .Skip((currentPage - 1) * maxRows)
            .Take(maxRows).ToList();
-                var lstUsers = new UserMastersRepository().GetAll();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll();
+
 
 
                 if (lst != null && lst.Count > 0)
@@ -183,15 +196,24 @@ namespace ComplaintManagement.Controllers
                     foreach (CommitteeMasterVM com in lst)
                     {
                         dynamic row = new ExpandoObject();
-                        if (com.UserId > 0)
+                        if (!string.IsNullOrEmpty(com.UserId))
                         {
-                            if (lstUsers.FirstOrDefault(x => x.Id == com.UserId) != null)
+                            if (com.UserId.Contains(","))
                             {
-                                row.User = lstUsers.FirstOrDefault(x => x.Id == com.UserId).EmployeeName;
+                                string[] array = com.UserId.Split(',');
+                                List<string> users = new List<string>();
+                                foreach (string UserItem in array)
+                                {
+                                    if (lstUserMaster.Where(x => x.Id == Convert.ToInt32(UserItem)).FirstOrDefault() != null)
+                                    {
+                                        users.Add(lstUserMaster.Where(x => x.Id == Convert.ToInt32(UserItem)).FirstOrDefault().EmployeeName);
+                                    }
+                                }
+                                row.User = string.Join(",", users);
                             }
                             else
                             {
-                                row.User = "";
+                                row.User = lstUserMaster.Where(x => x.Id == Convert.ToInt32(com.UserId)).FirstOrDefault() != null ? lstUserMaster.Where(x => x.Id == Convert.ToInt32(com.UserId)).FirstOrDefault().EmployeeName : string.Empty;
                             }
                         }
                         row.Id = com.Id;

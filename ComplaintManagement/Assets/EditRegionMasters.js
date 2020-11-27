@@ -16,7 +16,7 @@ function submitForm() {
             $(this).parent().find("label").remove();
             $(this).removeClass("adderror");
         }
-    });
+    }); 
     if (isValidRegion) {
         $("#Region").addClass("adderror");
         funToastr(false, "This Region is already exist."); return;

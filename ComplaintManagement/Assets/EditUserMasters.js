@@ -221,7 +221,6 @@ function checkDuplicate() {
             url: "/UserMaster/IsExist/",
             data: { UserVM: data },
             success: function (data) {
-                debugger
                 if (data != null) {
                     if (data.msg != null && data.msg != "") {
                         if (data.msg.includes("Employee Id")) {
@@ -254,6 +253,29 @@ function checkDuplicate() {
         })
     }
 }
+function GetLOSSettings() {
+    var LOSId = $("#LOSId").val();
 
+    if (LOSId != "") {
+        var data={
+            LOSId:LOSId
+        }
+        $.ajax({
+            type: "POST",
+            url: "/UserMaster/GetLOSSettings/",
+            data: { UserVM: data },
+            success: function (data) {
+                if (data != null) {
+                    console.log(data);
+                    console.log('subList', JSON.parse($("#hdnSBUList").val()))
+                    console.log('hdnSubSBUList', JSON.parse($("#hdnSubSBUList").val()))
+                    console.log('hdnCompentencyList', JSON.parse($("#hdnCompentencyList").val()))
+
+                }
+            }
+        })
+    }
+
+}
 
 

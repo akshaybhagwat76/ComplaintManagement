@@ -63,7 +63,8 @@ namespace ComplaintManagement.Controllers
                     }
                 }
             }
-            ViewBag.lstRole = JsonConvert.SerializeObject(output);
+            List<dynamic> data = output;
+            ViewBag.lstRole = JsonConvert.SerializeObject(data.Distinct().ToList());
             return View("Index");
         }
         public ActionResult LoadRole(int currentPageIndex, string range = "")

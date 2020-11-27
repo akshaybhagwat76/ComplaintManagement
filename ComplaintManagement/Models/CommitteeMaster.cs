@@ -22,6 +22,6 @@ namespace ComplaintManagement.Models
         public System.DateTime CreatedDate { get; set; }
         public int CreatedBy { get; set; }
         public int ModifiedBy { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

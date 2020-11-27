@@ -54,7 +54,8 @@ namespace ComplaintManagement.Controllers
                     }
                 }
             }
-            ViewBag.lstLOS = JsonConvert.SerializeObject(output);
+            List<dynamic> data = output;
+            ViewBag.lstLOS = JsonConvert.SerializeObject(data.Distinct().ToList());
             return View("Index");
         }
 

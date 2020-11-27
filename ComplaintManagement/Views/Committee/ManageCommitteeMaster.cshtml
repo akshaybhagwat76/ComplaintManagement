@@ -37,14 +37,7 @@
             <h4 class="text-white m-0">Masters</h4>
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <form class="d-none d-sm-inline-block form-inline my-3 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                            <i class="fas fa-search fa-sm" id="searchIcon"></i>
-                        </div>
-                    </form>
-                </li>
+               
                 <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                 <li class="nav-item dropdown no-arrow d-sm-none">
                     <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -164,20 +157,23 @@
                                         @Html.EditorFor(model => model.CommitteeName, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Committee", @onfocusout = "checkDuplicate()" } })
                                     </div>
                                     <div class="col-sm-9 mb-3">
-                                        @Html.LabelFor(model => model.UserId, new { @class = "requiredLabel" })
-                                        @{
-                                            List<SelectListItem> listUser = new List<SelectListItem>();
-                                            listUser = new List<SelectListItem>();
-                                            listUser.Add(new SelectListItem
-                                            {
-                                                Text = "",
-                                                Value = ""
-                                            });
-                                            listUser.AddRange(ViewBag.lstUser);
-                                        }
+                                       
+                                        @Html.Hidden("UserIds", Model.UserId)
+                                        @Html.LabelFor(model => model.UserId)
 
-                                        @Html.DropDownListFor(model => model.UserId, (List<SelectListItem>)listUser, new { @class = "form-control required" })
-
+                                        <div class="container">
+                                            <div class="row justify-content-md-right">
+                                                <div class="col col-lg-6">
+                                                    @{
+                                                        foreach (var priv in ViewBag.lstUser)
+                                                        {
+                                                            <label class="checkbox-inline"><input name="UserList" id="@string.Format("User-"+priv.Value)" type="checkbox" value="@priv.Value" class="checks-User">&nbsp; @priv.Text</label>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label id="lblErrorUser" class="inline"></label>
 
                                     </div>
                                     <div class="col-sm-9 mb-3">

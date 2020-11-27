@@ -11,7 +11,7 @@ namespace ComplaintManagement.ViewModel
     {
         public int Id { get; set; }
         [DisplayName("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [DisplayName("Committee ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string CommitteeName { get; set; }
