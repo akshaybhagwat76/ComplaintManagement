@@ -405,5 +405,22 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+
+        [HttpPost]
+        public ActionResult AutoCompeleteManager(string managervalue)
+        {
+            try
+            {
+                var data = new UserMastersRepository().ManagerAutoCompelete(managervalue);
+                return new ReplyFormat().Success(Messages.SUCCESS, data);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
+
     }
 }

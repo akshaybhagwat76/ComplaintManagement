@@ -156,6 +156,7 @@ namespace ComplaintManagement.Repository
             try
             {
                 User = db.UserMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
+                
                 if (User == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
@@ -632,6 +633,18 @@ namespace ComplaintManagement.Repository
                 }
             }
             return count;
+        }
+        public List<UserMasterVM> ManagerAutoCompelete(string managervalue )
+        {
+            List<UserMaster> User = new List<UserMaster>();
+            string mngr = managervalue.ToString();
+            if (!string.IsNullOrEmpty(mngr))
+            {
+              User = db.UserMasters.Where(x => x.EmployeeId.Contains(mngr) || x.WorkEmail.Contains(mngr) || x.EmployeeName.Contains(mngr)).ToList();
+
+               
+            }
+            return Mapper.Map<List<UserMaster>, List<UserMasterVM>>(User);
         }
     }
 }

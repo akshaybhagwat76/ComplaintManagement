@@ -331,6 +331,7 @@
     <Content Include="Content\css\styles.css" />
     <Content Include="Content\img\login.png" />
     <Content Include="Content\img\undraw_posting_photo.svg" />
+    <Content Include="Content\plugins\blitzer\jquery-ui.css" />
     <Content Include="Content\plugins\dataTables\datatables.min.css" />
     <Content Include="Content\plugins\dataTables\responsive.min.css" />
     <Content Include="Content\plugins\datepicker\datepicker3.css" />
@@ -402,6 +403,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />

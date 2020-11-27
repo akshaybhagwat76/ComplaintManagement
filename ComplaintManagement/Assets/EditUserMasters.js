@@ -339,4 +339,39 @@ function GetLOSSettings() {
 
 }
 
-
+$("#Manager").autocomplete({
+    source: function (request, response) {
+      
+        $.ajax({
+            type: 'POST',
+            url: '/UserMaster/AutoCompeleteManager',
+            data: { managervalue: request.term  },
+            success: function (resp) {
+                if (resp.status === 'Success') {
+                    var Managerdata = [];
+                    if (resp.data != null && resp.data.length > 0) {
+                        $.each(resp.data, function (key, item) {
+                            if (item != null && item.Name != "" && item.EmpId != "") {
+                                Managerdata.push({ val: item.Id, label: item.EmployeeName + " (" + item.EmployeeId + ")" });
+                            }
+                        })
+                        response($.map(Managerdata, function (item) {
+                            return item;
+                        }))
+                    }
+                }
+               
+            },
+            error: function (response) {
+                alert(response.responseText);
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            }
+        });
+    },
+    select: function (e, i) {
+        $("#ManagerId").val(i.item.label);
+    },
+    minLength: 1
+});
