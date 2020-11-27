@@ -314,8 +314,6 @@ namespace ComplaintManagement.Controllers
                 ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstLocation = new LocationMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LocationName, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstRegion = new RegionMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.Region, Value = d.Id.ToString() }).ToList();
-
-
             }
             catch (Exception ex)
             {

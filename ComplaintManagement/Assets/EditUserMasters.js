@@ -271,8 +271,7 @@ function GetLOSSettings() {
                     var dataOfCompentency = JSON.parse($("#hdnCompentencyList").val());
                     var dataOfsubList = JSON.parse($("#hdnSBUList").val());
                     var dataOfSubSBUList = JSON.parse($("#hdnSubSBUList").val());
-                    debugger
-                    if (data.CompetencyId != "" || data.CompetencyId != null) {
+                    if (data.CompetencyId != "" || data.CompetencyId != null && dataOfCompentency.length > 0) {
                         var lstCompentency = data.CompetencyId.split(",");
                         var losBaseCompantency = [];
                         $.each(lstCompentency, function (key, ctcId) {
@@ -283,12 +282,13 @@ function GetLOSSettings() {
                                 }
                             }
                         })
+                        $("#CompentencyId").empty();
                         losBaseCompantency = [{ Text: "", Value: "" }, ...losBaseCompantency];
                         let optionHtml = losBaseCompantency.map(x => `<option value='${x.Value}'>${x.Text}</option>`);
                         $("#CompentencyId").html(optionHtml)
                     }
 
-                    if (data.SBUId != "" || data.SBUId != null) {
+                    if (data.SBUId != "" || data.SBUId != null && dataOfsubList.length > 0) {
                         var lstSBU = data.SBUId.split(",");
                         var losBaseSBU = [];
                         $.each(lstSBU, function (key, sbuId) {
@@ -299,23 +299,27 @@ function GetLOSSettings() {
                                 }
                             }
                         })
+                        $("#SBUId").empty();
+
                         losBaseSBU = [{ Text: "", Value: "" }, ...losBaseSBU];
                         let optionHtml = losBaseSBU.map(x => `<option value='${x.Value}'>${x.Text}</option>`);
                         $("#SBUId").html(optionHtml)
                     }
 
 
-                    if (data.SubSBUId != "" || data.SubSBUId != null) {
+                    if (data.SubSBUId != "" || data.SubSBUId != null && dataOfSubSBUList.length>0) {
                         var lstSubSBU = data.SubSBUId.split(",");
                         var losBaseSubSBU = [];
                         $.each(lstSubSBU, function (key, subSbuId) {
                             if (subSbuId > 0) {
-                                var losSubSBUObj = dataOfsubList.find(x => x.Value === subSbuId);
+                                var losSubSBUObj = dataOfSubSBUList.find(x => x.Value === subSbuId);
                                 if (losSubSBUObj !== null || losSubSBUObj !== undefined) {
                                     losBaseSubSBU.push(losSubSBUObj);
                                 }
                             }
                         })
+                        $("#SubSBUId").empty();
+
                         losBaseSubSBU = [{ Text: "", Value: "" }, ...losBaseSubSBU];
                         let optionHtml = losBaseSubSBU.map(x => `<option value='${x.Value}'>${x.Text}</option>`);
                         $("#SubSBUId").html(optionHtml)
