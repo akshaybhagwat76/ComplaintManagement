@@ -43,7 +43,6 @@ function submitForm() {
             docfile = $("#inputImage").attr('data-base64string');
             docfile = docfile + ',' + documentFileExt;
         }
-        debugger
         var data = {
             Id: $("#Id").val(),
             EmployeeName: $("#EmployeeName").val().trim(),

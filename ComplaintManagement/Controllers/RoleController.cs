@@ -107,11 +107,11 @@ namespace ComplaintManagement.Controllers
 
 
                 var lstUsers = new UserMastersRepository().GetAll();
-                List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll();
-                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll();
-                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll();
-                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll();
-                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll();
+                List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
 
 
                 if (lst != null && lst.Count > 0)
@@ -228,11 +228,11 @@ namespace ComplaintManagement.Controllers
 
                 var lstUsers = new UserMastersRepository().GetAll();
 
-                List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll();
-                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll();
-                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll();
-                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll();
-                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll();
+                List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
 
 
                 if (lst != null && lst.Count > 0)

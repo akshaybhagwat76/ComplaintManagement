@@ -130,7 +130,7 @@ namespace ComplaintManagement.Controllers
                         .Take(maxRows).ToList();
 
                 dynamic output = new List<dynamic>();
-                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
                 if (lst != null && lst.Count > 0)
                 {
                     foreach (CommitteeMasterVM com in lst)
@@ -187,7 +187,7 @@ namespace ComplaintManagement.Controllers
            .OrderByDescending(user => user.Id)
            .Skip((currentPage - 1) * maxRows)
            .Take(maxRows).ToList();
-                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
 
 
 

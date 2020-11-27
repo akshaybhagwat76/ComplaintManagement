@@ -95,9 +95,9 @@ namespace ComplaintManagement.Controllers
                         .Take(maxRows).ToList();
 
                 dynamic output = new List<dynamic>();
-                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll();
-                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll();
-                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll();
+                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x=>x.Status).ToList();
+                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
 
 
                 #region Other joining logics
@@ -190,9 +190,9 @@ namespace ComplaintManagement.Controllers
            .Skip((currentPage - 1) * maxRows)
            .Take(maxRows).ToList();
 
-                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll();
-                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll();
-                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll();
+                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
 
 
 
@@ -250,7 +250,10 @@ namespace ComplaintManagement.Controllers
                                 List<string> CompetencyLst = new List<string>();
                                 foreach (string CompetencyItem in array)
                                 {
-                                    CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+                                    if (lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault() != null)
+                                    {
+                                        CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+                                    }
                                 }
                                 row.CompetencyName = string.Join(",", CompetencyLst);
                             }
