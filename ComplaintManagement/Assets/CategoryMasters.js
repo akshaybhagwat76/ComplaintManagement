@@ -127,7 +127,8 @@ function PagerClick(index) {
     if (fromDate !== "" && toDate !== "") {
         range = fromDate + ',' + toDate;
     }
-    debugger
+
+
     if ($("#history").val() == undefined) {
         location.href = '/Category/LoadCategories?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
     }

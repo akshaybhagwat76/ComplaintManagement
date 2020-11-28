@@ -121,7 +121,6 @@ namespace ComplaintManagement.Repository
                         CategoryMasterVM catObj = Mapper.Map<CategoryMaster, CategoryMasterVM>(item);
                         if (catObj != null)
                         {
-
                             catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
                             catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
                             categoryList.Add(catObj);

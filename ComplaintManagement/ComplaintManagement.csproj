@@ -2333,6 +2333,7 @@
     <Content Include="Views\Compliant\_Compliant.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Category\HistoryIndex.cshtml" />
+    <Content Include="Views\Committee\HistoryIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

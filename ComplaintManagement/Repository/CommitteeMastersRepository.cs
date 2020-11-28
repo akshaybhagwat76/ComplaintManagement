@@ -36,39 +36,66 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var Committee = db.CommitteeMasters.FirstOrDefault(p => p.Id == CommitteeVM.Id);
-                    if (Committee == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        CommitteeVM.IsActive = true;
-                        CommitteeVM.CreatedDate = DateTime.UtcNow;
-                        CommitteeVM.CreatedBy = Convert.ToInt32(sid);
-
-                        Committee = Mapper.Map<CommitteeMasterVM, CommitteeMaster>(CommitteeVM);
-                        if (IsExist(Committee.CommitteeName))
+                        try
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.CommitteeMasters.Add(Committee);
-                        db.SaveChanges();
-                        return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
-                    }
-                    else
-                    {
-                        CommitteeVM.IsActive = true;
+                            var Committee = db.CommitteeMasters.FirstOrDefault(p => p.Id == CommitteeVM.Id);
+                            if (Committee == null)
+                            {
+                                CommitteeVM.IsActive = true;
+                                CommitteeVM.CreatedDate = DateTime.UtcNow;
+                                CommitteeVM.CreatedBy = Convert.ToInt32(sid);
 
-                        CommitteeVM.CreatedDate = Committee.CreatedDate;
-                        CommitteeVM.UpdatedDate = DateTime.UtcNow;
-                        CommitteeVM.CreatedBy = Committee.CreatedBy;
-                        CommitteeVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(Committee).CurrentValues.SetValues(CommitteeVM);
-                        if (IsExist(Committee.CommitteeName, Committee.Id))
+                                Committee = Mapper.Map<CommitteeMasterVM, CommitteeMaster>(CommitteeVM);
+                                if (IsExist(Committee.CommitteeName))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.CommitteeMasters.Add(Committee);
+                                db.SaveChanges();
+
+                                CommitteeMasters_History historyObj = Mapper.Map<CommitteeMasterVM, CommitteeMasters_History>(CommitteeVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.CommitteeId = Committee.Id; };
+                                db.CommitteeMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+
+                                return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                            }
+                            else
+                            {
+                                CommitteeVM.IsActive = true;
+
+                                CommitteeVM.CreatedDate = Committee.CreatedDate;
+                                CommitteeVM.UpdatedDate = DateTime.UtcNow;
+                                CommitteeVM.CreatedBy = Committee.CreatedBy;
+                                CommitteeVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(Committee).CurrentValues.SetValues(CommitteeVM);
+                                if (IsExist(Committee.CommitteeName, Committee.Id))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+
+                                CommitteeMasters_History historyObj = Mapper.Map<CommitteeMasterVM, CommitteeMasters_History>(CommitteeVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.CommitteeId = Committee.Id; };
+                                db.CommitteeMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+
+                                return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
+                            }
+                        }
+                        catch (Exception ex)
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
                         }
-                        db.SaveChanges();
-                        return Mapper.Map<CommitteeMaster, CommitteeMasterVM>(Committee);
-
                     }
+
                 }
                 return new CommitteeMasterVM();
             }
@@ -99,7 +126,6 @@ namespace ComplaintManagement.Repository
                         CommitteeMasterVM catObj = Mapper.Map<CommitteeMaster, CommitteeMasterVM>(item);
                         if (catObj != null)
                         {
-
                             catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
                             catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
                             CommitteeList.Add(catObj);
@@ -158,7 +184,35 @@ namespace ComplaintManagement.Repository
         {
             return new Common().SaveExcelFromBase64(file);
         }
-
+        public List<CommitteeMasterHistoryVM> GetAllHistory()
+        {
+            List<CommitteeMasters_History> listdto = new List<CommitteeMasters_History>();
+            List<CommitteeMasterHistoryVM> lst = new List<CommitteeMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.CommitteeMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (CommitteeMasters_History item in listdto)
+                    {
+                        CommitteeMasterHistoryVM ViewModelDto = Mapper.Map<CommitteeMasters_History, CommitteeMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
+        }
         public int ImportImportCommitties(string file)
         {
             List<CommitteeMaster> importCommittee = new List<CommitteeMaster>();
@@ -278,11 +332,35 @@ namespace ComplaintManagement.Repository
                         CommitteeMasterDto.IsActive = true;
                         importCommittee.Add(CommitteeMasterDto);
                     }
-                    if (importCommittee != null && importCommittee.Count > 0)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.CommitteeMasters.AddRange(importCommittee);
-                        db.SaveChanges();
-                        count = importCommittee.Count;
+                        try
+                        {
+                            if (importCommittee != null && importCommittee.Count > 0)
+                            {
+                                db.CommitteeMasters.AddRange(importCommittee);
+                                db.SaveChanges();
+
+                                List<CommitteeMasterHistoryVM> CommitteeDtoListVM = Mapper.Map<List<CommitteeMaster>, List<CommitteeMasterHistoryVM>>(importCommittee);
+
+                                List<CommitteeMasters_History> CommitteeMasters_History = Mapper.Map<List<CommitteeMasterHistoryVM>, List<CommitteeMasters_History>>(CommitteeDtoListVM);
+                                if (CommitteeMasters_History != null && CommitteeMasters_History.Count > 0)
+                                {
+                                    CommitteeMasters_History.Select(c => { c.EntityState = Messages.Added; c.CommitteeId = c.Id; return c; }).ToList();
+                                }
+
+                                db.CommitteeMasters_History.AddRange(CommitteeMasters_History);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+                                count = importCommittee.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }
