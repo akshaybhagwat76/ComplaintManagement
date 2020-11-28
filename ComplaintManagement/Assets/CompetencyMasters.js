@@ -20,6 +20,7 @@ function searchKeyPress(e) {
 }
 
 function searchCompetency(searchText) {
+    debugger
     if (searchText !== null && searchText !== "") {
         location.href = "/Competency/searchCompetency?search=" + searchText;
     }

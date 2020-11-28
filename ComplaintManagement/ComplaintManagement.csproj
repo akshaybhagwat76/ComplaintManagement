@@ -438,7 +438,6 @@
     <Content Include="Imports\Samples\SBU\SBU.xlsx" />
     <Content Include="Imports\Samples\SubCategory\SubCategory.xlsx" />
     <Content Include="Imports\Samples\SubSBU\SubSBU.xlsx" />
-    <Content Include="Imports\Samples\User\Category.xlsx" />
     <EntityDeploy Include="Models\Model.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model.Designer.cs</LastGenOutput>
@@ -449,6 +448,7 @@
     <Content Include="Imports\Samples\LOS\LOS.xlsx" />
     <Content Include="Imports\Samples\Committee\Committee.xlsx" />
     <Content Include="Imports\Samples\Role\Role.xlsx" />
+    <Content Include="Imports\Samples\User\Users.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

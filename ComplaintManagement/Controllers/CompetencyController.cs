@@ -22,6 +22,7 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+        [HttpGet]
         public ActionResult searchCompetency(string search)
         {
             if (!string.IsNullOrEmpty(search))

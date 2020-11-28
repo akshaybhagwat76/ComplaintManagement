@@ -376,9 +376,9 @@
           <Property Name="CompentencyId" Type="int" Nullable="false" />
           <Property Name="LocationId" Type="int" Nullable="false" />
           <Property Name="RegionId" Type="int" Nullable="false" />
-          <Property Name="DateOfJoining" Type="date" Nullable="false" />
-          <Property Name="MobileNo" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="Manager" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateOfJoining" Type="datetime" />
+          <Property Name="MobileNo" Type="nvarchar" MaxLength="20" />
+          <Property Name="Manager" Type="nvarchar" MaxLength="1287" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
@@ -978,9 +978,9 @@
           <Property Name="CompentencyId" Type="Int32" Nullable="false" />
           <Property Name="LocationId" Type="Int32" Nullable="false" />
           <Property Name="RegionId" Type="Int32" Nullable="false" />
-          <Property Name="DateOfJoining" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="MobileNo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="Manager" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateOfJoining" Type="DateTime" Precision="3" />
+          <Property Name="MobileNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Manager" Type="String" MaxLength="1287" FixedLength="false" Unicode="true" />
           <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
