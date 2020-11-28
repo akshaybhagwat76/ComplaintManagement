@@ -310,5 +310,26 @@ namespace ComplaintManagement.Controllers
             return View();
 
         }
+
+
+        [HttpPost]
+        public ActionResult ImportCommitties(string file)
+        {
+            try
+            {
+                string retval = new CommitteeMastersRepository().UploadImportCommitties(file);
+                if (!string.IsNullOrEmpty(retval))
+                {
+                    int count = new CommitteeMastersRepository().ImportImportCommitties(retval);
+                    return new ReplyFormat().Success(count.ToString());
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
     }
 }

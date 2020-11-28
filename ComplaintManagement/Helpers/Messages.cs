@@ -47,6 +47,8 @@
         public const string Status = "Status";
 
         public const string DataCategoryAlreadyExists = "This Category {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataCommitteeAlreadyExists = "This Committee {0} already exists! - Row No. {1} and Column No. {2}";
+
         public const string DataEmpAlreadyExists = "This Employee {0} already exists! - Row No. {1} and Column No. {2}";
         public const string FieldCannotBeBlankOrEmpty = "{0} cannot be blank or contain white space.";
         public const string FieldIsRequired = "{0} is required - Row No. {1} and Column No. {2}";
@@ -57,6 +59,7 @@
         public const string StatusInvalid = "Please select status active or inactive - Row No. {1} and Column No. {2}";
         public const string EmpManagerPattern = "Employee ID or name or email";
         public const string DataEmpNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
+        public const string DataNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
         public const string EmailFormat = "Please work email in email format - Row No. {1} and Column No. {2}";
         public const string AgeInvalid = "Please select age in digit only - Row No. {1} and Column No. {2}";
         public const string DOJInvalid = "Please enter valid date of joining - Row No. {1} and Column No. {2}";

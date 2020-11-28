@@ -291,7 +291,7 @@
                     </div>
                     <div class="col-md-3">
                         <a class="btn btn-danger btn-user btn-sm" id="btnUpload">Upload</a>
-                        <a href="#" class="btn bg-white border btn-user btn-sm">Cancel</a>
+                        <a href="/Category/Index" class="btn bg-white border btn-user btn-sm">Cancel</a>
                     </div>
                     <a href="/Files/DownloadFile?filePath=/Imports/Samples/Category/Category.xlsx" class="ml-3 mt-n2">Download Sample</a>
                     <label id="lblError" class="ml-n5 mt-5 adderror"></label>
@@ -300,6 +300,8 @@
         </div>
     </div>
 </div>
+
+
 @Scripts.Render("~/Assets/Common")
 @Html.Partial("_CommonDeleteModal")
 @Scripts.Render("~/Assets/CategoryMasters")
