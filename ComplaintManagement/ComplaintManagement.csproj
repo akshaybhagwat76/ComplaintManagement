@@ -209,22 +209,43 @@
     <Compile Include="Models\CategoryMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CategoryMasters_History.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CommitteeMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CommitteeMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CompetencyMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CompetencyMasters_History.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DesignationMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DesignationMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EntityMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EntityMasters_History.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\LocationMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\LocationMasters_History.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\LOSMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LOSMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Model.Context.cs">
@@ -245,19 +266,37 @@
     <Compile Include="Models\RegionMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RegionMasters_History.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RoleMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RoleMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SBUMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SBUMasters_History.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SubCategoryMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SubCategoryMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SubSBUMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SubSBUMasters_History.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\UserMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -275,19 +314,32 @@
     <Compile Include="Repository\SubSBUMasterRepository.cs" />
     <Compile Include="Repository\UserMastersRepository.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModel\CategoryMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CategoryMasterVM.cs" />
+    <Compile Include="ViewModel\CommitteeMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CommitteeMasterVM.cs" />
+    <Compile Include="ViewModel\CompetencyMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
+    <Compile Include="ViewModel\DesignationMasterHistoryVM.cs" />
     <Compile Include="ViewModel\DesignationMasterVM.cs" />
+    <Compile Include="ViewModel\EntityMasterHistoryVM.cs" />
     <Compile Include="ViewModel\EntityMasterVM.cs" />
+    <Compile Include="ViewModel\LocationMasterHistoryVM.cs" />
     <Compile Include="ViewModel\LocationMasterVM.cs" />
     <Compile Include="ViewModel\LoginVM.cs" />
+    <Compile Include="ViewModel\LOSMasterHistoryVM.cs" />
+    <Compile Include="ViewModel\RegionMasterHistoryVM.cs" />
     <Compile Include="ViewModel\RegionMasterVM.cs" />
+    <Compile Include="ViewModel\RoleMasterHistoryVM.cs" />
     <Compile Include="ViewModel\RoleMasterVM.cs" />
+    <Compile Include="ViewModel\SBUMasterHistoryVM.cs" />
     <Compile Include="ViewModel\SBUMasterVM.cs" />
     <Compile Include="ViewModel\LOSMasterVM.cs" />
+    <Compile Include="ViewModel\SubCategoryMasterHistoryVM.cs" />
     <Compile Include="ViewModel\SubCategoryMasterVM.cs" />
+    <Compile Include="ViewModel\SubSBUMasterHistoryVM.cs" />
     <Compile Include="ViewModel\SubSBUMasterVM.cs" />
+    <Compile Include="ViewModel\UserMasterHistoryVM.cs" />
     <Compile Include="ViewModel\UserMasterVM.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2280,6 +2332,7 @@
     <Content Include="Views\Compliant\Compliant_three.cshtml" />
     <Content Include="Views\Compliant\_Compliant.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Category\HistoryIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

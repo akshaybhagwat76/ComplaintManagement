@@ -13,9 +13,11 @@ namespace ComplaintManagement.ViewModel
         public string SBUId { get; set; }
         [DisplayName("SubSBU ")]
         public string SubSBUId { get; set; }
+        public string EntityState{ get; set; }
         [DisplayName("Competency ")]
         public string CompetencyId { get; set; }
         public bool Status { get; set; }
+        public int LOSId { get; set; }
         public int UserId { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public bool IsActive { get; set; }

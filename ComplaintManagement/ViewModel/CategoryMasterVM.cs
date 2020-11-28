@@ -11,9 +11,11 @@ namespace ComplaintManagement.ViewModel
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string CategoryName { get; set; }
         [DisplayName("Status")]
+        public int CategoryId { get; set; }
         public bool Status { get; set; }
         public int UserId { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public string EntityState{ get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public int CreatedBy { get; set; }
         public int ModifiedBy { get; set; }

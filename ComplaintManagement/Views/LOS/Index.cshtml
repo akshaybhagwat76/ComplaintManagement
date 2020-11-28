@@ -1,4 +1,6 @@
 ﻿@using ComplaintManagement.Helpers
+@using System
+@using System.Globalization
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -10,7 +12,7 @@
         var cI = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.UserData);
         var userIDInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Sid);
 
-        if (c != null && cI != null && userIDInfo!=null)
+        if (c != null && cI != null && userIDInfo != null)
         {
 
             user = c.Value.ToString();
@@ -205,13 +207,26 @@
                                                 <td class="text-black text-center"><strong>@item.SBU</strong></td>
                                                 <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
                                                 <td class="text-black text-center"><strong>@item.CompetencyName</strong></td>
-                                                <td class="text-black text-center"><strong> @String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")))</strong></td>
+                                                <td class="text-black text-center">
+                                                    <strong>
+                                                        @if (item.CreatedDate != null)
+                                                        {
+                                                            var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+                                                            @Html.Raw(DateTime
+                                                        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+                                                        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                                        }
+                                                    </strong>
+                                                </td>
                                                 <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                                                 <td class="text-black text-center">
                                                     <strong>
                                                         @if (item.UpdatedDate != null)
                                                         {
-                                                            @Html.Raw(String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T"))))
+                                                            var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+                                                            @Html.Raw(DateTime
+                                                        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+                                                        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
                                                         }
                                                         else
                                                         {
@@ -220,6 +235,7 @@
                                                     </strong>
                                                 </td>
                                                 <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+
 
                                                 <td class="text-black text-center">
                                                     <strong>

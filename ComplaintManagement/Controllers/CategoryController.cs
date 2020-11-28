@@ -24,6 +24,16 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+        [HttpGet]
+        public ActionResult HistoryIndex(int id)
+        {
+            ViewBag.lstCategoriesHistory = GetAllHistories(1,id).ToList();
+            ViewBag.name = id.ToString();
+            var DataTableDetail = new HomeController().getDataTableDetail("Categories History", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+        }
 
         public ActionResult SearchCategories(string search)
         {
@@ -61,6 +71,19 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
 
+        [HttpGet]
+        public ActionResult LoadHistoryCategories(int currentPageIndex, int range = 0)
+        {
+            ViewBag.name = range;
+            ViewBag.lstCategoriesHistory = GetAllHistories(currentPageIndex, range);
+            //if (!string.IsNullOrEmpty(range) && range.Contains(","))
+            //{
+            //    ViewBag.startDate = range.Split(',')[0];
+            //    ViewBag.toDate = range.Split(',')[1];
+            //}
+            return View("HistoryIndex");
+        }
+
         public List<CategoryMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
@@ -80,6 +103,53 @@ namespace ComplaintManagement.Controllers
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from category in lst
                        where category.CreatedDate.Date >= fromDate.Date && category.CreatedDate.Date <= toDate.Date
+                       select category).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+            else
+            {
+                lst = (from category in lst
+                       select category)
+             .OrderByDescending(customer => customer.Id)
+             .Skip((currentPage - 1) * maxRows)
+             .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+        }
+
+        public List<CategoryMasterHistoryVM> GetAllHistories(int currentPage, int range =0)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
+            var lst = new CategoryMastersRepository().GetAllHistory();
+            lstCount = lst.Count;
+
+
+            if (!string.IsNullOrEmpty(range.ToString()))
+            {
+                //string[] dates = range.Split(',');
+                //DateTime fromDate = Convert.ToDateTime(dates[0]);
+                //DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from category in lst
+                       where category.CategoryId ==range
                        select category).ToList();
                 lstCount = lst.Count;
                 lst = (lst)

@@ -293,13 +293,16 @@ namespace ComplaintManagement.Controllers
                                 List<string> CompetencyLst = new List<string>();
                                 foreach (string CompetencyItem in array)
                                 {
-                                    CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+                                    if (lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault() != null)
+                                    {
+                                        CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+                                    }
                                 }
                                 row.CompetencyName = string.Join(",", CompetencyLst);
                             }
                             else
                             {
-                                row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault().CompetencyName;
+                                row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault()!=null?lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault().CompetencyName:"";
                             }
                         }
 
