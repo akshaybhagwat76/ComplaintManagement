@@ -132,8 +132,10 @@ function PagerClick(index) {
 
 // Import excel
 var inputImage = document.getElementById('excelFile');
-
-$("#excelFile").on('change', function () {
+document.getElementById('excelFile').addEventListener('change',
+    importExcel,
+    false);
+function importExcel() {
     var files = this.files;
     var file;
     if (files && files.length) {
@@ -158,7 +160,7 @@ $("#excelFile").on('change', function () {
         }
 
     }
-});
+};
 
 $("#btnUpload").on("click", function () {
     var excelFile = $("#excelFile").get(0).files;
