@@ -36,35 +36,60 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var category = db.CategoryMasters.FirstOrDefault(p => p.Id == categoryVM.Id);
-                    if (category == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        categoryVM.IsActive = true;
-                        categoryVM.CreatedDate = DateTime.UtcNow;
-                        categoryVM.CreatedBy = Convert.ToInt32(sid);
-                        category = Mapper.Map<CategoryMasterVM, CategoryMaster>(categoryVM);
-                        if (IsExist(category.CategoryName))
+                        try
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
+                            var category = db.CategoryMasters.FirstOrDefault(p => p.Id == categoryVM.Id);
+                            if (category == null)
+                            {
+                                categoryVM.IsActive = true;
+                                categoryVM.CreatedDate = DateTime.UtcNow;
+                                categoryVM.CreatedBy = Convert.ToInt32(sid);
+                                category = Mapper.Map<CategoryMasterVM, CategoryMaster>(categoryVM);
+                                if (IsExist(category.CategoryName))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.CategoryMasters.Add(category);
+                                db.SaveChanges();
+
+                                CategoryMasters_History categoryMasters_History = Mapper.Map<CategoryMasterVM, CategoryMasters_History>(categoryVM);
+                                if (categoryMasters_History != null) { categoryMasters_History.EntityState = Messages.Added;categoryMasters_History.CategoryId = category.Id; };
+                                db.CategoryMasters_History.Add(categoryMasters_History);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+                                return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
+                            }
+                            else
+                            {
+                                categoryVM.IsActive = true;
+                                categoryVM.CreatedDate = category.CreatedDate;
+                                categoryVM.CreatedBy = category.CreatedBy;
+                                categoryVM.UpdatedDate = DateTime.UtcNow;
+                                categoryVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(category).CurrentValues.SetValues(categoryVM);
+                                if (IsExist(category.CategoryName, category.Id))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+
+                                CategoryMasters_History categoryMasters_History = Mapper.Map<CategoryMasterVM, CategoryMasters_History>(categoryVM);
+                                if (categoryMasters_History != null) { categoryMasters_History.EntityState = Messages.Updated; categoryMasters_History.CategoryId = category.Id; };
+                                db.CategoryMasters_History.Add(categoryMasters_History);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+                                return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
+                            }
                         }
-                        db.CategoryMasters.Add(category);
-                        db.SaveChanges();
-                        return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
-                    }
-                    else
-                    {
-                        categoryVM.IsActive = true;
-                        categoryVM.CreatedDate = category.CreatedDate;
-                        categoryVM.CreatedBy = category.CreatedBy;
-                        categoryVM.UpdatedDate = DateTime.UtcNow;
-                        categoryVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(category).CurrentValues.SetValues(categoryVM);
-                        if (IsExist(category.CategoryName, category.Id))
+                        catch (Exception ex)
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
                         }
-                        db.SaveChanges();
-                        return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
                     }
                 }
                 return new CategoryMasterVM();
@@ -96,7 +121,36 @@ namespace ComplaintManagement.Repository
                         CategoryMasterVM catObj = Mapper.Map<CategoryMaster, CategoryMasterVM>(item);
                         if (catObj != null)
                         {
+                            catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                            catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            categoryList.Add(catObj);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return categoryList;
+        }
 
+        public List<CategoryMasterHistoryVM> GetAllHistory()
+        {
+            List<CategoryMasters_History> category = new List<CategoryMasters_History>();
+            List<CategoryMasterHistoryVM> categoryList = new List<CategoryMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                category = db.CategoryMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (category != null && category.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (CategoryMasters_History item in category)
+                    {
+                        CategoryMasterHistoryVM catObj = Mapper.Map<CategoryMasters_History, CategoryMasterHistoryVM>(item);
+                        if (catObj != null)
+                        {
                             catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
                             catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
                             categoryList.Add(catObj);
@@ -231,14 +285,38 @@ namespace ComplaintManagement.Repository
                         #endregion
                         CategoryMasterDto.CreatedBy = Convert.ToInt32(sid);
                         CategoryMasterDto.CreatedDate = DateTime.UtcNow;
-                        CategoryMasterDto.IsActive = true;
+                        CategoryMasterDto.IsActive = true; 
                         importCategories.Add(CategoryMasterDto);
                     }
-                    if (importCategories != null && importCategories.Count > 0)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.CategoryMasters.AddRange(importCategories);
-                        db.SaveChanges();
-                        count = importCategories.Count;
+                        try
+                        {
+                            if (importCategories != null && importCategories.Count > 0)
+                            {
+                                db.CategoryMasters.AddRange(importCategories);
+                                db.SaveChanges();
+
+                                List<CategoryMasterVM> categoryDtoListVM = Mapper.Map<List<CategoryMaster>, List<CategoryMasterVM>>(importCategories);
+
+                                List<CategoryMasters_History> categoryMasters_History = Mapper.Map<List<CategoryMasterVM>, List<CategoryMasters_History>>(categoryDtoListVM);
+                                if (categoryMasters_History!=null && categoryMasters_History.Count > 0)
+                                {
+                                    categoryMasters_History.Select(c => { c.EntityState = Messages.Added; c.CategoryId = c.Id; return c; }).ToList();
+                                }
+
+                                db.CategoryMasters_History.AddRange(categoryMasters_History);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+                                count = importCategories.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -17,6 +14,8 @@ namespace ComplaintManagement.ViewModel
         public bool Status { get; set; }
         public int UserId { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public string EntityState{ get; set; }
+        public int LocationId { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public int CreatedBy { get; set; }

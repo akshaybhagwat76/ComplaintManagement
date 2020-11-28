@@ -127,6 +127,13 @@ function PagerClick(index) {
         range = fromDate + ',' + toDate;
     }
     location.href = '/Committee/LoadCommittee?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+
+    if ($("#history").val() == undefined) {
+        location.href = '/Committee/LoadCommittee?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+    }
+    else {
+        location.href = '/Committee/LoadHistoryCommittee?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&id=' + $("#history").val();
+    }
 }
 
 // Import excel

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,6 +11,8 @@ namespace ComplaintManagement.ViewModel
         public string UserId { get; set; }
         [DisplayName("Committee ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
+        public string EntityState{ get; set; }
+        public int CommitteeId { get; set; }
         public string CommitteeName { get; set; }
         public bool Status { get; set; }
         public bool IsActive { get; set; }

@@ -34,37 +34,60 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var Subcategory = db.SubCategoryMasters.FirstOrDefault(p => p.Id == SubcategoryVM.Id);
-                    if (Subcategory == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        SubcategoryVM.IsActive = true;
-                        SubcategoryVM.CreatedDate = DateTime.UtcNow;
-                        SubcategoryVM.UserId = 1;
-                        SubcategoryVM.CreatedBy = Convert.ToInt32(sid);
-                        Subcategory = Mapper.Map<SubCategoryMasterVM, SubCategoryMaster>(SubcategoryVM);
-                        if (IsExist(Subcategory.SubCategoryName))
+                        try
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.SubCategoryMasters.Add(Subcategory);
-                        db.SaveChanges();
-                        return Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(Subcategory);
-                    }
-                    else
-                    {
-                        SubcategoryVM.IsActive = true;
-                         SubcategoryVM.CreatedDate = Subcategory.CreatedDate;
-                        SubcategoryVM.CreatedBy = Subcategory.CreatedBy;
-                        SubcategoryVM.UpdatedDate = DateTime.UtcNow;
-                        SubcategoryVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(Subcategory).CurrentValues.SetValues(SubcategoryVM);
-                        if (IsExist(Subcategory.SubCategoryName,Subcategory.Id))
-                        {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.SaveChanges();
-                        return Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(Subcategory);
+                            var Subcategory = db.SubCategoryMasters.FirstOrDefault(p => p.Id == SubcategoryVM.Id);
+                            if (Subcategory == null)
+                            {
+                                SubcategoryVM.IsActive = true;
+                                SubcategoryVM.CreatedDate = DateTime.UtcNow;
+                                SubcategoryVM.UserId = 1;
+                                SubcategoryVM.CreatedBy = Convert.ToInt32(sid);
+                                Subcategory = Mapper.Map<SubCategoryMasterVM, SubCategoryMaster>(SubcategoryVM);
+                                if (IsExist(Subcategory.SubCategoryName))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SubCategoryMasters.Add(Subcategory);
+                                db.SaveChanges();
 
+                                SubCategoryMasters_History subcategoryMasters_History = Mapper.Map<SubCategoryMasterVM, SubCategoryMasters_History>(SubcategoryVM);
+                                if (subcategoryMasters_History != null) { subcategoryMasters_History.EntityState = Messages.Updated; };
+                                db.SubCategoryMasters_History.Add(subcategoryMasters_History);
+                                db.SaveChanges();
+
+                                return Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(Subcategory);
+                            }
+                            else
+                            {
+                                SubcategoryVM.IsActive = true;
+                                SubcategoryVM.CreatedDate = Subcategory.CreatedDate;
+                                SubcategoryVM.CreatedBy = Subcategory.CreatedBy;
+                                SubcategoryVM.UpdatedDate = DateTime.UtcNow;
+                                SubcategoryVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(Subcategory).CurrentValues.SetValues(SubcategoryVM);
+                                if (IsExist(Subcategory.SubCategoryName, Subcategory.Id))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+
+                                SubCategoryMasters_History subcategoryMasters_History = Mapper.Map<SubCategoryMasterVM, SubCategoryMasters_History>(SubcategoryVM);
+                                if (subcategoryMasters_History != null) { subcategoryMasters_History.EntityState = Messages.Updated; };
+                                db.SubCategoryMasters_History.Add(subcategoryMasters_History);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+                                return Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(Subcategory);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
                 return new SubCategoryMasterVM();

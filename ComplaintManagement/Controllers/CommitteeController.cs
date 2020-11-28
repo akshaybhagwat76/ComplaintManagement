@@ -26,6 +26,19 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+        [HttpGet]
+        public ActionResult HistoryIndex(int id)
+        {
+            var lst = GetAllHistory(1,id);
+            ViewBag.name = id.ToString();
+
+            var DataTableDetail = new HomeController().getDataTableDetail("Committee", null);
+            ViewBag.lstHistoryCommittee = JsonConvert.SerializeObject(lst);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+        }
+
         public ActionResult SearchCommittee(string search)
         {
             var originalList = GetAll(0);
@@ -65,6 +78,18 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         [HttpGet]
+        public ActionResult LoadHistoryCommittee(int currentPageIndex, int id)
+        {
+            ViewBag.lstHistoryCommittee = JsonConvert.SerializeObject(GetAllHistory(currentPageIndex, id));
+            //if (!string.IsNullOrEmpty(range) && range.Contains(","))
+            //{
+            //    ViewBag.startDate = range.Split(',')[0];
+            //    ViewBag.toDate = range.Split(',')[1];
+            //}
+            return View("HistoryIndex");
+        }
+
+        [HttpGet]
         public ActionResult LoadCommittee(int currentPageIndex, string range = "")
         {
             ViewBag.lstCommittee = JsonConvert.SerializeObject(GetAll(currentPageIndex, range));
@@ -75,6 +100,7 @@ namespace ComplaintManagement.Controllers
             }
             return View("Index");
         }
+
         [HttpPost]
         public JsonResult CheckIfExist(CommitteeMasterVM data)
         {
@@ -228,6 +254,140 @@ namespace ComplaintManagement.Controllers
                         output.Add(row);
                     }
                 }
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+                return output;
+
+            }
+        }
+
+        public dynamic GetAllHistory(int currentPage, int id)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
+            var lst = new CommitteeMastersRepository().GetAllHistory();
+            lstCount = lst.Count;
+            if (!string.IsNullOrEmpty(id.ToString()))
+            {
+                //string[] dates = range.Split(',');
+                //DateTime fromDate = Convert.ToDateTime(dates[0]);
+                //DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from Committee in lst
+                       where Committee.Id == id
+                       select Committee).ToList();
+
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                dynamic output = new List<dynamic>();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
+                if (lst != null && lst.Count > 0)
+                {
+                    foreach (CommitteeMasterHistoryVM com in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+
+                        if (!string.IsNullOrEmpty(com.UserId))
+                        {
+                            if (com.UserId.Contains(","))
+                            {
+                                string[] array = com.UserId.Split(',');
+                                List<string> users = new List<string>();
+                                foreach (string UserItem in array)
+                                {
+                                    if (lstUserMaster.Where(x => x.Id == Convert.ToInt32(UserItem)).FirstOrDefault() != null)
+                                    {
+                                        users.Add(lstUserMaster.Where(x => x.Id == Convert.ToInt32(UserItem)).FirstOrDefault().EmployeeName);
+                                    }
+                                }
+                                row.User = string.Join(",", users);
+                            }
+                            else
+                            {
+                                row.User = lstUserMaster.Where(x => x.Id == Convert.ToInt32(com.UserId)).FirstOrDefault() != null ? lstUserMaster.Where(x => x.Id == Convert.ToInt32(com.UserId)).FirstOrDefault().EmployeeName : string.Empty;
+                            }
+                        }
+                        row.Id = com.Id;
+                        row.CommitteeName = com.CommitteeName;
+                        row.UpdatedByName = com.UpdatedByName;
+                        row.CreatedByName = com.CreatedByName;
+                        row.ModifiedBy = com.ModifiedBy;
+                        row.CreatedBy = com.CreatedBy;
+                        row.UpdatedDate = com.UpdatedDate;
+                        row.CreatedDate = com.CreatedDate;
+
+                        row.Status = com.Status;
+
+                        output.Add(row);
+                    }
+                }
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return output;
+            }
+            else
+            {
+                dynamic output = new List<dynamic>();
+
+                lst = (from Committee in lst
+                       select Committee)
+           .OrderByDescending(user => user.Id)
+           .Skip((currentPage - 1) * maxRows)
+           .Take(maxRows).ToList();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
+
+
+
+                //if (lst != null && lst.Count > 0)
+                //{
+                //    foreach (CommitteeMasterVM com in lst)
+                //    {
+                //        dynamic row = new ExpandoObject();
+                //        if (!string.IsNullOrEmpty(com.UserId))
+                //        {
+                //            if (com.UserId.Contains(","))
+                //            {
+                //                string[] array = com.UserId.Split(',');
+                //                List<string> users = new List<string>();
+                //                foreach (string UserItem in array)
+                //                {
+                //                    if (lstUserMaster.Where(x => x.Id == Convert.ToInt32(UserItem)).FirstOrDefault() != null)
+                //                    {
+                //                        users.Add(lstUserMaster.Where(x => x.Id == Convert.ToInt32(UserItem)).FirstOrDefault().EmployeeName);
+                //                    }
+                //                }
+                //                row.User = string.Join(",", users);
+                //            }
+                //            else
+                //            {
+                //                row.User = lstUserMaster.Where(x => x.Id == Convert.ToInt32(com.UserId)).FirstOrDefault() != null ? lstUserMaster.Where(x => x.Id == Convert.ToInt32(com.UserId)).FirstOrDefault().EmployeeName : string.Empty;
+                //            }
+                //        }
+                //        row.Id = com.Id;
+                //        row.CommitteeName = com.CommitteeName;
+                //        row.Status = com.Status;
+                //        row.UpdatedByName = com.UpdatedByName;
+                //        row.CreatedByName = com.CreatedByName;
+                //        row.ModifiedBy = com.ModifiedBy;
+                //        row.CreatedBy = com.CreatedBy;
+                //        row.UpdatedDate = com.UpdatedDate;
+                //        row.CreatedDate = com.CreatedDate;
+                //        output.Add(row);
+                //    }
+                //}
                 double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
                 ViewBag.PageCount = (int)Math.Ceiling(pageCount);
 

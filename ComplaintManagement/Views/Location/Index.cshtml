@@ -199,13 +199,13 @@
                                             {
                                             <tr>
                                                 <td class="text-black text-center"><strong>@item.LocationName</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CreatedDate.ToShortDateString()</strong></td>
+                                                <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
                                                 <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                                                 <td class="text-black text-center">
                                                     <strong>
                                                         @if (item.UpdatedDate != null)
                                                         {
-                                                            @Html.Raw(item.UpdatedDate.ToShortDateString())
+                                                            @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
                                                         }
                                                         else
                                                         {

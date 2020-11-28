@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-
 namespace ComplaintManagement.ViewModel
 {
     public class UserMasterVM
@@ -15,6 +10,7 @@ namespace ComplaintManagement.ViewModel
         public string EmployeeId { get; set; }
         [DisplayName("Gender")]
         public string Gender { get; set; }
+        public string EntityState{ get; set; }
         [DisplayName("Age")]
         public int Age { get; set; }
         [DisplayName("Work Email")]

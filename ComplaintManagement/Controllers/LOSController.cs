@@ -211,11 +211,8 @@ namespace ComplaintManagement.Controllers
                                 List<string> subsbus = new List<string>();
                                 foreach (string SubSBUIdItem in array)
                                 {
-                                    if(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault()!= null)
-                                    {
-                                    subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU);
-
-                                    }
+                                    if (lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault() != null)
+                                    { subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU); }
                                 }
                                 row.SubSBU = string.Join(",", subsbus);
                             }

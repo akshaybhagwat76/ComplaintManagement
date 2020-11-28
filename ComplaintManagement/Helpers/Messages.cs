@@ -40,6 +40,8 @@
         public const string DELETE_MESSAGE_FILE = "Successfully deleted file.";
 
         public const string COMMENT_APPROVED_MESSAGE = "Successfully published {0} detail";
+        public const string Added = "Added";
+        public const string Updated = "Updated";
 
         public const string PRODUCT_IMAGE = "Product";
         public const string Active = "Active";
