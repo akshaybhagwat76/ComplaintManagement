@@ -198,6 +198,25 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+        [HttpPost]
+        public ActionResult ImportLocation(string file)
+        {
+            try
+            {
+                string retval = new LocationMastersRepository().UploadImportLocation(file);
+                if (!string.IsNullOrEmpty(retval))
+                {
+                    int count = new LocationMastersRepository().ImportLocation(retval);
+                    return new ReplyFormat().Success(count.ToString());
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
 
     }
 }

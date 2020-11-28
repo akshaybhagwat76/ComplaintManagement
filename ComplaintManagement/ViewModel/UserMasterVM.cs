@@ -39,7 +39,7 @@ namespace ComplaintManagement.ViewModel
         [DisplayName("Region")]
         public int RegionId { get; set; }
         [DisplayName("Date Of Joining")]
-        public System.DateTime DateOfJoining { get; set; }
+        public Nullable<System.DateTime> DateOfJoining { get; set; }
         [DisplayName("Mobile No")]
         public string MobileNo { get; set; }
         [DisplayName("Manager")]

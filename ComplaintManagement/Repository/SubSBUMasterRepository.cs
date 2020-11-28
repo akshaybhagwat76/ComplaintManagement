@@ -3,9 +3,11 @@ using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -148,6 +150,105 @@ namespace ComplaintManagement.Repository
         public bool IsExist(string SubSBU, int id)
         {
             return db.SubSBUMasters.Count(x => x.IsActive && x.SubSBU.ToUpper() == SubSBU.ToUpper() && x.Id != id) > 0;
+        }
+
+        public string UploadImportSubSBU(string file)
+        {
+            return new Common().SaveExcelFromBase64(file);
+        }
+
+        public int ImportSubSBU(string file)
+        {
+            List<SubSBUMaster> importSubSBU = new List<SubSBUMaster>();
+            SubSBUMaster SubSBUMasterDto = null;
+            int count = 0;
+            #region Indexes 
+            int SubSBUNameIndex = 1; int StatusIndex = 2;
+            #endregion
+
+            string[] statuses = { "active", "inactive" };
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (Path.GetExtension(file) == ".xlsx" && !string.IsNullOrEmpty(sid))
+                {
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage package = new ExcelPackage(new FileInfo(file));
+                    ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
+                    for (int i = 1; i <= workSheet.Dimension.Rows; i++)
+                    {
+                        if (i == 1) //skip header row if its there
+                        {
+                            continue;
+                        }
+                        SubSBUMasterDto = new SubSBUMaster();
+
+                        #region SBU Name
+                        //SBU Name check
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, SubSBUNameIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Name", i, SubSBUNameIndex }));
+                        }
+                        else
+                        {
+                            string SubSBUName = workSheet.Cells[i, SubSBUNameIndex].Value?.ToString();
+                            SubSBUMasterVM SubsBUMasterDto = new SubSBUMasterVM { SubSBU = SubSBUName };
+                            if (IsExist(SubSBUName))
+                            {
+                                throw new Exception(string.Format(Messages.DataSubSBUAlreadyExists, new object[] { "Name", i, SubSBUNameIndex }));
+                            }
+                            else
+                            {
+                                SubSBUMasterDto.SubSBU = workSheet.Cells[i, SubSBUNameIndex].Value?.ToString();
+                            }
+                        }
+                        #endregion
+
+                        #region Status
+                        //Status check
+                        if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
+                        {
+                            string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
+                            if (statuses.Any(Status.ToLower().Contains))
+                            {
+                                if (workSheet.Cells[i, StatusIndex].Value?.ToString().ToLower() == Messages.Active.ToLower())
+                                {
+                                    SubSBUMasterDto.Status = true;
+                                }
+                                else
+                                {
+                                    SubSBUMasterDto.Status = false;
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
+                            }
+                        }
+                        #endregion
+                        SubSBUMasterDto.CreatedBy = Convert.ToInt32(sid);
+                        SubSBUMasterDto.CreatedDate = DateTime.UtcNow;
+                        SubSBUMasterDto.IsActive = true;
+                        importSubSBU.Add(SubSBUMasterDto);
+                    }
+                    if (importSubSBU != null && importSubSBU.Count > 0)
+                    {
+                        db.SubSBUMasters.AddRange(importSubSBU);
+                        db.SaveChanges();
+                        count = importSubSBU.Count;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                count = 0;
+                throw ex;
+            }
+            return count;
         }
     }
 }

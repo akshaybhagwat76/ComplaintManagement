@@ -194,5 +194,24 @@ namespace ComplaintManagement.Controllers
             }
             return View();
         }
+        [HttpPost]
+        public ActionResult ImportEntity(string file)
+        {
+            try
+            {
+                string retval = new EntityMasterRepository().UploadImportEntity(file);
+                if (!string.IsNullOrEmpty(retval))
+                {
+                    int count = new EntityMasterRepository().ImportEntity(retval);
+                    return new ReplyFormat().Success(count.ToString());
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
     }
 }

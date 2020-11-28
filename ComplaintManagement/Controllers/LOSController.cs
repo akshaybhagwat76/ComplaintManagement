@@ -211,7 +211,11 @@ namespace ComplaintManagement.Controllers
                                 List<string> subsbus = new List<string>();
                                 foreach (string SubSBUIdItem in array)
                                 {
+                                    if(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault()!= null)
+                                    {
                                     subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU);
+
+                                    }
                                 }
                                 row.SubSBU = string.Join(",", subsbus);
                             }
@@ -390,6 +394,26 @@ namespace ComplaintManagement.Controllers
                 {
                     return new ReplyFormat().Error(Messages.BAD_DATA);
                 }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ImportLOS(string file)
+        {
+            try
+            {
+                string retval = new LOSMasterRepository().UploadImportLOS(file);
+                if (!string.IsNullOrEmpty(retval))
+                {
+                    int count = new LOSMasterRepository().ImportImportLOS(retval);
+                    return new ReplyFormat().Success(count.ToString());
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
             }
             catch (Exception ex)
             {

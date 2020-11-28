@@ -3,9 +3,11 @@ using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -150,6 +152,104 @@ namespace ComplaintManagement.Repository
         public bool IsExist(string Designation, int id)
         {
             return db.DesignationMasters.Count(x => x.IsActive && x.Designation.ToUpper() == Designation.ToUpper() && x.Id != id) > 0;
+        }
+
+        public string UploadImportDesignation(string file)
+        {
+            return new Common().SaveExcelFromBase64(file);
+        }
+
+        public int ImportDesignation(string file)
+        {
+            List<DesignationMaster> importDesignation = new List<DesignationMaster>();
+            DesignationMaster DesignationMasterDto = null;
+            int count = 0;
+            #region Indexes 
+            int DesignationNameIndex = 1; int StatusIndex = 2;
+            #endregion
+
+            string[] statuses = { "active", "inactive" };
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (Path.GetExtension(file) == ".xlsx" && !string.IsNullOrEmpty(sid))
+                {
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage package = new ExcelPackage(new FileInfo(file));
+                    ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
+                    for (int i = 1; i <= workSheet.Dimension.Rows; i++)
+                    {
+                        if (i == 1) //skip header row if its there
+                        {
+                            continue;
+                        }
+                        DesignationMasterDto = new DesignationMaster();
+
+                        #region designation Name
+                        //designation Name check
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, DesignationNameIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Name", i, DesignationNameIndex }));
+                        }
+                        else
+                        {
+                            string DesignationName = workSheet.Cells[i, DesignationNameIndex].Value?.ToString();
+                            if (IsExist(DesignationName))
+                            {
+                                throw new Exception(string.Format(Messages.DataDesignationAlreadyExists, new object[] { "Name", i, DesignationNameIndex }));
+                            }
+                            else
+                            {
+                                DesignationMasterDto.Designation = workSheet.Cells[i, DesignationNameIndex].Value?.ToString();
+                            }
+                        }
+                        #endregion
+
+                        #region Status
+                        //Status check
+                        if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
+                        {
+                            string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
+                            if (statuses.Any(Status.ToLower().Contains))
+                            {
+                                if (workSheet.Cells[i, StatusIndex].Value?.ToString().ToLower() == Messages.Active.ToLower())
+                                {
+                                    DesignationMasterDto.Status = true;
+                                }
+                                else
+                                {
+                                    DesignationMasterDto.Status = false;
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
+                            }
+                        }
+                        #endregion
+                        DesignationMasterDto.CreatedBy = Convert.ToInt32(sid);
+                        DesignationMasterDto.CreatedDate = DateTime.UtcNow;
+                        DesignationMasterDto.IsActive = true;
+                        importDesignation.Add(DesignationMasterDto);
+                    }
+                    if (importDesignation != null && importDesignation.Count > 0)
+                    {
+                        db.DesignationMasters.AddRange(importDesignation);
+                        db.SaveChanges();
+                        count = importDesignation.Count;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                count = 0;
+                throw ex;
+            }
+            return count;
         }
     }
 }

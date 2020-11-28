@@ -3,9 +3,11 @@ using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -41,7 +43,7 @@ namespace ComplaintManagement.Repository
                         RoleVM.CreatedDate = DateTime.UtcNow;
                         RoleVM.CreatedBy = Convert.ToInt32(sid);
                         Role = Mapper.Map<RoleMasterVM, RoleMaster>(RoleVM);
-                      
+
                         db.RoleMasters.Add(Role);
                         db.SaveChanges();
                         return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
@@ -132,6 +134,260 @@ namespace ComplaintManagement.Repository
                 data.IsActive = false;
             }
             return db.SaveChanges() > 0;
+        }
+
+        public string UploadImportRole(string file)
+        {
+            return new Common().SaveExcelFromBase64(file);
+        }
+
+        public int ImportImportRole(string file)
+        {
+            List<RoleMaster> importRole = new List<RoleMaster>();
+            RoleMaster RoleMasterDto = null;
+            int count = 0;
+            #region Indexes 
+            int UserIndex = 1; int LOSNameIndex = 2; int SBUIndex = 3; int SubSBUIndex = 4; int CompetencyIndex = 5; int StatusIndex = 6;
+            #endregion
+
+            string[] statuses = { "active", "inactive" };
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                List<UserMasterVM> lstUsers = new UserMastersRepository().GetAll();
+                List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll();
+                List<SBUMasterVM> lstSBU = new SBUMasterRepository().GetAll();
+                List<SubSBUMasterVM> lstSubSBU = new SubSBUMasterRepository().GetAll();
+                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll();
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (Path.GetExtension(file) == ".xlsx" && !string.IsNullOrEmpty(sid))
+                {
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage package = new ExcelPackage(new FileInfo(file));
+                    ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
+                    for (int i = 1; i <= workSheet.Dimension.Rows; i++)
+                    {
+                        if (i == 1) //skip header row if its there
+                        {
+                            continue;
+                        }
+
+                        RoleMasterDto = new RoleMaster();
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, UserIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Name", i, UserIndex }));
+                        }
+                        else
+                        {
+                            string UserName = workSheet.Cells[i, UserIndex].Value?.ToString();
+                            UserMasterVM UserMasterVMDto = new UserMasterVM { EmployeeName = UserName };
+                            if (lstUsers != null && lstUsers.Count > 0)
+                            {
+                                UserMasterVM isExist = lstUsers.FirstOrDefault(x => x.EmployeeName.ToLower() == UserName.ToLower());
+                                if (isExist != null)
+                                {
+                                    RoleMasterDto.UserId = isExist.Id;
+                                }
+                                else
+                                {
+
+                                    throw new Exception(string.Format(Messages.DataEmpNOTExists, new object[] { "Name", i, UserIndex }));
+                                }
+                            }
+                        }
+                        //los
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, LOSNameIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "LOS", i, LOSNameIndex }));
+                        }
+                        else
+                        {
+                            string LOS = workSheet.Cells[i, LOSNameIndex].Value?.ToString();
+
+                            if (!string.IsNullOrEmpty(LOS))
+                            {
+                                string[] LOSvalues = LOS.Split(',').Select(sValue => sValue.Trim()).ToArray();
+                                List<string> LOSDtoValues = new List<string>();
+
+                                foreach (string LOSvalue in LOSvalues)
+                                {
+                                    if (!string.IsNullOrEmpty(LOSvalue))
+                                    {
+                                        var LOSDto = lstLOS.FirstOrDefault(x => x.LOSName.ToLower() == LOSvalue.ToLower());
+                                        if (LOSDto == null)
+                                        {
+                                            throw new Exception(string.Format(Messages.DataNOTExists, new object[] { "LOS", i, LOSNameIndex }));
+                                        }
+                                        else
+                                        {
+                                            LOSDtoValues.Add(LOSDto.Id.ToString());
+                                        }
+                                    }
+                                }
+                                RoleMasterDto.LOSId = String.Join(",", LOSDtoValues);
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "LOS", i, LOSNameIndex }));
+                            }
+                        }
+
+                        #region SBU Name
+                        //SBU Name check
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, SBUIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "SBU", i, SBUIndex }));
+                        }
+                        else
+                        {
+                            string SBU = workSheet.Cells[i, SBUIndex].Value?.ToString();
+
+                            if (!string.IsNullOrEmpty(SBU))
+                            {
+                                string[] SBUvalues = SBU.Split(',').Select(sValue => sValue.Trim()).ToArray();
+                                List<string> SBUDtoValues = new List<string>();
+
+                                foreach (string SBUvalue in SBUvalues)
+                                {
+                                    if (!string.IsNullOrEmpty(SBUvalue))
+                                    {
+                                        var SBUDto = lstSBU.FirstOrDefault(x => x.SBU.ToLower() == SBUvalue.ToLower());
+                                        if (SBUDto == null)
+                                        {
+                                            throw new Exception(string.Format(Messages.DataNOTExists, new object[] { "SBU", i, SBUIndex }));
+                                        }
+                                        else
+                                        {
+                                            SBUDtoValues.Add(SBUDto.Id.ToString());
+                                        }
+                                    }
+                                }
+                                RoleMasterDto.SBUId = String.Join(",", SBUDtoValues);
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "User", i, SBUIndex }));
+                            }
+                        }
+                        #endregion
+                        //SubSBU Check
+
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, SubSBUIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "SUbSBU", i, SubSBUIndex }));
+                        }
+                        else
+                        {
+                            string SubSBU = workSheet.Cells[i, SubSBUIndex].Value?.ToString();
+
+                            if (!string.IsNullOrEmpty(SubSBU))
+                            {
+                                string[] SubSBUvalues = SubSBU.Split(',').Select(sValue => sValue.Trim()).ToArray();
+                                List<string> SubSBUDtoValues = new List<string>();
+
+                                foreach (string SubSBUvalue in SubSBUvalues)
+                                {
+                                    if (!string.IsNullOrEmpty(SubSBUvalue))
+                                    {
+                                        var SubSBUDto = lstSubSBU.FirstOrDefault(x => x.SubSBU.ToLower() == SubSBUvalue.ToLower());
+                                        if (SubSBUDto == null)
+                                        {
+                                            throw new Exception(string.Format(Messages.DataNOTExists, new object[] { "SubSBU", i, SubSBUIndex }));
+                                        }
+                                        else
+                                        {
+                                            SubSBUDtoValues.Add(SubSBUDto.Id.ToString());
+                                        }
+                                    }
+                                }
+                                RoleMasterDto.SubSBUId = String.Join(",", SubSBUDtoValues);
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "SubSBU", i, SubSBUIndex }));
+                            }
+                        }
+                        // Competency Name Check
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, CompetencyIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Competency", i, CompetencyIndex }));
+                        }
+                        else
+                        {
+                            string Competency = workSheet.Cells[i, CompetencyIndex].Value?.ToString();
+
+                            if (!string.IsNullOrEmpty(Competency))
+                            {
+                                string[] Competencyvalues = Competency.Split(',').Select(sValue => sValue.Trim()).ToArray();
+                                List<string> CompetencyDtoValues = new List<string>();
+
+                                foreach (string Competencyvalue in Competencyvalues)
+                                {
+                                    if (!string.IsNullOrEmpty(Competencyvalue))
+                                    {
+                                        var CompetencyDto = lstCompetency.FirstOrDefault(x => x.CompetencyName.ToLower() == Competencyvalue.ToLower());
+                                        if (CompetencyDto == null)
+                                        {
+                                            throw new Exception(string.Format(Messages.DataNOTExists, new object[] { "Competency", i, CompetencyIndex }));
+                                        }
+                                        else
+                                        {
+                                            CompetencyDtoValues.Add(CompetencyDto.Id.ToString());
+                                        }
+                                    }
+                                }
+                                RoleMasterDto.CompetencyId = String.Join(",", CompetencyDtoValues);
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Competency", i, CompetencyIndex }));
+                            }
+                        }
+                        #region Status
+                        //Status check
+                        if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
+                        {
+                            string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
+                            if (statuses.Any(Status.ToLower().Contains))
+                            {
+                                if (workSheet.Cells[i, StatusIndex].Value?.ToString().ToLower() == Messages.Active.ToLower())
+                                {
+                                    RoleMasterDto.Status = true;
+                                }
+                                else
+                                {
+                                    RoleMasterDto.Status = false;
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
+                            }
+                        }
+                        #endregion
+
+                        RoleMasterDto.CreatedBy = Convert.ToInt32(sid);
+                        RoleMasterDto.CreatedDate = DateTime.UtcNow;
+                        RoleMasterDto.IsActive = true;
+                        importRole.Add(RoleMasterDto);
+                    }
+                    if (importRole != null && importRole.Count > 0)
+                    {
+                        db.RoleMasters.AddRange(importRole);
+                        db.SaveChanges();
+                        count = importRole.Count;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                count = 0;
+                throw ex;
+            }
+            return count;
         }
     }
 }

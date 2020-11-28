@@ -378,7 +378,6 @@
     <Content Include="Content\scss\_utilities.scss" />
     <Content Include="Content\scss\_variables.scss" />
     <Content Include="Imports\Samples\Category\Category.xlsx" />
-    <Content Include="Imports\Samples\Committee\Committee.xlsx" />
     <Content Include="Imports\Samples\Competency\Competency.xlsx" />
     <Content Include="Imports\Samples\Designation\Designation.xlsx" />
     <Content Include="Imports\Samples\Entity\Entity.xlsx" />
@@ -387,7 +386,6 @@
     <Content Include="Imports\Samples\SBU\SBU.xlsx" />
     <Content Include="Imports\Samples\SubCategory\SubCategory.xlsx" />
     <Content Include="Imports\Samples\SubSBU\SubSBU.xlsx" />
-    <Content Include="Imports\Samples\Role\Category.xlsx" />
     <Content Include="Imports\Samples\User\Category.xlsx" />
     <EntityDeploy Include="Models\Model.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
@@ -396,6 +394,9 @@
     <Content Include="Models\Model.edmx.diagram">
       <DependentUpon>Model.edmx</DependentUpon>
     </Content>
+    <Content Include="Imports\Samples\LOS\LOS.xlsx" />
+    <Content Include="Imports\Samples\Committee\Committee.xlsx" />
+    <Content Include="Imports\Samples\Role\Role.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -2283,7 +2284,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Imports\Samples\LOS\" />
     <Folder Include="Views\Files\" />
   </ItemGroup>
   <ItemGroup>

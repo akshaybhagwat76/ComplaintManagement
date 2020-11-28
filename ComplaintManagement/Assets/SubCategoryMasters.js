@@ -123,3 +123,72 @@ function PagerClick(index) {
 }
 
 $("#myTable").find('thead td').on('click', column_sort);
+
+// Import excel
+var inputImage = document.getElementById('excelFile');
+document.getElementById('excelFile').addEventListener('change',
+    importExcel,
+    false);
+function importExcel() {
+    var files = this.files;
+    var file;
+    if (files && files.length) {
+        file = files[0];
+        const filename = file.name;
+        let last_dot = filename.lastIndexOf('.')
+        let ext = "." + filename.slice(last_dot + 1);
+        if (ext.toLowerCase() == '.xlsx' || ext.toLowerCase() == '.xlsm' || ext.toLowerCase() == '.xltx' || ext.toLowerCase() == '.xltm' || ext.toLowerCase() == '.xls') {
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                $(inputImage).attr('src', '');
+                $(inputImage).attr("data-base64string", '');
+                $(inputImage).attr("data-extension", '');
+
+                $(inputImage).attr('src', reader.result);
+                $(inputImage).attr("data-base64string", reader.result);
+                $(inputImage).attr("data-extension", ext);
+            }
+            reader.readAsDataURL(file);
+        } else {
+            funToastr(false, 'Please choose an excel file');
+        }
+
+    }
+};
+
+$("#btnUpload").on("click", function () {
+    var excelFile = $("#excelFile").get(0).files;
+    var excelUploadedFile = "";
+    if (excelFile.length > 0) {
+        var excelFileExt = excelFile[0].name.split('.').pop();
+        excelUploadedFile = $("#excelFile").attr('data-base64string');
+        excelUploadedFile = excelUploadedFile + ',' + excelFileExt;
+    }
+    else {
+        funToastr(false, "Please upload file."); return;
+    }
+    StartProcess();
+    $.ajax({
+        type: "POST",
+        url: "/SubCategory/ImportSubCategory",
+        data: { file: excelUploadedFile },
+        success: function (data) {
+            if (data.status == "Fail") {
+                StopProcess();
+                funToastr(false, data.error);
+                $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(data.error).show();
+
+            }
+            else {
+                StopProcess();
+                funToastr(true, data.msg + " Records imported." + " Please reload page to refresh changes.")
+                $("#lblError").removeClass("adderror").addClass("success").text(data.msg + " Records imported." + " Please reload page to refresh changes.").show();
+            }
+        }, error: function (response) {
+            funToastr(false, response.responseText);
+        },
+        failure: function (response) {
+            funToastr(false, response.responseText);
+        }
+    });
+})

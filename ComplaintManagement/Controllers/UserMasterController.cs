@@ -381,8 +381,9 @@ namespace ComplaintManagement.Controllers
                 if (!string.IsNullOrEmpty(retval))
                 {
                     int count = new UserMastersRepository().ImportUsers(retval);
+                    return new ReplyFormat().Success(count.ToString());
                 }
-                return new ReplyFormat().Success(retval);
+                return new ReplyFormat().Error(Messages.BAD_DATA);
             }
             catch (Exception ex)
             {
@@ -421,6 +422,7 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+       
 
 
     }

@@ -195,14 +195,14 @@ namespace ComplaintManagement.Repository
                         //Category Name check
                         if (string.IsNullOrEmpty(workSheet.Cells[i, CommitteeNameIndex].Value?.ToString()))
                         {
-                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Committee Name", i, CommitteeNameIndex }));
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { " Name", i, CommitteeNameIndex }));
                         }
                         else
                         {
                             string Committee = workSheet.Cells[i, CommitteeNameIndex].Value?.ToString();
                             if (IsExist(Committee))
                             {
-                                throw new Exception(string.Format(Messages.DataCommitteeAlreadyExists, new object[] { "Category Name", i, CommitteeNameIndex }));
+                                throw new Exception(string.Format(Messages.DataCommitteeAlreadyExists, new object[] { "Name", i, CommitteeNameIndex }));
                             }
                             else
                             {

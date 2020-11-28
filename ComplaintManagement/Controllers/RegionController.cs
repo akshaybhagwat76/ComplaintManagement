@@ -196,5 +196,24 @@ namespace ComplaintManagement.Controllers
             }
             return View();
         }
+        [HttpPost]
+        public ActionResult ImportRegion(string file)
+        {
+            try
+            {
+                string retval = new RegionMasterRepository().UploadImportRegion(file);
+                if (!string.IsNullOrEmpty(retval))
+                {
+                    int count = new RegionMasterRepository().ImportRegion(retval);
+                    return new ReplyFormat().Success(count.ToString());
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
     }
 }

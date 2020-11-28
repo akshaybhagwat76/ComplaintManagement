@@ -299,20 +299,20 @@
                 <div class="row">
                     <div class="col-md-9">
                         <div class="form-group">
-
                             <div class="input-group">
                                 <div class="custom-file">
-
-                                    <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                                    <input type="file" onclick="this.value = null" class="custom-file-input" id="excelFile" data-ketan="" aria-describedby="inputGroupFileAddon01">
                                     <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <a href="#" class="btn btn-danger btn-user btn-sm">Upload</a>
-                        <a href="#" class="btn bg-white border btn-user btn-sm">Cancel</a>
+                        <a class="btn btn-danger btn-user btn-sm" id="btnUpload">Upload</a>
+                        <a href="/SBU/Index" class="btn bg-white border btn-user btn-sm">Cancel</a>
                     </div>
+                    <a href="/Files/DownloadFile?filePath=/Imports/Samples/SBU/SBU.xlsx" class="ml-3 mt-n2">Download Sample</a>
+                    <label id="lblError" class="ml-n5 mt-5 adderror"></label>
                 </div>
             </div>
         </div>

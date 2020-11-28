@@ -190,7 +190,7 @@ namespace ComplaintManagement.Repository
                         //Category Name check
                         if (string.IsNullOrEmpty(workSheet.Cells[i, CategoryNameIndex].Value?.ToString()))
                         {
-                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Category Name", i, CategoryNameIndex }));
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Name", i, CategoryNameIndex }));
                         }
                         else
                         {
@@ -198,7 +198,7 @@ namespace ComplaintManagement.Repository
                             CategoryMasterVM categoryMasterDto = new CategoryMasterVM { CategoryName = CategoryName };
                             if (IsExist(CategoryName))
                             {
-                                throw new Exception(string.Format(Messages.DataCategoryAlreadyExists, new object[] { "Category Name", i, CategoryNameIndex }));
+                                throw new Exception(string.Format(Messages.DataCategoryAlreadyExists, new object[] { "Name", i, CategoryNameIndex }));
                             }
                             else
                             {

@@ -36,7 +36,7 @@ namespace ComplaintManagement.Models
         public virtual DbSet<SBUMaster> SBUMasters { get; set; }
         public virtual DbSet<SubCategoryMaster> SubCategoryMasters { get; set; }
         public virtual DbSet<SubSBUMaster> SubSBUMasters { get; set; }
-        public virtual DbSet<UserMaster> UserMasters { get; set; }
         public virtual DbSet<CommitteeMaster> CommitteeMasters { get; set; }
+        public virtual DbSet<UserMaster> UserMasters { get; set; }
     }
 }

@@ -111,34 +111,7 @@ function PagerClick(index) {
     }
     location.href = '/UserMaster/LoadUserMasters?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
 }
-var ExcelFile = document.getElementById('ExcelFile');
 
-ExcelFile.onchange = function () {
-    var files = this.files;
-    var file = files[0];
-    var filename = file.name
-    var acceptedFiles = ["xlsx", "xls"];
-    debugger
-    let last_dot = filename.lastIndexOf('.')
-    let ext = filename.slice(last_dot + 1);
-    var isAcceptedExcelFormat = ($.inArray(ext, acceptedFiles)) !== -1;
-    if (!isAcceptedExcelFormat) {
-        isValidExcel = false;
-        funToastr(false, 'Please select excel file');
-    }
-    else {
-        isValidExcel = true;
-        var reader = new FileReader();
-        reader.onloadend = function () {
-           
-            $(ExcelFile).attr("data-base64string", reader.result);
-            $(ExcelFile).attr("data-extension", ext);
-            //PreviewBase64Image(reader.result, $this.id + "Preview");
-        }
-        reader.readAsDataURL(file);
-       
-    }
-}
 function column_sort() {
     getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
     comparer = (idx, asc) => (a, b) => ((v1, v2) =>
@@ -157,39 +130,76 @@ function column_sort() {
 
 $("#myTable").find('thead td').on('click', column_sort);
 
-function ImportExcelFile() {
-    if (!isValidExcel) {
-        funToastr(false, 'Please select excel file first.');
+
+
+// Import excel
+var inputImage = document.getElementById('excelFile');
+document.getElementById('excelFile').addEventListener('change',
+    importExcel,
+    false);
+function importExcel() {
+    var files = this.files;
+    var file;
+    if (files && files.length) {
+        file = files[0];
+        const filename = file.name;
+        let last_dot = filename.lastIndexOf('.')
+        let ext = "." + filename.slice(last_dot + 1);
+        if (ext.toLowerCase() == '.xlsx' || ext.toLowerCase() == '.xlsm' || ext.toLowerCase() == '.xltx' || ext.toLowerCase() == '.xltm' || ext.toLowerCase() == '.xls') {
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                $(inputImage).attr('src', '');
+                $(inputImage).attr("data-base64string", '');
+                $(inputImage).attr("data-extension", '');
+
+                $(inputImage).attr('src', reader.result);
+                $(inputImage).attr("data-base64string", reader.result);
+                $(inputImage).attr("data-extension", ext);
+            }
+            reader.readAsDataURL(file);
+        } else {
+            funToastr(false, 'Please choose an excel file');
+        }
 
     }
-    else {
-        var documentFile = $("#ExcelFile").get(0).files;
-        var docfile = "";
-        if (documentFile.length > 0) {
-            var documentFileExt = documentFile[0].name.split('.').pop();
-            docfile = $("#ExcelFile").attr('data-base64string');
-            docfile = docfile + ',' + documentFileExt;
-        }
-       debugger
-        StartProcess();
-        $.ajax({
-            type: "POST",
-            url: "/UserMaster/ImportUsers",
-            data: { file: docfile },
-            success: function (data) {
-                StopProcess();
-                console.log(data);
-                if (data.status == "Fail") {
-                    
-                    $("#lblError").addClass("adderror").text(data.error).show();
-                }
-                else {
-                   
-                }
-            }
-        });
+};
+
+$("#btnUpload").on("click", function () {
+    debugger
+    var excelFile = $("#excelFile").get(0).files;
+    var excelUploadedFile = "";
+    if (excelFile.length > 0) {
+        var excelFileExt = excelFile[0].name.split('.').pop();
+        excelUploadedFile = $("#excelFile").attr('data-base64string');
+        excelUploadedFile = excelUploadedFile + ',' + excelFileExt;
     }
-}
+    else {
+        funToastr(false, "Please upload file."); return;
+    }
+    StartProcess();
+    $.ajax({
+        type: "POST",
+        url: "/UserMaster/ImportUsers",
+        data: { file: excelUploadedFile },
+        success: function (data) {
+            if (data.status == "Fail") {
+                StopProcess();
+                funToastr(false, data.error);
+                $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(data.error).show();
+            }
+            else {
+                StopProcess();
+                funToastr(true, data.msg + " Records imported." + " Please reload page to refresh changes.")
+                $("#lblError").removeClass("adderror").addClass("success").text(data.msg + " Records imported." + " Please reload page to refresh changes.").show();
+            }
+        }, error: function (response) {
+            funToastr(false, response.responseText);
+        },
+        failure: function (response) {
+            funToastr(false, response.responseText);
+        }
+    });
+})
     
 
     

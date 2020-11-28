@@ -182,7 +182,7 @@ $("#btnUpload").on("click", function () {
             if (data.status == "Fail") {
                 StopProcess();
                 funToastr(false, data.error);
-                $("#lblError").addClass("adderror").text(data.error).show();
+                $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(data.error).show();
             }
             else {
                 StopProcess();

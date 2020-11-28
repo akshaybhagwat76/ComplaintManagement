@@ -29,7 +29,7 @@ namespace ComplaintManagement.Models
         public int CompentencyId { get; set; }
         public int LocationId { get; set; }
         public int RegionId { get; set; }
-        public System.DateTime DateOfJoining { get; set; }
+        public Nullable<System.DateTime> DateOfJoining { get; set; }
         public string MobileNo { get; set; }
         public string Manager { get; set; }
         public string Type { get; set; }

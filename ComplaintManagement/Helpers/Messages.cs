@@ -45,9 +45,20 @@
         public const string Active = "Active";
         public const string Inactive = "Inactive";
         public const string Status = "Status";
-
+        
         public const string DataCategoryAlreadyExists = "This Category {0} already exists! - Row No. {1} and Column No. {2}";
         public const string DataCommitteeAlreadyExists = "This Committee {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataCompetencyAlreadyExists = "This Competency {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataDesignationAlreadyExists = "This Designaton {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataRegionAlreadyExists = "This Region {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataEntityAlreadyExists = "This Entity {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataLocationAlreadyExists = "This Location {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataSBUAlreadyExists = "This SBU {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataSubSBUAlreadyExists = "This SubSBU {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataSubCategoryAlreadyExists = "This SubCategory {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataLOSAlreadyExists = "This SubCategory {0} already exists! - Row No. {1} and Column No. {2}";
+        public const string DataRoleAlreadyExists = "This SubCategory {0} already exists! - Row No. {1} and Column No. {2}";
+
 
         public const string DataEmpAlreadyExists = "This Employee {0} already exists! - Row No. {1} and Column No. {2}";
         public const string FieldCannotBeBlankOrEmpty = "{0} cannot be blank or contain white space.";
@@ -60,11 +71,11 @@
         public const string EmpManagerPattern = "Employee ID or name or email";
         public const string DataEmpNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
         public const string DataNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
-        public const string EmailFormat = "Please work email in email format - Row No. {1} and Column No. {2}";
-        public const string AgeInvalid = "Please select age in digit only - Row No. {1} and Column No. {2}";
-        public const string DOJInvalid = "Please enter valid date of joining - Row No. {1} and Column No. {2}";
-        public const string MobileNumberInvalid = "Please enter valid mobile number - Row No. {1} and Column No. {2}";
-        public const string MobileNumberInvalidFormat = "Mobile number should not contain char - Row No. {1} and Column No. {2}";
+        public const string EmailFormat = "Please work email in email format - Row No. {0} and Column No. {1}";
+        public const string AgeInvalid = "Please select age in digit only - Row No. {0} and Column No. {1}";
+        public const string DOJInvalid = "Please enter valid date of joining - Row No. {0} and Column No. {1}";
+        public const string MobileNumberInvalid = "Please enter valid mobile number - Row No. {0} and Column No. {1}";
+        public const string MobileNumberInvalidFormat = "Mobile number should not contain char - Row No. {0} and Column No. {1}";
 
         public const string LOGO = "Logo";
 

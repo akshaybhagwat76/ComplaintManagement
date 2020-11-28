@@ -197,5 +197,25 @@ namespace ComplaintManagement.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult ImportSubSBU(string file)
+        {
+            try
+            {
+                string retval = new SubSBUMasterRepository().UploadImportSubSBU(file);
+                if (!string.IsNullOrEmpty(retval))
+                {
+                    int count = new SubSBUMasterRepository().ImportSubSBU(retval);
+                    return new ReplyFormat().Success(count.ToString());
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
     }
 }

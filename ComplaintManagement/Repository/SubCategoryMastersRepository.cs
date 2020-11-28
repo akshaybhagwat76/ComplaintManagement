@@ -3,9 +3,11 @@ using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -148,6 +150,105 @@ namespace ComplaintManagement.Repository
         public bool IsExist(string SubCategoryName, int id)
         {
             return db.SubCategoryMasters.Count(x => x.IsActive && x.SubCategoryName.ToUpper() == SubCategoryName.ToUpper() && x.Id != id) > 0;
+        }
+
+        public string UploadImportSubCategories(string file)
+        {
+            return new Common().SaveExcelFromBase64(file);
+        }
+
+        public int ImportSubCategories(string file)
+        {
+            List<SubCategoryMaster> importSubCategories = new List<SubCategoryMaster>();
+            SubCategoryMaster SubCategoryMasterDto = null;
+            int count = 0;
+            #region Indexes 
+            int SubCategoryNameIndex = 1; int StatusIndex = 2;
+            #endregion
+
+            string[] statuses = { "active", "inactive" };
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (Path.GetExtension(file) == ".xlsx" && !string.IsNullOrEmpty(sid))
+                {
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage package = new ExcelPackage(new FileInfo(file));
+                    ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
+                    for (int i = 1; i <= workSheet.Dimension.Rows; i++)
+                    {
+                        if (i == 1) //skip header row if its there
+                        {
+                            continue;
+                        }
+                        SubCategoryMasterDto = new SubCategoryMaster();
+
+                        #region SubCategory Name
+                        //SubCategory Name check
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, SubCategoryNameIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Name", i, SubCategoryNameIndex }));
+                        }
+                        else
+                        {
+                            string SubCategoryName = workSheet.Cells[i, SubCategoryNameIndex].Value?.ToString();
+                            SubCategoryMasterVM categoryMasterDto = new SubCategoryMasterVM {SubCategoryName  = SubCategoryName };
+                            if (IsExist(SubCategoryName))
+                            {
+                                throw new Exception(string.Format(Messages.DataSubCategoryAlreadyExists, new object[] { "Name", i, SubCategoryNameIndex }));
+                            }
+                            else
+                            {
+                                SubCategoryMasterDto.SubCategoryName = workSheet.Cells[i, SubCategoryNameIndex].Value?.ToString();
+                            }
+                        }
+                        #endregion
+
+                        #region Status
+                        //Status check
+                        if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
+                        {
+                            string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
+                            if (statuses.Any(Status.ToLower().Contains))
+                            {
+                                if (workSheet.Cells[i, StatusIndex].Value?.ToString().ToLower() == Messages.Active.ToLower())
+                                {
+                                    SubCategoryMasterDto.Status = true;
+                                }
+                                else
+                                {
+                                    SubCategoryMasterDto.Status = false;
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
+                            }
+                        }
+                        #endregion
+                        SubCategoryMasterDto.CreatedBy = Convert.ToInt32(sid);
+                        SubCategoryMasterDto.CreatedDate = DateTime.UtcNow;
+                        SubCategoryMasterDto.IsActive = true;
+                        importSubCategories.Add(SubCategoryMasterDto);
+                    }
+                    if (importSubCategories != null && importSubCategories.Count > 0)
+                    {
+                        db.SubCategoryMasters.AddRange(importSubCategories);
+                        db.SaveChanges();
+                        count = importSubCategories.Count;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                count = 0;
+                throw ex;
+            }
+            return count;
         }
     }
 }

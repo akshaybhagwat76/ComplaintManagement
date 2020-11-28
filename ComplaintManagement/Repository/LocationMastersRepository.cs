@@ -3,9 +3,11 @@ using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -149,6 +151,105 @@ namespace ComplaintManagement.Repository
         public bool IsExist(string LocationName, int id)
         {
             return db.LocationMasters.Count(x => x.IsActive && x.LocationName.ToUpper() == LocationName.ToUpper() && x.Id != id) > 0;
+        }
+
+        public string UploadImportLocation(string file)
+        {
+            return new Common().SaveExcelFromBase64(file);
+        }
+
+        public int ImportLocation(string file)
+        {
+            List<LocationMaster> importLocation = new List<LocationMaster>();
+            LocationMaster LocationMasterDto = null;
+            int count = 0;
+            #region Indexes 
+            int LocationNameIndex = 1; int StatusIndex = 2;
+            #endregion
+
+            string[] statuses = { "active", "inactive" };
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (Path.GetExtension(file) == ".xlsx" && !string.IsNullOrEmpty(sid))
+                {
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage package = new ExcelPackage(new FileInfo(file));
+                    ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
+                    for (int i = 1; i <= workSheet.Dimension.Rows; i++)
+                    {
+                        if (i == 1) //skip header row if its there
+                        {
+                            continue;
+                        }
+                        LocationMasterDto = new LocationMaster();
+
+                        #region Location Name
+                        //Location Name check
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, LocationNameIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Name", i, LocationNameIndex }));
+                        }
+                        else
+                        {
+                            string LocationName = workSheet.Cells[i, LocationNameIndex].Value?.ToString();
+                            LocationMasterVM locationMasterDto = new LocationMasterVM { LocationName = LocationName };
+                            if (IsExist(LocationName))
+                            {
+                                throw new Exception(string.Format(Messages.DataLocationAlreadyExists, new object[] { "Name", i, LocationNameIndex }));
+                            }
+                            else
+                            {
+                                LocationMasterDto.LocationName = workSheet.Cells[i, LocationNameIndex].Value?.ToString();
+                            }
+                        }
+                        #endregion
+
+                        #region Status
+                        //Status check
+                        if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
+                        {
+                            string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
+                            if (statuses.Any(Status.ToLower().Contains))
+                            {
+                                if (workSheet.Cells[i, StatusIndex].Value?.ToString().ToLower() == Messages.Active.ToLower())
+                                {
+                                    LocationMasterDto.Status = true;
+                                }
+                                else
+                                {
+                                    LocationMasterDto.Status = false;
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
+                            }
+                        }
+                        #endregion
+                        LocationMasterDto.CreatedBy = Convert.ToInt32(sid);
+                        LocationMasterDto.CreatedDate = DateTime.UtcNow;
+                        LocationMasterDto.IsActive = true;
+                        importLocation.Add(LocationMasterDto);
+                    }
+                    if (importLocation != null && importLocation.Count > 0)
+                    {
+                        db.LocationMasters.AddRange(importLocation);
+                        db.SaveChanges();
+                        count = importLocation.Count;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                count = 0;
+                throw ex;
+            }
+            return count;
         }
     }
 }

@@ -3,9 +3,11 @@ using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -150,6 +152,104 @@ namespace ComplaintManagement.Repository
         public bool IsExist(string EntityName, int id)
         {
             return db.EntityMasters.Count(x => x.IsActive && x.EntityName.ToUpper() == EntityName.ToUpper() && x.Id != id) > 0;
+        }
+        public string UploadImportEntity(string file)
+        {
+            return new Common().SaveExcelFromBase64(file);
+        }
+
+        public int ImportEntity(string file)
+        {
+            List<EntityMaster> importEntity = new List<EntityMaster>();
+            EntityMaster EntityMasterDto = null;
+            int count = 0;
+            #region Indexes 
+            int EntityNameIndex = 1; int StatusIndex = 2;
+            #endregion
+
+            string[] statuses = { "active", "inactive" };
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (Path.GetExtension(file) == ".xlsx" && !string.IsNullOrEmpty(sid))
+                {
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage package = new ExcelPackage(new FileInfo(file));
+                    ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
+                    for (int i = 1; i <= workSheet.Dimension.Rows; i++)
+                    {
+                        if (i == 1) //skip header row if its there
+                        {
+                            continue;
+                        }
+                        EntityMasterDto = new EntityMaster();
+
+                        #region Category Name
+                        //Competency Name check
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, EntityNameIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Name", i, EntityNameIndex }));
+                        }
+                        else
+                        {
+                            string EntityName = workSheet.Cells[i, EntityNameIndex].Value?.ToString();
+                            EntityMasterVM entityMasterDto = new EntityMasterVM { EntityName = EntityName };
+                            if (IsExist(EntityName))
+                            {
+                                throw new Exception(string.Format(Messages.DataEntityAlreadyExists, new object[] { "Name", i, EntityNameIndex }));
+                            }
+                            else
+                            {
+                                EntityMasterDto.EntityName = workSheet.Cells[i, EntityNameIndex].Value?.ToString();
+                            }
+                        }
+                        #endregion
+
+                        #region Status
+                        //Status check
+                        if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
+                        {
+                            string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
+                            if (statuses.Any(Status.ToLower().Contains))
+                            {
+                                if (workSheet.Cells[i, StatusIndex].Value?.ToString().ToLower() == Messages.Active.ToLower())
+                                {
+                                    EntityMasterDto.Status = true;
+                                }
+                                else
+                                {
+                                    EntityMasterDto.Status = false;
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
+                            }
+                        }
+                        #endregion
+                        EntityMasterDto.CreatedBy = Convert.ToInt32(sid);
+                        EntityMasterDto.CreatedDate = DateTime.UtcNow;
+                        EntityMasterDto.IsActive = true;
+                        importEntity.Add(EntityMasterDto);
+                    }
+                    if (importEntity != null && importEntity.Count > 0)
+                    {
+                        db.EntityMasters.AddRange(importEntity);
+                        db.SaveChanges();
+                        count = importEntity.Count;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                count = 0;
+                throw ex;
+            }
+            return count;
         }
     }
 }

@@ -293,13 +293,21 @@ namespace ComplaintManagement.Controllers
                                 List<string> CompetencyLst = new List<string>();
                                 foreach (string CompetencyItem in array)
                                 {
+                                    if(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault()!= null)
+                                    {
                                     CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+
+                                    }
                                 }
                                 row.CompetencyName = string.Join(",", CompetencyLst);
                             }
                             else
                             {
-                                row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault().CompetencyName;
+                                if(lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault()!= null)
+                                {
+                                  row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault().CompetencyName;
+
+                                }
                             }
                         }
 
@@ -447,6 +455,26 @@ namespace ComplaintManagement.Controllers
             }
             return View();
 
+        }
+
+        [HttpPost]
+        public ActionResult ImportRole(string file)
+        {
+            try
+            {
+                string retval = new RoleMasterRepoitory().UploadImportRole(file);
+                if (!string.IsNullOrEmpty(retval))
+                {
+                    int count = new RoleMasterRepoitory().ImportImportRole(retval);
+                    return new ReplyFormat().Success(count.ToString());
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
         }
     }
 }

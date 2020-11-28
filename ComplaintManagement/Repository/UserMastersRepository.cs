@@ -257,18 +257,20 @@ namespace ComplaintManagement.Repository
 
             #endregion
 
-
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             string[] genders = { "male", "female" };
             string[] timeType = { "full time", "part time" };
             string[] managers = { "normal", "admin", "hr" };
             string[] statuses = { "active", "inactive" };
-
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                  .Select(c => c.Value).SingleOrDefault();
             int number;
 
             if (Path.GetExtension(file) == ".xlsx")
             {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 ExcelPackage package = new ExcelPackage(new FileInfo(file));
-                ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
                 var lstDesignation = new DesignationMasterRepository().GetAll();
                 var lstEntity = new EntityMasterRepository().GetAll();
                 var lstSBU = new SBUMasterRepository().GetAll();
@@ -294,7 +296,16 @@ namespace ComplaintManagement.Repository
                     }
                     else
                     {
-                        UserMasterDto.EmployeeName = workSheet.Cells[i, EmployeeNameIndex].Value?.ToString();
+                        string EmployeeName = workSheet.Cells[i, EmployeeNameIndex].Value?.ToString();
+                        UserMasterVM userMasterDto = new UserMasterVM { EmployeeName = EmployeeName };
+                        if (!string.IsNullOrEmpty(IsExist(userMasterDto)))
+                        {
+                            throw new Exception(string.Format(Messages.DataEmpAlreadyExists, new object[] { "Name", i, EmployeeIdIndex }));
+                        }
+                        else
+                        {
+                            UserMasterDto.EmployeeName = workSheet.Cells[i, EmployeeIdIndex].Value?.ToString();
+                        }
                     }
 
                     //EmpId check
@@ -312,7 +323,7 @@ namespace ComplaintManagement.Repository
                         }
                         else
                         {
-                            UserMasterDto.EmployeeName = workSheet.Cells[i, EmployeeIdIndex].Value?.ToString();
+                            UserMasterDto.EmployeeId = workSheet.Cells[i, EmployeeIdIndex].Value?.ToString();
                         }
                     }
 
@@ -323,7 +334,7 @@ namespace ComplaintManagement.Repository
                     }
                     else
                     {
-                        string Gender = workSheet.Cells[i, EmployeeIdIndex].Value?.ToString();
+                        string Gender = workSheet.Cells[i, GenderIndex].Value?.ToString();
                         if (genders.Any(Gender.ToLower().Contains))
                         {
                             UserMasterDto.Gender = workSheet.Cells[i, GenderIndex].Value?.ToString();
@@ -391,7 +402,7 @@ namespace ComplaintManagement.Repository
                         }
                         else
                         {
-                            throw new Exception(string.Format(Messages.TimeTypeInvalid, new object[] { i, AgeIndex }));
+                            throw new Exception(string.Format(Messages.TimeTypeInvalid, new object[] { i, TimeTypeIndex }));
                         }
                     }
 
@@ -568,7 +579,7 @@ namespace ComplaintManagement.Repository
 
                         if (Mobile.Length > 17)
                         {
-                            throw new Exception(string.Format(Messages.MobileNumberInvalid, new object[] { i, DateOfJoiningIndex }));
+                            throw new Exception(string.Format(Messages.MobileNumberInvalid, new object[] { i, MobileNoIndex }));
                         }
                         if (Mobile.Any(x => !char.IsLetter(x)))
                         {
@@ -576,7 +587,7 @@ namespace ComplaintManagement.Repository
                         }
                         else
                         {
-                            throw new Exception(string.Format(Messages.MobileNumberInvalidFormat, new object[] { i, DateOfJoiningIndex }));
+                            throw new Exception(string.Format(Messages.MobileNumberInvalidFormat, new object[] { i, MobileNoIndex }));
                         }
                     }
 
@@ -617,19 +628,38 @@ namespace ComplaintManagement.Repository
                         UserMasterDto.ImagePath = IMG;
                     }
 
+                    #region Status
                     //Status check
                     if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
                     {
                         string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
                         if (statuses.Any(Status.ToLower().Contains))
                         {
-                            UserMasterDto.Status = Convert.ToBoolean(workSheet.Cells[i, StatusIndex].Value?.ToString());
+                            if (workSheet.Cells[i, StatusIndex].Value?.ToString().ToLower() == Messages.Active.ToLower())
+                            {
+                                UserMasterDto.Status = true;
+                            }
+                            else
+                            {
+                                UserMasterDto.Status = false;
+                            }
                         }
                         else
                         {
                             throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
                         }
                     }
+                    #endregion
+                    UserMasterDto.CreatedBy = Convert.ToInt32(sid);
+                    UserMasterDto.CreatedDate = DateTime.UtcNow;
+                    UserMasterDto.IsActive = true;
+                    importUsers.Add(UserMasterDto);
+                }
+                if (importUsers != null && importUsers.Count > 0)
+                {
+                    db.UserMasters.AddRange(importUsers);
+                    db.SaveChanges();
+                    count = importUsers.Count;
                 }
             }
             return count;
