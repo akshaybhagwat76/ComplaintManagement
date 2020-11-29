@@ -57,7 +57,7 @@ namespace ComplaintManagement.Repository
                                 db.SaveChanges();
 
                                 RegionMasters_History historyObj = Mapper.Map<RegionMasterVM, RegionMasters_History>(RegionVM);
-                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.RegionId = Region.Id; };
+                                if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.RegionId = Region.Id; };
                                 db.RegionMasters_History.Add(historyObj);
                                 db.SaveChanges();
 
