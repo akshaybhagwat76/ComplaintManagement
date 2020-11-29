@@ -280,7 +280,7 @@ namespace ComplaintManagement.Controllers
                 //DateTime fromDate = Convert.ToDateTime(dates[0]);
                 //DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from Committee in lst
-                       where Committee.Id == id
+                       where Committee.CommitteeId == id
                        select Committee).ToList();
 
                 lstCount = lst.Count;
@@ -325,7 +325,7 @@ namespace ComplaintManagement.Controllers
                         row.CreatedBy = com.CreatedBy;
                         row.UpdatedDate = com.UpdatedDate;
                         row.CreatedDate = com.CreatedDate;
-
+                        row.EntityState = com.EntityState;
                         row.Status = com.Status;
 
                         output.Add(row);
