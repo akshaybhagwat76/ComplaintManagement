@@ -37,37 +37,61 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var Designation = db.DesignationMasters.FirstOrDefault(p => p.Id == DesignationVM.Id);
-                    if (Designation == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        DesignationVM.IsActive = true;
-                        DesignationVM.CreatedDate = DateTime.UtcNow;
-                        DesignationVM.CreatedBy = Convert.ToInt32(sid);
-                       
-                        Designation = Mapper.Map<DesignationMasterVM, DesignationMaster>(DesignationVM);
-                        if (IsExist(Designation.Designation))
+                        try
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.DesignationMasters.Add(Designation);
-                        db.SaveChanges();
-                        return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
-                    }
-                    else
-                    {
-                        DesignationVM.IsActive = true;
-                       DesignationVM.CreatedDate = Designation.CreatedDate;
-                        DesignationVM.UpdatedDate = DateTime.UtcNow;
-                        DesignationVM.CreatedBy = Designation.CreatedBy;
-                        DesignationVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(Designation).CurrentValues.SetValues(DesignationVM);
-                        if (IsExist(Designation.Designation,Designation.Id))
-                        {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.SaveChanges();
-                        return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
+                            var Designation = db.DesignationMasters.FirstOrDefault(p => p.Id == DesignationVM.Id);
+                            if (Designation == null)
+                            {
+                                DesignationVM.IsActive = true;
+                                DesignationVM.CreatedDate = DateTime.UtcNow;
+                                DesignationVM.CreatedBy = Convert.ToInt32(sid);
 
+                                Designation = Mapper.Map<DesignationMasterVM, DesignationMaster>(DesignationVM);
+                                if (IsExist(Designation.Designation))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.DesignationMasters.Add(Designation);
+                                db.SaveChanges();
+
+                                DesignationMasters_History historyObj = Mapper.Map<DesignationMasterVM, DesignationMasters_History>(DesignationVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.DesignationId = Designation.Id; };
+                                db.DesignationMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+
+                                return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
+                            }
+                            else
+                            {
+                                DesignationVM.IsActive = true;
+                                DesignationVM.CreatedDate = Designation.CreatedDate;
+                                DesignationVM.UpdatedDate = DateTime.UtcNow;
+                                DesignationVM.CreatedBy = Designation.CreatedBy;
+                                DesignationVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(Designation).CurrentValues.SetValues(DesignationVM);
+                                if (IsExist(Designation.Designation, Designation.Id))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+
+                                DesignationMasters_History historyObj = Mapper.Map<DesignationMasterVM, DesignationMasters_History>(DesignationVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.DesignationId = Designation.Id; };
+                                db.DesignationMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
                 return new DesignationMasterVM();
@@ -134,6 +158,35 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
         }
 
+        public List<DesignationMasterHistoryVM> GetAllHistory()
+        {
+            List<DesignationMasters_History> listdto = new List<DesignationMasters_History>();
+            List<DesignationMasterHistoryVM> lst = new List<DesignationMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.DesignationMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (DesignationMasters_History item in listdto)
+                    {
+                        DesignationMasterHistoryVM ViewModelDto = Mapper.Map<DesignationMasters_History, DesignationMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
+        }
 
         public bool Delete(int id)
         {
@@ -236,11 +289,36 @@ namespace ComplaintManagement.Repository
                         DesignationMasterDto.IsActive = true;
                         importDesignation.Add(DesignationMasterDto);
                     }
-                    if (importDesignation != null && importDesignation.Count > 0)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.DesignationMasters.AddRange(importDesignation);
-                        db.SaveChanges();
-                        count = importDesignation.Count;
+                        try
+                        {
+                            if (importDesignation != null && importDesignation.Count > 0)
+                            {
+                                db.DesignationMasters.AddRange(importDesignation);
+                                db.SaveChanges();
+
+
+                                List<DesignationMasterHistoryVM> listVMDto = Mapper.Map<List<DesignationMaster>, List<DesignationMasterHistoryVM>>(importDesignation);
+
+                                List<DesignationMasters_History> HistoryDto = Mapper.Map<List<DesignationMasterHistoryVM>, List<DesignationMasters_History>>(listVMDto);
+                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                {
+                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.DesignationId = c.Id; return c; }).ToList();
+                                }
+
+                                db.DesignationMasters_History.AddRange(HistoryDto);
+                                db.SaveChanges();
+                                                                                                                                       
+                                dbContextTransaction.Commit();
+                                count = importDesignation.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }

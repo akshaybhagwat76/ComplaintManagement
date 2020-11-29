@@ -148,8 +148,8 @@ namespace ComplaintManagement.Controllers
                         row.Status = com.Status;
                         row.TimeType = com.TimeType;
                         row.Manager = com.Manager;
-                        row.CreatedByName = com.EmployeeName;
-                        row.UpdatedByName = com.EmployeeName;
+                        row.CreatedByName = com.CreatedByName;
+                        row.UpdatedByName = com.UpdatedByName;
 
                         row.UpdatedDate = com.UpdatedDate; row.CreatedDate = com.CreatedDate;
 
@@ -225,8 +225,8 @@ namespace ComplaintManagement.Controllers
                         row.TimeType = com.TimeType;
                         row.Manager = com.Manager;
                         row.UpdatedDate = com.UpdatedDate; row.CreatedDate = com.CreatedDate;
-                        row.CreatedByName = com.EmployeeName;
-                        row.UpdatedByName = com.EmployeeName;
+                        row.CreatedByName = com.CreatedByName;
+                        row.UpdatedByName = com.UpdatedByName;
                         output.Add(row);
                     }
                 }

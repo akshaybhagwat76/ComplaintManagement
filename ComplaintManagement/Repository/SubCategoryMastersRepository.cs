@@ -136,6 +136,36 @@ namespace ComplaintManagement.Repository
             return SubcategoryList;
         }
 
+        public List<SubCategoryMasterHistoryVM> GetAllHistory()
+        {
+            List<SubCategoryMasters_History> listdto = new List<SubCategoryMasters_History>();
+            List<SubCategoryMasterHistoryVM> lst = new List<SubCategoryMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.SubCategoryMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (SubCategoryMasters_History item in listdto)
+                    {
+                        SubCategoryMasterHistoryVM ViewModelDto = Mapper.Map<SubCategoryMasters_History, SubCategoryMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
+        }
+
         public SubCategoryMasterVM Get(int id)
         {
             SubCategoryMaster Subcategory = new SubCategoryMaster();
@@ -154,7 +184,6 @@ namespace ComplaintManagement.Repository
             }
             return Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(Subcategory);
         }
-
 
         public bool Delete(int id)
         {
@@ -219,7 +248,7 @@ namespace ComplaintManagement.Repository
                         else
                         {
                             string SubCategoryName = workSheet.Cells[i, SubCategoryNameIndex].Value?.ToString();
-                            SubCategoryMasterVM categoryMasterDto = new SubCategoryMasterVM {SubCategoryName  = SubCategoryName };
+                            SubCategoryMasterVM categoryMasterDto = new SubCategoryMasterVM { SubCategoryName = SubCategoryName };
                             if (IsExist(SubCategoryName))
                             {
                                 throw new Exception(string.Format(Messages.DataSubCategoryAlreadyExists, new object[] { "Name", i, SubCategoryNameIndex }));
@@ -258,11 +287,35 @@ namespace ComplaintManagement.Repository
                         SubCategoryMasterDto.IsActive = true;
                         importSubCategories.Add(SubCategoryMasterDto);
                     }
-                    if (importSubCategories != null && importSubCategories.Count > 0)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.SubCategoryMasters.AddRange(importSubCategories);
-                        db.SaveChanges();
-                        count = importSubCategories.Count;
+                        try
+                        {
+                            if (importSubCategories != null && importSubCategories.Count > 0)
+                            {
+                                db.SubCategoryMasters.AddRange(importSubCategories);
+                                db.SaveChanges();
+
+                                List<SubCategoryMasterHistoryVM> listVMDto = Mapper.Map<List<SubCategoryMaster>, List<SubCategoryMasterHistoryVM>>(importSubCategories);
+
+                                List<SubCategoryMasters_History> HistoryDto = Mapper.Map<List<SubCategoryMasterHistoryVM>, List<SubCategoryMasters_History>>(listVMDto);
+                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                {
+                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.SubCategoryId = c.Id; return c; }).ToList();
+                                }
+
+                                db.SubCategoryMasters_History.AddRange(HistoryDto);
+                                db.SaveChanges();
+                                dbContextTransaction.Commit();
+
+                                count = importSubCategories.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }

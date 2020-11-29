@@ -35,37 +35,61 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var Location = db.LocationMasters.FirstOrDefault(p => p.Id == LocationVM.Id);
-                    if (Location == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        LocationVM.IsActive = true;
-                        LocationVM.CreatedDate = DateTime.UtcNow;
-                        LocationVM.UserId = 1;
-                        LocationVM.CreatedBy = Convert.ToInt32(sid);
-                        Location = Mapper.Map<LocationMasterVM, LocationMaster>(LocationVM);
-                        if (IsExist(Location.LocationName))
+                        try
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.LocationMasters.Add(Location);
-                        db.SaveChanges();
-                        return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
-                    }
-                    else
-                    {
-                        LocationVM.IsActive = true;
-                      LocationVM.CreatedDate = Location.CreatedDate;
-                        LocationVM.CreatedBy = Location.CreatedBy;
-                        LocationVM.UpdatedDate = DateTime.UtcNow;
-                        LocationVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(Location).CurrentValues.SetValues(LocationVM);
-                        if (IsExist(Location.LocationName,Location.Id))
-                        {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.SaveChanges();
-                        return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
+                            var Location = db.LocationMasters.FirstOrDefault(p => p.Id == LocationVM.Id);
+                            if (Location == null)
+                            {
+                                LocationVM.IsActive = true;
+                                LocationVM.CreatedDate = DateTime.UtcNow;
+                                LocationVM.UserId = 1;
+                                LocationVM.CreatedBy = Convert.ToInt32(sid);
+                                Location = Mapper.Map<LocationMasterVM, LocationMaster>(LocationVM);
+                                if (IsExist(Location.LocationName))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.LocationMasters.Add(Location);
+                                db.SaveChanges();
 
+
+                                LocationMasters_History historyObj = Mapper.Map<LocationMasterVM, LocationMasters_History>(LocationVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.LocationId = Location.Id; };
+                                db.LocationMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
+                            }
+                            else
+                            {
+                                LocationVM.IsActive = true;
+                                LocationVM.CreatedDate = Location.CreatedDate;
+                                LocationVM.CreatedBy = Location.CreatedBy;
+                                LocationVM.UpdatedDate = DateTime.UtcNow;
+                                LocationVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(Location).CurrentValues.SetValues(LocationVM);
+                                if (IsExist(Location.LocationName, Location.Id))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+
+                                LocationMasters_History historyObj = Mapper.Map<LocationMasterVM, LocationMasters_History>(LocationVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.LocationId = Location.Id; };
+                                db.LocationMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
                 return new LocationMasterVM();
@@ -133,7 +157,35 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
         }
 
-
+        public List<LocationMasterHistoryVM> GetAllHistory()
+        {
+            List<LocationMasters_History> listdto = new List<LocationMasters_History>();
+            List<LocationMasterHistoryVM> lst = new List<LocationMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.LocationMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (LocationMasters_History item in listdto)
+                    {
+                        LocationMasterHistoryVM ViewModelDto = Mapper.Map<LocationMasters_History, LocationMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
+        }
         public bool Delete(int id)
         {
             var data = db.LocationMasters.FirstOrDefault(p => p.Id == id);
@@ -236,11 +288,36 @@ namespace ComplaintManagement.Repository
                         LocationMasterDto.IsActive = true;
                         importLocation.Add(LocationMasterDto);
                     }
-                    if (importLocation != null && importLocation.Count > 0)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.LocationMasters.AddRange(importLocation);
-                        db.SaveChanges();
-                        count = importLocation.Count;
+                        try
+                        {
+                            if (importLocation != null && importLocation.Count > 0)
+                            {
+                                db.LocationMasters.AddRange(importLocation);
+                                db.SaveChanges();
+
+                                List<LocationMasterHistoryVM> listVMDto = Mapper.Map<List<LocationMaster>, List<LocationMasterHistoryVM>>(importLocation);
+
+                                List<LocationMasters_History> HistoryDto = Mapper.Map<List<LocationMasterHistoryVM>, List<LocationMasters_History>>(listVMDto);
+                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                {
+                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.LocationId = c.Id; return c; }).ToList();
+                                }
+
+                                db.LocationMasters_History.AddRange(HistoryDto);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+
+                                count = importLocation.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }

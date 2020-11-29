@@ -35,37 +35,60 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var SubSBU = db.SubSBUMasters.FirstOrDefault(p => p.Id == SubSBUVM.Id);
-                    if (SubSBU == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        SubSBUVM.IsActive = true;
-                        SubSBUVM.CreatedDate = DateTime.UtcNow;
-                        SubSBUVM.UserId = 1;
-                        SubSBUVM.CreatedBy = Convert.ToInt32(sid);
-                        SubSBU = Mapper.Map<SubSBUMasterVM, SubSBUMaster>(SubSBUVM);
-                        if (IsExist(SubSBU.SubSBU))
+                        try
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.SubSBUMasters.Add(SubSBU);
-                        db.SaveChanges();
-                        return Mapper.Map<SubSBUMaster, SubSBUMasterVM>(SubSBU);
-                    }
-                    else
-                    {
-                        SubSBUVM.IsActive = true;
-                         SubSBUVM.CreatedDate = SubSBU.CreatedDate;
-                        SubSBUVM.CreatedBy = SubSBU.CreatedBy;
-                        SubSBUVM.UpdatedDate = DateTime.UtcNow;
-                        SubSBUVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(SubSBU).CurrentValues.SetValues(SubSBUVM);
-                        if (IsExist(SubSBU.SubSBU,SubSBU.Id))
-                        {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.SaveChanges();
-                        return Mapper.Map<SubSBUMaster, SubSBUMasterVM>(SubSBU);
+                            var SubSBU = db.SubSBUMasters.FirstOrDefault(p => p.Id == SubSBUVM.Id);
+                            if (SubSBU == null)
+                            {
+                                SubSBUVM.IsActive = true;
+                                SubSBUVM.CreatedDate = DateTime.UtcNow;
+                                SubSBUVM.UserId = 1;
+                                SubSBUVM.CreatedBy = Convert.ToInt32(sid);
+                                SubSBU = Mapper.Map<SubSBUMasterVM, SubSBUMaster>(SubSBUVM);
+                                if (IsExist(SubSBU.SubSBU))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SubSBUMasters.Add(SubSBU);
+                                db.SaveChanges();
 
+                                SubSBUMasters_History historyObj = Mapper.Map<SubSBUMasterVM, SubSBUMasters_History>(SubSBUVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.SubSBUId = SubSBU.Id; };
+                                db.SubSBUMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                return Mapper.Map<SubSBUMaster, SubSBUMasterVM>(SubSBU);
+                            }
+                            else
+                            {
+                                SubSBUVM.IsActive = true;
+                                SubSBUVM.CreatedDate = SubSBU.CreatedDate;
+                                SubSBUVM.CreatedBy = SubSBU.CreatedBy;
+                                SubSBUVM.UpdatedDate = DateTime.UtcNow;
+                                SubSBUVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(SubSBU).CurrentValues.SetValues(SubSBUVM);
+                                if (IsExist(SubSBU.SubSBU, SubSBU.Id))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+
+
+                                SubSBUMasters_History historyObj = Mapper.Map<SubSBUMasterVM, SubSBUMasters_History>(SubSBUVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.SubSBUId = SubSBU.Id; };
+                                db.SubSBUMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                return Mapper.Map<SubSBUMaster, SubSBUMasterVM>(SubSBU);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
                 return new SubSBUMasterVM();
@@ -132,6 +155,35 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<SubSBUMaster, SubSBUMasterVM>(SubSBU);
         }
 
+        public List<SubSBUMasterHistoryVM> GetAllHistory()
+        {
+            List<SubSBUMasters_History> listdto = new List<SubSBUMasters_History>();
+            List<SubSBUMasterHistoryVM> lst = new List<SubSBUMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.SubSBUMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (SubSBUMasters_History item in listdto)
+                    {
+                        SubSBUMasterHistoryVM ViewModelDto = Mapper.Map<SubSBUMasters_History, SubSBUMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
+        }
 
         public bool Delete(int id)
         {
@@ -235,11 +287,36 @@ namespace ComplaintManagement.Repository
                         SubSBUMasterDto.IsActive = true;
                         importSubSBU.Add(SubSBUMasterDto);
                     }
-                    if (importSubSBU != null && importSubSBU.Count > 0)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.SubSBUMasters.AddRange(importSubSBU);
-                        db.SaveChanges();
-                        count = importSubSBU.Count;
+                        try
+                        {
+                            if (importSubSBU != null && importSubSBU.Count > 0)
+                            {
+                                db.SubSBUMasters.AddRange(importSubSBU);
+                                db.SaveChanges();
+
+                                List<SubSBUMasterHistoryVM> listVMDto = Mapper.Map<List<SubSBUMaster>, List<SubSBUMasterHistoryVM>>(importSubSBU);
+
+                                List<SubSBUMasters_History> HistoryDto = Mapper.Map<List<SubSBUMasterHistoryVM>, List<SubSBUMasters_History>>(listVMDto);
+                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                {
+                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.SubSBUId = c.Id; return c; }).ToList();
+                                }
+
+                                db.SubSBUMasters_History.AddRange(HistoryDto);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+
+                                count = importSubSBU.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }

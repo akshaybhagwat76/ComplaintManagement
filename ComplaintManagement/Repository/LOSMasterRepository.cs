@@ -33,42 +33,65 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var LOS = db.LOSMasters.FirstOrDefault(p => p.Id == LOSVM.Id);
-                    if (LOS == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        LOSVM.IsActive = true;
-                        LOSVM.CreatedDate = DateTime.UtcNow;
-                        LOSVM.UserId = 1;
-                        LOSVM.CreatedBy = Convert.ToInt32(sid);
-                        LOS = Mapper.Map<LOSMasterVM, LOSMaster>(LOSVM);
-                        if (IsExist(LOS.LOSName))
+                        try
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
+                            var LOS = db.LOSMasters.FirstOrDefault(p => p.Id == LOSVM.Id);
+                            if (LOS == null)
+                            {
+                                LOSVM.IsActive = true;
+                                LOSVM.CreatedDate = DateTime.UtcNow;
+                                LOSVM.UserId = 1;
+                                LOSVM.CreatedBy = Convert.ToInt32(sid);
+                                LOS = Mapper.Map<LOSMasterVM, LOSMaster>(LOSVM);
+                                if (IsExist(LOS.LOSName))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.LOSMasters.Add(LOS);
+                                db.SaveChanges();
+                                LOSMasters_History historyObj = Mapper.Map<LOSMasterVM, LOSMasters_History>(LOSVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.LOSId = LOS.Id; };
+                                db.LOSMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+
+                                return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
+                            }
+                            else
+                            {
+                                LOSVM.IsActive = true;
+                                LOSVM.CreatedDate = LOS.CreatedDate;
+                                LOSVM.CreatedBy = LOS.CreatedBy;
+                                LOSVM.UpdatedDate = DateTime.UtcNow;
+                                LOSVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(LOS).CurrentValues.SetValues(LOSVM);
+                                if (IsExist(LOS.LOSName, LOS.Id))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+                                LOSMasters_History historyObj = Mapper.Map<LOSMasterVM, LOSMasters_History>(LOSVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.LOSId = LOS.Id; };
+                                db.LOSMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+
+                                return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
+                            }
                         }
-                        db.LOSMasters.Add(LOS);
-                        db.SaveChanges();
-                        return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
-                    }
-                    else
-                    {
-                        LOSVM.IsActive = true;
-                         LOSVM.CreatedDate = LOS.CreatedDate;
-                        LOSVM.CreatedBy = LOS.CreatedBy;
-                        LOSVM.UpdatedDate = DateTime.UtcNow;
-                        LOSVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(LOS).CurrentValues.SetValues(LOSVM);
-                        if (IsExist(LOS.LOSName,LOS.Id))
+                        catch (Exception ex)
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
                         }
-                        db.SaveChanges();
-                        return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
                     }
                 }
                 return new LOSMasterVM();
             }
             catch (DbEntityValidationException dve)
-            { 
+            {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
                 throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
             }
@@ -129,6 +152,35 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<LOSMaster, LOSMasterVM>(los);
         }
 
+        public List<LOSMasterHistoryVM> GetAllHistory()
+        {
+            List<LOSMasters_History> listdto = new List<LOSMasters_History>();
+            List<LOSMasterHistoryVM> lst = new List<LOSMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.LOSMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (LOSMasters_History item in listdto)
+                    {
+                        LOSMasterHistoryVM ViewModelDto = Mapper.Map<LOSMasters_History, LOSMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
+        }
 
         public bool Delete(int id)
         {
@@ -160,7 +212,7 @@ namespace ComplaintManagement.Repository
             LOSMaster LOSMasterDto = null;
             int count = 0;
             #region Indexes 
-            int LOSNameIndex = 1; int SBUIndex = 2;int  SubSBUIndex = 3; int CompetencyIndex = 4; int StatusIndex = 5;
+            int LOSNameIndex = 1; int SBUIndex = 2; int SubSBUIndex = 3; int CompetencyIndex = 4; int StatusIndex = 5;
             #endregion
 
             string[] statuses = { "active", "inactive" };
@@ -347,11 +399,37 @@ namespace ComplaintManagement.Repository
                         LOSMasterDto.IsActive = true;
                         importLOS.Add(LOSMasterDto);
                     }
-                    if (importLOS != null && importLOS.Count > 0)
+
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.LOSMasters.AddRange(importLOS);
-                        db.SaveChanges();
-                        count = importLOS.Count;
+                        try
+                        {
+                            if (importLOS != null && importLOS.Count > 0)
+                            {
+                                db.LOSMasters.AddRange(importLOS);
+                                db.SaveChanges();
+
+                                List<LOSMasterHistoryVM> listVMDto = Mapper.Map<List<LOSMaster>, List<LOSMasterHistoryVM>>(importLOS);
+
+                                List<LOSMasters_History> HistoryDto = Mapper.Map<List<LOSMasterHistoryVM>, List<LOSMasters_History>>(listVMDto);
+                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                {
+                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.LOSId = c.Id; return c; }).ToList();
+                                }
+
+                                db.LOSMasters_History.AddRange(HistoryDto);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+
+                                count = importLOS.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }

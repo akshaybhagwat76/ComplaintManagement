@@ -46,6 +46,7 @@ namespace ComplaintManagement.Controllers
             }
             return View("Index");
         }
+
         [HttpGet]
         public ActionResult LoadCompetency(int currentPageIndex, string range = "")
         {
@@ -57,6 +58,7 @@ namespace ComplaintManagement.Controllers
             }
             return View("Index");
         }
+
         [HttpPost]
         public JsonResult CheckIfExist(CompetencyMasterVM data)
         {
@@ -144,6 +146,7 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View("Index");
         }
+
         [HttpPost]
         public ActionResult Delete(int id)
         {
@@ -160,6 +163,7 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+
         [HttpPost]
         public ActionResult AddOrUpdateCompetency(CompetencyMasterVM CompetencyVM)
         {

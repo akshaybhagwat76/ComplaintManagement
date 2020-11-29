@@ -36,37 +36,62 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
-                    if (Entity == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        EntityVM.IsActive = true;
-                        EntityVM.CreatedDate = DateTime.UtcNow;
-                        EntityVM.UserId = 1;
-                        EntityVM.CreatedBy = Convert.ToInt32(sid);
-                        Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
-                        if (IsExist(Entity.EntityName))
+                        try
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.EntityMasters.Add(Entity);
-                        db.SaveChanges();
-                        return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
-                    }
-                    else
-                    {
-                        EntityVM.IsActive = true;
-                         EntityVM.CreatedDate = Entity.CreatedDate;
-                        EntityVM.CreatedBy = Entity.CreatedBy;
-                        EntityVM.UpdatedDate = DateTime.UtcNow;
-                        EntityVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(Entity).CurrentValues.SetValues(EntityVM);
-                        if (IsExist(Entity.EntityName,Entity.Id))
-                        {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.SaveChanges();
-                        return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+                            var Entity = db.EntityMasters.FirstOrDefault(p => p.Id == EntityVM.Id);
+                            if (Entity == null)
+                            {
+                                EntityVM.IsActive = true;
+                                EntityVM.CreatedDate = DateTime.UtcNow;
+                                EntityVM.UserId = 1;
+                                EntityVM.CreatedBy = Convert.ToInt32(sid);
+                                Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
+                                if (IsExist(Entity.EntityName))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.EntityMasters.Add(Entity);
+                                db.SaveChanges();
 
+                                EntityMasters_History historyObj = Mapper.Map<EntityMasterVM, EntityMasters_History>(EntityVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.EntityId = Entity.Id; };
+                                db.EntityMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+
+                                dbContextTransaction.Commit();
+                                return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+                            }
+                            else
+                            {
+                                EntityVM.IsActive = true;
+                                EntityVM.CreatedDate = Entity.CreatedDate;
+                                EntityVM.CreatedBy = Entity.CreatedBy;
+                                EntityVM.UpdatedDate = DateTime.UtcNow;
+                                EntityVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(Entity).CurrentValues.SetValues(EntityVM);
+                                if (IsExist(Entity.EntityName, Entity.Id))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+
+                                EntityMasters_History historyObj = Mapper.Map<EntityMasterVM, EntityMasters_History>(EntityVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.EntityId = Entity.Id; };
+                                db.EntityMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
                 return new EntityMasterVM();
@@ -134,6 +159,35 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
         }
 
+        public List<EntityMasterHistoryVM> GetAllHistory()
+        {
+            List<EntityMasters_History> listdto = new List<EntityMasters_History>();
+            List<EntityMasterHistoryVM> lst = new List<EntityMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.EntityMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (EntityMasters_History item in listdto)
+                    {
+                        EntityMasterHistoryVM ViewModelDto = Mapper.Map<EntityMasters_History, EntityMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
+        }
 
         public bool Delete(int id)
         {
@@ -236,11 +290,37 @@ namespace ComplaintManagement.Repository
                         EntityMasterDto.IsActive = true;
                         importEntity.Add(EntityMasterDto);
                     }
-                    if (importEntity != null && importEntity.Count > 0)
+
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.EntityMasters.AddRange(importEntity);
-                        db.SaveChanges();
-                        count = importEntity.Count;
+                        try
+                        {
+                            if (importEntity != null && importEntity.Count > 0)
+                            {
+                                db.EntityMasters.AddRange(importEntity);
+                                db.SaveChanges();
+
+                                List<EntityMasterHistoryVM> listVMDto = Mapper.Map<List<EntityMaster>, List<EntityMasterHistoryVM>>(importEntity);
+
+                                List<EntityMasters_History> HistoryDto = Mapper.Map<List<EntityMasterHistoryVM>, List<EntityMasters_History>>(listVMDto);
+                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                {
+                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.EntityId = c.Id; return c; }).ToList();
+                                }
+
+                                db.EntityMasters_History.AddRange(HistoryDto);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+
+                                count = importEntity.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }
