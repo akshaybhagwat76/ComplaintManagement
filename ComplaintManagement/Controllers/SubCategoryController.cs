@@ -22,6 +22,30 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+        [HttpGet]
+        public ActionResult HistoryIndex(int id)
+        {
+            ViewBag.lstHistorySubCategory = GetAllHistory(1,id);
+            ViewBag.name = id.ToString();
+
+            var DataTableDetail = new HomeController().getDataTableDetail("SubCategory", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult LoadHistorySubCategory(int currentPageIndex, int range =0 )
+        {
+            ViewBag.lstHistorySubCategory = GetAllHistory(currentPageIndex, range);
+            //if (!string.IsNullOrEmpty(range))
+            //{
+            //    ViewBag.startDate = range.Split(',')[0];
+            //    ViewBag.toDate = range.Split(',')[1];
+            //}
+            return View("HistoryIndex");
+        }
+
         public ActionResult SearchSubCategories(string search)
         {
             if (!string.IsNullOrEmpty(search))
@@ -130,6 +154,50 @@ namespace ComplaintManagement.Controllers
             }
         }
 
+        public List<SubCategoryMasterHistoryVM> GetAllHistory(int currentPage, int id)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
+            var lst = new SubCategoryMastersRepository().GetAllHistory();
+            lstCount = lst.Count;
+            if (!string.IsNullOrEmpty(id.ToString()))
+            {
+                //string[] dates = range.Split(',');
+                //DateTime fromDate = Convert.ToDateTime(dates[0]);
+                //DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from Subcategory in lst
+                       where Subcategory.SubCategoryId == id
+                       select Subcategory).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+            else
+            {
+                lst = (from Subcategory in lst
+                       select Subcategory)
+            .OrderByDescending(customer => customer.Id)
+            .Skip((currentPage - 1) * maxRows)
+            .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+        }
 
         [HttpGet]
         public ActionResult GetSubCategories(string range, int currentPage)

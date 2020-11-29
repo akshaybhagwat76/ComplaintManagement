@@ -161,18 +161,18 @@ namespace ComplaintManagement.Repository
             List<UserMasterVM> UsersListDto = new List<UserMasterVM>();
             try
             {
-                List<UserMasterVM> usersList = GetAll();
+                
 
                 User = db.UserMasters.Where(i => i.IsActive).OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
-                if (User != null && User.Count > 0 && usersList != null && usersList.Count > 0)
+                if (User != null && User.Count > 0)
                 {
                     foreach (UserMaster item in User)
                     {
                         UserMasterVM ViewModelDto = Mapper.Map<UserMaster, UserMasterVM>(item);
                         if (ViewModelDto != null)
                         {
-                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
-                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            ViewModelDto.CreatedByName = User.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? User.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = User.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? User.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
                             UsersListDto.Add(ViewModelDto);
                         }
                     }

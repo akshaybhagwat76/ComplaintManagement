@@ -22,6 +22,8 @@
 @{
     ViewBag.Title = "Index";
 }
+@Html.Hidden("history", (object)ViewBag.name)
+
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
     <!-- Main Content -->
@@ -35,33 +37,8 @@
             <h4 class="text-white m-0">Masters</h4>
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <form class="d-none d-sm-inline-block form-inline my-3 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" onkeypress="return searchKeyPress(event);" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                            <i class="fas fa-search fa-sm" id="searchIcon"></i>
-                        </div>
-                    </form>
-                </li>
-                <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                <li class="nav-item dropdown no-arrow d-sm-none">
-                    <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-search fa-fw"></i>
-                    </a>
-                    <!-- Dropdown - Messages -->
-                    <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                        <form class="form-inline mr-auto w-100 navbar-search">
-                            <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </li>
+                
+
 
                 <!-- Nav Item - Alerts -->
                 <li class="nav-item dropdown no-arrow mx-1">
@@ -133,45 +110,15 @@
                         </a>
                     </div>
                 </li>
-
             </ul>
-
         </nav>
         <!-- End of Topbar -->
         <div class="container-fluid">
             <div class="preloader"></div>
             <div class="page-title">
-                <h2 class="text-black">Sub Category Master</h2>
+                <h2 class="text-black">Sub Category History</h2>
             </div>
-            <div class="card mb-4 rounded-0 border-0">
-                <div class="card-body">
-                    <div class="row justify-content-between">
-                        <div class="col-md-8">
-                            <ul class="nav">
-                                <li class="nav-item mr-3">
-                                    <input type="date" id="fromDate" class="form-control" value="@ViewBag.startDate" placeholder="From Date" />
-                                </li>
-                                <li class="nav-item mr-3">
-                                    <input type="date" id="toDate" class="form-control" value="@ViewBag.toDate" placeholder="To Date" />
-                                </li>
-                                <li class="nav-item">
-                                    <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-2">
-                            <ul class="nav">
-                                <li class="nav-item mr-4">
-                                    <a href="/SubCategory/Create" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
-                                </li>
-                                <li class="nav-item">
-                                    <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <!-- Tab Bar -->
             <div class="user-list">
                 <div class="row">
@@ -185,6 +132,7 @@
                                             <tr>
                                                 <td class="text-center">Sub Category</td>
                                                 <td class="text-center">Created Date</td>
+                                                <td class="text-center">Entity State</td>
                                                 <td class="text-center">Created By</td>
                                                 <td class="text-center">Modified Date</td>
                                                 <td class="text-center">Modified By</td>
@@ -193,41 +141,41 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var item in ViewBag.lstSubCategory)
+                                            @foreach (var item in ViewBag.lstHistorySubCategory)
                                             {
-                                            <tr>
-                                                <td class="text-black text-center"><strong>@item.SubCategoryName</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-","/")</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.UpdatedDate != null)
-                                                        {
-                                                            @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
-                                                        }
-                                                        else
-                                                        {
-                                                            @Html.Raw(Messages.NotAvailable.ToString())
-                                                        }
-                                                    </strong>
-                                                </td>
-                                                <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.Status == true)
-                                                        {@Html.Raw("Active") }
-                                                    else
-                                                    { @Html.Raw("Inactive")}
-                                                    </strong>
-                                                </td>
-                                                <td class="text-center">
-                                                    <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="deleteSubCategory('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                    <a href="/SubCategory/HistoryIndex?id=@item.Id" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
+                                                <tr>
+                                                    <td class="text-black text-center"><strong>@item.SubCategoryName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.EntityState</strong></td>
 
-                                                </td>
-                                            </tr>
+                                                    <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.UpdatedDate != null)
+                                                            {
+                                                                @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Raw(Messages.NotAvailable.ToString())
+                                                            }
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.Status == true)
+                                                            {@Html.Raw("Active") }
+                                                        else
+                                                        { @Html.Raw("Inactive")}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="deleteSubCategory('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                    </td>
+                                                </tr>
                                             }
                                         </tbody>
 

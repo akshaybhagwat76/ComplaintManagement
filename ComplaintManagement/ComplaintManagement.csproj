@@ -2335,6 +2335,7 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Category\HistoryIndex.cshtml" />
     <Content Include="Views\Committee\HistoryIndex.cshtml" />
+    <Content Include="Views\SubCategory\HistoryIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

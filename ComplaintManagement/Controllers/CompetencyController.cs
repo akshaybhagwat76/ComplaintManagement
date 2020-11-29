@@ -13,7 +13,6 @@ namespace ComplaintManagement.Controllers
     [Authorize]
     public class CompetencyController : Controller
     {
-        // GET: Competency
         public ActionResult Index()
         {
             ViewBag.lstCompetency = GetAll(1);

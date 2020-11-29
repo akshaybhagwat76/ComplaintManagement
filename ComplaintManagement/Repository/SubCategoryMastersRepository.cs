@@ -54,10 +54,11 @@ namespace ComplaintManagement.Repository
                                 db.SaveChanges();
 
                                 SubCategoryMasters_History subcategoryMasters_History = Mapper.Map<SubCategoryMasterVM, SubCategoryMasters_History>(SubcategoryVM);
-                                if (subcategoryMasters_History != null) { subcategoryMasters_History.EntityState = Messages.Updated; };
+                                if (subcategoryMasters_History != null) { subcategoryMasters_History.EntityState = Messages.Added; subcategoryMasters_History.SubCategoryId = Subcategory.Id; };
                                 db.SubCategoryMasters_History.Add(subcategoryMasters_History);
                                 db.SaveChanges();
 
+                                dbContextTransaction.Commit();
                                 return Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(Subcategory);
                             }
                             else
@@ -75,7 +76,7 @@ namespace ComplaintManagement.Repository
                                 db.SaveChanges();
 
                                 SubCategoryMasters_History subcategoryMasters_History = Mapper.Map<SubCategoryMasterVM, SubCategoryMasters_History>(SubcategoryVM);
-                                if (subcategoryMasters_History != null) { subcategoryMasters_History.EntityState = Messages.Updated; };
+                                if (subcategoryMasters_History != null) { subcategoryMasters_History.EntityState = Messages.Updated; subcategoryMasters_History.SubCategoryId = Subcategory.Id; };
                                 db.SubCategoryMasters_History.Add(subcategoryMasters_History);
                                 db.SaveChanges();
 
