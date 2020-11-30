@@ -216,8 +216,8 @@
                                                 @foreach (var item in data)
                                                 {
                                                     <tr>
-                                                        <td class="text-black text-center pl-2"><strong>@item.EmployeeName</strong></td>
-                                                        <td class="text-black text-center pl-2">
+                                                        <td class="text-black"><strong>@item.EmployeeName</strong></td>
+                                                        <td class="text-black">
                                                             <strong>
                                                                 @if (item.CreatedDate != null)
                                                                 {
@@ -242,7 +242,7 @@
                                                                 </strong>
                                                             </td>*@
                                                         @*<td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>*@
-                                                        <td class="text-black text-center pl-2">
+                                                        <td class="text-black">
                                                             <strong>
                                                                 @if (item.Status == true)
                                                                 {@Html.Raw("Active") }
