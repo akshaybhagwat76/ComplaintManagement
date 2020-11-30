@@ -26,6 +26,18 @@ namespace ComplaintManagement.Controllers
             return View();
 
         }
+        [HttpGet]
+        public ActionResult HistoryIndex(int id)
+        {
+            var lst = GetAllHistory(1, id);
+            ViewBag.name = id.ToString();
+            ViewBag.lstRole = JsonConvert.SerializeObject(lst);
+            var DataTableDetail = new HomeController().getDataTableDetail("Role", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+
+        }
         public ActionResult SearchRole(string search)
         {
             var originalList = GetAll(0);
@@ -76,6 +88,16 @@ namespace ComplaintManagement.Controllers
                 ViewBag.toDate = range.Split(',')[1];
             }
             return View("Index");
+        }
+        public ActionResult LoadHistoryRole(int currentPageIndex, int range = 0)
+        {
+            ViewBag.lstRoleHistory = JsonConvert.SerializeObject(GetAllHistory(currentPageIndex, range));
+            //if (!string.IsNullOrEmpty(range))
+            //{
+            //    ViewBag.startDate = range.Split(',')[0];
+            //    ViewBag.toDate = range.Split(',')[1];
+            //}
+            return View("HistoryIndex");
         }
         public dynamic GetAll(int currentPage, string range = "")
         {
@@ -249,7 +271,11 @@ namespace ComplaintManagement.Controllers
                                 List<string> subsbus = new List<string>();
                                 foreach (string SubSBUIdItem in array)
                                 {
+                                    if(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault()!= null)
+                                    {
                                     subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU);
+
+                                    }
                                 }
                                 row.SubSBU = string.Join(",", subsbus);
                             }
@@ -360,6 +386,306 @@ namespace ComplaintManagement.Controllers
 
             }
         }
+        public dynamic GetAllHistory(int currentPage, int range = 0)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
+            var lst = new RoleMasterRepoitory().GetAllHistory();
+            lstCount = lst.Count;
+            if (!string.IsNullOrEmpty(range.ToString()))
+            {
+                //string[] dates = range.Split(',');
+                //DateTime fromDate = Convert.ToDateTime(dates[0]);
+                //DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from Role in lst
+                       where Role.RoleId == range
+                       select Role).ToList();
+                lstCount = lst.Count;
+
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+
+                dynamic output = new List<dynamic>();
+
+
+                var lstUsers = new UserMastersRepository().GetAll();
+                List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
+
+
+                if (lst != null && lst.Count > 0)
+                {
+
+                    foreach (RoleMasterHistoryVM Rol in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (!string.IsNullOrEmpty(Rol.SubSBUId))
+                        {
+                            if (Rol.SubSBUId.Contains(","))
+                            {
+                                string[] array = Rol.SubSBUId.Split(',');
+                                List<string> subsbus = new List<string>();
+                                foreach (string SubSBUIdItem in array)
+                                {
+                                    if(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault() != null)
+                                    {
+                                    subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU);
+
+                                    }
+                                }
+                                row.SubSBU = string.Join(",", subsbus);
+                            }
+                            else
+                            {
+                                if(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SubSBUId)).FirstOrDefault()!= null)
+                                {
+                                    row.SubSBU = lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SubSBUId)).FirstOrDefault().SubSBU;
+
+                                }
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(Rol.SBUId))
+                        {
+                            if (Rol.SBUId.Contains(","))
+                            {
+                                string[] array = Rol.SBUId.Split(',');
+                                List<string> sbus = new List<string>();
+                                foreach (string SBUIdItem in array)
+                                {
+                                    if(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault()!=null)
+                                    {
+                                        sbus.Add(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault().SBU);
+
+                                    }
+                                }
+                                row.SBU = string.Join(",", sbus);
+                            }
+                            else
+                            {
+                                if(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault()!= null)
+                                {
+                                row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault().SBU;
+
+                                }
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(Rol.CompetencyId))
+                        {
+                            if (Rol.CompetencyId.Contains(","))
+                            {
+                                string[] array = Rol.CompetencyId.Split(',');
+                                List<string> CompetencyLst = new List<string>();
+                                foreach (string CompetencyItem in array)
+                                {
+                                    CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+                                }
+                                row.CompetencyName = string.Join(",", CompetencyLst);
+                            }
+                            else
+                            {
+                                row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault().CompetencyName;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(Rol.LOSId))
+                        {
+
+                            if (Rol.LOSId.Contains(","))
+                            {
+                                string[] array = Rol.LOSId.Split(',');
+                                List<string> LOSIdLst = new List<string>();
+                                foreach (string LOSItem in array)
+                                {
+                                    LOSIdLst.Add(lstLOS.Where(x => x.Id == Convert.ToInt32(LOSItem)).FirstOrDefault().LOSName);
+                                }
+                                row.LOS = string.Join(",", LOSIdLst);
+                            }
+                            else
+                            {
+                                row.LOS = lstLOS.Where(x => x.Id == Convert.ToInt32(Rol.LOSId)).FirstOrDefault().LOSName;
+                            }
+                        }
+
+                        if (Rol.UserId > 0)
+                        {
+                            row.UserName = lstUserMaster.FirstOrDefault(x => x.Id == Rol.UserId) != null ? lstUserMaster.FirstOrDefault(x => x.Id == Rol.UserId).EmployeeName : "";
+                        }
+                        row.Id = Rol.Id;
+
+                        row.Status = Rol.Status;
+                        row.UpdatedByName = Rol.UpdatedByName;
+                        row.CreatedByName = Rol.CreatedByName;
+                        row.ModifiedBy = Rol.ModifiedBy;
+                        row.CreatedBy = Rol.CreatedBy;
+                        row.UpdatedDate = Rol.UpdatedDate;
+                        row.CreatedDate = Rol.CreatedDate;
+
+                        output.Add(row);
+                    }
+                }
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return output;
+            }
+            else
+            {
+                dynamic output = new List<dynamic>();
+
+                lst = (from Role in lst
+                       select Role)
+           .OrderByDescending(Role => Role.Id)
+           .Skip((currentPage - 1) * maxRows)
+           .Take(maxRows).ToList();
+
+                var lstUsers = new UserMastersRepository().GetAll();
+
+                List<LOSMasterVM> lstLOS = new LOSMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
+                List<UserMasterVM> lstUserMaster = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
+
+
+                if (lst != null && lst.Count > 0)
+                {
+
+                    foreach (RoleMasterHistoryVM Rol in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (!string.IsNullOrEmpty(Rol.SubSBUId))
+                        {
+                            if (Rol.SubSBUId.Contains(","))
+                            {
+                                string[] array = Rol.SubSBUId.Split(',');
+                                List<string> subsbus = new List<string>();
+                                foreach (string SubSBUIdItem in array)
+                                {
+                                    subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU);
+                                }
+                                row.SubSBU = string.Join(",", subsbus);
+                            }
+                            else
+                            {
+                                row.SubSBU = lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SubSBUId)).FirstOrDefault().SubSBU;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(Rol.SBUId))
+                        {
+                            if (Rol.SBUId.Contains(","))
+                            {
+                                string[] array = Rol.SBUId.Split(',');
+                                List<string> sbus = new List<string>();
+                                foreach (string SBUIdItem in array)
+                                {
+                                    if (lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault() != null)
+                                    {
+                                        sbus.Add(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault().SBU);
+                                    }
+                                }
+                                row.SBU = string.Join(",", sbus);
+                            }
+                            else
+                            {
+                                if (lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault() != null)
+                                {
+                                    row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(Rol.SBUId)).FirstOrDefault().SBU;
+
+                                }
+
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(Rol.CompetencyId))
+                        {
+                            if (Rol.CompetencyId.Contains(","))
+                            {
+                                string[] array = Rol.CompetencyId.Split(',');
+                                List<string> CompetencyLst = new List<string>();
+                                foreach (string CompetencyItem in array)
+                                {
+                                    if (lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault() != null)
+                                    {
+                                        CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+                                    }
+                                }
+                                row.CompetencyName = string.Join(",", CompetencyLst);
+                            }
+                            else
+                            {
+                                if (lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault() != null)
+                                {
+                                    row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(Rol.CompetencyId)).FirstOrDefault().CompetencyName;
+
+                                }
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(Rol.LOSId))
+                        {
+
+                            if (Rol.LOSId.Contains(","))
+                            {
+                                string[] array = Rol.LOSId.Split(',');
+                                List<string> LOSIdLst = new List<string>();
+                                foreach (string LOSItem in array)
+                                {
+                                    if (!string.IsNullOrEmpty(LOSItem))
+                                    {
+                                        LOSIdLst.Add(lstLOS.Where(x => x.Id == Convert.ToInt32(LOSItem)).FirstOrDefault().LOSName);
+                                    }
+                                }
+                                if (LOSIdLst.Count > 0)
+                                {
+                                    row.LOS = string.Join(",", LOSIdLst);
+                                }
+                            }
+                            else
+                            {
+                                row.LOS = lstLOS.Where(x => x.Id == Convert.ToInt32(Rol.LOSId)).FirstOrDefault() != null ? lstLOS.Where(x => x.Id == Convert.ToInt32(Rol.LOSId)).FirstOrDefault().LOSName : String.Empty;
+                            }
+                        }
+
+                        if (Rol.UserId > 0)
+                        {
+                            row.UserName = lstUserMaster.FirstOrDefault(x => x.Id == Rol.UserId) != null ? lstUserMaster.FirstOrDefault(x => x.Id == Rol.UserId).EmployeeName : "";
+                        }
+                        row.Id = Rol.Id;
+                        row.UpdatedByName = Rol.UpdatedByName;
+                        row.CreatedByName = Rol.CreatedByName;
+                        row.ModifiedBy = Rol.ModifiedBy;
+                        row.CreatedBy = Rol.CreatedBy;
+                        row.UpdatedDate = Rol.UpdatedDate;
+                        row.CreatedDate = Rol.CreatedDate;
+                        row.Status = Rol.Status;
+
+                        output.Add(row);
+                    }
+                }
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+                return output;
+
+            }
+        }
+
 
         [HttpGet]
         public ActionResult GetRole(string range, int currentPage)

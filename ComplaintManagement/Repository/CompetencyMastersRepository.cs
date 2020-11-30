@@ -81,7 +81,7 @@ namespace ComplaintManagement.Repository
                                 if (CompetencyMasters_History != null) { CompetencyMasters_History.EntityState = Messages.Updated; CompetencyMasters_History.CompetencyId = Competency.Id; };
                                 db.CompetencyMasters_History.Add(CompetencyMasters_History);
                                 db.SaveChanges();
-
+                                dbContextTransaction.Commit();
                                 return Mapper.Map<CompetencyMaster, CompetencyMasterVM>(Competency);
 
                             }

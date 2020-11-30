@@ -83,7 +83,7 @@ namespace ComplaintManagement.Repository
                                 if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.DesignationId = Designation.Id; };
                                 db.DesignationMasters_History.Add(historyObj);
                                 db.SaveChanges();
-
+                                dbContextTransaction.Commit();
                                 return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
                             }
                         }

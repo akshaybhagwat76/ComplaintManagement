@@ -22,6 +22,16 @@ namespace ComplaintManagement.Controllers
             return View();
         }
         [HttpGet]
+        public ActionResult HistoryIndex(int id)
+        {
+            ViewBag.lstCompetencyHistory = GetAllHistories(1, id).ToList();
+            ViewBag.name = id.ToString();
+            var DataTableDetail = new HomeController().getDataTableDetail("Competency", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+        }
+        [HttpGet]
         public ActionResult searchCompetency(string search)
         {
             if (!string.IsNullOrEmpty(search))
@@ -56,6 +66,18 @@ namespace ComplaintManagement.Controllers
                 ViewBag.toDate = range.Split(',')[1];
             }
             return View("Index");
+        }
+        [HttpGet]
+        public ActionResult LoadHistoryCompetency(int currentPageIndex, int range =0)
+        {
+            ViewBag.name = range;
+            ViewBag.lstCompetencyHistory = GetAllHistories(currentPageIndex, range);
+            //if (!string.IsNullOrEmpty(range))
+            //{
+            //    ViewBag.startDate = range.Split(',')[0];
+            //    ViewBag.toDate = range.Split(',')[1];
+            //}
+            return View("HistoryIndex");
         }
 
         [HttpPost]
@@ -132,6 +154,52 @@ namespace ComplaintManagement.Controllers
                 return lst;
             }
         }
+        public List<CompetencyMasterHistoryVM> GetAllHistories(int currentPage, int range = 0)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
+            var lst = new CompetencyMastersRepository().GetAllHistory();
+            lstCount = lst.Count;
+            if (!string.IsNullOrEmpty(range.ToString()))
+            {
+                //string[] dates = range.Split(',');
+                //DateTime fromDate = Convert.ToDateTime(dates[0]);
+                //DateTime toDate = Convert.ToDateTime(dates[1]);
+
+                lst = (from Competency in lst
+                       where Competency.CompetencyId == range
+                       select Competency).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+            else
+            {
+                lst = (from Competency in lst
+                       select Competency)
+             .OrderByDescending(customer => customer.Id)
+             .Skip((currentPage - 1) * maxRows)
+             .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+        }
+
 
         [HttpGet]
         public ActionResult GetCompetency(string range, int currentPage)

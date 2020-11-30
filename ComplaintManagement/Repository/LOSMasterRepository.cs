@@ -77,7 +77,7 @@ namespace ComplaintManagement.Repository
                                 db.LOSMasters_History.Add(historyObj);
                                 db.SaveChanges();
 
-
+                                dbContextTransaction.Commit();
                                 return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
                             }
                         }
@@ -440,5 +440,6 @@ namespace ComplaintManagement.Repository
             }
             return count;
         }
+       
     }
 }

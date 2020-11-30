@@ -22,6 +22,16 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+        [HttpGet]
+        public ActionResult HistoryIndex(int id)
+        {
+            ViewBag.lstHistoryEntity = GetAllHistories(1, id).ToList();
+            ViewBag.name = id.ToString();
+            var DataTableDetail = new HomeController().getDataTableDetail("Entity", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+        }
         public ActionResult SearchEntity(string search)
         {
             if (!string.IsNullOrEmpty(search))
@@ -55,6 +65,18 @@ namespace ComplaintManagement.Controllers
                 ViewBag.toDate = range.Split(',')[1];
             }
             return View("Index");
+        }
+        [HttpGet]
+        public ActionResult LoadHistoryEntity(int currentPageIndex, int range = 0)
+        {
+            ViewBag.name = range;
+            ViewBag.lstHistoryEntity = GetAllHistories(currentPageIndex, range);
+            //if (!string.IsNullOrEmpty(range))
+            //{
+            //    ViewBag.startDate = range.Split(',')[0];
+            //    ViewBag.toDate = range.Split(',')[1];
+            //}
+            return View("HistoryIndex");
         }
         [HttpPost]
         public JsonResult CheckIfExist(EntityMasterVM data)
@@ -129,6 +151,51 @@ namespace ComplaintManagement.Controllers
                 return lst;
             }
         }
+        public List<EntityMasterHistoryVM> GetAllHistories(int currentPage, int range = 0)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
+            var lst = new EntityMasterRepository().GetAllHistory();
+            lstCount = lst.Count;
+            if (!string.IsNullOrEmpty(range.ToString()))
+            {
+                //string[] dates = range.Split(',');
+                //DateTime fromDate = Convert.ToDateTime(dates[0]);
+                //DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from Entity in lst
+                       where Entity.EntityId == range
+                       select Entity).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+            else
+            {
+                lst = (from Entity in lst
+                       select Entity)
+             .OrderByDescending(customer => customer.Id)
+             .Skip((currentPage - 1) * maxRows)
+             .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+        }
+
 
         [HttpGet]
         public ActionResult GetEntity(string range, int currentPage)

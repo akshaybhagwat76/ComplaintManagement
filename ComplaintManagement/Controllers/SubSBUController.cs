@@ -21,6 +21,16 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+        [HttpGet]
+        public ActionResult HistoryIndex(int id)
+        {
+            ViewBag.lstSubSBUHistory = GetAllHistories(1, id).ToList();
+            ViewBag.name = id.ToString();
+            var DataTableDetail = new HomeController().getDataTableDetail("SubSBU", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+        }
         public ActionResult searchSubSBU(string search)
         {
             if (!string.IsNullOrEmpty(search))
@@ -55,6 +65,17 @@ namespace ComplaintManagement.Controllers
             }
             return View("Index");
         }
+        [HttpGet]
+        public ActionResult LoadHistorySubSBU(int currentPageIndex, int range = 0)
+        {
+            ViewBag.lstSubSBUHistory = GetAllHistories(currentPageIndex, range);
+            //if (!string.IsNullOrEmpty(range))
+            //{
+            //    ViewBag.startDate = range.Split(',')[0];
+            //    ViewBag.toDate = range.Split(',')[1];
+            //}
+            return View("HistoryIndex");
+        }
         public List<SubSBUMasterVM> GetAll(int currentPage,string range = "")
         {
             int maxRows = 10; int lstCount = 0;
@@ -73,6 +94,51 @@ namespace ComplaintManagement.Controllers
                 DateTime toDate = Convert.ToDateTime(dates[1]);
                 lst = (from SubSBU in lst
                        where SubSBU.CreatedDate.Date >= fromDate.Date && SubSBU.CreatedDate.Date <= toDate.Date
+                       select SubSBU).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+            else
+            {
+                lst = (from SubSBU in lst
+                       select SubSBU)
+             .OrderByDescending(customer => customer.Id)
+             .Skip((currentPage - 1) * maxRows)
+             .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+        }
+        public List<SubSBUMasterHistoryVM> GetAllHistories(int currentPage, int range = 0)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+            var lst = new SubSBUMasterRepository().GetAllHistory();
+            lstCount = lst.Count;
+
+
+            if (!string.IsNullOrEmpty(range.ToString()))
+            {
+                //string[] dates = range.Split(',');
+                //DateTime fromDate = Convert.ToDateTime(dates[0]);
+                //DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from SubSBU in lst
+                       where SubSBU.SubSBUId == range
                        select SubSBU).ToList();
                 lstCount = lst.Count;
                 lst = (lst)

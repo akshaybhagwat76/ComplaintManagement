@@ -121,7 +121,13 @@ function PagerClick(index) {
     if (fromDate !== "" && toDate !== "") {
         range = fromDate + ',' + toDate;
     }
-    location.href = '/Designation/LoadDesignations?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+    if ($("#history").val() == undefined) {
+        location.href = '/Designation/LoadDesignations?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+
+    }
+    else {
+        location.href = '/Designation/LoadHistoryDesignations?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
+    }
 }
 
 // Import excel

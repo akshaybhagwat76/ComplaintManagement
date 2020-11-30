@@ -95,8 +95,15 @@ function filterGrid() {
         if ($("#hfCurrentPageIndex").val() == "") {
             $("#hfCurrentPageIndex").val("1");
         }
-        location.href = '/Role/GetRole?range=' + fromDate + ',' + toDate + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        if ($("#history").val() == undefined) {
+            location.href = '/Role/GetRole?range=' + fromDate + ',' + toDate + '&currentPage=' + $("#hfCurrentPageIndex").val();
+
+        }
+        else {
+            location.href = '/Role/LoadHistoryRole?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
+        }
     }
+
 }
 function PagerClick(index) {
     StartProcess();

@@ -122,7 +122,13 @@ function PagerClick(index) {
     if (fromDate !== "" && toDate !== "") {
         range = fromDate + ',' + toDate;
     }
-    location.href = '/Competency/LoadCompetency?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+    if ($("#history").val() == undefined) {
+        location.href = '/Competency/LoadCompetency?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+
+    }
+    else {
+        location.href = '/Competency/LoadHistoryCompetency?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
+    }
 }
 
 // Import excel

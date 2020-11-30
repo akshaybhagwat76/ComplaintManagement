@@ -25,6 +25,18 @@ namespace ComplaintManagement.Controllers
             return View();
 
         }
+        [HttpGet]
+        public ActionResult HistoryIndex(int id)
+        {
+            var lst = GetAllHistory(1, id);
+            ViewBag.name = id.ToString();
+            var DataTableDetail = new HomeController().getDataTableDetail("User", null);
+            ViewBag.lstUser = JsonConvert.SerializeObject(lst);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+
+        }
         public ActionResult SearchUser(string search)
         {
             var originalList = GetAll(0);
@@ -73,6 +85,17 @@ namespace ComplaintManagement.Controllers
                 ViewBag.toDate = range.Split(',')[1];
             }
             return View("Index");
+        }
+        [HttpGet]
+        public ActionResult LoadHistoryUserMasters(int currentPageIndex, int range = 0)
+        {
+            ViewBag.lstUserHistory = JsonConvert.SerializeObject(GetAllHistory(currentPageIndex, range));
+            //if (!string.IsNullOrEmpty(range))
+            //{
+            //    ViewBag.startDate = range.Split(',')[0];
+            //    ViewBag.toDate = range.Split(',')[1];
+            //}
+            return View("HistoryIndex");
         }
 
         public dynamic GetAll(int currentPage, string range = "")
@@ -240,6 +263,172 @@ namespace ComplaintManagement.Controllers
                 return output;
             }
         }
+        public dynamic GetAllHistory(int currentPage, int range = 0)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+            var lst = new UserMastersRepository().GetAllHistory().ToList();
+            lstCount = lst.Count;
+            if (!string.IsNullOrEmpty(range.ToString()))
+            {
+                //string[] dates = range.Split(',');
+                //DateTime fromDate = Convert.ToDateTime(dates[0]);
+                //DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from user in lst
+                       where user.UserMasterId == range
+                       select user).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+
+                dynamic output = new List<dynamic>();
+
+                #region Other logics
+                var lstSBU = new SBUMasterRepository().GetAll();
+                var lstSubSBU = new SubSBUMasterRepository().GetAll();
+                var lstLOS = new LOSMasterRepository().GetAll();
+                var lstCompetency = new CompetencyMastersRepository().GetAll();
+                var lstRegion = new RegionMasterRepository().GetAll();
+                var lstDesignation = new DesignationMasterRepository().GetAll();
+                var LstCompany = new EntityMasterRepository().GetAll();
+                if (lst != null && lst.Count > 0)
+                {
+                    foreach (UserMasterHistoryVM com in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (com.SBUId > 0)
+                        {
+                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId) != null ? lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU : "";
+                        }
+                        if (com.SubSBUId > 0)
+                        {
+
+                            row.SubSBU = lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId) != null ? lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId).SubSBU : "";
+                        }
+                        if (com.LOSId > 0)
+                        {
+                            row.LOS = lstLOS.FirstOrDefault(x => x.Id == com.LOSId) != null ? lstLOS.FirstOrDefault(x => x.Id == com.LOSId).LOSName : "";
+                        }
+                        if (com.CompentencyId > 0)
+                        {
+                            row.Competency = lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId) != null ? lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId).CompetencyName : "";
+                        }
+                        if (com.RegionId > 0)
+                        {
+                            row.Region = lstRegion.FirstOrDefault(x => x.Id == com.RegionId) != null ? lstRegion.FirstOrDefault(x => x.Id == com.RegionId).Region : "";
+                        }
+                        if (com.BusinessTitle > 0)
+                        {
+                            row.BusinessTitle = lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle) != null ? lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle).Designation : "";
+                        }
+                        if (com.Company > 0)
+                        {
+                            row.Company = LstCompany.FirstOrDefault(x => x.Id == com.Company) != null ? LstCompany.FirstOrDefault(x => x.Id == com.Company).EntityName : "";
+                        }
+                        row.Id = com.Id;
+                        row.EmployeeName = com.EmployeeName;
+                        row.Status = com.Status;
+                        row.TimeType = com.TimeType;
+                        row.Manager = com.Manager;
+                        row.CreatedByName = com.CreatedByName;
+                        row.UpdatedByName = com.UpdatedByName;
+
+                        row.UpdatedDate = com.UpdatedDate; row.CreatedDate = com.CreatedDate;
+
+                        output.Add(row);
+                    }
+                }
+
+                #endregion
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return output;
+            }
+            else
+            {
+
+                dynamic output = new List<dynamic>();
+
+                lst = (from user in lst
+                       select user)
+           .OrderByDescending(user => user.Id)
+           .Skip((currentPage - 1) * maxRows)
+           .Take(maxRows).ToList();
+
+                #region Other joining logics
+                var lstSBU = new SBUMasterRepository().GetAll();
+                var lstSubSBU = new SubSBUMasterRepository().GetAll();
+                var lstLOS = new LOSMasterRepository().GetAll();
+                var lstCompetency = new CompetencyMastersRepository().GetAll();
+                var lstRegion = new RegionMasterRepository().GetAll();
+                var lstDesignation = new DesignationMasterRepository().GetAll();
+                var LstCompany = new EntityMasterRepository().GetAll();
+                if (lst != null && lst.Count > 0)
+                {
+                    foreach (UserMasterHistoryVM com in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (com.SBUId > 0)
+                        {
+                            row.SBU = lstSBU.FirstOrDefault(x => x.Id == com.SBUId) != null ? lstSBU.FirstOrDefault(x => x.Id == com.SBUId).SBU : "";
+
+                        }
+                        if (com.SubSBUId > 0)
+                        {
+
+                            row.SubSBU = lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId) != null ? lstSubSBU.FirstOrDefault(x => x.Id == com.SubSBUId).SubSBU : "";
+                        }
+                        if (com.LOSId > 0)
+                        {
+                            row.LOS = lstLOS.FirstOrDefault(x => x.Id == com.LOSId) != null ? lstLOS.FirstOrDefault(x => x.Id == com.LOSId).LOSName : "";
+                        }
+                        if (com.CompentencyId > 0)
+                        {
+                            row.Competency = lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId) != null ? lstCompetency.FirstOrDefault(x => x.Id == com.CompentencyId).CompetencyName : "";
+                        }
+                        if (com.RegionId > 0)
+                        {
+                            row.Region = lstRegion.FirstOrDefault(x => x.Id == com.RegionId) != null ? lstRegion.FirstOrDefault(x => x.Id == com.RegionId).Region : "";
+                        }
+                        if (com.BusinessTitle > 0)
+                        {
+                            row.BusinessTitle = lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle) != null ? lstDesignation.FirstOrDefault(x => x.Id == com.BusinessTitle).Designation : "";
+                        }
+                        if (com.Company > 0)
+                        {
+                            row.Company = LstCompany.FirstOrDefault(x => x.Id == com.Company) != null ? LstCompany.FirstOrDefault(x => x.Id == com.Company).EntityName : "";
+                        }
+                        row.Id = com.Id;
+                        row.EmployeeName = com.EmployeeName;
+                        row.Status = com.Status;
+                        row.TimeType = com.TimeType;
+                        row.Manager = com.Manager;
+                        row.UpdatedDate = com.UpdatedDate; row.CreatedDate = com.CreatedDate;
+                        row.CreatedByName = com.CreatedByName;
+                        row.UpdatedByName = com.UpdatedByName;
+                        output.Add(row);
+                    }
+                }
+                #endregion
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+                return output;
+            }
+        }
+
 
         [HttpGet]
         public ActionResult GetUsers(string range, int currentPage)

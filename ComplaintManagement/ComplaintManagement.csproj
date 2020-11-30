@@ -2336,6 +2336,16 @@
     <Content Include="Views\Category\HistoryIndex.cshtml" />
     <Content Include="Views\Committee\HistoryIndex.cshtml" />
     <Content Include="Views\SubCategory\HistoryIndex.cshtml" />
+    <Content Include="Views\SBU\HistoryIndex.cshtml" />
+    <Content Include="Views\SubSBU\HistoryIndex.cshtml" />
+    <Content Include="Views\Competency\HistoryIndex.cshtml" />
+    <Content Include="Views\Designation\HistoryIndex.cshtml" />
+    <Content Include="Views\Entity\HistoryIndex.cshtml" />
+    <Content Include="Views\Location\HistoryIndex.cshtml" />
+    <Content Include="Views\Region\HistoryIndex.cshtml" />
+    <Content Include="Views\LOS\HistoryIndex.cshtml" />
+    <Content Include="Views\Role\HistoryIndex.cshtml" />
+    <Content Include="Views\UserMaster\HistoryIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

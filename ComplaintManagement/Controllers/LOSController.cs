@@ -23,6 +23,16 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
+        public ActionResult HistoryIndex(int id)
+        {
+            var lst = GetAllHistory(1, id);
+            ViewBag.name = id.ToString();
+            ViewBag.lstHistoryLOS = JsonConvert.SerializeObject(lst);
+            var DataTableDetail = new HomeController().getDataTableDetail("LOS", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+        }
         public ActionResult SearchLOS(string search)
         {
             var originalList = GetAll(0);
@@ -69,6 +79,17 @@ namespace ComplaintManagement.Controllers
                 ViewBag.toDate = range.Split(',')[1];
             }
             return View("Index");
+        }
+        [HttpGet]
+        public ActionResult LoadHistoryLOS(int currentPageIndex, int range = 0)
+        {
+            ViewBag.lstHistoryLOS = JsonConvert.SerializeObject(GetAllHistory(currentPageIndex, range));
+            //if (!string.IsNullOrEmpty(range))
+            //{
+            //    ViewBag.startDate = range.Split(',')[0];
+            //    ViewBag.toDate = range.Split(',')[1];
+            //}
+            return View("HistoryIndex");
         }
         public dynamic GetAll(int currentPage, string range = "")
         {
@@ -261,6 +282,221 @@ namespace ComplaintManagement.Controllers
                             else
                             {
                                 row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault()!=null? lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault().CompetencyName:string.Empty;
+                            }
+                        }
+                        row.Id = los.Id;
+                        row.LOSName = los.LOSName;
+                        row.UpdatedByName = los.UpdatedByName;
+                        row.CreatedByName = los.CreatedByName;
+                        row.ModifiedBy = los.ModifiedBy;
+                        row.CreatedBy = los.CreatedBy;
+                        row.UpdatedDate = los.UpdatedDate;
+                        row.CreatedDate = los.CreatedDate;
+                        row.Status = los.Status;
+
+                        output.Add(row);
+                    }
+                }
+                #endregion
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+                return output;
+            }
+        }
+        public dynamic GetAllHistory(int currentPage, int range = 0)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
+            var lst = new LOSMasterRepository().GetAllHistory();
+            lstCount = lst.Count;
+            if (!string.IsNullOrEmpty(range.ToString()))
+            {
+                //string[] dates = range.Split(',');
+                //DateTime fromDate = Convert.ToDateTime(dates[0]);
+                //DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from LOS in lst
+                       where LOS.LOSId == range
+                       select LOS).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                dynamic output = new List<dynamic>();
+                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
+
+
+                #region Other joining logics
+                if (lst != null && lst.Count > 0)
+                {
+
+                    foreach (LOSMasterHistoryVM los in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (!string.IsNullOrEmpty(los.SubSBUId))
+                        {
+                            if (los.SubSBUId.Contains(","))
+                            {
+                                string[] array = los.SubSBUId.Split(',');
+                                List<string> subsbus = new List<string>();
+                                foreach (string SubSBUIdItem in array)
+                                {
+                                    subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU);
+                                }
+                                row.SubSBU = string.Join(",", subsbus);
+                            }
+                            else
+                            {
+                                row.SubSBU = lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SubSBUId)).FirstOrDefault().SubSBU;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(los.SBUId))
+                        {
+                            if (los.SBUId.Contains(","))
+                            {
+                                string[] array = los.SBUId.Split(',');
+                                List<string> sbus = new List<string>();
+                                foreach (string SBUIdItem in array)
+                                {
+                                    sbus.Add(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault().SBU);
+                                }
+                                row.SBU = string.Join(",", sbus);
+                            }
+                            else
+                            {
+                                row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SBUId)).FirstOrDefault().SBU;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(los.CompetencyId))
+                        {
+                            if (los.CompetencyId.Contains(","))
+                            {
+                                string[] array = los.CompetencyId.Split(',');
+                                List<string> CompetencyLst = new List<string>();
+                                foreach (string CompetencyItem in array)
+                                {
+                                    CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+                                }
+                                row.CompetencyName = string.Join(",", CompetencyLst);
+                            }
+                            else
+                            {
+                                row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault().CompetencyName;
+                            }
+                        }
+                        row.Id = los.Id;
+                        row.LOSName = los.LOSName;
+                        row.UpdatedByName = los.UpdatedByName;
+                        row.CreatedByName = los.CreatedByName;
+                        row.ModifiedBy = los.ModifiedBy;
+                        row.CreatedBy = los.CreatedBy;
+                        row.UpdatedDate = los.UpdatedDate;
+                        row.CreatedDate = los.CreatedDate;
+                        row.Status = los.Status;
+
+                        output.Add(row);
+                    }
+                }
+                #endregion
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return output;
+            }
+            else
+            {
+                dynamic output = new List<dynamic>();
+
+                lst = (from LOS in lst
+                       select LOS)
+           .OrderByDescending(LOS => LOS.Id)
+           .Skip((currentPage - 1) * maxRows)
+           .Take(maxRows).ToList();
+
+                List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
+                List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
+
+
+
+                #region Other logicals joining
+                if (lst != null && lst.Count > 0)
+                {
+
+                    foreach (LOSMasterHistoryVM los in lst)
+                    {
+                        dynamic row = new ExpandoObject();
+                        if (!string.IsNullOrEmpty(los.SubSBUId))
+                        {
+                            if (los.SubSBUId.Contains(","))
+                            {
+                                string[] array = los.SubSBUId.Split(',');
+                                List<string> subsbus = new List<string>();
+                                foreach (string SubSBUIdItem in array)
+                                {
+                                    if (lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault() != null)
+                                    { subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU); }
+                                }
+                                row.SubSBU = string.Join(",", subsbus);
+                            }
+                            else
+                            {
+                                row.SubSBU = lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SubSBUId)).FirstOrDefault() != null ? lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SubSBUId)).FirstOrDefault().SubSBU : string.Empty;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(los.SBUId))
+                        {
+                            if (los.SBUId.Contains(","))
+                            {
+                                string[] array = los.SBUId.Split(',');
+                                List<string> sbus = new List<string>();
+                                foreach (string SBUIdItem in array)
+                                {
+                                    if (lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault() != null)
+                                    {
+                                        sbus.Add(lstSBUMaster.Where(x => x.Id == Convert.ToInt32(SBUIdItem)).FirstOrDefault().SBU);
+                                    }
+                                }
+                                row.SBU = string.Join(",", sbus);
+                            }
+                            else
+                            {
+                                row.SBU = lstSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SBUId)).FirstOrDefault() != null ? lstSBUMaster.Where(x => x.Id == Convert.ToInt32(los.SBUId)).FirstOrDefault().SBU : string.Empty;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(los.CompetencyId))
+                        {
+                            if (los.CompetencyId.Contains(","))
+                            {
+                                string[] array = los.CompetencyId.Split(',');
+                                List<string> CompetencyLst = new List<string>();
+                                foreach (string CompetencyItem in array)
+                                {
+                                    if (lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault() != null)
+                                    {
+                                        CompetencyLst.Add(lstCompetency.Where(x => x.Id == Convert.ToInt32(CompetencyItem)).FirstOrDefault().CompetencyName);
+                                    }
+                                }
+                                row.CompetencyName = string.Join(",", CompetencyLst);
+                            }
+                            else
+                            {
+                                row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault() != null ? lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault().CompetencyName : string.Empty;
                             }
                         }
                         row.Id = los.Id;

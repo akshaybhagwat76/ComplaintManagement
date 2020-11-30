@@ -23,11 +23,12 @@
 }
 @{
     ViewBag.Title = "Index";
-    dynamic data = Json.Decode(ViewBag.lstUser);
+    dynamic data = Json.Decode(ViewBag.lstUserHistory);
 }
 
 <!-- Page Wrapper -->
 <div id="wrapper">
+    @Html.Hidden("history", (object)ViewBag.name)
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -43,12 +44,7 @@
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <form class="d-none d-sm-inline-block form-inline my-3 mw-100 navbar-search">
-                            <div class="input-group">
-                                <input type="text" onkeypress="return searchKeyPress(event);" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                <i class="fas fa-search fa-sm" id="searchIcon"></i>
-                            </div>
-                        </form>
+                        
                     </li>
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                     <li class="nav-item dropdown no-arrow d-sm-none">
@@ -151,35 +147,7 @@
                 <div class="page-title">
                     <h2 class="text-black">User Master</h2>
                 </div>
-                <div class="card mb-4 rounded-0 border-0">
-                    <div class="card-body">
-                        <div class="row justify-content-between">
-                            <div class="col-md-8">
-                                <ul class="nav">
-                                    <li class="nav-item mr-3">
-                                        <input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
-                                    </li>
-                                    <li class="nav-item mr-3">
-                                        <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
-                                    </li>
-                                    <li class="nav-item">
-                                        <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-md-2">
-                                <ul class="nav">
-                                    <li class="nav-item mr-4">
-                                        <a href="/UserMaster/Create" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 <!-- Tab Bar -->
                 <div class="user-list">
                     <div class="row">
@@ -188,7 +156,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table f-14"  width="100%"id="myTable">
+                                        <table class="table f-14" width="100%" id="myTable">
                                             <thead>
                                                 <tr>
                                                     <td width="12%">Employee Name</td>
@@ -197,6 +165,7 @@
                                                     @*<td>Modified Date</td>*@
                                                     @* <td>Modified By</td>*@
                                                     <td>Status</td>
+                                                    <td >Created Date</td>
                                                     <td>Time Type</td>
                                                     <td>Business Title</td>
                                                     <td>Company</td>
@@ -212,58 +181,59 @@
                                             <tbody>
                                                 @foreach (var item in data)
                                                 {
-                                                    <tr>
-                                                        <td class="text-black text-center pl-2"><strong>@item.EmployeeName</strong></td>
-                                                        <td class="text-black text-center pl-2">
-                                                            <strong>
-                                                                @if (item.CreatedDate != null)
-                                                                {
-                                                                    var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-                                                                    @Html.Raw(DateTime
-                                                                .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-                                                                .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-                                                                }
-                                                            </strong>
-                                                        </td>
-                                                        @*<td class="text-black text-center"><strong>@item.CreatedByName</strong></td>*@
-                                                        @*<td class="text-black text-center">
-                                                                <strong>
-                                                                    @if (item.UpdatedDate != null)
-                                                                    {
-                                                                        @Html.Raw(String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T"))))
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        @Html.Raw(Messages.NotAvailable.ToString())
-                                                                    }
-                                                                </strong>
-                                                            </td>*@
-                                                        @*<td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>*@
-                                                        <td class="text-black text-center pl-2">
-                                                            <strong>
-                                                                @if (item.Status == true)
-                                                                {@Html.Raw("Active") }
-                                                            else
-                                                            { @Html.Raw("Inactive")}
-                                                            </strong>
-                                                        </td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.TimeType</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.BusinessTitle</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.Company</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.LOS</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.SBU</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.SubSBU</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.Competency</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.Region</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.Manager</strong></td>
+                                                <tr>
+                                                    <td class="text-black text-center pl-2"><strong>@item.EmployeeName</strong></td>
+                                                    <td class="text-black text-center pl-2">
+                                                        <strong>
+                                                            @if (item.CreatedDate != null)
+                                                            {
+                                                                var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+                                                                @Html.Raw(DateTime
+                                                            .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+                                                            .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                                            }
+                                                        </strong>
+                                                    </td>
+                                                    @*<td class="text-black text-center"><strong>@item.CreatedByName</strong></td>*@
+                                                    @*<td class="text-black text-center">
+            <strong>
+                @if (item.UpdatedDate != null)
+                {
+                    @Html.Raw(String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T"))))
+                }
+                else
+                {
+                    @Html.Raw(Messages.NotAvailable.ToString())
+                }
+            </strong>
+        </td>*@
+                                                    @*<td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>*@
+                                                    <td class="text-black text-center pl-2">
+                                                        <strong>
+                                                            @if (item.Status == true)
+                                                            {@Html.Raw("Active") }
+                                                        else
+                                                        { @Html.Raw("Inactive")}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center pl-2"><strong>@item.CreatedByName</strong></td>
 
-                                                        <td class="text-center" style="width: 90px;">
-                                                            <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                            <a href="javascript:void(0)" onclick="deleteUser('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                            <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                            <a href="/UserMaster/HistoryIndex?id=@item.Id" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
-                                                        </td>
-                                                    </tr>
+                                                    <td class="text-black text-center pl-2"><strong>@item.TimeType</strong></td>
+                                                    <td class="text-black text-center pl-2"><strong>@item.BusinessTitle</strong></td>
+                                                    <td class="text-black text-center pl-2"><strong>@item.Company</strong></td>
+                                                    <td class="text-black text-center pl-2"><strong>@item.LOS</strong></td>
+                                                    <td class="text-black text-center pl-2"><strong>@item.SBU</strong></td>
+                                                    <td class="text-black text-center pl-2"><strong>@item.SubSBU</strong></td>
+                                                    <td class="text-black text-center pl-2"><strong>@item.Competency</strong></td>
+                                                    <td class="text-black text-center pl-2"><strong>@item.Region</strong></td>
+                                                    <td class="text-black text-center pl-2"><strong>@item.Manager</strong></td>
+
+                                                    <td class="text-center" style="width: 90px;">
+                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="deleteUser('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                    </td>
+                                                </tr>
                                                 }
                                             </tbody>
                                         </table>

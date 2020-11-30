@@ -80,7 +80,7 @@ namespace ComplaintManagement.Repository
                                 if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.SBUId = SBU.Id; };
                                 db.SBUMasters_History.Add(historyObj);
                                 db.SaveChanges();
-
+                                dbContextTransaction.Commit();
                                 return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
                             }
                         }

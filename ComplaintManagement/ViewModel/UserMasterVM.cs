@@ -54,6 +54,8 @@ namespace ComplaintManagement.ViewModel
         public int ModifiedBy { get; set; }
         public string CreatedByName { get; set; }
         public string UpdatedByName { get; set; }
+        public int UserMasterId { get; set; }
+
         public System.DateTime CreatedDate { get; set; }
 
     }

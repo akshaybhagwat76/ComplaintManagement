@@ -80,7 +80,7 @@ namespace ComplaintManagement.Repository
                                 if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.LocationId = Location.Id; };
                                 db.LocationMasters_History.Add(historyObj);
                                 db.SaveChanges();
-
+                                dbContextTransaction.Commit();
                                 return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
 
                             }
