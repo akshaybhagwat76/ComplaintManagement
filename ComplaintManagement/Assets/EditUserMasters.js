@@ -22,11 +22,14 @@ function submitForm() {
         }
     });
     var email = $("#WorkEmail").val().trim();
-    if (email && !isEmail(email)) {
+    if (email === "") {
         $("#WorkEmail").addClass("adderror");
         retval = false;
     }
-
+    if (email  && !isEmail(email)) {
+        $("#WorkEmail").addClass("adderror");
+        retval = false;
+    }
     var mobile = $("#MobileNo").val();
     if ($("#MobileNo").val() != "" && mobile.length < 10) {
         $("#MobileNo").addClass("adderror");
@@ -266,7 +269,6 @@ function GetLOSSettings() {
             data: { UserVM: data },
             success: function (response) {
                 if (response != null) {
-                    console.log(response);
                     var data = response.data;
                     var dataOfCompentency = JSON.parse($("#hdnCompentencyList").val());
                     var dataOfsubList = JSON.parse($("#hdnSBUList").val());

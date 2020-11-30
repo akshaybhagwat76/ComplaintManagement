@@ -191,6 +191,14 @@
                                                     { @Html.Raw(Messages.Inactive.ToString())}
                                                     </strong>
                                                 </td>
+                                                <td class="text-black text-center pl-2">
+                                                    <strong>
+                                                        @if (item.Status == true)
+                                                        {@Html.Raw("Active") }
+                                                    else
+                                                    { @Html.Raw("Inactive")}
+                                                    </strong>
+                                                </td>
 
                                             </tr>
                                             }

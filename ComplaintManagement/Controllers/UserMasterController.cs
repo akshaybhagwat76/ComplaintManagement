@@ -31,7 +31,7 @@ namespace ComplaintManagement.Controllers
             var lst = GetAllHistory(1, id);
             ViewBag.name = id.ToString();
             var DataTableDetail = new HomeController().getDataTableDetail("User", null);
-            ViewBag.lstUser = JsonConvert.SerializeObject(lst);
+            ViewBag.lstUserHistory = JsonConvert.SerializeObject(lst);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
@@ -338,6 +338,7 @@ namespace ComplaintManagement.Controllers
                         row.Manager = com.Manager;
                         row.CreatedByName = com.CreatedByName;
                         row.UpdatedByName = com.UpdatedByName;
+                        row.EntityState = com.EntityState;
 
                         row.UpdatedDate = com.UpdatedDate; row.CreatedDate = com.CreatedDate;
 
@@ -411,6 +412,7 @@ namespace ComplaintManagement.Controllers
                         row.EmployeeName = com.EmployeeName;
                         row.Status = com.Status;
                         row.TimeType = com.TimeType;
+                        row.EntityState = com.EntityState;
                         row.Manager = com.Manager;
                         row.UpdatedDate = com.UpdatedDate; row.CreatedDate = com.CreatedDate;
                         row.CreatedByName = com.CreatedByName;

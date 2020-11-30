@@ -141,7 +141,7 @@
         <div class="container-fluid">
             <div class="preloader"></div>
             <div class="page-title">
-                <h2 class="text-black">Entity Master</h2>
+                <h2 class="text-black">Entity History</h2>
             </div>
 
             <!-- Tab Bar -->
@@ -162,7 +162,6 @@
                                                 <td class="text-center">Modified Date</td>
                                                 <td class="text-center">Modified By</td>
                                                 <td class="text-center">Status</td>
-                                                <td class="text-center">Action</td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -194,12 +193,6 @@
                                                         else
                                                         { @Html.Raw("Inactive")}
                                                         </strong>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                        <a href="javascript:void(0)" onclick="deleteEntity('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                        <a href="/Entity/HistoryIndex?id=@item.Id" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
                                                     </td>
                                                 </tr>
                                             }

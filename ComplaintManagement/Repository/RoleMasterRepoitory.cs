@@ -56,6 +56,7 @@ namespace ComplaintManagement.Repository
                                 if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.RoleId = Role.Id; };
                                 db.RoleMasters_History.Add(historyObj);
                                 db.SaveChanges();
+                                dbContextTransaction.Commit();
 
                                 return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
                             }

@@ -293,6 +293,7 @@ namespace ComplaintManagement.Controllers
                         row.UpdatedDate = los.UpdatedDate;
                         row.CreatedDate = los.CreatedDate;
                         row.Status = los.Status;
+      
 
                         output.Add(row);
                     }
@@ -405,6 +406,7 @@ namespace ComplaintManagement.Controllers
                         row.UpdatedDate = los.UpdatedDate;
                         row.CreatedDate = los.CreatedDate;
                         row.Status = los.Status;
+                        row.EntityState = los.EntityState;
 
                         output.Add(row);
                     }
@@ -508,6 +510,7 @@ namespace ComplaintManagement.Controllers
                         row.UpdatedDate = los.UpdatedDate;
                         row.CreatedDate = los.CreatedDate;
                         row.Status = los.Status;
+                        row.EntityState = los.EntityState;
 
                         output.Add(row);
                     }
