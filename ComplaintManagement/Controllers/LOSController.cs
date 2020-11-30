@@ -3,9 +3,11 @@ using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -656,6 +658,175 @@ namespace ComplaintManagement.Controllers
                 ErrorSignal.FromCurrentContext().Raise(ex);
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
+        }
+
+        public ActionResult ExportData()
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage();
+
+
+                var ws = package.Workbook.Worksheets.Add(Messages.LOS);
+                //Headers
+                ws.Cells["A1"].Value = Messages.LOS;
+                ws.Cells["B1"].Value = Messages.SBU;
+                ws.Cells["C1"].Value = Messages.SubSBU;
+                ws.Cells["D1"].Value = Messages.Competency;
+                ws.Cells["E1"].Value = Messages.CreatedDate;
+                ws.Cells["F1"].Value = Messages.CreatedBy;
+                ws.Cells["G1"].Value = Messages.ModifiedDate;
+                ws.Cells["H1"].Value = Messages.ModifiedBy;
+                ws.Cells["I1"].Value = Messages.Status;
+
+
+                var rowNumber = 1;
+                ws.Cells[rowNumber, 1].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 1].Value = Messages.LOS;
+
+                ws.Cells[rowNumber, 2].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 2].Value = Messages.SBU;
+
+                ws.Cells[rowNumber, 3].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 3].Value = Messages.SubSBU;
+
+                ws.Cells[rowNumber, 4].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 4].Value = Messages.Competency;
+
+                ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 5].Value = Messages.CreatedDate;
+
+                ws.Cells[rowNumber, 6].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 6].Value = Messages.CreatedBy;
+
+                ws.Cells[rowNumber, 7].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 7].Value = Messages.ModifiedDate;
+
+                ws.Cells[rowNumber, 8].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 8].Value = Messages.ModifiedBy;
+                                    
+                ws.Cells[rowNumber, 9].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 9].Value = Messages.Status;
+                foreach (var log in  GetAll(0))
+                {
+                    rowNumber++;
+
+                    ws.Cells[rowNumber, 1].Value = log.LOSName;
+                    ws.Cells[rowNumber, 2].Value = log.SBU;
+                    ws.Cells[rowNumber, 3].Value = log.SubSBU;
+                    ws.Cells[rowNumber, 4].Value = log.CompetencyName;
+                    ws.Cells[rowNumber, 5].Value = log.CreatedDate != null? log.CreatedDate.ToString("dd/MM/yyyy"):Messages.NotAvailable;
+                    ws.Cells[rowNumber, 6].Value = log.CreatedByName;
+                    ws.Cells[rowNumber, 7].Value = log.UpdatedDate != null ? log.UpdatedDate.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 8].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 9].Value = log.Status ? Messages.Active : Messages.Inactive;
+
+                }
+
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = Messages.LOS + Messages.XLSX;
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+                return File(stream, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
+        }
+
+        public ActionResult ExportDataHistory(int id)
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage();
+
+
+                var ws = package.Workbook.Worksheets.Add(Messages.LOSHistory);
+                //Headers
+                ws.Cells["A1"].Value = Messages.LOS;
+                ws.Cells["B1"].Value = Messages.SBU;
+                ws.Cells["C1"].Value = Messages.SubSBU;
+                ws.Cells["D1"].Value = Messages.Competency;
+                ws.Cells["E1"].Value = Messages.CreatedDate;
+                ws.Cells["F1"].Value = Messages.CreatedBy;
+                ws.Cells["G1"].Value = Messages.ModifiedDate;
+                ws.Cells["H1"].Value = Messages.ModifiedBy;
+                ws.Cells["I1"].Value = Messages.Status;
+                ws.Cells["J1"].Value = Messages.EntityState;
+
+
+                var rowNumber = 1;
+                ws.Cells[rowNumber, 1].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 1].Value = Messages.LOS;
+
+                ws.Cells[rowNumber, 2].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 2].Value = Messages.SBU;
+
+                ws.Cells[rowNumber, 3].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 3].Value = Messages.SubSBU;
+
+                ws.Cells[rowNumber, 4].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 4].Value = Messages.Competency;
+
+                ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 5].Value = Messages.CreatedDate;
+
+                ws.Cells[rowNumber, 6].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 6].Value = Messages.CreatedBy;
+
+                ws.Cells[rowNumber, 7].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 7].Value = Messages.ModifiedDate;
+
+                ws.Cells[rowNumber, 8].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 8].Value = Messages.ModifiedBy;
+
+                ws.Cells[rowNumber, 9].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 9].Value = Messages.Status;
+
+                ws.Cells[rowNumber, 10].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 10].Value = Messages.EntityState;
+                var lst = GetAllHistory(0,id);
+                foreach (var log in lst)
+                {
+                    rowNumber++;
+
+                    ws.Cells[rowNumber, 1].Value = log.LOSName;
+                    ws.Cells[rowNumber, 2].Value = log.SBU;
+                    ws.Cells[rowNumber, 3].Value = log.SubSBU;
+                    ws.Cells[rowNumber, 4].Value = log.CompetencyName;
+                    ws.Cells[rowNumber, 5].Value = log.CreatedDate != null ? log.CreatedDate.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 6].Value = log.CreatedByName;
+                    ws.Cells[rowNumber, 7].Value = log.UpdatedDate != null ? log.UpdatedDate.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 8].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 9].Value = log.Status ? Messages.Active : Messages.Inactive;
+                    ws.Cells[rowNumber, 10].Value =log.EntityState;
+                }
+
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = Messages.LOSHistory + Messages.XLSX;
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+                return File(stream, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
         }
     }
 }

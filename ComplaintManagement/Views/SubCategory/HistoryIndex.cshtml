@@ -119,6 +119,19 @@
                 <h2 class="text-black">Sub Category History</h2>
             </div>
 
+            <div class="card mb-4 rounded-0 border-0">
+                <div class="card-body">
+                    <div class="row justify-content-between">
+                        <div class="col-md-8">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "SubCategory", new {id = ViewBag.name})'"><i class="fas fa-file-excel"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Tab Bar -->
             <div class="user-list">
                 <div class="row">

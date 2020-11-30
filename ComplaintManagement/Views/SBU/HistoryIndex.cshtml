@@ -150,7 +150,19 @@
             <div class="page-title">
                 <h2 class="text-black">SBU History</h2>
             </div>
-            
+            <div class="card mb-4 rounded-0 border-0">
+                <div class="card-body">
+                    <div class="row justify-content-between">
+                        <div class="col-md-8">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "SBU", new {id = ViewBag.name})'"><i class="fas fa-file-excel"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Tab Bar -->
             <div class="user-list">
                 <div class="row">
@@ -175,33 +187,33 @@
 
                                             @foreach (var item in ViewBag.lstSBUHistory)
                                             {
-                                            <tr>
-                                                <td class="text-black text-center"><strong>@item.SBU</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
-                                                <td class="text-black text-center"><strong>@item.EntityState</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.UpdatedDate != null)
-                                                        {
-                                                            @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
-                                                        }
+                                                <tr>
+                                                    <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.EntityState</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.UpdatedDate != null)
+                                                            {
+                                                                @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Raw(Messages.NotAvailable.ToString())
+                                                            }
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.Status == true)
+                                                            {@Html.Raw("Active") }
                                                         else
-                                                        {
-                                                            @Html.Raw(Messages.NotAvailable.ToString())
-                                                        }
-                                                    </strong>
-                                                </td>
-                                                <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.Status == true)
-                                                        {@Html.Raw("Active") }
-                                                    else
-                                                    { @Html.Raw("Inactive")}
-                                                    </strong>
-                                                </td>
-                                            </tr>
+                                                        { @Html.Raw("Inactive")}
+                                                        </strong>
+                                                    </td>
+                                                </tr>
                                             }
                                         </tbody>
                                     </table>

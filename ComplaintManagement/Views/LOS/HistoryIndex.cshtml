@@ -141,7 +141,20 @@
             <div class="page-title">
                 <h2 class="text-black">LOS History</h2>
             </div>
-            
+
+            <div class="card mb-4 rounded-0 border-0">
+                <div class="card-body">
+                    <div class="row justify-content-between">
+                        <div class="col-md-8">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "LOS", new {id = ViewBag.name})'"><i class="fas fa-file-excel"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Tab Bar -->
             <div class="user-list">
                 <div class="row">
@@ -168,53 +181,53 @@
                                         <tbody>
                                             @foreach (var item in data)
                                             {
-                                            <tr>
-                                                <td class="text-black text-center"><strong>@item.LOSName</strong></td>
-                                                <td class="text-black text-center"><strong>@item.SBU</strong></td>
-                                                <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CompetencyName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.CreatedDate != null)
-                                                        {
-                                                            var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-                                                            @Html.Raw(DateTime
-                                                        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-                                                        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-                                                        }
-                                                    </strong>
-                                                </td>
-                                                <td class="text-black text-center"><strong>@item.EntityState</strong></td>
+                                                <tr>
+                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CompetencyName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.CreatedDate != null)
+                                                            {
+                                                                var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+                                                                @Html.Raw(DateTime
+                                                            .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+                                                            .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                                            }
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.EntityState</strong></td>
 
-                                                <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.UpdatedDate != null)
-                                                        {
-                                                            var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-                                                            @Html.Raw(DateTime
-                                                        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-                                                        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-                                                        }
+                                                    <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.UpdatedDate != null)
+                                                            {
+                                                                var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+                                                                @Html.Raw(DateTime
+                                                            .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+                                                            .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Raw(Messages.NotAvailable.ToString())
+                                                            }
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+
+
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.Status == true)
+                                                            {@Html.Raw("Active") }
                                                         else
-                                                        {
-                                                            @Html.Raw(Messages.NotAvailable.ToString())
-                                                        }
-                                                    </strong>
-                                                </td>
-                                                <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+                                                        { @Html.Raw("Inactive")}
+                                                        </strong>
+                                                    </td>
 
-
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.Status == true)
-                                                        {@Html.Raw("Active") }
-                                                    else
-                                                    { @Html.Raw("Inactive")}
-                                                    </strong>
-                                                </td>
-                                               
-                                            </tr>
+                                                </tr>
                                             }
                                         </tbody>
                                     </table>

@@ -2,8 +2,10 @@
 using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -286,5 +288,148 @@ namespace ComplaintManagement.Controllers
             }
         }
 
+
+        public ActionResult ExportData()
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage();
+
+
+                var ws = package.Workbook.Worksheets.Add(Messages.Location);
+                //Headers
+                ws.Cells["A1"].Value = Messages.Location;
+                ws.Cells["B1"].Value = Messages.CreatedDate;
+                ws.Cells["C1"].Value = Messages.CreatedBy;
+                ws.Cells["D1"].Value = Messages.ModifiedDate;
+                ws.Cells["E1"].Value = Messages.ModifiedBy;
+                ws.Cells["F1"].Value = Messages.Status;
+
+
+                var rowNumber = 1;
+
+                ws.Cells[rowNumber, 1].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 1].Value = Messages.Location;
+
+                ws.Cells[rowNumber, 2].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 2].Value = Messages.CreatedDate;
+
+                ws.Cells[rowNumber, 3].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 3].Value = Messages.CreatedBy;
+
+                ws.Cells[rowNumber, 4].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 4].Value = Messages.ModifiedDate;
+
+                ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 5].Value = Messages.ModifiedBy;
+
+                ws.Cells[rowNumber, 6].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 6].Value = Messages.Status;
+
+                foreach (var log in new LocationMastersRepository().GetAll())
+                {
+                    rowNumber++;
+
+                    ws.Cells[rowNumber, 1].Value = log.LocationName;
+                    ws.Cells[rowNumber, 2].Value = log.CreatedDate.ToString("dd/MM/yyyy");
+                    ws.Cells[rowNumber, 3].Value = log.CreatedByName;
+                    ws.Cells[rowNumber, 4].Value = log.UpdatedDate.HasValue ? log.UpdatedDate.Value.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 5].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 6].Value = log.Status ? Messages.Active : Messages.Inactive;
+                }
+
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = Messages.Location + Messages.XLSX;
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+                return File(stream, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
+        }
+
+        public ActionResult ExportDataHistory(int id)
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage();
+
+
+                var ws = package.Workbook.Worksheets.Add(Messages.LocationHistory);
+                //Headers
+                ws.Cells["A1"].Value = Messages.Location;
+                ws.Cells["B1"].Value = Messages.CreatedDate;
+                ws.Cells["C1"].Value = Messages.EntityState;
+                ws.Cells["D1"].Value = Messages.CreatedBy;
+                ws.Cells["E1"].Value = Messages.ModifiedDate;
+                ws.Cells["F1"].Value = Messages.ModifiedBy;
+                ws.Cells["G1"].Value = Messages.Status;
+
+                List<LocationMasterHistoryVM> list = new LocationMastersRepository().GetAllHistory().Where(x => x.LocationId == id).ToList();
+
+                var rowNumber = 1;
+                ws.Cells[rowNumber, 1].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 1].Value = Messages.Location;
+
+                ws.Cells[rowNumber, 2].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 2].Value = Messages.CreatedDate;
+
+                ws.Cells[rowNumber, 3].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 3].Value = Messages.EntityState;
+
+                ws.Cells[rowNumber, 4].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 4].Value = Messages.CreatedBy;
+
+                ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 5].Value = Messages.ModifiedDate;
+
+                ws.Cells[rowNumber, 6].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 6].Value = Messages.ModifiedBy;
+
+                ws.Cells[rowNumber, 7].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 7].Value = Messages.Status;
+
+                foreach (var log in list)
+                {
+                    rowNumber++;
+                    if (rowNumber > 1)
+                    {
+                        ws.Cells[rowNumber, 1].Value = log.LocationName;
+                        ws.Cells[rowNumber, 2].Value = log.CreatedDate.ToString("dd/MM/yyyy");
+                        ws.Cells[rowNumber, 3].Value = log.EntityState;
+                        ws.Cells[rowNumber, 4].Value = log.CreatedByName;
+                        ws.Cells[rowNumber, 5].Value = log.UpdatedDate.HasValue ? log.UpdatedDate.Value.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                        ws.Cells[rowNumber, 6].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
+                        ws.Cells[rowNumber, 7].Value = log.Status ? Messages.Active : Messages.Inactive;
+                    }
+                }
+
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = Messages.LocationHistory + Messages.XLSX;
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+                return File(stream, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
+        }
     }
 }

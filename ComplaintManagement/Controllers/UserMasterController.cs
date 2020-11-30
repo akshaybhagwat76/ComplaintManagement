@@ -3,9 +3,11 @@ using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -613,8 +615,239 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
-       
 
+        public ActionResult ExportData()
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage();
+
+
+                var ws = package.Workbook.Worksheets.Add(Messages.UserMaster);
+                //Headers
+                ws.Cells["A1"].Value = Messages.EmployeeName;
+                ws.Cells["B1"].Value = Messages.CreatedDate;
+                ws.Cells["C1"].Value = Messages.Status;
+                ws.Cells["D1"].Value = Messages.TimeType;
+                ws.Cells["E1"].Value = Messages.BusinessTitle;
+                ws.Cells["F1"].Value = Messages.Company;
+                ws.Cells["G1"].Value = Messages.LOS;
+                ws.Cells["H1"].Value = Messages.SBU;
+                ws.Cells["I1"].Value = Messages.SubSBU;
+                ws.Cells["J1"].Value = Messages.Competency;
+                ws.Cells["K1"].Value = Messages.Region;
+                ws.Cells["L1"].Value = Messages.Manager;
+                ws.Cells["M1"].Value = Messages.CreatedBy;
+                ws.Cells["N1"].Value = Messages.ModifiedDate;
+                ws.Cells["O1"].Value = Messages.ModifiedBy;
+
+                var rowNumber = 1;
+                ws.Cells[rowNumber, 1].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 1].Value = Messages.EmployeeName;
+
+                ws.Cells[rowNumber, 2].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 2].Value = Messages.CreatedDate;
+
+                ws.Cells[rowNumber, 3].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 3].Value = Messages.Status;
+
+                ws.Cells[rowNumber, 4].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 4].Value = Messages.TimeType;
+
+                ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 5].Value = Messages.BusinessTitle;
+
+                ws.Cells[rowNumber, 6].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 6].Value = Messages.Company;
+
+                ws.Cells[rowNumber, 7].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 7].Value = Messages.LOS;
+
+                ws.Cells[rowNumber, 8].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 8].Value = Messages.SBU;
+
+                ws.Cells[rowNumber, 9].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 9].Value = Messages.SubSBU;
+
+                ws.Cells[rowNumber, 10].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 10].Value = Messages.Competency;
+
+                ws.Cells[rowNumber, 11].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 11].Value = Messages.Region;
+
+                ws.Cells[rowNumber, 12].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 12].Value = Messages.Manager;
+
+
+                ws.Cells[rowNumber, 13].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 13].Value = Messages.CreatedBy;
+
+                ws.Cells[rowNumber, 14].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 14].Value = Messages.ModifiedDate;
+
+                ws.Cells[rowNumber, 15].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 15].Value = Messages.ModifiedBy;
+
+                foreach (var log in GetAll(0))
+                {
+                    rowNumber++;
+
+                    ws.Cells[rowNumber, 1].Value = log.EmployeeName;
+                    ws.Cells[rowNumber, 2].Value = log.CreatedDate != null ? log.CreatedDate.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 3].Value = log.Status ? Messages.Active : Messages.Inactive;
+                    ws.Cells[rowNumber, 4].Value = log.TimeType;
+                    ws.Cells[rowNumber, 5].Value = log.BusinessTitle;
+                    ws.Cells[rowNumber, 6].Value = log.Company;
+                    ws.Cells[rowNumber,7].Value = log.LOS;
+                    ws.Cells[rowNumber, 8].Value = log.SBU;
+                    ws.Cells[rowNumber, 9].Value = log.SubSBU;
+                    ws.Cells[rowNumber, 10].Value = log.Competency;
+                    ws.Cells[rowNumber, 11].Value = log.Region;
+                    ws.Cells[rowNumber, 12].Value = log.Manager;
+                    ws.Cells[rowNumber, 13].Value = log.CreatedByName;
+                    ws.Cells[rowNumber, 14].Value = log.UpdatedDate != null ? log.UpdatedDate.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 15].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
+
+                }
+
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = Messages.UserMaster + Messages.XLSX;
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+                return File(stream, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
+        }
+
+        public ActionResult ExportDataHistory(int id)
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage();
+
+
+                var ws = package.Workbook.Worksheets.Add(Messages.UserMasterHistory);
+                //Headers
+                ws.Cells["A1"].Value = Messages.EmployeeName;
+                ws.Cells["B1"].Value = Messages.CreatedDate;
+                ws.Cells["C1"].Value = Messages.Status;
+                ws.Cells["D1"].Value = Messages.TimeType;
+                ws.Cells["E1"].Value = Messages.BusinessTitle;
+                ws.Cells["F1"].Value = Messages.Company;
+                ws.Cells["G1"].Value = Messages.LOS;
+                ws.Cells["H1"].Value = Messages.SBU;
+                ws.Cells["I1"].Value = Messages.SubSBU;
+                ws.Cells["J1"].Value = Messages.Competency;
+                ws.Cells["K1"].Value = Messages.Region;
+                ws.Cells["L1"].Value = Messages.Manager;
+                ws.Cells["M1"].Value = Messages.CreatedBy;
+                ws.Cells["N1"].Value = Messages.ModifiedDate;
+                ws.Cells["O1"].Value = Messages.ModifiedBy;
+                ws.Cells["P1"].Value = Messages.EntityState;
+
+
+                var rowNumber = 1;
+                ws.Cells[rowNumber, 1].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 1].Value = Messages.EmployeeName;
+
+                ws.Cells[rowNumber, 2].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 2].Value = Messages.CreatedDate;
+
+                ws.Cells[rowNumber, 3].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 3].Value = Messages.Status;
+
+                ws.Cells[rowNumber, 4].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 4].Value = Messages.TimeType;
+
+                ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 5].Value = Messages.BusinessTitle;
+
+                ws.Cells[rowNumber, 6].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 6].Value = Messages.Company;
+
+                ws.Cells[rowNumber, 7].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 7].Value = Messages.LOS;
+
+                ws.Cells[rowNumber, 8].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 8].Value = Messages.SBU;
+
+                ws.Cells[rowNumber, 9].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 9].Value = Messages.SubSBU;
+
+                ws.Cells[rowNumber, 10].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 10].Value = Messages.Competency;
+
+                ws.Cells[rowNumber, 11].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 11].Value = Messages.Region;
+
+                ws.Cells[rowNumber, 12].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 12].Value = Messages.Manager;
+
+
+                ws.Cells[rowNumber, 13].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 13].Value = Messages.CreatedBy;
+
+                ws.Cells[rowNumber, 14].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 14].Value = Messages.ModifiedDate;
+
+                ws.Cells[rowNumber, 15].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 15].Value = Messages.ModifiedBy;
+
+
+                ws.Cells[rowNumber, 16].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 16].Value = Messages.EntityState;
+                var lst = GetAllHistory(0, id);
+                foreach (var log in lst)
+                {
+                    rowNumber++;
+
+
+                    ws.Cells[rowNumber, 1].Value = log.EmployeeName;
+                    ws.Cells[rowNumber, 2].Value = log.CreatedDate != null ? log.CreatedDate.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 3].Value = log.Status ? Messages.Active : Messages.Inactive;
+                    ws.Cells[rowNumber, 4].Value = log.TimeType;
+                    ws.Cells[rowNumber, 5].Value = log.BusinessTitle;
+                    ws.Cells[rowNumber, 6].Value = log.Company;
+                    ws.Cells[rowNumber, 7].Value = log.LOS;
+                    ws.Cells[rowNumber, 8].Value = log.SBU;
+                    ws.Cells[rowNumber, 9].Value = log.SubSBU;
+                    ws.Cells[rowNumber, 10].Value = log.Competency;
+                    ws.Cells[rowNumber, 11].Value = log.Region;
+                    ws.Cells[rowNumber, 12].Value = log.Manager;
+                    ws.Cells[rowNumber, 13].Value = log.CreatedByName;
+                    ws.Cells[rowNumber, 14].Value = log.UpdatedDate != null ? log.UpdatedDate.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 15].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 16].Value = log.EntityState;
+                }
+
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = Messages.UserMasterHistory + Messages.XLSX;
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+                return File(stream, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
+        }
 
     }
 }
