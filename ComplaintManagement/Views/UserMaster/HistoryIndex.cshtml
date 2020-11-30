@@ -44,7 +44,7 @@
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        
+
                     </li>
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                     <li class="nav-item dropdown no-arrow d-sm-none">
@@ -142,7 +142,13 @@
             </nav>
             <!-- End of Topbar -->
             <!-- Begin Page Content -->
+            <a href="/UserMaster/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+
+
+
+
             <div class="container-fluid">
+
                 <div class="preloader"></div>
                 <div class="page-title">
                     <h2 class="text-black">User History</h2>
@@ -208,17 +214,17 @@
                                                         </td>
                                                         @*<td class="text-black text-center"><strong>@item.CreatedByName</strong></td>*@
                                                         @*<td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.UpdatedDate != null)
-                                                        {
-                                                            @Html.Raw(String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T"))))
-                                                        }
-                                                        else
-                                                        {
-                                                            @Html.Raw(Messages.NotAvailable.ToString())
-                                                        }
-                                                    </strong>
-                                                </td>*@
+                                                        <strong>
+                                                            @if (item.UpdatedDate != null)
+                                                            {
+                                                                @Html.Raw(String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T"))))
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Raw(Messages.NotAvailable.ToString())
+                                                            }
+                                                        </strong>
+                                                    </td>*@
                                                         @*<td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>*@
                                                         <td class="text-black text-center pl-2">
                                                             <strong>
