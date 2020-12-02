@@ -35,22 +35,35 @@
    
 
     
-    if (retval ) {
+    if (retval) {
+        debugger
         var data = {
             Id: $("#Id").val(),
             CategoryId: $("#CategoryId").val(),
             SubCategoryId: $("#SubCategoryId").val(),
             Remark: $("#Remark").val(),
-            Attachments: $("#Attachment").val(),
            UserId:$("#UserId").val()
         }
-        debugger
+        var file = $("#customFile").get(0).files;
+        var formData = new FormData();
+
+        var fileUpload = $("#customFile").get(0);
+        var files = fileUpload.files;  
+
+        for (var i = 0; i < files.length; i++) {
+            formData.append(files[i].name, files[i]);
+        }  
+
         data = JSON.stringify(data);
+        formData.append("EmpCompliantParams", data);
+
         StartProcess();
         $.ajax({
             type: "POST",
             url: "/Compliant/AddOrUpdateEmployeeCompliant",
-            data: { EmpCompliantParams: data },
+            data: formData,
+            contentType: false,
+            processData: false,
             success: function (response) {
                 if (response.status == "Fail") {
                     StopProcess();

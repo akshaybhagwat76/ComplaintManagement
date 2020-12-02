@@ -110,6 +110,7 @@ function performAction(id, isView) {
 }
 
 function filterGrid() {
+    debugger
     var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
     if (fromDate == "" || toDate == "") {
         funToastr(false, "Please select from and to date."); return;
@@ -119,7 +120,7 @@ function filterGrid() {
         if ($("#hfCurrentPageIndex").val() == "") {
             $("#hfCurrentPageIndex").val("1");
         }
-        location.href = '/Category/GetCategories?range=' + fromDate + ',' + toDate + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        location.href = '/Employee/GetEmployeeCompliant?range=' + fromDate + ',' + toDate + '&currentPage=' + $("#hfCurrentPageIndex").val();
     }
 }
 

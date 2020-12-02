@@ -5,6 +5,7 @@ using Elmah;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -97,10 +98,33 @@ namespace ComplaintManagement.Controllers
         {
             try
             {
+                List<string> filesName = new List<string>();
+                if (Request.Files.Count > 0)
+                {
+                    var files = Request.Files;
+
+                    //iterating through multiple file collection   
+                    foreach (string str in files)
+                    {
+                        HttpPostedFileBase file = Request.Files[str] as HttpPostedFileBase;
+                        //Checking file is available to save.  
+                        if (file != null)
+                        {
+                            var InputFileName = new Common().UniqueFileName();
+                                  string strpath = InputFileName+= System.IO.Path.GetExtension(file.FileName);
+
+                            var ServerSavePath = Path.Combine(Server.MapPath("~/Documents/") + strpath);
+                            //Save file to server folder  
+                            file.SaveAs(ServerSavePath);
+                            filesName.Add(strpath);
+                        }
+
+                    }
+                }
                 if (!string.IsNullOrEmpty(EmpCompliantParams))
                 {
                     var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliant_oneMasterVM>(EmpCompliantParams);
-
+                    EmployeeComplaintDto.Attachments = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
                     var User = new EmployeeComplaintMastersRepository().AddOrUpdate(EmployeeComplaintDto);
                     return new ReplyFormat().Success(Messages.SUCCESS, User);
                 }

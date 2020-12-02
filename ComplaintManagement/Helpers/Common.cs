@@ -48,6 +48,10 @@ namespace ComplaintManagement.Helpers
             }
         }
 
+        public string UniqueFileName()
+        {
+            return RandomString(3) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss");
+        }
         public string SaveImageFromBase64(string filename)
         {
             string filePath = "";
