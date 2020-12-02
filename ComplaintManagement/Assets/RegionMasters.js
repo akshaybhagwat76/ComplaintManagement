@@ -105,7 +105,12 @@ function PagerClick(index) {
     if (fromDate !== "" && toDate !== "") {
         range = fromDate + ',' + toDate;
     }
+    if ($("#history").val() == undefined) {
     location.href = '/Region/LoadRegion?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+    }
+    else {
+        location.href = '/Region/LoadHistoryRegion?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
+    }
 } function column_sort() {
     getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
     comparer = (idx, asc) => (a, b) => ((v1, v2) =>

@@ -36,29 +36,54 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var Role = db.RoleMasters.FirstOrDefault(p => p.Id == RoleVM.Id);
-                    if (Role == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        RoleVM.IsActive = true;
-                        RoleVM.CreatedDate = DateTime.UtcNow;
-                        RoleVM.CreatedBy = Convert.ToInt32(sid);
-                        Role = Mapper.Map<RoleMasterVM, RoleMaster>(RoleVM);
+                        try
+                        {
+                            var Role = db.RoleMasters.FirstOrDefault(p => p.Id == RoleVM.Id);
+                            if (Role == null)
+                            {
+                                RoleVM.IsActive = true;
+                                RoleVM.CreatedDate = DateTime.UtcNow;
+                                RoleVM.CreatedBy = Convert.ToInt32(sid);
+                                Role = Mapper.Map<RoleMasterVM, RoleMaster>(RoleVM);
 
-                        db.RoleMasters.Add(Role);
-                        db.SaveChanges();
-                        return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
-                    }
-                    else
-                    {
-                        RoleVM.IsActive = true;
-                        RoleVM.CreatedDate = Role.CreatedDate;
-                        RoleVM.CreatedBy = Role.CreatedBy;
-                        RoleVM.UpdatedDate = DateTime.UtcNow;
-                        RoleVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(Role).CurrentValues.SetValues(RoleVM);
-                        db.SaveChanges();
-                        return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
+                                db.RoleMasters.Add(Role);
+                                db.SaveChanges();
 
+
+                                RoleMasters_History historyObj = Mapper.Map<RoleMasterVM, RoleMasters_History>(RoleVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.RoleId = Role.Id; };
+                                db.RoleMasters_History.Add(historyObj);
+                                db.SaveChanges();
+                                dbContextTransaction.Commit();
+
+                                return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
+                            }
+                            else
+                            {
+                                RoleVM.IsActive = true;
+                                RoleVM.CreatedDate = Role.CreatedDate;
+                                RoleVM.CreatedBy = Role.CreatedBy;
+                                RoleVM.UpdatedDate = DateTime.UtcNow;
+                                RoleVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(Role).CurrentValues.SetValues(RoleVM);
+                                db.SaveChanges();
+
+                                RoleMasters_History historyObj = Mapper.Map<RoleMasterVM, RoleMasters_History>(RoleVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.RoleId = Role.Id; };
+                                db.RoleMasters_History.Add(historyObj);
+                                db.SaveChanges();
+                                dbContextTransaction.Commit();
+                                return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
                 return new RoleMasterVM();
@@ -125,6 +150,35 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<RoleMaster, RoleMasterVM>(Role);
         }
 
+        public List<RoleMasterHistoryVM> GetAllHistory()
+        {
+            List<RoleMasters_History> listdto = new List<RoleMasters_History>();
+            List<RoleMasterHistoryVM> lst = new List<RoleMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.RoleMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (RoleMasters_History item in listdto)
+                    {
+                        RoleMasterHistoryVM ViewModelDto = Mapper.Map<RoleMasters_History, RoleMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
+        }
 
         public bool Delete(int id)
         {
@@ -374,11 +428,35 @@ namespace ComplaintManagement.Repository
                         RoleMasterDto.IsActive = true;
                         importRole.Add(RoleMasterDto);
                     }
-                    if (importRole != null && importRole.Count > 0)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.RoleMasters.AddRange(importRole);
-                        db.SaveChanges();
-                        count = importRole.Count;
+                        try
+                        {
+                            if (importRole != null && importRole.Count > 0)
+                            {
+                                db.RoleMasters.AddRange(importRole);
+                                db.SaveChanges();
+
+                                List<RoleMasterHistoryVM> listVMDto = Mapper.Map<List<RoleMaster>, List<RoleMasterHistoryVM>>(importRole);
+
+                                List<RoleMasters_History> HistoryDto = Mapper.Map<List<RoleMasterHistoryVM>, List<RoleMasters_History>>(listVMDto);
+                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                {
+                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.RoleId = c.Id; return c; }).ToList();
+                                }
+
+                                db.RoleMasters_History.AddRange(HistoryDto);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+                                count = importRole.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }

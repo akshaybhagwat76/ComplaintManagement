@@ -123,7 +123,12 @@ function PagerClick(index) {
     if (fromDate !== "" && toDate !== "") {
         range = fromDate + ',' + toDate;
     }
-    location.href = '/SubSBU/LoadSubSBU?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+    if ($("#history").val() == undefined) {
+        location.href = '/SubSBU/LoadSubSBU?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+    }
+    else {
+        location.href = '/SubSBU/LoadHistorySubSBU?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
+    }
 }
 
 // Import excel

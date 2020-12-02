@@ -25,6 +25,8 @@ namespace ComplaintManagement.ViewModel
         public string CompetencyId { get; set; }
         public int CreatedBy { get; set; }
         public int ModifiedBy { get; set; }
+        public int RegionId { get; set; }
+        public int RoleId { get; set; }
         public bool Status { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public bool IsActive { get; set; }

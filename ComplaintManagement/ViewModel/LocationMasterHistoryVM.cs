@@ -12,6 +12,8 @@ namespace ComplaintManagement.ViewModel
         [DisplayName("Status")]
         public bool Status { get; set; }
         public string EntityState{ get; set; }
+        public int LocationId { get; set; }
+
         public int UserId { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public bool IsActive { get; set; }

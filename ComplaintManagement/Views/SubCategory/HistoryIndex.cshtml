@@ -1,6 +1,4 @@
 ﻿@using ComplaintManagement.Helpers
-@using System
-@using System.Globalization
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -23,12 +21,11 @@
 }
 @{
     ViewBag.Title = "Index";
-    dynamic data = Json.Decode(ViewBag.lstHistoryCommittee);
 }
+@Html.Hidden("history", (object)ViewBag.name)
 
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
-    @Html.Hidden("history", (object)ViewBag.name)
     <!-- Main Content -->
     <div id="content">
         <!-- Topbar -->
@@ -40,14 +37,7 @@
             <h4 class="text-white m-0">Masters</h4>
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <form class="d-none d-sm-inline-block form-inline my-3 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" onkeypress="return searchKeyPress(event);" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                            <i class="fas fa-search fa-sm" id="searchIcon"></i>
-                        </div>
-                    </form>
-                </li>
+
 
 
                 <!-- Nav Item - Alerts -->
@@ -120,26 +110,24 @@
                         </a>
                     </div>
                 </li>
-
             </ul>
-
         </nav>
         <!-- End of Topbar -->
-        <a href="/Committee/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+        <a href="/SubCategory/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
 
-        <!-- Begin Page Content -->
         <div class="container-fluid">
             <div class="preloader"></div>
             <div class="page-title">
-                <h2 class="text-black">Committee History</h2>
+                <h2 class="text-black">Sub Category History</h2>
             </div>
+
             <div class="card mb-4 rounded-0 border-0">
                 <div class="card-body">
                     <div class="row justify-content-between">
                         <div class="col-md-8">
                             <ul class="nav">
                                 <li class="nav-item">
-                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "Committee", new {id = ViewBag.name})'"><i class="fas fa-file-excel"></i></button>
+                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "SubCategory", new {id = ViewBag.name})'"><i class="fas fa-file-excel"></i></button>
                                 </li>
                             </ul>
                         </div>
@@ -157,8 +145,7 @@
                                     <table class="table f-14" id="myTable">
                                         <thead>
                                             <tr>
-                                                <td class="text-center">User Name</td>
-                                                <td class="text-center">Committee</td>
+                                                <td class="text-center">Sub Category</td>
                                                 <td class="text-center">Created Date</td>
                                                 <td class="text-center">Entity State</td>
                                                 <td class="text-center">Created By</td>
@@ -168,32 +155,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var item in data)
+                                            @foreach (var item in ViewBag.lstHistorySubCategory)
                                             {
                                                 <tr>
-                                                    <td class="text-black text-center"><strong>@item.User</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.CommitteeName</strong></td>
-                                                    <td class="text-black text-center">
-                                                        <strong>
-                                                            @if (item.CreatedDate != null)
-                                                            {
-                                                                var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-                                                                @Html.Raw(DateTime
-                                                            .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-                                                            .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-                                                            }
-                                                        </strong>
-                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.SubCategoryName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
                                                     <td class="text-black text-center"><strong>@item.EntityState</strong></td>
+
                                                     <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                                                     <td class="text-black text-center">
                                                         <strong>
                                                             @if (item.UpdatedDate != null)
                                                             {
-                                                                var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-                                                                @Html.Raw(DateTime
-                                                            .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-                                                            .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                                                @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
                                                             }
                                                             else
                                                             {
@@ -202,7 +176,6 @@
                                                         </strong>
                                                     </td>
                                                     <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
-
                                                     <td class="text-black text-center">
                                                         <strong>
                                                             @if (item.Status == true)
@@ -213,7 +186,6 @@
                                                     </td>
                                                 </tr>
                                             }
-
                                         </tbody>
 
                                     </table>
@@ -245,41 +217,40 @@
                 </div>
             </div>
         </div>
-        <!-- /.container-fluid -->
-    </div>
-    <!-- End of Main Content -->
-</div>
-<!-- End of Content Wrapper -->
-<!-- End of Page Wrapper -->
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="/Account/LogOff">Logout</a>
+        <div class="modal" tabindex="-1" id="uploadFile">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content border-0 rounded-0">
+                    <span class="close-modal" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </span>
+                    <div class="modal-body">
+                        <label class="d-block file-upload mb-3">Upload File</label>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" onclick="this.value = null" class="custom-file-input" id="excelFile" data-ketan="" aria-describedby="inputGroupFileAddon01">
+                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <a class="btn btn-danger btn-user btn-sm" id="btnUpload">Upload</a>
+                                <a href="/SubCategory/Index" class="btn bg-white border btn-user btn-sm">Cancel</a>
+                            </div>
+                            <a href="/Files/DownloadFile?filePath=/Imports/Samples/SubCategory/SubCategory.xlsx" class="ml-3 mt-n2">Download Sample</a>
+                            <label id="lblError" class="ml-n5 mt-5 adderror"></label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-
-
-@Scripts.Render("~/Assets/Common")
-@Html.Partial("_CommonDeleteModal")
-@Scripts.Render("~/Assets/CommitteeMasters")
-<script>
+        @Scripts.Render("~/Assets/Common")
+        @Html.Partial("_CommonDeleteModal")
+        @Scripts.Render("~/Assets/SubCategoryMasters")
+        <script>
     var pageLength=@ViewBag.PageIndex;
     var page = @ViewBag.Page;
-</script>
+        </script>

@@ -214,7 +214,7 @@
                             <form class="user" id="myForm">
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3">
-                                        @Html.LabelFor(model => model.TimeType)
+                                        @Html.LabelFor(model => model.TimeType, new { @class = "requiredLabel" })
                                         @Html.DropDownListFor(model => model.TimeType,
                  new List<SelectListItem> {
                       new SelectListItem { Value = "Full Time" , Text = "Full Time" },
@@ -224,7 +224,7 @@
                  new { @class = "form-control required" })
                                     </div>
                                     <div class="col-sm-4">
-                                        @Html.LabelFor(model => model.BusinessTitle)
+                                        @Html.LabelFor(model => model.BusinessTitle, new { @class = "requiredLabel" })
 
                                         @{
                                             List<SelectListItem> listBusinessTitle = new List<SelectListItem>();
@@ -242,7 +242,7 @@
 
                                     </div>
                                     <div class="col-sm-4">
-                                        @Html.LabelFor(model => model.Company)
+                                        @Html.LabelFor(model => model.Company, new { @class = "requiredLabel" })
 
                                         @{
                                             List<SelectListItem> listCompany = new List<SelectListItem>();
@@ -262,7 +262,7 @@
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-0">
-                                        @Html.LabelFor(model => model.LOSId)
+                                        @Html.LabelFor(model => model.LOSId, new { @class = "requiredLabel" })
 
                                         @{
                                             List<SelectListItem> listLOS = new List<SelectListItem>();
@@ -279,7 +279,7 @@
 
                                     </div>
                                     <div class="col-sm-4">
-                                        @Html.LabelFor(model => model.SBUId)
+                                        @Html.LabelFor(model => model.SBUId, new { @class = "requiredLabel" })
 
                                         @{
                                             List<SelectListItem> listSBU = new List<SelectListItem>();
@@ -296,7 +296,7 @@
 
                                     </div>
                                     <div class="col-sm-4">
-                                        @Html.LabelFor(model => model.SubSBUId)
+                                        @Html.LabelFor(model => model.SubSBUId, new { @class = "requiredLabel" })
 
                                         @{
                                             List<SelectListItem> listSubSBU = new List<SelectListItem>();
@@ -316,7 +316,7 @@
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-0">
-                                        @Html.LabelFor(model => model.CompentencyId)
+                                        @Html.LabelFor(model => model.CompentencyId, new { @class = "requiredLabel" })
 
                                         @{
                                             List<SelectListItem> listCompentency = new List<SelectListItem>();
@@ -333,7 +333,7 @@
 
                                     </div>
                                     <div class="col-sm-4">
-                                        @Html.LabelFor(model => model.LocationId)
+                                        @Html.LabelFor(model => model.LocationId, new { @class = "requiredLabel" })
 
                                         @{
                                             List<SelectListItem> listLocation = new List<SelectListItem>();
@@ -350,7 +350,7 @@
 
                                     </div>
                                     <div class="col-sm-4">
-                                        @Html.LabelFor(model => model.RegionId)
+                                        @Html.LabelFor(model => model.RegionId, new { @class = "requiredLabel" })
 
                                         @{
                                             List<SelectListItem> listRegion = new List<SelectListItem>();
@@ -370,8 +370,8 @@
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-0">
-                                        @Html.LabelFor(model => model.DateOfJoining, new { @type = "Date", @class = "requiredLabel" })
-                                        @Html.TextBoxFor(model => model.DateOfJoining, new { @type = "Date", @class = "form-control form-control-user required ", @placeholder = "Name" })
+                                        @Html.LabelFor(model => model.DateOfJoining, new { @type = "Date"})
+                                        @Html.TextBoxFor(model => model.DateOfJoining, new { @type = "Date", @class = "form-control form-control-user required", @placeholder = "Name" })
 
                                     </div>
                                     <div class="col-sm-4">
@@ -387,7 +387,7 @@
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-0">
-                                        @Html.LabelFor(model => model.Type)
+                                        @Html.LabelFor(model => model.Type, new { @class = "requiredLabel" })
                                         @Html.DropDownListFor(model => model.Type,
                  new List<SelectListItem> {
                       new SelectListItem { Value = "Normal" , Text = "Normal" },

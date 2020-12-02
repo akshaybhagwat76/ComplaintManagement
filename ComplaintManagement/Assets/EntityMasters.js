@@ -117,7 +117,12 @@ function PagerClick(index) {
     if (fromDate !== "" && toDate !== "") {
         range = fromDate + ',' + toDate;
     }
+    if ($("#history").val() == undefined) {
     location.href = '/Entity/LoadEntity?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+    }
+    else {
+        location.href = '/Entity/LoadHistoryEntity?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
+    }
 }
 
 // Import excel

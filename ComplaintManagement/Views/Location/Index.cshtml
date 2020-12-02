@@ -159,6 +159,9 @@
                                 <li class="nav-item">
                                     <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
                                 </li>
+                                <li class="nav-item">
+                                    &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportData", "Location")'"><i class="fas fa-file-excel"></i></button>
+                                </li>
                             </ul>
                         </div>
                         <div class="col-md-2">
@@ -226,6 +229,7 @@
                                                     <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
                                                     <a href="javascript:void(0)" onclick="deleteLocation('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
                                                     <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                    <a href="/Location/HistoryIndex?id=@item.Id" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
                                                 </td>
                                             </tr>
                                             }

@@ -22,8 +22,8 @@
 @{
     ViewBag.Title = "Index";
 }
+@Html.Hidden("history", (object)ViewBag.name)
 
-<!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
     <!-- Main Content -->
     <div id="content">
@@ -36,14 +36,7 @@
             <h4 class="text-white m-0">Masters</h4>
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <form class="d-none d-sm-inline-block form-inline my-3 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" onkeypress="return searchKeyPress(event);" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                            <i class="fas fa-search fa-sm" id="searchIcon"></i>
-                        </div>
-                    </form>
-                </li>
+
                 <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                 <li class="nav-item dropdown no-arrow d-sm-none">
                     <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -139,38 +132,22 @@
 
         </nav>
         <!-- End of Topbar -->
+        <a href="/Designation/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+
         <!-- Begin Page Content -->
         <div class="container-fluid">
             <div class="preloader"></div>
             <div class="page-title">
-                <h2 class="text-black">Entity Master</h2>
+                <h2 class="text-black">Designation History</h2>
             </div>
+
             <div class="card mb-4 rounded-0 border-0">
                 <div class="card-body">
                     <div class="row justify-content-between">
                         <div class="col-md-8">
                             <ul class="nav">
-                                <li class="nav-item mr-3">
-                                    <input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
-                                </li>
-                                <li class="nav-item mr-3">
-                                    <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
-                                </li>
                                 <li class="nav-item">
-                                    <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
-                                </li>
-                                <li class="nav-item">
-                                    &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportData", "Entity")'"><i class="fas fa-file-excel"></i></button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-2">
-                            <ul class="nav">
-                                <li class="nav-item mr-4">
-                                    <a href="/Entity/Create" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
-                                </li>
-                                <li class="nav-item">
-                                    <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
+                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "Designation", new {id = ViewBag.name})'"><i class="fas fa-file-excel"></i></button>
                                 </li>
                             </ul>
                         </div>
@@ -184,57 +161,52 @@
                         <div class="card mb-4 rounded-0 border-0">
                             <!-- Card Body -->
                             <div class="card-body">
-                                <div class="table-responsive" id="myTable">
-                                    <table class="table f-14">
+                                <div class="table-responsive">
+                                    <table class="table f-14" id="myTable">
                                         <thead>
                                             <tr>
-                                                <td class="text-center">Entity</td>
+                                                <td class="text-center">Designation</td>
                                                 <td class="text-center">Created Date</td>
+                                                <td class="text-center">Entity State</td>
                                                 <td class="text-center">Created By</td>
                                                 <td class="text-center">Modified Date</td>
                                                 <td class="text-center">Modified By</td>
                                                 <td class="text-center">Status</td>
-                                                <td class="text-center">Action</td>
                                             </tr>
                                         </thead>
                                         <tbody>
-
-                                            @foreach (var item in ViewBag.lstEntity)
+                                            @foreach (var item in ViewBag.lstHistoryDesignation)
                                             {
-                                            <tr>
-                                                <td class="text-black text-center"><strong>@item.EntityName</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.UpdatedDate != null)
-                                                        {
-                                                            @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
-                                                        }
+                                                <tr>
+                                                    <td class="text-black text-center"><strong>@item.Designation</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.EntityState</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.UpdatedDate != null)
+                                                            {
+                                                                @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Raw(Messages.NotAvailable.ToString())
+                                                            }
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.Status == true)
+                                                            {@Html.Raw("Active") }
                                                         else
-                                                        {
-                                                            @Html.Raw(Messages.NotAvailable.ToString())
-                                                        }
-                                                    </strong>
-                                                </td>
-                                                <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.Status == true)
-                                                        {@Html.Raw("Active") }
-                                                    else
-                                                    { @Html.Raw("Inactive")}
-                                                    </strong>
-                                                </td>
-                                                <td class="text-center">
-                                                    <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="deleteEntity('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                    <a href="/Entity/HistoryIndex?id=@item.Id" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
-                                                </td>
-                                            </tr>
+                                                        { @Html.Raw("Inactive")}
+                                                        </strong>
+                                                    </td>
+                                                </tr>
                                             }
                                         </tbody>
+
                                     </table>
                                     <br />
                                     <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
@@ -269,7 +241,7 @@
     <!-- End of Main Content -->
 </div>
 <!-- End of Content Wrapper -->
-    </div>
+ </div>
 <!-- End of Page Wrapper -->
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
@@ -314,9 +286,9 @@
                     </div>
                     <div class="col-md-3">
                         <a class="btn btn-danger btn-user btn-sm" id="btnUpload">Upload</a>
-                        <a href="/Entity/Index" class="btn bg-white border btn-user btn-sm">Cancel</a>
+                        <a href="/Designation/Index" class="btn bg-white border btn-user btn-sm">Cancel</a>
                     </div>
-                    <a href="/Files/DownloadFile?filePath=/Imports/Samples/Entity/Entity.xlsx" class="ml-3 mt-n2">Download Sample</a>
+                    <a href="/Files/DownloadFile?filePath=/Imports/Samples/Designation/Designation.xlsx" class="ml-3 mt-n2">Download Sample</a>
                     <label id="lblError" class="ml-n5 mt-5 adderror"></label>
                 </div>
             </div>
@@ -325,7 +297,7 @@
 </div>
 @Scripts.Render("~/Assets/Common")
 @Html.Partial("_CommonDeleteModal")
-@Scripts.Render("~/Assets/EntityMasters")
+@Scripts.Render("~/Assets/DesignationMasters")
 <script>
     var pageLength=@ViewBag.PageIndex;
     var page = @ViewBag.Page;

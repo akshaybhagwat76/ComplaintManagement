@@ -10,6 +10,8 @@ namespace ComplaintManagement.ViewModel
         [DisplayName("Sub Category ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string SubCategoryName { get; set; }
+
+        public int SubCategoryId { get; set; }
         public bool Status { get; set; }
         public int UserId { get; set; }
         public System.DateTime CreatedDate { get; set; }

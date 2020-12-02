@@ -37,45 +37,68 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var User = db.UserMasters.FirstOrDefault(p => p.Id == UserVM.Id);
-                    if (User == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        UserVM.IsActive = true;
-                        UserVM.CreatedDate = DateTime.UtcNow;
-                        UserVM.CreatedBy = Convert.ToInt32(sid);
-                        if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
+                        try
                         {
-                            UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
-                        }
-                        User = Mapper.Map<UserMasterVM, UserMaster>(UserVM);
-                        if(!string.IsNullOrEmpty(IsExist(UserVM)))
-                        {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.UserMasters.Add(User);
-                        db.SaveChanges();
-                        return Mapper.Map<UserMaster, UserMasterVM>(User);
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
-                        {
-                            new Common().RemoveFile(User.ImagePath);
-                            UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
-                        }
-                        UserVM.IsActive = true;
-                        UserVM.CreatedDate = User.CreatedDate;
-                        UserVM.UpdatedDate = DateTime.UtcNow;
-                        UserVM.ModifiedBy = Convert.ToInt32(sid);
-                        UserVM.CreatedBy = User.CreatedBy;
-                        db.Entry(User).CurrentValues.SetValues(UserVM);
-                        if (!string.IsNullOrEmpty(IsExist(UserVM)))
-                        {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.SaveChanges();
-                        return Mapper.Map<UserMaster, UserMasterVM>(User);
+                            var User = db.UserMasters.FirstOrDefault(p => p.Id == UserVM.Id);
+                            if (User == null)
+                            {
+                                UserVM.IsActive = true;
+                                UserVM.CreatedDate = DateTime.UtcNow;
+                                UserVM.CreatedBy = Convert.ToInt32(sid);
+                                if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
+                                {
+                                    UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
+                                }
+                                User = Mapper.Map<UserMasterVM, UserMaster>(UserVM);
+                                if (!string.IsNullOrEmpty(IsExist(UserVM)))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.UserMasters.Add(User);
+                                db.SaveChanges();
 
+                                UserMasters_History historyObj = Mapper.Map<UserMasterVM, UserMasters_History>(UserVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.UserMasterId = User.Id; };
+                                db.UserMasters_History.Add(historyObj);
+                                db.SaveChanges();
+                                dbContextTransaction.Commit();
+
+                                return Mapper.Map<UserMaster, UserMasterVM>(User);
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(UserVM.ImagePath) && UserVM.ImagePath != null)
+                                {
+                                    new Common().RemoveFile(User.ImagePath);
+                                    UserVM.ImagePath = UserVM.ImagePath != null ? new Common().SaveImageFromBase64(UserVM.ImagePath) : "";
+                                }
+                                UserVM.IsActive = true;
+                                UserVM.CreatedDate = User.CreatedDate;
+                                UserVM.UpdatedDate = DateTime.UtcNow;
+                                UserVM.ModifiedBy = Convert.ToInt32(sid);
+                                UserVM.CreatedBy = User.CreatedBy;
+                                db.Entry(User).CurrentValues.SetValues(UserVM);
+                                if (!string.IsNullOrEmpty(IsExist(UserVM)))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+
+                                UserMasters_History historyObj = Mapper.Map<UserMasterVM, UserMasters_History>(UserVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.UserMasterId = User.Id; };
+                                db.UserMasters_History.Add(historyObj);
+                                db.SaveChanges();
+                                dbContextTransaction.Commit();
+                                return Mapper.Map<UserMaster, UserMasterVM>(User);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
                 return new UserMasterVM();
@@ -101,13 +124,13 @@ namespace ComplaintManagement.Repository
                     throw new Exception(Messages.BAD_DATA);
                 }
                 user = (from u in db.UserMasters
-                        where u.EmployeeName == LoginVM.Email || u.WorkEmail == LoginVM.Email && u.IsActive 
+                        where u.EmployeeName == LoginVM.Email || u.WorkEmail == LoginVM.Email && u.IsActive
                         select u).FirstOrDefault();
                 if (user == null)
                 {
                     throw new Exception(Messages.INVALID_USER_PASS);
                 }
-                if (!user.IsActive )
+                if (!user.IsActive)
                 {
                     throw new Exception(Messages.NOT_ACTIVE);
                 }
@@ -117,10 +140,9 @@ namespace ComplaintManagement.Repository
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            
+
             return user;
         }
-
         public void RemoveProfilePic(string fileName)
         {
             if (!string.IsNullOrEmpty(fileName))
@@ -134,29 +156,43 @@ namespace ComplaintManagement.Repository
                 new Common().RemoveFile(fileName);
             }
         }
-
         public List<UserMasterVM> GetAll()
         {
             List<UserMaster> User = new List<UserMaster>();
+            List<UserMasterVM> UsersListDto = new List<UserMasterVM>();
             try
             {
+                
+
                 User = db.UserMasters.Where(i => i.IsActive).OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (User != null && User.Count > 0)
+                {
+                    foreach (UserMaster item in User)
+                    {
+                        UserMasterVM ViewModelDto = Mapper.Map<UserMaster, UserMasterVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = User.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? User.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = User.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? User.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            UsersListDto.Add(ViewModelDto);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<List<UserMaster>, List<UserMasterVM>>(User);
+            return UsersListDto;
         }
-
         public UserMasterVM Get(int id)
         {
             UserMaster User = new UserMaster();
             try
             {
                 User = db.UserMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                
+
                 if (User == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
@@ -169,7 +205,36 @@ namespace ComplaintManagement.Repository
             }
             return Mapper.Map<UserMaster, UserMasterVM>(User);
         }
+        public List<UserMasterHistoryVM> GetAllHistory()
+        {
+            List<UserMasters_History> listdto = new List<UserMasters_History>();
+            List<UserMasterHistoryVM> lst = new List<UserMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.UserMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (UserMasters_History item in listdto)
+                    {
+                        UserMasterHistoryVM ViewModelDto = Mapper.Map<UserMasters_History, UserMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
 
+        }
         public string IsExist(UserMasterVM userMasterVM)
         {
             string response = string.Empty;
@@ -655,24 +720,49 @@ namespace ComplaintManagement.Repository
                     UserMasterDto.IsActive = true;
                     importUsers.Add(UserMasterDto);
                 }
-                if (importUsers != null && importUsers.Count > 0)
+                using (var dbContextTransaction = db.Database.BeginTransaction())
                 {
-                    db.UserMasters.AddRange(importUsers);
-                    db.SaveChanges();
-                    count = importUsers.Count;
+                    try
+                    {
+                        if (importUsers != null && importUsers.Count > 0)
+                        {
+                            db.UserMasters.AddRange(importUsers);
+                            db.SaveChanges();
+
+                            List<UserMasterHistoryVM> listVMDto = Mapper.Map<List<UserMaster>, List<UserMasterHistoryVM>>(importUsers);
+
+                            List<UserMasters_History> HistoryDto = Mapper.Map<List<UserMasterHistoryVM>, List<UserMasters_History>>(listVMDto);
+                            if (HistoryDto != null && HistoryDto.Count > 0)
+                            {
+                                HistoryDto.Select(c => { c.EntityState = Messages.Added; c.UserMasterId = c.Id; return c; }).ToList();
+                            }
+
+                            db.UserMasters_History.AddRange(HistoryDto);
+                            db.SaveChanges();
+
+                            dbContextTransaction.Commit();
+
+                            count = importUsers.Count;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        dbContextTransaction.Rollback();
+                        throw new Exception(ex.Message.ToString());
+                    }
                 }
             }
             return count;
         }
-        public List<UserMasterVM> ManagerAutoCompelete(string managervalue )
+        public List<UserMasterVM> ManagerAutoCompelete(string managervalue)
         {
             List<UserMaster> User = new List<UserMaster>();
             string mngr = managervalue.ToString();
             if (!string.IsNullOrEmpty(mngr))
             {
-              User = db.UserMasters.Where(x => x.EmployeeId.Contains(mngr) || x.WorkEmail.Contains(mngr) || x.EmployeeName.Contains(mngr)).ToList();
+                User = db.UserMasters.Where(x => x.EmployeeId.Contains(mngr) || x.WorkEmail.Contains(mngr) || x.EmployeeName.Contains(mngr)).ToList();
 
-               
+
             }
             return Mapper.Map<List<UserMaster>, List<UserMasterVM>>(User);
         }

@@ -109,7 +109,13 @@ function PagerClick(index) {
     if (fromDate !== "" && toDate !== "") {
         range = fromDate + ',' + toDate;
     }
-    location.href = '/UserMaster/LoadUserMasters?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+    if ($("#history").val() == undefined) {
+        location.href = '/UserMaster/LoadUserMasters?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+
+    }
+    else {
+        location.href = '/UserMaster/LoadHistoryUser?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
+    }
 }
 
 function column_sort() {

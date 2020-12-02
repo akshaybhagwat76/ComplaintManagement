@@ -10,7 +10,7 @@
         });
     });
     $("#btn-submit").on("click", function () {
-        debugger
+       
         $("#lblError").removeClass("success").removeClass("adderror").text('');
         var retval = true;
         $("#myForm .required").each(function () {

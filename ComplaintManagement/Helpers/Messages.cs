@@ -82,7 +82,12 @@
         public const string LOGO = "Logo";
 
         public const string ORDER_NOT_REVISION_YET = "Order Not Delivered";
+        public const string EmployeeName = "Employee Name";
+        public const string TimeType = "Time Type";
+        public const string BusinessTitle = "Business Title";
 
+        public const string Company = "Company";
+        public const string Manager = "Manager";
 
         public const string NotAvailable = "N/A";
         public const string ABOUT_ORDER_NO = "ABOUT YOUR ORDER {0}";
@@ -112,11 +117,62 @@
         public const string REFUNDED = "refunded";
         public const string CANCELLED = "cancelled";
         public const string COMPLETED = "completed";
+        public const string XLSX = ".xlsx";
 
         //Image paths
         public const string LOGOIMG = "logo";
         public const string PRODUCT = "product";
         public const string AUDIOFILE = "audiofile";
         public const string SCRIPTIMAGES = "scriptimages";
+
+        public const string CreatedDate = "Created Date";
+        public const string ModifiedDate = "Modified Date";
+        public const string ModifiedBy = "Modified By";
+        public const string CreatedBy = "Created By";
+
+        public const string Category = "Category";
+        public const string CategoryHistory = "Category History";
+
+        public const string SubCategory = "SubCategory";
+        public const string SubCategoryHistory = "SubCategory History";
+
+        public const string Designation = "Designation";
+        public const string DesignationHistory = "Designation History";
+
+        public const string LOS = "LOS";
+        public const string LOSHistory = "LOS History";
+
+        public const string SBU = "SBU";
+        public const string SBUHistory = "SBU History";
+
+        public const string SubSBU = "SubSBU";
+        public const string SubSBUHistory = "SubSBU History";
+
+        public const string Region = "Region";
+        public const string RegionHistory = "Region History";
+
+        public const string Location = "Location";
+        public const string LocationHistory = "Location History";
+
+        public const string Competency = "Competency";
+        public const string CompetencyHistory = "Competency History";
+
+        public const string Entity = "Entity";
+        public const string EntityHistory = "Entity History";
+
+        public const string Role = "Role";
+        public const string RoleHistory = "Role History";
+
+        public const string Committee = "Committee";
+        public const string CommitteeHistory = "Committee History";
+
+        public const string UserMaster = "User Master";
+        public const string UserMasterHistory = "User Master History";
+
+        public const string User = "User";
+        public const string UserName = "User Name";
+
+        public const string EntityState = "Entity State";
+
     }
 }

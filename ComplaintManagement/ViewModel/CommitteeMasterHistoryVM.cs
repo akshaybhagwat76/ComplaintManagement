@@ -16,6 +16,7 @@ namespace ComplaintManagement.ViewModel
         [DisplayName("Committee ")]
         [StringLength(100, ErrorMessage = "Max 128 characters")]
         public string CommitteeName { get; set; }
+        public int CommitteeId { get; set; }
         public bool Status { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }

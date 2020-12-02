@@ -37,37 +37,60 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
                 {
-                    var Region = db.RegionMasters.FirstOrDefault(p => p.Id == RegionVM.Id);
-                    if (Region == null)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        RegionVM.IsActive = true;
-                        RegionVM.CreatedDate = DateTime.UtcNow;
-                        RegionVM.UserId = 1;
-                        RegionVM.CreatedBy = Convert.ToInt32(sid);
-                        Region = Mapper.Map<RegionMasterVM, RegionMaster>(RegionVM);
-                        if (IsExist(Region.Region))
+                        try
                         {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.RegionMasters.Add(Region);
-                        db.SaveChanges();
-                        return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
-                    }
-                    else
-                    {
-                        RegionVM.IsActive = true;
-                        RegionVM.CreatedDate = Region.CreatedDate;
-                        RegionVM.CreatedBy = Region.CreatedBy;
-                        RegionVM.UpdatedDate = DateTime.UtcNow;
-                        RegionVM.ModifiedBy = Convert.ToInt32(sid);
-                        db.Entry(Region).CurrentValues.SetValues(RegionVM);
-                        if (IsExist(Region.Region,Region.Id))
-                        {
-                            throw new Exception(Messages.ALREADY_EXISTS);
-                        }
-                        db.SaveChanges();
-                        return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
+                            var Region = db.RegionMasters.FirstOrDefault(p => p.Id == RegionVM.Id);
+                            if (Region == null)
+                            {
+                                RegionVM.IsActive = true;
+                                RegionVM.CreatedDate = DateTime.UtcNow;
+                                RegionVM.UserId = 1;
+                                RegionVM.CreatedBy = Convert.ToInt32(sid);
+                                Region = Mapper.Map<RegionMasterVM, RegionMaster>(RegionVM);
+                                if (IsExist(Region.Region))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.RegionMasters.Add(Region);
+                                db.SaveChanges();
 
+                                RegionMasters_History historyObj = Mapper.Map<RegionMasterVM, RegionMasters_History>(RegionVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.RegionId = Region.Id; };
+                                db.RegionMasters_History.Add(historyObj);
+                                db.SaveChanges();
+
+                                return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
+                            }
+                            else
+                            {
+                                RegionVM.IsActive = true;
+                                RegionVM.CreatedDate = Region.CreatedDate;
+                                RegionVM.CreatedBy = Region.CreatedBy;
+                                RegionVM.UpdatedDate = DateTime.UtcNow;
+                                RegionVM.ModifiedBy = Convert.ToInt32(sid);
+                                db.Entry(Region).CurrentValues.SetValues(RegionVM);
+                                if (IsExist(Region.Region, Region.Id))
+                                {
+                                    throw new Exception(Messages.ALREADY_EXISTS);
+                                }
+                                db.SaveChanges();
+
+                                RegionMasters_History historyObj = Mapper.Map<RegionMasterVM, RegionMasters_History>(RegionVM);
+                                if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.RegionId = Region.Id; };
+                                db.RegionMasters_History.Add(historyObj);
+                                db.SaveChanges();
+                                dbContextTransaction.Commit();
+                                return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
                 return new RegionMasterVM();
@@ -135,6 +158,35 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
         }
 
+        public List<RegionMasterHistoryVM> GetAllHistory()
+        {
+            List<RegionMasters_History> listdto = new List<RegionMasters_History>();
+            List<RegionMasterHistoryVM> lst = new List<RegionMasterHistoryVM>();
+            try
+            {
+                List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                listdto = db.RegionMasters_History.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                if (listdto != null && listdto.Count > 0 && usersList != null && usersList.Count > 0)
+                {
+                    foreach (RegionMasters_History item in listdto)
+                    {
+                        RegionMasterHistoryVM ViewModelDto = Mapper.Map<RegionMasters_History, RegionMasterHistoryVM>(item);
+                        if (ViewModelDto != null)
+                        {
+                            ViewModelDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.CreatedBy).EmployeeName : string.Empty;
+                            ViewModelDto.UpdatedByName = usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == ViewModelDto.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            lst.Add(ViewModelDto);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return lst;
+        }
 
         public bool Delete(int id)
         {
@@ -145,6 +197,7 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
+
         public bool IsExist(string Region)
         {
             return db.RegionMasters.Count(x => x.IsActive && x.Region.ToUpper() == Region.ToUpper()) > 0;
@@ -154,6 +207,7 @@ namespace ComplaintManagement.Repository
         {
             return db.RegionMasters.Count(x => x.IsActive && x.Region.ToUpper() == Region.ToUpper() && x.Id != id) > 0;
         }
+
         public string UploadImportRegion(string file)
         {
             return new Common().SaveExcelFromBase64(file);
@@ -161,7 +215,7 @@ namespace ComplaintManagement.Repository
 
         public int ImportRegion(string file)
         {
-            List<RegionMaster> importRegion= new List<RegionMaster>();
+            List<RegionMaster> importRegion = new List<RegionMaster>();
             RegionMaster RegionMasterDto = null;
             int count = 0;
             #region Indexes 
@@ -237,11 +291,37 @@ namespace ComplaintManagement.Repository
                         RegionMasterDto.IsActive = true;
                         importRegion.Add(RegionMasterDto);
                     }
-                    if (importRegion != null && importRegion.Count > 0)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                        db.RegionMasters.AddRange(importRegion);
-                        db.SaveChanges();
-                        count = importRegion.Count;
+                        try
+                        {
+                            if (importRegion != null && importRegion.Count > 0)
+                            {
+                                db.RegionMasters.AddRange(importRegion);
+                                db.SaveChanges();
+
+
+                                List<RegionMasterHistoryVM> listVMDto = Mapper.Map<List<RegionMaster>, List<RegionMasterHistoryVM>>(importRegion);
+
+                                List<RegionMasters_History> HistoryDto = Mapper.Map<List<RegionMasterHistoryVM>, List<RegionMasters_History>>(listVMDto);
+                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                {
+                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.RegionId = c.Id; return c; }).ToList();
+                                }
+
+                                db.RegionMasters_History.AddRange(HistoryDto);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+
+                                count = importRegion.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
                     }
                 }
             }

@@ -126,7 +126,6 @@ function PagerClick(index) {
     if (fromDate !== "" && toDate !== "") {
         range = fromDate + ',' + toDate;
     }
-    location.href = '/Committee/LoadCommittee?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
 
     if ($("#history").val() == undefined) {
         location.href = '/Committee/LoadCommittee?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
