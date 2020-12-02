@@ -249,7 +249,11 @@ namespace ComplaintManagement.Controllers
                                 List<string> subsbus = new List<string>();
                                 foreach (string SubSBUIdItem in array)
                                 {
-                                    subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU);
+                                    if(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault()!= null)
+                                    {
+                                        subsbus.Add(lstSubSBUMaster.Where(x => x.Id == Convert.ToInt32(SubSBUIdItem)).FirstOrDefault().SubSBU);
+
+                                    }
                                 }
                                 row.SubSBU = string.Join(",", subsbus);
                             }
@@ -389,20 +393,7 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
-        [HttpPost]
-        public ActionResult AddOrUpdateRole1(RoleMasterVM data)
-        {
-            try
-            {
-                var Role = new RoleMasterRepoitory().AddOrUpdate(data);
-                return new ReplyFormat().Success(Messages.SUCCESS, Role);
-            }
-            catch (Exception ex)
-            {
-                ErrorSignal.FromCurrentContext().Raise(ex);
-                return new ReplyFormat().Error(ex.Message.ToString());
-            }
-        }
+      
         [HttpPost]
         public ActionResult AddOrUpdateRole(string roleParams)
         {

@@ -1,4 +1,24 @@
-﻿
+﻿@using ComplaintManagement.Helpers
+@{
+    var user = ""; var userImage = string.Empty;
+    int userId = 0;
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+    if (claimsIdentity != null)
+    {
+        var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Name);
+        var cI = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.UserData);
+        var userIDInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Sid);
+
+        if (c != null && cI != null && userIDInfo != null)
+        {
+
+            user = c.Value.ToString();
+            userImage = cI.Value.ToString();
+            userId = Convert.ToInt32(userIDInfo.Value.ToString());
+        }
+    }
+}
 @{
     ViewBag.Title = "Index";
 }
@@ -32,12 +52,8 @@
                     <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
                         <form class="form-inline mr-auto w-100 navbar-search">
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
+                                <input type="text" onkeypress="searchKeyPress(event);" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                <i class="fas fa-search fa-sm" id="searchIcon"></i>
                             </div>
                         </form>
                     </div>
@@ -120,6 +136,7 @@
         <!-- End of Topbar -->
         <!-- Begin Page Content -->
         <div class="container-fluid">
+            <div class="preloader"></div>
             <div class="page-title">
                 <h2 class="text-black">Employee Information</h2>
             </div>
@@ -135,13 +152,43 @@
                                     <input type="text" class="form-control" placeholder="To Date">
                                 </li>
                                 <li class="nav-item mr-3">
-                                    <input type="text" class="form-control" placeholder="Category">
+
+                                    @{
+                                        List<SelectListItem> listCategory = new List<SelectListItem>();
+                                        listCategory = new List<SelectListItem>();
+                                        listCategory.Add(new SelectListItem
+                                        {
+                                            Text = "Select Category",
+                                            Value = ""
+                                        });
+                                        listCategory.AddRange(ViewBag.lstCategories);
+                                    }
+
+                                    @Html.DropDownList("CategoryId", (List<SelectListItem>)listCategory, new { @class = "form-control required" })
+
                                 </li>
                                 <li class="nav-item mr-3">
-                                    <input type="text" class="form-control" placeholder="Sub Category">
+
+                                    @{
+                                        List<SelectListItem> listSubCategoryId = new List<SelectListItem>();
+                                        listSubCategoryId = new List<SelectListItem>();
+                                        listSubCategoryId.Add(new SelectListItem
+                                        {
+                                            Text = "Select SubCategory",
+                                            Value = ""
+                                        });
+                                        listSubCategoryId.AddRange(ViewBag.lstSubCategories);
+                                    }
+
+                                    @Html.DropDownList("SubCategoryId", (List<SelectListItem>)listSubCategoryId, new { @class = "form-control required" })
+
                                 </li>
                                 <li class="nav-item">
                                     <button type="submit" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                                </li>
+                                <li>
+                                    <a href="/Compliant/Compliant_one" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
+
                                 </li>
                             </ul>
                         </div>
@@ -157,73 +204,62 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table f-14">
-                                        <tbody>
+                                        <thead>
                                             <tr>
                                                 <td class="text-center">Employee Name</td>
                                                 <td class="text-center">Category</td>
                                                 <td class="text-center">Sub Category</td>
-                                                <td class="text-center">Case Type</td>
+                                                <td class="text-center">Created Date</td>
+                                                <td class="text-center">Created By</td>
+                                                <td class="text-center">Modified Date</td>
+                                                <td class="text-center">Modified By</td>
                                                 <td class="text-center">Remarks</td>
                                                 <td class="text-center">Status</td>
                                                 <td class="text-center">Attachments</td>
                                                 <td class="text-center">Action</td>
                                             </tr>
-                                            <tr>
-                                                <td class="text-black text-center"><strong>R1</strong></td>
-                                                <td class="text-black text-center"><strong>R2</strong></td>
-                                                <td class="text-black text-center"><strong>R3</strong></td>
-                                                <td class="text-black text-center"><strong>R4</strong></td>
-                                                <td class="text-black text-center"><strong>R5</strong></td>
-                                                <td class="text-black text-center"><strong>img_01</strong></td>
-                                                <td class="text-black text-center"><strong>Active</strong></td>
-                                                <td class="text-center">
-                                                    <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                    <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-black text-center"><strong>R1</strong></td>
-                                                <td class="text-black text-center"><strong>R2</strong></td>
-                                                <td class="text-black text-center"><strong>R3</strong></td>
-                                                <td class="text-black text-center"><strong>R4</strong></td>
-                                                <td class="text-black text-center"><strong>R5</strong></td>
-                                                <td class="text-black text-center"><strong>img_01</strong></td>
-                                                <td class="text-black text-center"><strong>Active</strong></td>
-                                                <td class="text-center">
-                                                    <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                    <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-black text-center"><strong>R1</strong></td>
-                                                <td class="text-black text-center"><strong>R2</strong></td>
-                                                <td class="text-black text-center"><strong>R3</strong></td>
-                                                <td class="text-black text-center"><strong>R4</strong></td>
-                                                <td class="text-black text-center"><strong>R5</strong></td>
-                                                <td class="text-black text-center"><strong>img_01</strong></td>
-                                                <td class="text-black text-center"><strong>Active</strong></td>
-                                                <td class="text-center">
-                                                    <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                    <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-black text-center"><strong>R1</strong></td>
-                                                <td class="text-black text-center"><strong>R2</strong></td>
-                                                <td class="text-black text-center"><strong>R3</strong></td>
-                                                <td class="text-black text-center"><strong>R4</strong></td>
-                                                <td class="text-black text-center"><strong>R5</strong></td>
-                                                <td class="text-black text-center"><strong>img_01</strong></td>
-                                                <td class="text-black text-center"><strong>Active</strong></td>
-                                                <td class="text-center">
-                                                    <a href="#" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                    <a href="#" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="#"><i class="fas fa-clock text-danger"></i></a>
-                                                </td>
-                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.lstEmployeeComplaint)
+                                            {
+                                                <tr>
+                                                    <td class="text-black text-center"><strong>@item.EmployeeName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CategoryName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubCategoryName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.UpdatedDate != null)
+                                                            {
+                                                                @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Raw(Messages.NotAvailable.ToString())
+                                                            }
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.Remark</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.ComplaintStatus == true)
+                                                            {@Html.Raw("Active") }
+                                                        else
+                                                        { @Html.Raw("Inactive")}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.Attachments</strong></td>
+
+
+                                                    <td class="text-center">
+                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="deleteEmployeeCompliant('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="#"><i class="fas fa-clock text-danger"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
                                         </tbody>
                                     </table>
                                 </div>
@@ -237,3 +273,6 @@
     </div>
     <!-- End of Main Content -->
 </div>
+@Scripts.Render("~/Assets/Common")
+@Html.Partial("_CommonDeleteModal")
+@Scripts.Render("~/Assets/EmployeeComplaint")

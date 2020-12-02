@@ -419,7 +419,7 @@
 
                                     </div>
                                 </div>
-                                @Html.Hidden("Doj", Model.DateOfJoining.ToString("yyyy/MM/dd"))
+                                @Html.Hidden("Doj", Model.DateOfJoining.HasValue? Model.DateOfJoining.Value.ToString("yyyy/MM/dd"):"")
 
 
                                 <div class="col-sm-12 text-right">

@@ -52,9 +52,17 @@ namespace ComplaintManagement.ViewModel
         public bool Status { get; set; }
         public int CreatedBy { get; set; }
         public int ModifiedBy { get; set; }
+        public bool ComplaintStatus { get; set; }
         public string CreatedByName { get; set; }
         public string UpdatedByName { get; set; }
         public System.DateTime CreatedDate { get; set; }
-
+        [DisplayName("Category ")]
+        public int CategoryId { get; set; }
+        [DisplayName("SubCategory ")]
+        public int SubCategoryId { get; set; }
+        [DisplayName("Remark ")]
+        public string Remark { get; set; }
+        [DisplayName("Attachments ")]
+        public string Attachments { get; set; }
     }
 }

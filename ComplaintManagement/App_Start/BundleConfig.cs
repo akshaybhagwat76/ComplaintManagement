@@ -216,6 +216,14 @@ namespace ComplaintManagement
             bundles.Add(new Bundle("~/Assets/Login").Include(
                       "~/Assets/common.js",
                       "~/Assets/Login.js"));
+
+            //Edit Role Masters
+            bundles.Add(new ScriptBundle("~/Assets/EditEmployeeCompliant_OneMasters").Include(
+                      "~/Assets/EditEmployeeCompliant_OneMasters.js"));
+
+            // Employee Compliant Master
+            bundles.Add(new ScriptBundle("~/Assets/EmployeeComplaint").Include(
+                      "~/Assets/EmployeeComplaint.js"));
         }
     }
 }

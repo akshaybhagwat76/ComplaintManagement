@@ -264,7 +264,7 @@ label.adderror {
     margin-left: 5px;
 }
 
-input.adderror, select.adderror, div.adderror {
+input.adderror, textarea.adderror, select.adderror, div.adderror {
     border: 2px dotted #cc5965;
 }
 

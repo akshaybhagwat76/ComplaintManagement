@@ -230,6 +230,9 @@
     <Compile Include="Models\DesignationMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EmployeeComplaintMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\EntityMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -303,7 +306,9 @@
     <Compile Include="Repository\CategoryMastersRepository.cs" />
     <Compile Include="Repository\CommitteeMastersRepository.cs" />
     <Compile Include="Repository\CompetencyMastersRepository.cs" />
+    <Compile Include="Repository\Compliant_oneMastersRepository.cs" />
     <Compile Include="Repository\DesignationMasterRepository.cs" />
+    <Compile Include="Repository\EmployeeComplaintMastersRepository.cs" />
     <Compile Include="Repository\EntityMasterRepository.cs" />
     <Compile Include="Repository\LocationMastersRepository.cs" />
     <Compile Include="Repository\RegionMasterRepository.cs" />
@@ -320,6 +325,7 @@
     <Compile Include="ViewModel\CommitteeMasterVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
+    <Compile Include="ViewModel\EmployeeCompliant_oneMasterVM.cs" />
     <Compile Include="ViewModel\DesignationMasterHistoryVM.cs" />
     <Compile Include="ViewModel\DesignationMasterVM.cs" />
     <Compile Include="ViewModel\EntityMasterHistoryVM.cs" />
@@ -353,6 +359,7 @@
     <Content Include="Assets\EditCommitteeMaster.js" />
     <Content Include="Assets\EditCompetencyMasters.js" />
     <Content Include="Assets\EditDesignationMasters.js" />
+    <Content Include="Assets\EditEmployeeCompliant_OneMasters.js" />
     <Content Include="Assets\EditEntityMasters.js" />
     <Content Include="Assets\EditLocationMasters.js" />
     <Content Include="Assets\EditLOSMasters.js" />
@@ -362,6 +369,7 @@
     <Content Include="Assets\EditSubCategoryMasters.js" />
     <Content Include="Assets\EditSubSBUMasters.js" />
     <Content Include="Assets\EditUserMasters.js" />
+    <Content Include="Assets\EmployeeComplaint.js" />
     <Content Include="Assets\EntityMasters.js" />
     <Content Include="Assets\LocationMasters.js" />
     <Content Include="Assets\Login.js" />

@@ -119,6 +119,24 @@
           <Property Name="EntityState" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="DesignationId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="EmployeeComplaintMasters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="SubCategoryId" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedBy" Type="int" />
+          <Property Name="Remark" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Attachments" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="ComplaintStatus" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="EntityMasters">
           <Key>
             <PropertyRef Name="Id" />
@@ -421,6 +439,18 @@
           <Property Name="EntityState" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="UserMasterId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_EmployeeComplaintMasters_UserMasters">
+          <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="1" />
+          <End Role="EmployeeComplaintMasters" Type="Self.EmployeeComplaintMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmployeeComplaintMasters">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserMasters_CompetencyMasters">
           <End Role="CompetencyMasters" Type="Self.CompetencyMasters" Multiplicity="1" />
           <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="*" />
@@ -502,6 +532,7 @@
           <EntitySet Name="CompetencyMasters_History" EntityType="Self.CompetencyMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DesignationMasters" EntityType="Self.DesignationMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DesignationMasters_History" EntityType="Self.DesignationMasters_History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeComplaintMasters" EntityType="Self.EmployeeComplaintMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntityMasters" EntityType="Self.EntityMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntityMasters_History" EntityType="Self.EntityMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LocationMasters" EntityType="Self.LocationMasters" Schema="dbo" store:Type="Tables" />
@@ -520,6 +551,10 @@
           <EntitySet Name="SubSBUMasters_History" EntityType="Self.SubSBUMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMasters" EntityType="Self.UserMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMasters_History" EntityType="Self.UserMasters_History" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_EmployeeComplaintMasters_UserMasters" Association="Self.FK_EmployeeComplaintMasters_UserMasters">
+            <End Role="UserMasters" EntitySet="UserMasters" />
+            <End Role="EmployeeComplaintMasters" EntitySet="EmployeeComplaintMasters" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserMasters_CompetencyMasters" Association="Self.FK_UserMasters_CompetencyMasters">
             <End Role="CompetencyMasters" EntitySet="CompetencyMasters" />
             <End Role="UserMasters" EntitySet="UserMasters" />
@@ -599,6 +634,11 @@
           <AssociationSet Name="FK_UserMasters_SubSBUMasters" Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters">
             <End Role="SubSBUMaster" EntitySet="SubSBUMasters" />
             <End Role="UserMaster" EntitySet="UserMasters" />
+          </AssociationSet>
+          <EntitySet Name="EmployeeComplaintMasters" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" />
+          <AssociationSet Name="FK_EmployeeComplaintMasters_UserMasters" Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintMasters_UserMasters">
+            <End Role="UserMaster" EntitySet="UserMasters" />
+            <End Role="EmployeeComplaintMaster" EntitySet="EmployeeComplaintMasters" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="CategoryMaster">
@@ -995,6 +1035,7 @@
           <NavigationProperty Name="RegionMaster" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_RegionMasters" FromRole="UserMaster" ToRole="RegionMaster" />
           <NavigationProperty Name="SBUMaster" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" FromRole="UserMaster" ToRole="SBUMaster" />
           <NavigationProperty Name="SubSBUMaster" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" FromRole="UserMaster" ToRole="SubSBUMaster" />
+          <NavigationProperty Name="EmployeeComplaintMasters" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintMasters_UserMasters" FromRole="UserMaster" ToRole="EmployeeComplaintMaster" />
         </EntityType>
         <EntityType Name="UserMasters_History">
           <Key>
@@ -1098,6 +1139,37 @@
             </Principal>
             <Dependent Role="UserMaster">
               <PropertyRef Name="SubSBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EmployeeComplaintMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="SubCategoryId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="Int32" />
+          <Property Name="Remark" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Attachments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="ComplaintStatus" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintMasters_UserMasters" FromRole="EmployeeComplaintMaster" ToRole="UserMaster" />
+        </EntityType>
+        <Association Name="FK_EmployeeComplaintMasters_UserMasters">
+          <End Type="DB_A6A061_complaintuserModel.UserMaster" Role="UserMaster" Multiplicity="1" />
+          <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" Role="EmployeeComplaintMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmployeeComplaintMaster">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1545,6 +1617,25 @@
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
                 <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeComplaintMasters">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintMaster">
+              <MappingFragment StoreEntitySet="EmployeeComplaintMasters">
+                <ScalarProperty Name="ComplaintStatus" ColumnName="ComplaintStatus" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Attachments" ColumnName="Attachments" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

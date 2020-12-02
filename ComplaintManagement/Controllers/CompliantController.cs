@@ -1,6 +1,13 @@
-﻿using System;
+﻿using ComplaintManagement.Helpers;
+using ComplaintManagement.Repository;
+using ComplaintManagement.ViewModel;
+using Elmah;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 
@@ -12,8 +19,174 @@ namespace ComplaintManagement.Controllers
         // GET: Compliant
         public ActionResult Compliant_one()
         {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+               .Select(c => c.Value).SingleOrDefault();
+            UserMasterVM UserVM = new UserMastersRepository().Get(Convert.ToInt32(sid));
+
+            ViewBag.Entity = new EntityMasterRepository().Get(UserVM.Company).EntityName;
+            ViewBag.SBU = new SBUMasterRepository().Get(UserVM.SBUId).SBU;
+            ViewBag.SubSBU = new SubSBUMasterRepository().Get(UserVM.SubSBUId).SubSBU;
+            ViewBag.LOS = new LOSMasterRepository().Get(UserVM.LOSId).LOSName;
+            ViewBag.Competency = new CompetencyMastersRepository().Get(UserVM.CompentencyId).CompetencyName;
+            ViewBag.Location = new LocationMastersRepository().Get(UserVM.LocationId).LocationName;
+            ViewBag.Region = new RegionMasterRepository().Get(UserVM.RegionId).Region;
+            ViewBag.ManagementLevel = new DesignationMasterRepository().Get(UserVM.BusinessTitle).Designation;
+            ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
+            ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
+
+            if (!string.IsNullOrEmpty(UserVM.ImagePath))
+            {
+                if (!new Common().GetFilePathExist(UserVM.ImagePath))
+                {
+                    UserVM.ImagePath = string.Empty;
+                }
+            }
             ViewBag.NavbarTitle = "Complaint Information";
+            return View( UserVM);
+        }
+        public ActionResult Edit(int id, bool isView)
+        {
+            try
+            {
+                EmployeeCompliant_oneMasterVM EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(id);
+                UserMasterVM userMasterVM = new UserMastersRepository().Get(EmployeeCompliant_oneVM.UserId);
+                if (EmployeeCompliant_oneVM != null)
+                {
+                    userMasterVM.CategoryId = EmployeeCompliant_oneVM.CategoryId;
+                    userMasterVM.SubCategoryId = EmployeeCompliant_oneVM.SubCategoryId;
+                    userMasterVM.Remark = EmployeeCompliant_oneVM.Remark;
+                    userMasterVM.Attachments = EmployeeCompliant_oneVM.Attachments;
+                    userMasterVM.Id = EmployeeCompliant_oneVM.UserId;
+
+                    userMasterVM.CompentencyId = EmployeeCompliant_oneVM.Id;
+
+                }
+                ViewBag.Entity = new EntityMasterRepository().Get(userMasterVM.Company).EntityName;
+                ViewBag.SBU = new SBUMasterRepository().Get(userMasterVM.SBUId).SBU;
+                ViewBag.SubSBU = new SubSBUMasterRepository().Get(userMasterVM.SubSBUId).SubSBU;
+                ViewBag.LOS = new LOSMasterRepository().Get(userMasterVM.LOSId).LOSName;
+                ViewBag.Competency = new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName;
+                ViewBag.Location = new LocationMastersRepository().Get(userMasterVM.LocationId).LocationName;
+                ViewBag.Region = new RegionMasterRepository().Get(userMasterVM.RegionId).Region;
+                ViewBag.ManagementLevel = new DesignationMasterRepository().Get(userMasterVM.BusinessTitle).Designation;
+                ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
+
+                if (!string.IsNullOrEmpty(userMasterVM.ImagePath))
+                {
+                    if (!new Common().GetFilePathExist(userMasterVM.ImagePath))
+                    {
+                        userMasterVM.ImagePath = string.Empty;
+                    }
+                }
+                ViewBag.ViewState = isView;
+                ViewBag.PageType = !isView ? "Edit" : "View";
+                return View("Compliant_one", userMasterVM);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+            }
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddOrUpdateEmployeeCompliant(string EmpCompliantParams)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(EmpCompliantParams))
+                {
+                    var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliant_oneMasterVM>(EmpCompliantParams);
+
+                    var User = new EmployeeComplaintMastersRepository().AddOrUpdate(EmployeeComplaintDto);
+                    return new ReplyFormat().Success(Messages.SUCCESS, User);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            bool retval = true;
+            try
+            {
+                retval = new EmployeeComplaintMastersRepository().Delete(id);
+                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "EmployeeComplaint"), null);
+            }
+            catch (Exception ex)
+            {
+
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+        public List<EmployeeCompliant_oneMasterVM> GetAll(int currentPage, string range = "")
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
+            var lst = new EmployeeComplaintMastersRepository().GetAll();
+            lstCount = lst.Count;
+
+
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                lst = (from EmployeeComplain in lst
+                       where EmployeeComplain.CreatedDate.Date >= fromDate.Date && EmployeeComplain.CreatedDate.Date <= toDate.Date
+                       select EmployeeComplain).ToList();
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+            else
+            {
+                lst = (from EmployeeComplain in lst
+                       select EmployeeComplain)
+             .OrderByDescending(customer => customer.Id)
+             .Skip((currentPage - 1) * maxRows)
+             .Take(maxRows).ToList();
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                return lst;
+            }
+        }
+        [HttpGet]
+        public ActionResult LoadEmployeeComplain(int currentPageIndex, string range = "")
+        {
+            ViewBag.lstEmployeeComplain = GetAll(currentPageIndex, range);
+            if (!string.IsNullOrEmpty(range))
+            {
+                ViewBag.startDate = range.Split(',')[0];
+                ViewBag.toDate = range.Split(',')[1];
+            }
+            return View("Index");
         }
         public ActionResult Compliant_two()
         {
@@ -26,76 +199,6 @@ namespace ComplaintManagement.Controllers
             return View();
         }
 
-        // GET: Compliant/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-        // GET: Compliant/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Compliant/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Compliant/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Compliant/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Compliant/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Compliant/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
