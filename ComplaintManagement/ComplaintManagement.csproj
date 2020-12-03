@@ -325,6 +325,7 @@
     <Compile Include="ViewModel\CommitteeMasterVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
+    <Compile Include="ViewModel\CompliantSearchVM.cs" />
     <Compile Include="ViewModel\EmployeeCompliant_oneMasterVM.cs" />
     <Compile Include="ViewModel\DesignationMasterHistoryVM.cs" />
     <Compile Include="ViewModel\DesignationMasterVM.cs" />
@@ -2354,6 +2355,7 @@
     <Content Include="Views\LOS\HistoryIndex.cshtml" />
     <Content Include="Views\Role\HistoryIndex.cshtml" />
     <Content Include="Views\UserMaster\HistoryIndex.cshtml" />
+    <Content Include="Views\Employee\_EmployeeListView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

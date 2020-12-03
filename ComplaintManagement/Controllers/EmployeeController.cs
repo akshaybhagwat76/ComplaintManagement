@@ -98,17 +98,55 @@ namespace ComplaintManagement.Controllers
                 return lst;
             }
         }
-        [HttpGet]
-        public ActionResult LoadEmployeeComplain(int currentPageIndex, string range = "")
+
+        [HttpPost]
+        public JsonResult LoadEmployeeComplaints(CompliantSearchVM data)
         {
-            ViewBag.lstEmployeeComplaint = GetAll(currentPageIndex, range);
-            if (!string.IsNullOrEmpty(range))
+            int maxRows = 10; int lstCount = 0;
+            if (data.currentPage == 0)
             {
-                ViewBag.startDate = range.Split(',')[0];
-                ViewBag.toDate = range.Split(',')[1];
+                maxRows = 2147483647;
             }
-            return View("Index");
+
+            var lst = new EmployeeComplaintMastersRepository().GetAll();
+            lstCount = lst.Count;
+
+            if (!string.IsNullOrEmpty(data.FromDate) && !string.IsNullOrEmpty(data.ToDate))
+            {
+                DateTime fromDate = Convert.ToDateTime(data.FromDate);
+                DateTime toDate = Convert.ToDateTime(data.ToDate);
+                lst = (from EmployeeComplain in lst
+                       where EmployeeComplain.CreatedDate.Date >= fromDate && EmployeeComplain.CreatedDate.Date <= toDate
+                       select EmployeeComplain).ToList();
+
+            }
+            if (data.CategoryId > 0)
+            {
+                lst = (from EmployeeComplain in lst
+                       where EmployeeComplain.CategoryId == data.CategoryId
+                       select EmployeeComplain).ToList();
+            }
+            if (data.SubCategoryId > 0)
+            {
+                lst = (from EmployeeComplain in lst
+                       where EmployeeComplain.SubCategoryId == data.CategoryId
+                       select EmployeeComplain).ToList();
+            }
+            lstCount = lst.Count;
+            lst = (lst)
+                    .OrderByDescending(customer => customer.Id)
+                    .Skip((data.currentPage - 1) * maxRows)
+                    .Take(maxRows).ToList();
+
+            double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+            ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+            ViewBag.CurrentPageIndex = data.currentPage;
+            ViewBag.lstEmployeeComplaint = lst;
+            return Json(new { Url = Url.Action("_EmployeeListView"),fromDate = data.FromDate,toDate=data.ToDate,categoryId=data.CategoryId,subCategoryId=data.SubCategoryId });
+
         }
+        
         [HttpGet]
         public ActionResult GetEmployeeCompliant(string range, int currentPage)
         {

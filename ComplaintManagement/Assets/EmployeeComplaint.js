@@ -1,11 +1,11 @@
 ﻿$(document).ready(function () {
     $.noConflict();
-   
+
     // $("#myTable").DataTable();
 });
 
 function deleteEmployeeCompliant(id) {
-   
+
     //$('#deleteModal').data('id', id).modal('show');
     //$('#deleteModal').modal('show');
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
@@ -26,7 +26,7 @@ function searchKeyPress(e) {
 
 //$("#dSuggest").keypress(function () {
 //    //Interrupt the execution thread to allow input to update
-   
+
 //});
 
 //$('#txtSearch').keypress(function (e) {
@@ -44,7 +44,7 @@ function searchKeyPress(e) {
 function searchEmployeeCompliant(searchText) {
     debugger
     if (searchText !== null && searchText !== "") {
-       
+
         location.href = "/Employee/searchEmployeeCompliant?search=" + searchText;
     }
 
@@ -129,17 +129,24 @@ function performAction(id, isView) {
 
 function filterGrid() {
     debugger
-    var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+    var data = {
+        fromDate = $("#fromDate").val(),
+        toDate = $("#toDate").val(),
+        CategoryId = $("#CategoryId").val(),
+        SubCategoryId = $("#SubCategoryId").val()
+    };
+
     if (fromDate == "" || toDate == "") {
         funToastr(false, "Please select from and to date."); return;
     }
-    else {
-        StartProcess();
-        if ($("#hfCurrentPageIndex").val() == "") {
-            $("#hfCurrentPageIndex").val("1");
+    $.ajax({
+        type: "POST",
+        url: "/Employee/LoadEmployeeComplaints",
+        data: { data: data },
+        success: function () {
+
         }
-        location.href = '/Employee/GetEmployeeCompliant?range=' + fromDate + ',' + toDate + '&currentPage=' + $("#hfCurrentPageIndex").val();
-    }
+    })
 }
 
 function PagerClick(index) {
@@ -153,9 +160,9 @@ function PagerClick(index) {
 
 
     if ($("#history").val() == undefined) {
-        location.href = '/Category/LoadCategories?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
+        location.href = '/Employee/LoadEmployeeComplain?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
     }
     else {
-        location.href = '/Category/LoadHistoryCategories?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
+        location.href = '/Employee/LoadEmployeeComplain?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
     }
 }
