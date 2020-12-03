@@ -2,9 +2,11 @@
 using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using Ionic.Zip;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -143,10 +145,10 @@ namespace ComplaintManagement.Controllers
 
             ViewBag.CurrentPageIndex = data.currentPage;
             ViewBag.lstEmployeeComplaint = lst;
-            return Json(new { Url = Url.Action("_EmployeeListView"),fromDate = data.FromDate,toDate=data.ToDate,categoryId=data.CategoryId,subCategoryId=data.SubCategoryId });
+            return Json(new { Url = Url.Action("_EmployeeListView"), fromDate = data.FromDate, toDate = data.ToDate, categoryId = data.CategoryId, subCategoryId = data.SubCategoryId });
 
         }
-        
+
         [HttpGet]
         public ActionResult GetEmployeeCompliant(string range, int currentPage)
         {
@@ -158,6 +160,54 @@ namespace ComplaintManagement.Controllers
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View("Index");
+        }
+
+
+        [HttpGet]
+        public ActionResult DownloadAttachments(string files)
+        {
+            if (!string.IsNullOrEmpty(files))
+            {
+                using (ZipFile zip = new ZipFile())
+                {
+
+                    zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                    zip.AddDirectoryByName("Files");
+                    string[] docfileArray = Directory.GetFiles(Server.MapPath("~/Documents/"));
+                    string[] filesArray = files.Split(new string[] { "," }, StringSplitOptions.None);
+
+                    foreach (var file in filesArray)
+                    {
+                        if (file != null)
+                        {
+                            if (docfileArray.FirstOrDefault(x => x.Contains(file)) != null)
+                            {
+                                string indexed = docfileArray.FirstOrDefault(x => x.Contains(file));
+
+
+                                if (System.IO.File.Exists(indexed))
+                                {
+                                    zip.AddFile(indexed, "Files");
+                                }
+                                else { return RedirectToAction("Index"); }
+                            }
+
+                        }
+                    }
+
+                    var order_id = "attachments";
+                    string zipName = string.Format("" + order_id + "_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+                    if (zip.Entries.Count > 1)
+                    {
+                        using (MemoryStream memoryStram = new MemoryStream())
+                        {
+                            zip.Save(memoryStram);
+                            return File(memoryStram.ToArray(), "application/zip", zipName);
+                        }
+                    }
+                }
+            }
+            return RedirectToAction("Index");
         }
     }
 }

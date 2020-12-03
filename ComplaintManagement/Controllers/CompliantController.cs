@@ -45,7 +45,7 @@ namespace ComplaintManagement.Controllers
                 }
             }
             ViewBag.NavbarTitle = "Complaint Information";
-            return View( UserVM);
+            return View(UserVM);
         }
         public ActionResult Edit(int id, bool isView)
         {
@@ -111,7 +111,13 @@ namespace ComplaintManagement.Controllers
                         if (file != null)
                         {
                             var InputFileName = new Common().UniqueFileName();
-                                  string strpath = InputFileName+= System.IO.Path.GetExtension(file.FileName);
+                            string strpath = InputFileName += System.IO.Path.GetExtension(file.FileName);
+
+                            String path = Server.MapPath("~/Documents/");
+                            if (!Directory.Exists(path))
+                            {
+                                Directory.CreateDirectory(path);
+                            }
 
                             var ServerSavePath = Path.Combine(Server.MapPath("~/Documents/") + strpath);
                             //Save file to server folder  
@@ -201,6 +207,7 @@ namespace ComplaintManagement.Controllers
                 return lst;
             }
         }
+
         [HttpGet]
         public ActionResult LoadEmployeeComplain(int currentPageIndex, string range = "")
         {
@@ -222,7 +229,5 @@ namespace ComplaintManagement.Controllers
             ViewBag.NavbarTitle = "Committee";
             return View();
         }
-
-
     }
 }

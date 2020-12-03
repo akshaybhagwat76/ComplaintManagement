@@ -31,10 +31,19 @@
                 </strong>
             </td>
             <td class="text-black text-center">
-                <strong>
-                    @item.Attachments
+                @if (!string.IsNullOrEmpty(item.Attachments) && item.Attachments.Length > 0)
+                {
+                    <strong>
+                        <a  href="/Employee/DownloadAttachments?files=@item.Attachments">
+                            <i class="fas fa-download fa-fw"></i>
+                        </a>
+                    </strong>
+                }
+                else
+                {
+                    @Html.Raw(Messages.NotAvailable.ToString())
+                }
 
-                </strong>
             </td>
 
 
