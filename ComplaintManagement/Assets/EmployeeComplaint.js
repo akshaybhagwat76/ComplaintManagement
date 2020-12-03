@@ -143,8 +143,8 @@ function filterGrid() {
         type: "POST",
         url: "/Employee/LoadEmployeeComplaints",
         data: { data: data },
-        success: function () {
-
+        success: function (response) {
+            console.log(response);
         }
     })
 }
