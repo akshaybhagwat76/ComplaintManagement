@@ -102,51 +102,58 @@ namespace ComplaintManagement.Controllers
         [HttpPost]
         public JsonResult LoadEmployeeComplaints(CompliantSearchVM data)
         {
-            int maxRows = 10; int lstCount = 0;
-            if (data.currentPage == 0)
+            try
             {
-                maxRows = 2147483647;
+                int maxRows = 10; int lstCount = 0;
+                if (data.currentPage == 0)
+                {
+                    maxRows = 2147483647;
+                }
+
+                var lst = new EmployeeComplaintMastersRepository().GetAll();
+                lstCount = lst.Count;
+
+                if (!string.IsNullOrEmpty(data.FromDate) && !string.IsNullOrEmpty(data.ToDate))
+                {
+                    DateTime fromDate = Convert.ToDateTime(data.FromDate);
+                    DateTime toDate = Convert.ToDateTime(data.ToDate);
+                    lst = (from EmployeeComplain in lst
+                           where EmployeeComplain.CreatedDate.Date >= fromDate && EmployeeComplain.CreatedDate.Date <= toDate
+                           select EmployeeComplain).ToList();
+
+                }
+                if (data.CategoryId > 0)
+                {
+                    lst = (from EmployeeComplain in lst
+                           where EmployeeComplain.CategoryId == data.CategoryId
+                           select EmployeeComplain).ToList();
+                }
+                if (data.SubCategoryId > 0)
+                {
+                    lst = (from EmployeeComplain in lst
+                           where EmployeeComplain.SubCategoryId == data.SubCategoryId
+                           select EmployeeComplain).ToList();
+                }
+                lstCount = lst.Count;
+                lst = (lst)
+                        .OrderByDescending(customer => customer.Id)
+                        .Skip((data.currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = data.currentPage;
+                ViewBag.lstEmployeeComplaint = lst;
+                return new ReplyFormat().Success(Messages.SUCCESS, new { Url = PartialView("_EmployeeListView").RenderToString(), fromDate = data.FromDate, toDate = data.ToDate, categoryId = data.CategoryId, subCategoryId = data.SubCategoryId });
             }
-
-            var lst = new EmployeeComplaintMastersRepository().GetAll();
-            lstCount = lst.Count;
-
-            if (!string.IsNullOrEmpty(data.FromDate) && !string.IsNullOrEmpty(data.ToDate))
+            catch (Exception ex)
             {
-                DateTime fromDate = Convert.ToDateTime(data.FromDate);
-                DateTime toDate = Convert.ToDateTime(data.ToDate);
-                lst = (from EmployeeComplain in lst
-                       where EmployeeComplain.CreatedDate.Date >= fromDate && EmployeeComplain.CreatedDate.Date <= toDate
-                       select EmployeeComplain).ToList();
-
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
             }
-            if (data.CategoryId > 0)
-            {
-                lst = (from EmployeeComplain in lst
-                       where EmployeeComplain.CategoryId == data.CategoryId
-                       select EmployeeComplain).ToList();
-            }
-            if (data.SubCategoryId > 0)
-            {
-                lst = (from EmployeeComplain in lst
-                       where EmployeeComplain.SubCategoryId == data.CategoryId
-                       select EmployeeComplain).ToList();
-            }
-            lstCount = lst.Count;
-            lst = (lst)
-                    .OrderByDescending(customer => customer.Id)
-                    .Skip((data.currentPage - 1) * maxRows)
-                    .Take(maxRows).ToList();
-
-            double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
-            ViewBag.PageCount = (int)Math.Ceiling(pageCount);
-
-            ViewBag.CurrentPageIndex = data.currentPage;
-            ViewBag.lstEmployeeComplaint = lst;
-            return Json(new { Url = Url.Action("_EmployeeListView"),fromDate = data.FromDate,toDate=data.ToDate,categoryId=data.CategoryId,subCategoryId=data.SubCategoryId });
-
         }
-        
+
         [HttpGet]
         public ActionResult GetEmployeeCompliant(string range, int currentPage)
         {

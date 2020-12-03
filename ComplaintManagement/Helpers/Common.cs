@@ -29,6 +29,14 @@ namespace ComplaintManagement.Helpers
                 File.Delete(HttpContext.Current.Server.MapPath(filePath));
             }
         }
+        public void RemoveDoc(string fileName)
+        {
+            string filePath = "~/Documents/" + fileName;
+            if (File.Exists(HttpContext.Current.Server.MapPath(filePath)))
+            {
+                File.Delete(HttpContext.Current.Server.MapPath(filePath));
+            }
+        }
 
         public bool GetFilePathExist(string fileName)
         {

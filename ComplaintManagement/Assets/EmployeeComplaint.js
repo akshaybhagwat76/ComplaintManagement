@@ -1,20 +1,12 @@
 ﻿$(document).ready(function () {
-    $.noConflict();
-
-    // $("#myTable").DataTable();
 });
 
 function deleteEmployeeCompliant(id) {
-
-    //$('#deleteModal').data('id', id).modal('show');
-    //$('#deleteModal').modal('show');
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
 
 }
 
 function searchKeyPress(e) {
-    // look for window.event in case event isn't passed in
-    debugger
     e = e || window.event;
     if (e.keyCode == 13) {
         e.preventDefault();
@@ -24,27 +16,9 @@ function searchKeyPress(e) {
     return true;
 }
 
-//$("#dSuggest").keypress(function () {
-//    //Interrupt the execution thread to allow input to update
-
-//});
-
-//$('#txtSearch').keypress(function (e) {
-//    debugger
-//    var key = e.which;
-//    if (key === 13)  // the enter key code
-//    {
-//        searchEmployeeCompliant(e.target.value);
-//        return false;
-//    }
-//    return true;
-//});   
-
 
 function searchEmployeeCompliant(searchText) {
-    debugger
     if (searchText !== null && searchText !== "") {
-
         location.href = "/Employee/searchEmployeeCompliant?search=" + searchText;
     }
 
@@ -130,21 +104,37 @@ function performAction(id, isView) {
 function filterGrid() {
     debugger
     var data = {
-        fromDate = $("#fromDate").val(),
-        toDate = $("#toDate").val(),
-        CategoryId = $("#CategoryId").val(),
-        SubCategoryId = $("#SubCategoryId").val()
+        fromDate: document.getElementById("fromDate").value,
+        toDate: document.getElementById("toDate").value,
+        CategoryId: document.getElementById("CategoryId").value,
+        SubCategoryId: document.getElementById("SubCategoryId").value
     };
-
+    StartProcess();
     if (fromDate == "" || toDate == "") {
+        StopProcess();
         funToastr(false, "Please select from and to date."); return;
     }
     $.ajax({
         type: "POST",
         url: "/Employee/LoadEmployeeComplaints",
         data: { data: data },
-        success: function (response) {
-            console.log(response);
+        success: function (data) {
+            console.log(data);
+            debugger
+            if (data.status == "Fail") {
+                StopProcess();
+                funToastr(false, data.error);
+            }
+            else {
+                StopProcess();
+                $("#tblList").find('tbody').empty();
+                $("#tblList").find('tbody').html(data.data.Url);
+            }
+        }, error: function (response) {
+            funToastr(false, response.responseText);
+        },
+        failure: function (response) {
+            funToastr(false, response.responseText);
         }
     })
 }
