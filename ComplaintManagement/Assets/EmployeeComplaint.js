@@ -17,17 +17,35 @@ function searchKeyPress(e) {
     debugger
     e = e || window.event;
     if (e.keyCode == 13) {
+        e.preventDefault();
         searchEmployeeCompliant(e.target.value);
         return false;
     }
     return true;
 }
 
+//$("#dSuggest").keypress(function () {
+//    //Interrupt the execution thread to allow input to update
+   
+//});
+
+//$('#txtSearch').keypress(function (e) {
+//    debugger
+//    var key = e.which;
+//    if (key === 13)  // the enter key code
+//    {
+//        searchEmployeeCompliant(e.target.value);
+//        return false;
+//    }
+//    return true;
+//});   
+
+
 function searchEmployeeCompliant(searchText) {
     debugger
     if (searchText !== null && searchText !== "") {
        
-        location.href = "/EmployeeCompliant/searchEmployeeCompliant?search=" + searchText;
+        location.href = "/Employee/searchEmployeeCompliant?search=" + searchText;
     }
 
 }

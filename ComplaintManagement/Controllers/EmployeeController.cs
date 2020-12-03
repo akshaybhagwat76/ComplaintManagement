@@ -41,21 +41,15 @@ namespace ComplaintManagement.Controllers
                 }
                 if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
                 {
-                    ViewBag.lstEmployeeComplaint = GetAll(0).ToList().Where(x => x.CategoryName.Contains(search)).ToList();
+                    ViewBag.lstEmployeeComplaint = GetAll(0).ToList().Where(x => x.CategoryName.Contains(search) || x.SubCategoryName.Contains(search) || x.Remark.Contains(search)).ToList();
                 }
-                if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
-                {
-                    ViewBag.lstEmployeeComplaint = GetAll(0).ToList().Where(x => x.SubCategoryName.Contains(search)).ToList();
-                }
-                if (search.ToLower() != Messages.Active.ToLower() && search.ToLower() != Messages.Inactive.ToLower())
-                {
-                    ViewBag.lstEmployeeComplaint = GetAll(0).ToList().Where(x => x.Remark.Contains(search)).ToList();
-                }
-
                 var DataTableDetail = new HomeController().getDataTableDetail("EmployeeComplaint", null);
                 ViewBag.Page = DataTableDetail.Item1;
                 ViewBag.PageIndex = DataTableDetail.Item2;
             }
+            ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
+            ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
+
             return View("Index");
         }
         public List<EmployeeCompliant_oneMasterVM> GetAll(int currentPage, string range = "")
