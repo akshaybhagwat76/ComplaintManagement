@@ -25,27 +25,27 @@
     <!-- Section for main scripts render -->
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryui")
-    @*@Scripts.Render("~/bundles/bootstrap")*@
+    @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/plugins/toastr")
     @Scripts.Render("~/plugins/dataTables")
     @RenderSection("scripts", required: false)
 
     <!--<link href="css/helper.css" rel="stylesheet">-->
     @*@{
-        UserMasterVM userProfile = new UserMasterVM();
-        int userId = 0;
-        try
-        {
-            var identity = (ClaimsIdentity)User.Identity;
-            userId = Convert.ToInt32(identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
-                   .Select(c => c.Value).SingleOrDefault());
-            userProfile = new UserMastersRepository().Get(userId);
-        }
-        catch (Exception ex)
-        {
-            ErrorSignal.FromCurrentContext().Raise(ex);
-        }
-    }*@
+            UserMasterVM userProfile = new UserMasterVM();
+            int userId = 0;
+            try
+            {
+                var identity = (ClaimsIdentity)User.Identity;
+                userId = Convert.ToInt32(identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                       .Select(c => c.Value).SingleOrDefault());
+                userProfile = new UserMastersRepository().Get(userId);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+            }
+        }*@
 </head>
 <body id="page-top">
     <!-- Page Wrapper -->
@@ -192,12 +192,12 @@
     </div>
 
 
-    @*@Scripts.Render("~/bundles/jquery")*@
-    @*@Scripts.Render("~/bundles/bootstrap")*@
-    @*@Scripts.Render("~/plugins/dataTables")*@
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/plugins/dataTables")
 
     <!-- Bootstrap core JavaScript-->
-    @*@Scripts.Render("~/sb-admin2/jquery")*@
+    @Scripts.Render("~/sb-admin2/jquery")
     @Scripts.Render("~/sb-admin2/bootstrapbundle")
     <!-- Core plugin JavaScript-->
     @Scripts.Render("~/sb-admin2/Jqueryeasing")
