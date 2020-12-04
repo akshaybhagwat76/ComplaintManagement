@@ -1,8 +1,4 @@
-﻿$(document).ready(function () {
-    $.noConflict();
-    // $("#myTable").DataTable();
-});
-
+﻿
 function deleteCategory(id) {
 
     //$('#deleteModal').data('id', id).modal('show');

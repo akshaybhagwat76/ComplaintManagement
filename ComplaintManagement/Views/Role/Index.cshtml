@@ -189,19 +189,21 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table f-14" id="myTable">
-                                        <tr>
-                                            <td class="text-center">User</td>
-                                            <td class="text-center">LOS</td>
-                                            <td class="text-center">SBU</td>
-                                            <td class="text-center">Sub-SBU</td>
-                                            <td class="text-center">Competency</td>
-                                            <td class="text-center">Created Date</td>
-                                            <td class="text-center">Created By</td>
-                                            <td class="text-center">Modified Date</td>
-                                            <td class="text-center">Modified By</td>
-                                            <td class="text-center">Status</td>
-                                            <td class="text-center">Action</td>
-                                        </tr>
+                                        <thead>
+                                            <tr>
+                                                <td class="text-center">User</td>
+                                                <td class="text-center">LOS</td>
+                                                <td class="text-center">SBU</td>
+                                                <td class="text-center">Sub-SBU</td>
+                                                <td class="text-center">Competency</td>
+                                                <td class="text-center">Created Date</td>
+                                                <td class="text-center">Created By</td>
+                                                <td class="text-center">Modified Date</td>
+                                                <td class="text-center">Modified By</td>
+                                                <td class="text-center">Status</td>
+                                                <td class="text-center">Action</td>
+                                            </tr>
+                                        </thead>
                                         <tbody>
 
                                             @foreach (var item in data)
@@ -260,6 +262,7 @@
                                         </tbody>
 
                                     </table>
+                                </div>
                                     <br />
                                     <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
                                         <tr>
@@ -281,7 +284,6 @@
                                         </tr>
                                     </table>
                                     <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -293,7 +295,6 @@
     <!-- End of Main Content -->
 </div>
 <!-- End of Content Wrapper -->
-    </div>
 <!-- End of Page Wrapper -->
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
