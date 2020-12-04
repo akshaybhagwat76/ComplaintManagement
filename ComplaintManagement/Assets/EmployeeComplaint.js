@@ -1,5 +1,4 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
 });
 
 function deleteEmployeeCompliant(id) {
@@ -73,6 +72,10 @@ function Confirm(title, msg, $true, $false, $link) { /*change*/
             $(this).remove();
         });
     });
+
+}
+
+addAttachementFile = function () {
 
 }
 
