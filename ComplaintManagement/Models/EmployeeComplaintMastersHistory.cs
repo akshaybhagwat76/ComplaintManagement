@@ -12,7 +12,7 @@ namespace ComplaintManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class EmployeeComplaintMaster
+    public partial class EmployeeComplaintMastersHistory
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -27,7 +27,7 @@ namespace ComplaintManagement.Models
         public bool IsActive { get; set; }
         public bool Status { get; set; }
         public string ComplaintStatus { get; set; }
-    
-        public virtual UserMaster UserMaster { get; set; }
+        public string EntityState { get; set; }
+        public int EmployeeComplaintMasterId { get; set; }
     }
 }

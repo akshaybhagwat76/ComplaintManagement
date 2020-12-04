@@ -43,6 +43,10 @@
         public const string Added = "Added";
         public const string Updated = "Updated";
 
+        public const string Opened = "Opened";
+        public const string Closed = "Closed";
+        public const string Withdrawn = "Withdrawn";
+
         public const string PRODUCT_IMAGE = "Product";
         public const string Active = "Active";
         public const string Inactive = "Inactive";

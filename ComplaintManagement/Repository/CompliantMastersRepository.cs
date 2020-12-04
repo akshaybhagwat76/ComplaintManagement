@@ -3,12 +3,8 @@ using ComplaintManagement.Helpers;
 using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
 using Elmah;
-using OfficeOpenXml;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Validation;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -16,17 +12,11 @@ using System.Web;
 
 namespace ComplaintManagement.Repository
 {
-    public class Compliant_oneMastersRepository
+    public class CompliantMastersRepository
     {
-
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public Compliant_oneMastersRepository()
-        {
-
-        }
-
-        public EmployeeCompliant_oneMasterVM AddOrUpdate(EmployeeCompliant_oneMasterVM EmployeeCompliant_oneVM)
+        public EmployeeCompliantMasterVM AddOrUpdate(EmployeeCompliantMasterVM EmployeeComplaintVM)
         {
             try
             {
@@ -41,54 +31,52 @@ namespace ComplaintManagement.Repository
                     {
                         try
                         {
-                            var EmployeeCompliant_one = db.EmployeeComplaintMasters.FirstOrDefault(p => p.UserId == EmployeeCompliant_oneVM.UserId);
-                            if (EmployeeCompliant_one == null)
+                            var EmployeeCompliant = db.EmployeeComplaintMasters.FirstOrDefault(p => p.UserId == EmployeeComplaintVM.UserId);
+                            if (EmployeeCompliant == null)
                             {
-                                EmployeeCompliant_oneVM.IsActive = true;
-                                EmployeeCompliant_oneVM.ComplaintStatus = true;
-                                EmployeeCompliant_oneVM.CreatedDate = DateTime.UtcNow;
-                                EmployeeCompliant_oneVM.CreatedBy = Convert.ToInt32(sid);
-                                EmployeeCompliant_one = Mapper.Map<EmployeeCompliant_oneMasterVM, EmployeeComplaintMaster>(EmployeeCompliant_oneVM);
+                                EmployeeComplaintVM.IsActive = true;
+                                EmployeeComplaintVM.ComplaintStatus = true;
+                                EmployeeComplaintVM.CreatedDate = DateTime.UtcNow;
+                                EmployeeComplaintVM.CreatedBy = Convert.ToInt32(sid);
+                                EmployeeCompliant = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMaster>(EmployeeComplaintVM);
 
-                                db.EmployeeComplaintMasters.Add(EmployeeCompliant_one);
+                                db.EmployeeComplaintMasters.Add(EmployeeCompliant);
                                 db.SaveChanges();
 
-                                //CategoryMasters_History categoryMasters_History = Mapper.Map<CategoryMasterVM, CategoryMasters_History>(categoryVM);
-                                //if (categoryMasters_History != null) { categoryMasters_History.EntityState = Messages.Added; categoryMasters_History.CategoryId = category.Id; };
-                                //db.CategoryMasters_History.Add(categoryMasters_History);
-                                //db.SaveChanges();
+                                EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
+                                if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Added; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
+                                db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
+                                db.SaveChanges();
+                                dbContextTransaction.Commit();
 
-                                //dbContextTransaction.Commit();
-                                //return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
                             }
                             else
                             {
-                                EmployeeCompliant_oneVM.IsActive = true;
-                                EmployeeCompliant_oneVM.CreatedDate = EmployeeCompliant_one.CreatedDate;
-                                EmployeeCompliant_oneVM.CreatedBy = EmployeeCompliant_one.CreatedBy;
-                                EmployeeCompliant_oneVM.UpdatedDate = DateTime.UtcNow;
-                                EmployeeCompliant_oneVM.UpdatedBy = Convert.ToInt32(sid);
-                                db.Entry(EmployeeCompliant_one).CurrentValues.SetValues(EmployeeCompliant_oneVM);
+                                EmployeeComplaintVM.IsActive = true;
+                                EmployeeComplaintVM.CreatedDate = EmployeeCompliant.CreatedDate;
+                                EmployeeComplaintVM.CreatedBy = EmployeeCompliant.CreatedBy;
+                                EmployeeComplaintVM.UpdatedDate = DateTime.UtcNow;
+                                EmployeeComplaintVM.UpdatedBy = Convert.ToInt32(sid);
+                                db.Entry(EmployeeCompliant).CurrentValues.SetValues(EmployeeComplaintVM);
 
                                 db.SaveChanges();
 
-                                //CategoryMasters_History categoryMasters_History = Mapper.Map<CategoryMasterVM, CategoryMasters_History>(categoryVM);
-                                //if (categoryMasters_History != null) { categoryMasters_History.EntityState = Messages.Updated; categoryMasters_History.CategoryId = category.Id; };
-                                //db.CategoryMasters_History.Add(categoryMasters_History);
-                                //db.SaveChanges();
+                                EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
+                                if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Updated; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
+                                db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
+                                db.SaveChanges();
 
-                                //dbContextTransaction.Commit();
-                                //return Mapper.Map<CategoryMaster, CategoryMasterVM>(category);
+                                dbContextTransaction.Commit();
                             }
                         }
                         catch (Exception ex)
                         {
-                            //dbContextTransaction.Rollback();
+                            dbContextTransaction.Rollback();
                             throw new Exception(ex.Message.ToString());
                         }
                     }
                 }
-                return new EmployeeCompliant_oneMasterVM();
+                return new EmployeeCompliantMasterVM();
             }
             catch (DbEntityValidationException dve)
             {
@@ -211,4 +199,3 @@ namespace ComplaintManagement.Repository
 
     }
 }
-

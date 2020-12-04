@@ -48,12 +48,12 @@ namespace ComplaintManagement.Models
         public int ModifiedBy { get; set; }
     
         public virtual CompetencyMaster CompetencyMaster { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EmployeeComplaintMaster> EmployeeComplaintMasters { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
         public virtual LOSMaster LOSMaster { get; set; }
         public virtual RegionMaster RegionMaster { get; set; }
         public virtual SBUMaster SBUMaster { get; set; }
         public virtual SubSBUMaster SubSBUMaster { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EmployeeComplaintMaster> EmployeeComplaintMasters { get; set; }
     }
 }

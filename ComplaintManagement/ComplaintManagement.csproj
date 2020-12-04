@@ -238,6 +238,9 @@
     <Compile Include="Models\EmployeeComplaintMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EmployeeComplaintMastersHistory.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\EntityMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -311,7 +314,7 @@
     <Compile Include="Repository\CategoryMastersRepository.cs" />
     <Compile Include="Repository\CommitteeMastersRepository.cs" />
     <Compile Include="Repository\CompetencyMastersRepository.cs" />
-    <Compile Include="Repository\Compliant_oneMastersRepository.cs" />
+    <Compile Include="Repository\CompliantMastersRepository.cs" />
     <Compile Include="Repository\DesignationMasterRepository.cs" />
     <Compile Include="Repository\EmployeeComplaintMastersRepository.cs" />
     <Compile Include="Repository\EntityMasterRepository.cs" />
@@ -331,7 +334,8 @@
     <Compile Include="ViewModel\CompetencyMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
     <Compile Include="ViewModel\CompliantSearchVM.cs" />
-    <Compile Include="ViewModel\EmployeeCompliant_oneMasterVM.cs" />
+    <Compile Include="ViewModel\EmployeeComplaintMastersHistoryVM.cs" />
+    <Compile Include="ViewModel\EmployeeCompliantMasterVM.cs" />
     <Compile Include="ViewModel\DesignationMasterHistoryVM.cs" />
     <Compile Include="ViewModel\DesignationMasterVM.cs" />
     <Compile Include="ViewModel\EntityMasterHistoryVM.cs" />
@@ -2342,10 +2346,6 @@
     <Content Include="Views\Committee\Index.cshtml" />
     <Content Include="Views\Shared\_CommonDeleteModal.cshtml" />
     <Content Include="Views\Employee\Index.cshtml" />
-    <Content Include="Views\Compliant\Compliant_one.cshtml" />
-    <Content Include="Views\Compliant\Compliant_two.cshtml" />
-    <Content Include="Views\Compliant\Compliant_three.cshtml" />
-    <Content Include="Views\Compliant\_Compliant.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Category\HistoryIndex.cshtml" />
     <Content Include="Views\Committee\HistoryIndex.cshtml" />
@@ -2361,6 +2361,10 @@
     <Content Include="Views\Role\HistoryIndex.cshtml" />
     <Content Include="Views\UserMaster\HistoryIndex.cshtml" />
     <Content Include="Views\Employee\_EmployeeListView.cshtml" />
+    <Content Include="Views\Compliant\Compliant_one.cshtml" />
+    <Content Include="Views\Compliant\Compliant_three.cshtml" />
+    <Content Include="Views\Compliant\Compliant_two.cshtml" />
+    <Content Include="Views\Compliant\_Compliant.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

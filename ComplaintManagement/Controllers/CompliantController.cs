@@ -51,7 +51,7 @@ namespace ComplaintManagement.Controllers
         {
             try
             {
-                EmployeeCompliant_oneMasterVM EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(id);
+                EmployeeCompliantMasterVM EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(id);
                 UserMasterVM userMasterVM = new UserMastersRepository().Get(EmployeeCompliant_oneVM.UserId);
                 if (EmployeeCompliant_oneVM != null)
                 {
@@ -129,7 +129,7 @@ namespace ComplaintManagement.Controllers
                 }
                 if (!string.IsNullOrEmpty(EmpCompliantParams))
                 {
-                    var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliant_oneMasterVM>(EmpCompliantParams);
+                    var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliantMasterVM>(EmpCompliantParams);
                     EmployeeComplaintDto.Attachments = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
                     var User = new EmployeeComplaintMastersRepository().AddOrUpdate(EmployeeComplaintDto);
                     return new ReplyFormat().Success(Messages.SUCCESS, User);
@@ -161,7 +161,7 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
-        public List<EmployeeCompliant_oneMasterVM> GetAll(int currentPage, string range = "")
+        public List<EmployeeCompliantMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
             if (currentPage == 0)
@@ -233,7 +233,7 @@ namespace ComplaintManagement.Controllers
         {
             try
             {
-                new Compliant_oneMastersRepository().Removefile(fileName);
+                new CompliantMastersRepository().Removefile(fileName);
                 return new ReplyFormat().Success(Messages.DELETE_MESSAGE_FILE, fileName);
             }
             catch (Exception ex)
@@ -243,7 +243,5 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
-
-
     }
 }
