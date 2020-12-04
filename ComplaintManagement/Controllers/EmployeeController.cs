@@ -3,7 +3,6 @@ using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
 using Ionic.Zip;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;

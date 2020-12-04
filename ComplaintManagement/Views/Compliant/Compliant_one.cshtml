@@ -1,11 +1,12 @@
-﻿@model ComplaintManagement.ViewModel.UserMasterVM
+﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.UserMasterVM
 @{
     ViewBag.Title = "Compliant_one";
 }
 <div id="content-wrapper" class="d-flex flex-column">
-    @Html.Hidden("UserId", Model.Id)
-    @Html.Hidden("Id", Model.CompentencyId)
-
+    @Html.Hidden("UserId", Model.CompentencyId)
+    @Html.Hidden("Id", Model.Id)
+    @Html.Hidden("ComplaintStatus", Model.ComplaintStatus)
     <!-- Main Content -->
     <div id="content">
         <!-- Topbar -->
@@ -180,44 +181,45 @@
                                         <i class="fas fa-plus"></i>
                                     </a>
                                 </div>
-                                    @if (!string.IsNullOrEmpty(Model.Attachments))
+                                @if (!string.IsNullOrEmpty(Model.Attachments))
+                                {
+                                    <br />
+                                    <br />
+                                    if (Model.Attachments.Contains(","))
                                     {
-                                        <br />
-                                        <br />
-                                        if (Model.Attachments.Contains(","))
+                                        string[] array = Model.Attachments.Split(',');
+                                        foreach (var item in array)
                                         {
-                                            string[] array = Model.Attachments.Split(',');
-                                            foreach (var item in array)
+                                            if (item.Length > 3)
                                             {
-                                                if (item.Length > 3)
-                                                {
-                                                    <div id="file_@item" class="col-md-6">
+                                                <div id="file_@item" class="col-md-6">
 
-                                                        @item &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@item')" title="remove"></span>
-                                                    </div>
-                                                }
+                                                    @item &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@item')" title="remove"></span>
+                                                </div>
                                             }
                                         }
-
-                                        else
-                                        {
-
-                                            <div id="file_@Model.Attachments" class="col-md-6">
-
-                                                @Model.Attachments &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@Model.Attachments')" title="remove"></span>
-                                            </div>
-                                            <br />
-
-                                            <br />
-
-                                        }
                                     }
+
+                                    else
+                                    {
+
+                                        <div id="file_@Model.Attachments" class="col-md-6">
+
+                                            @Model.Attachments &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@Model.Attachments')" title="remove"></span>
+                                        </div>
+                                        <br />
+
+                                        <br />
+
+                                    }
+                                }
                             </div>
                         </div>
                         <div class="text-right">
                             <a href="javascript:void(0)" onclick="submitForm()" class="btn btn-danger btn-md">Save</a>
-                            <a href="/Account/LogOff" class="btn btn-white border btn-md">Submit</a>
-                            <a href="/Account/LogOff" class="btn btn-white border btn-md">Cancel</a>
+                            <a href="/Compliant/SubmitComplaint?id=@CryptoEngineUtils.Encrypt(Convert.ToString(Model.Id),true)" class="btn btn-white border btn-md">Submit</a>
+                            <a href="/Employee/Index" class="btn btn-white border btn-md">Cancel</a>
+                            <label id="lblError" class="adderror"></label>
                         </div>
                     </form>
                 </div>

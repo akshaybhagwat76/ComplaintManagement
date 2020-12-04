@@ -2365,6 +2365,7 @@
     <Content Include="Views\Compliant\Compliant_three.cshtml" />
     <Content Include="Views\Compliant\Compliant_two.cshtml" />
     <Content Include="Views\Compliant\_Compliant.cshtml" />
+    <Content Include="Views\Shared\_WithdrawComplaint.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

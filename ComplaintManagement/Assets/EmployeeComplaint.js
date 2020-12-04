@@ -45,9 +45,57 @@ function column_sort() {
 $("#myTable").find('thead td').on('click', column_sort);
 
 
+widthdrawComplaint  = function (id) {
+    $('#widthdrawModel').data('id', id).modal('show');
+    $('#widthdrawModel').modal('show');
+}
 
-addAttachementFile = function () {
 
+withdrawComplaintForSubmission = function () {
+    debugger
+    var id = $('#widthdrawModel').data('id');
+    var retval = true;
+    var str = $('#Remark').val();
+    if (str == "" || str.length == 0) {
+        $('#Remark').addClass("adderror");
+        funToastr(false, "Remarks cannot be blank."); return;
+    }
+    if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
+        retval = false;
+        $('#Remark').addClass("adderror");
+        funToastr(false, "Remarks cannot contain special characters.");
+    }
+    else {
+        $('#Remark').removeClass("adderror");
+    }
+
+    var data = {
+        Id: id,
+        Remark: $("#Remark").val()
+    }
+    if (retval) {
+        StartProcess();
+
+        $.ajax({
+            type: "POST",
+            url: "/Compliant/WithdrawComplaint",
+            data: {
+                withdrawData: JSON.stringify(data)
+            },
+            success: function (data) {
+                if (data.status == "Fail") {
+                    StopProcess();
+                    $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(data.error).show();
+                }
+                else {
+                    location.reload();
+                }
+            },
+            error: function (error) {
+                funToastr(false, error);
+            },
+        });
+    }
 }
 
 $('#delete-btn').click(function () {
@@ -56,6 +104,29 @@ $('#delete-btn').click(function () {
     $.ajax({
         type: "POST",
         url: "/Compliant/Delete",
+        data: { id: id },
+        success: function (response) {
+
+            if (response.status != "Fail") {
+                location.reload();
+            }
+            else {
+                $('#deleteModal').modal('hide');
+                funToastr(false, response.error);
+            }
+        },
+        error: function (error) {
+            toastr.error(error)
+        }
+    });
+});
+
+$('#delete-btn').click(function () {
+    var id = $('#deleteModal').data('id');
+    StartProcess();
+    $.ajax({
+        type: "POST",
+        url: "/Compliant/WithdrawComplaint",
         data: { id: id },
         success: function (response) {
 

@@ -43,9 +43,8 @@ namespace ComplaintManagement.Repository
                                 EmployeeComplaintVM.CreatedBy = Convert.ToInt32(sid);
                                 EmployeeComplaintVM.DueDate = DateTime.UtcNow.AddDays(5);
                                 EmployeeComplaint = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMaster>(EmployeeComplaintVM);
-                                EmployeeComplaint.UserId = EmployeeComplaint.UserId == 0 ? Convert.ToInt32(sid) : EmployeeComplaint.UserId;
-                                EmployeeComplaint.ComplaintStatus = Messages.Opened;
-                                    EmployeeComplaint.Status = true;
+                                EmployeeComplaint.UserId = EmployeeComplaintVM.UserId = EmployeeComplaint.UserId == 0 ? Convert.ToInt32(sid) : EmployeeComplaint.UserId;
+                                 EmployeeComplaint.Status = true;
                                 db.EmployeeComplaintMasters.Add(EmployeeComplaint);
                                 db.SaveChanges();
 
@@ -194,6 +193,30 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
+
+        public bool SubmitComplaint(int id)
+        {
+            var data = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == id);
+            if (data != null)
+            {
+                data.IsSubmitted = true;
+                data.ComplaintStatus = Messages.SUBMITTED;
+            }
+            return db.SaveChanges() > 0;
+        }
+
+        public bool WithdrawComplaint(int id,string remarks)
+        {
+            var data = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == id);
+            if (data != null && !string.IsNullOrEmpty(remarks))
+            {
+                data.IsSubmitted = false;
+                data.Remark = remarks;
+                data.ComplaintStatus = Messages.Withdrawn;
+            }
+            return db.SaveChanges() > 0;
+        }
+
         public string UploadImportEmployeeCompliant(string file)
         {
             return new Common().SaveExcelFromBase64(file);

@@ -3,8 +3,11 @@ using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -45,52 +48,58 @@ namespace ComplaintManagement.Controllers
                 }
             }
             ViewBag.NavbarTitle = "Complaint Information";
+            UserVM.ComplaintStatus = Messages.Opened; UserVM.Id = UserVM.CompentencyId = 0;
             return View(UserVM);
         }
-        public ActionResult Edit(int id, bool isView)
+        public ActionResult Edit(string id, bool isView)
         {
+            EmployeeCompliantMasterVM EmployeeCompliant_oneVM = new EmployeeCompliantMasterVM();
             try
             {
-                EmployeeCompliantMasterVM EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(id);
-                UserMasterVM userMasterVM = new UserMastersRepository().Get(EmployeeCompliant_oneVM.UserId);
-                if (EmployeeCompliant_oneVM != null)
+                if (!string.IsNullOrEmpty(id))
                 {
-                    userMasterVM.CategoryId = EmployeeCompliant_oneVM.CategoryId;
-                    userMasterVM.SubCategoryId = EmployeeCompliant_oneVM.SubCategoryId;
-                    userMasterVM.Remark = EmployeeCompliant_oneVM.Remark;
-                    userMasterVM.Attachments = EmployeeCompliant_oneVM.Attachments;
-                    userMasterVM.Id = EmployeeCompliant_oneVM.UserId;
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
 
-                    userMasterVM.CompentencyId = EmployeeCompliant_oneVM.Id;
-
-                }
-                ViewBag.Entity = new EntityMasterRepository().Get(userMasterVM.Company) != null ? new EntityMasterRepository().Get(userMasterVM.Company).EntityName : Messages.NotAvailable;
-                ViewBag.SBU = new SBUMasterRepository().Get(userMasterVM.SBUId)!= null? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU:Messages.NotAvailable;
-                ViewBag.SubSBU = new SubSBUMasterRepository().Get(userMasterVM.SubSBUId)!= null? new SubSBUMasterRepository().Get(userMasterVM.SubSBUId).SubSBU:Messages.NotAvailable;
-                ViewBag.LOS = new LOSMasterRepository().Get(userMasterVM.LOSId)!= null ? new LOSMasterRepository().Get(userMasterVM.LOSId).LOSName:Messages.NotAvailable;
-                ViewBag.Competency = new CompetencyMastersRepository().Get(userMasterVM.CompentencyId)!=null?new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName:Messages.NotAvailable;
-                ViewBag.Location = new LocationMastersRepository().Get(userMasterVM.LocationId)!= null ? new LocationMastersRepository().Get(userMasterVM.LocationId).LocationName:Messages.NotAvailable;
-                ViewBag.Region = new RegionMasterRepository().Get(userMasterVM.RegionId)!= null? new RegionMasterRepository().Get(userMasterVM.RegionId).Region:Messages.Region;
-                ViewBag.ManagementLevel = new DesignationMasterRepository().Get(userMasterVM.BusinessTitle).Designation;
-                ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
-
-                if (!string.IsNullOrEmpty(userMasterVM.ImagePath))
-                {
-                    if (!new Common().GetFilePathExist(userMasterVM.ImagePath))
+                    EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(Convert.ToInt32(id));
+                    UserMasterVM userMasterVM = new UserMastersRepository().Get(EmployeeCompliant_oneVM.UserId);
+                    if (EmployeeCompliant_oneVM != null)
                     {
-                        userMasterVM.ImagePath = string.Empty;
+                        userMasterVM.CategoryId = EmployeeCompliant_oneVM.CategoryId;
+                        userMasterVM.SubCategoryId = EmployeeCompliant_oneVM.SubCategoryId;
+                        userMasterVM.Remark = EmployeeCompliant_oneVM.Remark;
+                        userMasterVM.Attachments = EmployeeCompliant_oneVM.Attachments;
+                        userMasterVM.Id = EmployeeCompliant_oneVM.Id;
+                        userMasterVM.ComplaintStatus = EmployeeCompliant_oneVM.ComplaintStatus;
+                        userMasterVM.CompentencyId = EmployeeCompliant_oneVM.UserId;
                     }
+                    ViewBag.Entity = new EntityMasterRepository().Get(userMasterVM.Company) != null ? new EntityMasterRepository().Get(userMasterVM.Company).EntityName : Messages.NotAvailable;
+                    ViewBag.SBU = new SBUMasterRepository().Get(userMasterVM.SBUId) != null ? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU : Messages.NotAvailable;
+                    ViewBag.SubSBU = new SubSBUMasterRepository().Get(userMasterVM.SubSBUId) != null ? new SubSBUMasterRepository().Get(userMasterVM.SubSBUId).SubSBU : Messages.NotAvailable;
+                    ViewBag.LOS = new LOSMasterRepository().Get(userMasterVM.LOSId) != null ? new LOSMasterRepository().Get(userMasterVM.LOSId).LOSName : Messages.NotAvailable;
+                    ViewBag.Competency = new CompetencyMastersRepository().Get(userMasterVM.CompentencyId) != null ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName : Messages.NotAvailable;
+                    ViewBag.Location = new LocationMastersRepository().Get(userMasterVM.LocationId) != null ? new LocationMastersRepository().Get(userMasterVM.LocationId).LocationName : Messages.NotAvailable;
+                    ViewBag.Region = new RegionMasterRepository().Get(userMasterVM.RegionId) != null ? new RegionMasterRepository().Get(userMasterVM.RegionId).Region : Messages.Region;
+                    ViewBag.ManagementLevel = new DesignationMasterRepository().Get(userMasterVM.BusinessTitle).Designation;
+                    ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
+                    ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
+
+                    if (!string.IsNullOrEmpty(userMasterVM.ImagePath))
+                    {
+                        if (!new Common().GetFilePathExist(userMasterVM.ImagePath))
+                        {
+                            userMasterVM.ImagePath = string.Empty;
+                        }
+                    }
+                    ViewBag.ViewState = isView;
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    return View("Compliant_one", userMasterVM);
                 }
-                ViewBag.ViewState = isView;
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                return View("Compliant_one", userMasterVM);
             }
             catch (Exception ex)
             {
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
-            return View("Compliant_one");
+            return View("Compliant_one", EmployeeCompliant_oneVM);
         }
 
         [HttpPost]
@@ -146,13 +155,19 @@ namespace ComplaintManagement.Controllers
             }
         }
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             bool retval = true;
             try
             {
-                retval = new EmployeeComplaintMastersRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "EmployeeComplaint"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    retval = new EmployeeComplaintMastersRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "EmployeeComplaint"), null);
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
             }
             catch (Exception ex)
             {
@@ -239,6 +254,53 @@ namespace ComplaintManagement.Controllers
             catch (Exception ex)
             {
 
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+        public ActionResult SubmitComplaint(string id)
+        {
+            bool retval = true;
+            try
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    retval = new EmployeeComplaintMastersRepository().SubmitComplaint(Convert.ToInt32(id));
+                    return RedirectToAction("Index","Employee");
+                }
+                return RedirectToAction("Edit", new { id = id, isView = false });
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return RedirectToAction("Edit",new { id = id, isView = false });
+            }
+        }
+        [HttpPost]
+        public ActionResult WithdrawComplaint(string withdrawData)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(withdrawData))
+                {
+                    int id = 0; string remarks = string.Empty;
+                    var converter = new ExpandoObjectConverter();
+                    dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(withdrawData, converter);
+                    if (!string.IsNullOrEmpty(data.Id))
+                    {
+                        id = Convert.ToInt32(CryptoEngineUtils.Decrypt(data.Id.Replace(" ", "+"), true));
+                    }
+
+                    new EmployeeComplaintMastersRepository().WithdrawComplaint(id,data.Remark);
+                    return new ReplyFormat().Success(Messages.SUCCESS);
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+
+            }
+            catch (Exception ex)
+            {
                 ErrorSignal.FromCurrentContext().Raise(ex);
                 return new ReplyFormat().Error(ex.Message.ToString());
             }

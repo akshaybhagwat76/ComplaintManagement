@@ -114,7 +114,7 @@
         public const string ACCOUNT_ACTIVATION = "About your account activation from pithplay.com";
         //Order statuses
 
-        public const string SUBMITTED = "submitted";
+        public const string SUBMITTED = "Submitted";
         public const string ORDERED = "ordered";
         public const string WORKING = "working";
         public const string DELIVERED = "delivered";

@@ -60,14 +60,14 @@ function submitForm() {
         $('#Remark').removeClass("adderror");
     }
 
-
     if (retval) {
         var data = {
             Id: $("#Id").val(),
             CategoryId: $("#CategoryId").val(),
             SubCategoryId: $("#SubCategoryId").val(),
             Remark: $("#Remark").val(),
-            UserId: $("#UserId").val()
+            UserId: $("#UserId").val(),
+            ComplaintStatus: $("#ComplaintStatus").val()
         }
         var formData = new FormData();
 
@@ -88,14 +88,14 @@ function submitForm() {
             success: function (response) {
                 if (response.status == "Fail") {
                     StopProcess();
-                    $("#lblError").addClass("adderror").text(data.error).show();
+                    $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(data.error).show();
                 }
                 else {
-                    window.location.href = '/Employee/Index'
+                    window.location.href = '/Employee/Index';
                 }
             },
             error: function (error) {
-                toastr.error(error)
+                funToastr(false, error);
             }
         });
     }
