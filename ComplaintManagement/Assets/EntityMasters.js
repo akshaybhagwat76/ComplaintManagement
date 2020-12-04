@@ -1,10 +1,8 @@
 ﻿
 function deleteEntity(id) {
 
-    //$('#deleteModal').data('id', id).modal('show');
-    //$('#deleteModal').modal('show');
-    Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
-
+    $('#deleteModal').data('id', id).modal('show');
+    $('#deleteModal').modal('show');
 }
 function searchKeyPress(e) {
     // look for window.event in case event isn't passed in
@@ -40,39 +38,10 @@ function column_sort() {
 }
 
 $("#myTable").find('thead td').on('click', column_sort);
-function Confirm(title, msg, $true, $false, $link) { /*change*/
-    var $content = "<div class='dialog-ovelay'>" +
-        "<div class='dialog'><header>" +
-        " <h3> " + title + " </h3> " +
-        "<i class='fa fa-close'></i>" +
-        "</header>" +
-        "<div class='dialog-msg'>" +
-        " <p> " + msg + " </p> " +
-        "</div>" +
-        "<footer>" +
-        "<div class='controls' style='margin-left: 235px;'>" +
-        " <button class='button button-danger doAction'>" + $true + "</button> " +
-        " <button class='button button-default cancelAction'>" + $false + "</button> " +
-        "</div>" +
-        "</footer>" +
-        "</div>" +
-        "</div>";
-    $('body').prepend($content);
-    $('.doAction').click(function () {
-        deleteAction($link);
-        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
-            $(this).remove();
-        });
-    });
-    $('.cancelAction, .fa-close').click(function () {
-        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
-            $(this).remove();
-        });
-    });
 
-}
 
-function deleteAction(id) {
+$('#delete-btn').click(function () {
+    var id = $('#deleteModal').data('id');
     $.ajax({
         type: "POST",
         url: "/Entity/Delete",
@@ -90,7 +59,7 @@ function deleteAction(id) {
             toastr.error(error)
         }
     });
-};
+});
 function performAction(id, isView) {
     let url = `/Entity/Edit?id=${id}&isView=${isView}`
     location.href = url;

@@ -194,6 +194,177 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
+        public string UploadImportEmployeeCompliant(string file)
+        {
+            return new Common().SaveExcelFromBase64(file);
+        }
+
+        public int ImportEmployeeCompliant(string file)
+        {
+            List<EmployeeComplaintMaster> importEmployeeComplaint = new List<EmployeeComplaintMaster>();
+            EmployeeComplaintMaster EmployeeComplaintMasterDto = null;
+            int count = 0;
+            #region Indexes 
+            int EmployeeIdIndex = 1; int CategoryNameIndex = 2; int SubCategoryNameIndex = 3; int RemarkNameIndex = 4; int StatusIndex = 5;
+            #endregion
+
+            string[] statuses = { "active", "inactive" };
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (Path.GetExtension(file) == ".xlsx" && !string.IsNullOrEmpty(sid))
+                {
+                    var lstEmployee = new UserMastersRepository().GetAll();
+                    var lstCategory= new CategoryMastersRepository().GetAll();
+                    var lstSubCategory = new SubCategoryMastersRepository().GetAll();
+
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage package = new ExcelPackage(new FileInfo(file));
+                    ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
+                    for (int i = 1; i <= workSheet.Dimension.Rows; i++)
+                    {
+                        if (i == 1) //skip header row if its there
+                        {
+                            continue;
+                        }
+                        EmployeeComplaintMasterDto = new EmployeeComplaintMaster();
+                        //Employee check
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, EmployeeIdIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Employee Name", i, EmployeeIdIndex }));
+                        }
+                        else
+                        {
+                            string LOS = workSheet.Cells[i, EmployeeIdIndex].Value?.ToString();
+                            var LOSDto = lstEmployee.FirstOrDefault(x => x.EmployeeName.ToLower() == LOS.ToLower());
+                            if (LOSDto != null)
+                            {
+                                EmployeeComplaintMasterDto.UserId = EmployeeComplaintMasterDto.Id;
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.DataEmpNOTExists, new object[] { "Employee Name", i, EmployeeIdIndex }));
+                            }
+                        }
+                        // Category Name
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, CategoryNameIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Employee Name", i, CategoryNameIndex }));
+                        }
+                        else
+                        {
+                            string Category = workSheet.Cells[i, CategoryNameIndex].Value?.ToString();
+                            var CategoryDto = lstCategory.FirstOrDefault(x => x.CategoryName.ToLower() == Category.ToLower());
+                            if (CategoryDto != null)
+                            {
+                                EmployeeComplaintMasterDto.CategoryId = CategoryDto.Id;
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.DataEmpNOTExists, new object[] { "Category", i, CategoryNameIndex }));
+                            }
+                        }
+                        // SubCategory Name
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, SubCategoryNameIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Category", i, SubCategoryNameIndex }));
+                        }
+                        else
+                        {
+                            string SubCategory = workSheet.Cells[i, SubCategoryNameIndex].Value?.ToString();
+                            var SubCategoryDto = lstSubCategory.FirstOrDefault(x => x.SubCategoryName.ToLower() == SubCategory.ToLower());
+                            if (SubCategoryDto != null)
+                            {
+                                EmployeeComplaintMasterDto.SubCategoryId = SubCategoryDto.Id;
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.DataEmpNOTExists, new object[] { "Sub CategoryName", i, SubCategoryNameIndex }));
+                            }
+                        }
+                        // Remark check
+                        if (string.IsNullOrEmpty(workSheet.Cells[i, RemarkNameIndex].Value?.ToString()))
+                        {
+                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Remarks", i, RemarkNameIndex }));
+                        }
+                        else
+                        {
+                            string Remark = workSheet.Cells[i, CategoryNameIndex].Value?.ToString();
+                            EmployeeCompliantMasterVM RemarkDto = new EmployeeCompliantMasterVM { Remark = Remark };
+                           
+                                throw new Exception(string.Format(Messages.DataCategoryAlreadyExists, new object[] { "Remarks", i, RemarkNameIndex }));
+                           
+                        }
+                        #region Status
+                        //Status check
+                        if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
+                        {
+                            string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
+                            if (statuses.Any(Status.ToLower().Contains))
+                            {
+                                if (workSheet.Cells[i, StatusIndex].Value?.ToString().ToLower() == Messages.Active.ToLower())
+                                {
+                                    EmployeeComplaintMasterDto.Status = true;
+                                }
+                                else
+                                {
+                                    EmployeeComplaintMasterDto.Status = false;
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
+                            }
+                        }
+                        #endregion
+                        EmployeeComplaintMasterDto.CreatedBy = Convert.ToInt32(sid);
+                        EmployeeComplaintMasterDto.CreatedDate = DateTime.UtcNow;
+                        EmployeeComplaintMasterDto.IsActive = true;
+                        importEmployeeComplaint.Add(EmployeeComplaintMasterDto);
+                    }
+                    //using (var dbContextTransaction = db.Database.BeginTransaction())
+                    //{
+                    //    try
+                    //    {
+                    //        if (importEmployeeComplaint != null && importEmployeeComplaint.Count > 0)
+                    //        {
+                    //            db.CategoryMasters.AddRange(importEmployeeComplaint);
+                    //            db.SaveChanges();
+
+                    //            List<CategoryMasterVM> categoryDtoListVM = Mapper.Map<List<CategoryMaster>, List<CategoryMasterVM>>(importCategories);
+
+                    //            List<CategoryMasters_History> categoryMasters_History = Mapper.Map<List<CategoryMasterVM>, List<CategoryMasters_History>>(categoryDtoListVM);
+                    //            if (categoryMasters_History != null && categoryMasters_History.Count > 0)
+                    //            {
+                    //                categoryMasters_History.Select(c => { c.EntityState = Messages.Added; c.CategoryId = c.Id; return c; }).ToList();
+                    //            }
+
+                    //            db.CategoryMasters_History.AddRange(categoryMasters_History);
+                    //            db.SaveChanges();
+
+                    //            dbContextTransaction.Commit();
+                    //            count = importCategories.Count;
+                    //        }
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        dbContextTransaction.Rollback();
+                    //        throw new Exception(ex.Message.ToString());
+                    //    }
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                count = 0;
+                throw ex;
+            }
+            return count;
+        }
 
 
     }
