@@ -38,6 +38,7 @@ function column_sort() {
     Array.from(tbody.querySelectorAll('tr')).sort(comparer(
         Array.from(children).indexOf(elm), table.asc = !table.asc))
         .forEach(tr => tbody.appendChild(tr));
+
 }
 
 $("#myTable").find('thead td').on('click', column_sort);
