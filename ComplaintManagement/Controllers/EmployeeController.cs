@@ -216,5 +216,24 @@ namespace ComplaintManagement.Controllers
             }
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public ActionResult ImportEmployeeCompliant(string file)
+        {
+            try
+            {
+                string retval = new EmployeeComplaintMastersRepository().UploadImportEmployeeCompliant(file);
+                if (!string.IsNullOrEmpty(retval))
+                {
+                    int count = new EmployeeComplaintMastersRepository().ImportEmployeeCompliant(retval);
+                    return new ReplyFormat().Success(count.ToString());
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
     }
 }
