@@ -165,8 +165,8 @@
                                 @Html.TextAreaFor(c => c.Remark, new { @class = "form-control required" })
                             </div>
                         </div>
-                        <div class="form-group">
-                            @Html.Label("Attachment", new { @class = "requiredLabel" })
+                        <div class="form-group" id="form-empData">
+                            @Html.Label("Attachments")
                             <div class="row">
                                 <div class="col-md-8">
 
@@ -180,7 +180,6 @@
                                         <i class="fas fa-plus"></i>
                                     </a>
                                 </div>
-                                <div id="lstAttachement">
                                     @if (!string.IsNullOrEmpty(Model.Attachments))
                                     {
                                         <br />
@@ -213,7 +212,6 @@
 
                                         }
                                     }
-                                </div>
                             </div>
                         </div>
                         <div class="text-right">

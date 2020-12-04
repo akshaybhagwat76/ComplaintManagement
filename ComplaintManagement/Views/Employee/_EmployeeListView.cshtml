@@ -24,10 +24,7 @@
             <td class="text-black text-center"><strong>@item.Remark</strong></td>
             <td class="text-black text-center">
                 <strong>
-                    @if (item.ComplaintStatus == true)
-                    {@Html.Raw("Active") }
-                else
-                { @Html.Raw("Inactive")}
+                    @item.ComplaintStatus
                 </strong>
             </td>
             <td class="text-black text-center">

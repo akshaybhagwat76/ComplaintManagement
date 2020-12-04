@@ -1,63 +1,32 @@
-﻿var files = [];
+﻿var attachementfiles = [];
 
 function removeFile(id) {
-
-    Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
+    $('#deleteModal').data('id', id).modal('show');
+    $('#deleteModal').modal('show');
+    document.getElementById("delete-btn").addEventListener("click", deleteFile);
 }
 
-function Confirm(title, msg, $true, $false, $link) { /*change*/
-    var $content = "<div class='dialog-ovelay'>" +
-        "<div class='dialog'><header>" +
-        " <h3> " + title + " </h3> " +
-        "<i class='fa fa-close'></i>" +
-        "</header>" +
-        "<div class='dialog-msg'>" +
-        " <p> " + msg + " </p> " +
-        "</div>" +
-        "<footer>" +
-        "<div class='controls' style='margin-left: 235px;'>" +
-        " <button class='button button-danger doAction'>" + $true + "</button> " +
-        " <button class='button button-default cancelAction'>" + $false + "</button> " +
-        "</div>" +
-        "</footer>" +
-        "</div>" +
-        "</div>";
-    $('body').prepend($content);
-    $('.doAction').click(function () {
-        deleteAction($link);
-        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
-            $(this).remove();
-        });
-    });
-    $('.cancelAction, .fa-close').click(function () {
-        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
-            $(this).remove();
-        });
-    });
-
-}
-
-function deleteAction(fileName) {
-    if (fileName != "" && fileName != undefined) {
-        //StartProcess();
-        $.ajax({
-            type: "POST",
-            url: "/Compliant/RemoveFIle",
-            data: { fileName: fileName },
-            success: function (response) {
-                if (response.status != "Fail") {
-                    funToastr(true, response.msg);
-                    document.getElementById("file_" + response.data).remove()
-                }
-                else {
-                    funToastr(false, response.error);
-                }
-            },
-            error: function (error) {
-                toastr.error(error)
+function deleteFile() {
+    var fileName = $('#deleteModal').data('id');
+    StartProcess();
+    $.ajax({
+        type: "POST",
+        url: "/Compliant/RemoveFIle",
+        data: { fileName: fileName },
+        success: function (response) {
+            if (response.status != "Fail") {
+                funToastr(true, response.msg);
+                document.getElementById("file_" + response.data).remove();
+                $('#deleteModal').modal('hide');
             }
-        });
-    }
+            else {
+                funToastr(false, response.error);
+            }
+        },
+        error: function (error) {
+            toastr.error(error)
+        }
+    });
 }
 
 function submitForm() {
@@ -92,12 +61,7 @@ function submitForm() {
     }
 
 
-
-
-
-
     if (retval) {
-        debugger
         var data = {
             Id: $("#Id").val(),
             CategoryId: $("#CategoryId").val(),
@@ -105,14 +69,10 @@ function submitForm() {
             Remark: $("#Remark").val(),
             UserId: $("#UserId").val()
         }
-        var file = $("#customFile").get(0).files;
         var formData = new FormData();
 
-        var fileUpload = $("#customFile").get(0);
-        var files = fileUpload.files;
-
-        for (var i = 0; i < files.length; i++) {
-            formData.append(files[i].name, files[i]);
+        for (var i = 0; i < attachementfiles.length; i++) {
+            formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
         }
 
         data = JSON.stringify(data);
@@ -142,31 +102,37 @@ function submitForm() {
 }
 
 addAttachement = function () {
-
+    if (attachementfiles && attachementfiles.length > 0) {
+        var lastFile = attachementfiles[attachementfiles.length - 1];
+        var index = attachementfiles.findIndex(x => x.file.name === lastFile.file.name);
+        var attachement = '<div id="file_' + lastFile.file.name + '" class="col-md-12">' + lastFile.file.name + ' &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeAttachementFile(' + index + ')" title="remove"></span></div>';
+        $("#form-empData").append(attachement);
+    }
 }
-
+removeAttachementFile = function (index) {
+    let getFile = attachementfiles[index];
+    document.getElementById("file_" + getFile.file.name).remove();
+    attachementfiles.splice(index, 1);
+}
 
 // Import Attachement 
 var inputAttachement = document.getElementById('attachementFile');
+document.getElementById('attachementFile').addEventListener('change',
+    addAttachementUploadedFile,
+    false);
 
-inputAttachement.onchange = function () {
+function addAttachementUploadedFile() {
     var files = this.files;
     var file;
     if (files && files.length) {
         file = files[0];
         const filename = file.name;
-
         let last_dot = filename.lastIndexOf('.')
         let ext = "." + filename.slice(last_dot + 1);
-
-        debugger
+        var reader = new FileReader();
         reader.onloadend = function () {
-            files.push({})
-            $('#profile_pic').attr('src', reader.result);
-            $(inputImage).attr("data-base64string", reader.result);
-            $(inputImage).attr("data-extension", ext);
-            //PreviewBase64Image(reader.result, $this.id + "Preview");
+            attachementfiles.push({ file });
         }
         reader.readAsDataURL(file);
     }
-};
+}

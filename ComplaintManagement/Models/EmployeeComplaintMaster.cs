@@ -27,6 +27,8 @@ namespace ComplaintManagement.Models
         public bool IsActive { get; set; }
         public bool Status { get; set; }
         public string ComplaintStatus { get; set; }
+        public System.DateTime DueDate { get; set; }
+        public bool IsSubmitted { get; set; }
     
         public virtual UserMaster UserMaster { get; set; }
     }

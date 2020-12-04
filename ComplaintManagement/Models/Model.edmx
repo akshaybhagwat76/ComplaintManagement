@@ -136,6 +136,8 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="Status" Type="bit" Nullable="false" />
           <Property Name="ComplaintStatus" Type="nvarchar" MaxLength="28" Nullable="false" />
+          <Property Name="DueDate" Type="datetime" Nullable="false" />
+          <Property Name="IsSubmitted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="EmployeeComplaintMastersHistory">
           <Key>
@@ -156,6 +158,8 @@
           <Property Name="ComplaintStatus" Type="nvarchar" MaxLength="28" Nullable="false" />
           <Property Name="EntityState" Type="nvarchar" MaxLength="28" Nullable="false" />
           <Property Name="EmployeeComplaintMasterId" Type="int" Nullable="false" />
+          <Property Name="DueDate" Type="datetime" Nullable="false" />
+          <Property Name="IsSubmitted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="EntityMasters">
           <Key>
@@ -796,6 +800,8 @@
           <Property Name="Status" Type="Boolean" Nullable="false" />
           <Property Name="ComplaintStatus" Type="String" Nullable="false" MaxLength="28" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="UserMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintMasters_UserMasters" FromRole="EmployeeComplaintMaster" ToRole="UserMaster" />
+          <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="EmployeeComplaintMastersHistory">
           <Key>
@@ -816,6 +822,8 @@
           <Property Name="ComplaintStatus" Type="String" Nullable="false" MaxLength="28" FixedLength="false" Unicode="true" />
           <Property Name="EntityState" Type="String" Nullable="false" MaxLength="28" FixedLength="false" Unicode="true" />
           <Property Name="EmployeeComplaintMasterId" Type="Int32" Nullable="false" />
+          <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="EntityMaster">
           <Key>
@@ -1346,6 +1354,8 @@
           <EntitySetMapping Name="EmployeeComplaintMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintMaster">
               <MappingFragment StoreEntitySet="EmployeeComplaintMasters">
+                <ScalarProperty Name="IsSubmitted" ColumnName="IsSubmitted" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
                 <ScalarProperty Name="ComplaintStatus" ColumnName="ComplaintStatus" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -1365,6 +1375,8 @@
           <EntitySetMapping Name="EmployeeComplaintMastersHistories">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintMastersHistory">
               <MappingFragment StoreEntitySet="EmployeeComplaintMastersHistory">
+                <ScalarProperty Name="IsSubmitted" ColumnName="IsSubmitted" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
                 <ScalarProperty Name="EmployeeComplaintMasterId" ColumnName="EmployeeComplaintMasterId" />
                 <ScalarProperty Name="EntityState" ColumnName="EntityState" />
                 <ScalarProperty Name="ComplaintStatus" ColumnName="ComplaintStatus" />

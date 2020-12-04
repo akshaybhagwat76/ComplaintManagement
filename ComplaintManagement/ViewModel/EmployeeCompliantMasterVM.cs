@@ -25,6 +25,10 @@ namespace ComplaintManagement.ViewModel
         public string EmployeeName { get; set; }
         public string CategoryName { get; set; }
         public string SubCategoryName { get; set; }
-        public bool ComplaintStatus { get; set; }
+        public string ComplaintStatus { get; set; }
+        public string EntityState { get; set; }
+        public int EmployeeComplaintMasterId { get; set; }
+        public System.DateTime DueDate { get; set; }
+        public bool IsSubmitted { get; set; }
     }
 }

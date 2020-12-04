@@ -41,6 +41,7 @@ namespace ComplaintManagement.Repository
                                 EmployeeComplaintVM.IsActive = true;
                                 EmployeeComplaintVM.CreatedDate = DateTime.UtcNow;
                                 EmployeeComplaintVM.CreatedBy = Convert.ToInt32(sid);
+                                EmployeeComplaintVM.DueDate = DateTime.UtcNow.AddDays(5);
                                 EmployeeComplaint = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMaster>(EmployeeComplaintVM);
                                 EmployeeComplaint.UserId = EmployeeComplaint.UserId == 0 ? Convert.ToInt32(sid) : EmployeeComplaint.UserId;
                                 EmployeeComplaint.ComplaintStatus = Messages.Opened;

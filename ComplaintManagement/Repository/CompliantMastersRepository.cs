@@ -35,7 +35,7 @@ namespace ComplaintManagement.Repository
                             if (EmployeeCompliant == null)
                             {
                                 EmployeeComplaintVM.IsActive = true;
-                                EmployeeComplaintVM.ComplaintStatus = true;
+                                EmployeeComplaintVM.ComplaintStatus = Messages.Opened;
                                 EmployeeComplaintVM.CreatedDate = DateTime.UtcNow;
                                 EmployeeComplaintVM.CreatedBy = Convert.ToInt32(sid);
                                 EmployeeCompliant = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMaster>(EmployeeComplaintVM);

@@ -29,5 +29,7 @@ namespace ComplaintManagement.Models
         public string ComplaintStatus { get; set; }
         public string EntityState { get; set; }
         public int EmployeeComplaintMasterId { get; set; }
+        public System.DateTime DueDate { get; set; }
+        public bool IsSubmitted { get; set; }
     }
 }
