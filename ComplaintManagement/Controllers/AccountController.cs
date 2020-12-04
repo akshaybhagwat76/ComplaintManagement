@@ -49,7 +49,7 @@ namespace ComplaintManagement.Controllers
             {
                 var user = new UserMastersRepository().Login(LoginVM);
                 Session["EmployeeId"] = user.EmployeeId;
-                SignInUser(user.WorkEmail, user.Id.ToString(), user.EmployeeName, user.ImagePath, false);
+                SignInUser(user.WorkEmail, user.Id.ToString(), user.EmployeeName, user.ImagePath, user.Type, false);
                 return new ReplyFormat().Success(Messages.SUCCESS, null);
             }
             catch (Exception ex)
@@ -58,11 +58,12 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
-        private void SignInUser(string useremail, string userid, string username, string image, bool isPersistent)
+        private void SignInUser(string useremail, string userid, string username, string image,string userrole, bool isPersistent)
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Sid, userid));
             claims.Add(new Claim(ClaimTypes.Email, useremail));
+            claims.Add(new Claim(ClaimTypes.Role, userrole));
             claims.Add(new Claim(ClaimTypes.Name, username));
             if (!string.IsNullOrEmpty(image) && new Common().GetFilePathExist(image))
             {

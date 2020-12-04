@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿var files = [];
+$(document).ready(function () {
 });
 
 function deleteEmployeeCompliant(id) {
@@ -75,6 +76,10 @@ function Confirm(title, msg, $true, $false, $link) { /*change*/
 
 }
 
+addAttachementFile = function () {
+
+}
+
 function deleteAction(id) {
     StartProcess();
     $.ajax({
@@ -102,8 +107,11 @@ function performAction(id, isView) {
     location.href = url;
 }
 
+addAttachement = function () {
+
+}
+
 function filterGrid() {
-    debugger
     var data = {
         fromDate: document.getElementById("fromDate").value,
         toDate: document.getElementById("toDate").value,
