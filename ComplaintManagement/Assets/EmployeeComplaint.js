@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
 });
 
 function deleteEmployeeCompliant(id) {
@@ -102,8 +103,11 @@ function performAction(id, isView) {
     location.href = url;
 }
 
+addAttachement = function () {
+
+}
+
 function filterGrid() {
-    debugger
     var data = {
         fromDate: document.getElementById("fromDate").value,
         toDate: document.getElementById("toDate").value,

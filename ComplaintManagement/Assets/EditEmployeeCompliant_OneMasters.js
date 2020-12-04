@@ -1,8 +1,9 @@
-﻿function removeFile(id) {
+﻿var files = [];
+
+function removeFile(id) {
 
     Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
 }
-
 
 function Confirm(title, msg, $true, $false, $link) { /*change*/
     var $content = "<div class='dialog-ovelay'>" +
@@ -35,6 +36,7 @@ function Confirm(title, msg, $true, $false, $link) { /*change*/
     });
 
 }
+
 function deleteAction(fileName) {
     if (fileName != "" && fileName != undefined) {
         //StartProcess();
@@ -57,8 +59,8 @@ function deleteAction(fileName) {
         });
     }
 }
+
 function submitForm() {
-   debugger
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {
@@ -78,7 +80,7 @@ function submitForm() {
             }
         }
     });
-   
+
     var str = $('#Remark').val();
     if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
         retval = false;
@@ -89,11 +91,11 @@ function submitForm() {
         $('#Remark').removeClass("adderror");
     }
 
-    
-   
-   
 
-    
+
+
+
+
     if (retval) {
         debugger
         var data = {
@@ -101,17 +103,17 @@ function submitForm() {
             CategoryId: $("#CategoryId").val(),
             SubCategoryId: $("#SubCategoryId").val(),
             Remark: $("#Remark").val(),
-           UserId:$("#UserId").val()
+            UserId: $("#UserId").val()
         }
         var file = $("#customFile").get(0).files;
         var formData = new FormData();
 
         var fileUpload = $("#customFile").get(0);
-        var files = fileUpload.files;  
+        var files = fileUpload.files;
 
         for (var i = 0; i < files.length; i++) {
             formData.append(files[i].name, files[i]);
-        }  
+        }
 
         data = JSON.stringify(data);
         formData.append("EmpCompliantParams", data);
@@ -138,3 +140,33 @@ function submitForm() {
         });
     }
 }
+
+addAttachement = function () {
+
+}
+
+
+// Import Attachement 
+var inputAttachement = document.getElementById('attachementFile');
+
+inputAttachement.onchange = function () {
+    var files = this.files;
+    var file;
+    if (files && files.length) {
+        file = files[0];
+        const filename = file.name;
+
+        let last_dot = filename.lastIndexOf('.')
+        let ext = "." + filename.slice(last_dot + 1);
+
+        debugger
+        reader.onloadend = function () {
+            files.push({})
+            $('#profile_pic').attr('src', reader.result);
+            $(inputImage).attr("data-base64string", reader.result);
+            $(inputImage).attr("data-extension", ext);
+            //PreviewBase64Image(reader.result, $this.id + "Preview");
+        }
+        reader.readAsDataURL(file);
+    }
+};
