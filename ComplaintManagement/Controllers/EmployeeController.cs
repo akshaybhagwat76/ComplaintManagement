@@ -196,7 +196,7 @@ namespace ComplaintManagement.Controllers
                                 {
                                     zip.AddFile(indexed, "Files");
                                 }
-                                else { return RedirectToAction("Index"); }
+                                else { return RedirectToAction("Index"); }  
                             }
 
                         }
