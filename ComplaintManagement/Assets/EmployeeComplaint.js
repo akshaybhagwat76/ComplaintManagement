@@ -120,8 +120,6 @@ function filterGrid() {
         url: "/Employee/LoadEmployeeComplaints",
         data: { data: data },
         success: function (data) {
-            console.log(data);
-            debugger
             if (data.status == "Fail") {
                 StopProcess();
                 funToastr(false, data.error);
