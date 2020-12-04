@@ -45,7 +45,7 @@ namespace ComplaintManagement.Controllers
                 }
             }
             ViewBag.NavbarTitle = "Complaint Information";
-            return View( UserVM);
+            return View(UserVM);
         }
         public ActionResult Edit(int id, bool isView)
         {
@@ -64,13 +64,13 @@ namespace ComplaintManagement.Controllers
                     userMasterVM.CompentencyId = EmployeeCompliant_oneVM.Id;
 
                 }
-                ViewBag.Entity = new EntityMasterRepository().Get(userMasterVM.Company).EntityName;
-                ViewBag.SBU = new SBUMasterRepository().Get(userMasterVM.SBUId).SBU;
-                ViewBag.SubSBU = new SubSBUMasterRepository().Get(userMasterVM.SubSBUId).SubSBU;
-                ViewBag.LOS = new LOSMasterRepository().Get(userMasterVM.LOSId).LOSName;
-                ViewBag.Competency = new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName;
-                ViewBag.Location = new LocationMastersRepository().Get(userMasterVM.LocationId).LocationName;
-                ViewBag.Region = new RegionMasterRepository().Get(userMasterVM.RegionId).Region;
+                ViewBag.Entity = new EntityMasterRepository().Get(userMasterVM.Company) != null ? new EntityMasterRepository().Get(userMasterVM.Company).EntityName : Messages.NotAvailable;
+                ViewBag.SBU = new SBUMasterRepository().Get(userMasterVM.SBUId)!= null? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU:Messages.NotAvailable;
+                ViewBag.SubSBU = new SubSBUMasterRepository().Get(userMasterVM.SubSBUId)!= null? new SubSBUMasterRepository().Get(userMasterVM.SubSBUId).SubSBU:Messages.NotAvailable;
+                ViewBag.LOS = new LOSMasterRepository().Get(userMasterVM.LOSId)!= null ? new LOSMasterRepository().Get(userMasterVM.LOSId).LOSName:Messages.NotAvailable;
+                ViewBag.Competency = new CompetencyMastersRepository().Get(userMasterVM.CompentencyId)!=null?new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName:Messages.NotAvailable;
+                ViewBag.Location = new LocationMastersRepository().Get(userMasterVM.LocationId)!= null ? new LocationMastersRepository().Get(userMasterVM.LocationId).LocationName:Messages.NotAvailable;
+                ViewBag.Region = new RegionMasterRepository().Get(userMasterVM.RegionId)!= null? new RegionMasterRepository().Get(userMasterVM.RegionId).Region:Messages.Region;
                 ViewBag.ManagementLevel = new DesignationMasterRepository().Get(userMasterVM.BusinessTitle).Designation;
                 ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
@@ -90,7 +90,7 @@ namespace ComplaintManagement.Controllers
             {
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
-            return View();
+            return View("Compliant_one");
         }
 
         [HttpPost]
@@ -111,7 +111,13 @@ namespace ComplaintManagement.Controllers
                         if (file != null)
                         {
                             var InputFileName = new Common().UniqueFileName();
-                                  string strpath = InputFileName+= System.IO.Path.GetExtension(file.FileName);
+                            string strpath = InputFileName += System.IO.Path.GetExtension(file.FileName);
+
+                            String path = Server.MapPath("~/Documents/");
+                            if (!Directory.Exists(path))
+                            {
+                                Directory.CreateDirectory(path);
+                            }
 
                             var ServerSavePath = Path.Combine(Server.MapPath("~/Documents/") + strpath);
                             //Save file to server folder  
@@ -201,6 +207,7 @@ namespace ComplaintManagement.Controllers
                 return lst;
             }
         }
+
         [HttpGet]
         public ActionResult LoadEmployeeComplain(int currentPageIndex, string range = "")
         {
@@ -221,6 +228,20 @@ namespace ComplaintManagement.Controllers
         {
             ViewBag.NavbarTitle = "Committee";
             return View();
+        }
+        public ActionResult RemoveFIle(string fileName)
+        {
+            try
+            {
+                new Compliant_oneMastersRepository().Removefile(fileName);
+                return new ReplyFormat().Success(Messages.DELETE_MESSAGE_FILE, fileName);
+            }
+            catch (Exception ex)
+            {
+
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
         }
 
 

@@ -1,5 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
-<tbody>
+
     @foreach (var item in ViewBag.lstEmployeeComplaint)
     {
         <tr>
@@ -31,18 +31,26 @@
                 </strong>
             </td>
             <td class="text-black text-center">
-                <strong>
-                    @item.Attachments
+                @if (!string.IsNullOrEmpty(item.Attachments) && item.Attachments.Length > 0)
+                {
+                    <strong>
+                        <a  href="/Employee/DownloadAttachments?files=@item.Attachments">
+                            <i class="fas fa-download fa-fw"></i>
+                        </a>
+                    </strong>
+                }
+                else
+                {
+                    @Html.Raw(Messages.NotAvailable.ToString())
+                }
 
-                </strong>
             </td>
 
 
-            <td class="text-center">
+            <td class="text-center text-nowrap">
                 <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
                 <a href="javascript:void(0)" onclick="deleteEmployeeCompliant('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
                 <a href="#"><i class="fas fa-clock text-danger"></i></a>
             </td>
         </tr>
     }
-</tbody>

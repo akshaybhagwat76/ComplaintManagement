@@ -174,10 +174,6 @@ namespace ComplaintManagement.Repository
             try
             {
                 Competency = db.CompetencyMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Competency == null)
-                {
-                    throw new Exception(Messages.BAD_DATA);
-                }
             }
             catch (Exception ex)
             {

@@ -49,7 +49,7 @@ namespace ComplaintManagement.Repository
                                 EmployeeCompliant_oneVM.CreatedDate = DateTime.UtcNow;
                                 EmployeeCompliant_oneVM.CreatedBy = Convert.ToInt32(sid);
                                 EmployeeCompliant_one = Mapper.Map<EmployeeCompliant_oneMasterVM, EmployeeComplaintMaster>(EmployeeCompliant_oneVM);
-                              
+
                                 db.EmployeeComplaintMasters.Add(EmployeeCompliant_one);
                                 db.SaveChanges();
 
@@ -69,7 +69,7 @@ namespace ComplaintManagement.Repository
                                 EmployeeCompliant_oneVM.UpdatedDate = DateTime.UtcNow;
                                 EmployeeCompliant_oneVM.UpdatedBy = Convert.ToInt32(sid);
                                 db.Entry(EmployeeCompliant_one).CurrentValues.SetValues(EmployeeCompliant_oneVM);
-                             
+
                                 db.SaveChanges();
 
                                 //CategoryMasters_History categoryMasters_History = Mapper.Map<CategoryMasterVM, CategoryMasters_History>(categoryVM);
@@ -99,6 +99,24 @@ namespace ComplaintManagement.Repository
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
+            }
+        }
+        public void Removefile(string fileName)
+        {
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var user = db.EmployeeComplaintMasters.Where(x => x.Attachments.Contains(fileName)).FirstOrDefault();
+                if (user != null && !string.IsNullOrEmpty(user.Attachments))
+                {
+                    string[] Attachments = user.Attachments.Split(new string[] { "," },
+                                  StringSplitOptions.None);
+                    int index = Array.IndexOf(Attachments, Attachments.Where(x => x == fileName).FirstOrDefault());
+                    Attachments[index] = string.Empty;
+
+                    user.Attachments = String.Join(",", Attachments.Select(p => p));
+                    db.SaveChanges();
+                }
+                new Common().RemoveDoc(fileName);
             }
         }
 
@@ -193,4 +211,4 @@ namespace ComplaintManagement.Repository
 
     }
 }
-    
+
