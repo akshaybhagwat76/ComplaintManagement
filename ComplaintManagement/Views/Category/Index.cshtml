@@ -232,8 +232,8 @@
                                                 <td class="text-center">
                                                     <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
                                                     <a href="javascript:void(0)" onclick="deleteCategory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                    <a href="/Category/HistoryIndex?id=@item.Id" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
+                                                    <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                    <a href="/Category/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" >&nbsp;<i class="fas fa-history text-danger"></i></a>
                                                 </td>
                                             </tr>
                                             }

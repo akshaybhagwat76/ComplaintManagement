@@ -44,7 +44,7 @@ function Confirm(title, msg, $true, $false, $link) { /*change*/
         "</footer>" +
         "</div>" +
         "</div>";
-    $('body').prepend($content);
+    $('body').append($content);
     $('.doAction').click(function () {
         deleteAction($link);
         $(this).parents('.dialog-ovelay').fadeOut(500, function () {
@@ -85,7 +85,7 @@ function performAction(id, isView) {
     location.href = url;
 }
 function filterGrid() {
-    var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+    var fromDate = jQuery("#fromDate").val(); var toDate = jQuery("#toDate").val();
     if (fromDate == "" || toDate == "") {
         funToastr(false, "Please select from and to date."); return;
     }

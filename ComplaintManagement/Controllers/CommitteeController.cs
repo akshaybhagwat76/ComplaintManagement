@@ -29,16 +29,25 @@ namespace ComplaintManagement.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult HistoryIndex(int id)
+        public ActionResult HistoryIndex(string id)
         {
-            var lst = GetAllHistory(1,id);
-            ViewBag.name = id.ToString();
+            if (!string.IsNullOrEmpty(id))
+            {
+                id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
 
-            var DataTableDetail = new HomeController().getDataTableDetail("Committee", null);
-            ViewBag.lstHistoryCommittee = JsonConvert.SerializeObject(lst);
-            ViewBag.Page = DataTableDetail.Item1;
-            ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+                var lst = GetAllHistory(1, Convert.ToInt32(id));
+                ViewBag.name = id.ToString();
+
+                var DataTableDetail = new HomeController().getDataTableDetail("Committee", null);
+                ViewBag.lstHistoryCommittee = JsonConvert.SerializeObject(lst);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+                return View();
+            }
+            else
+            {
+                return View("Index");
+            }
         }
 
         public ActionResult SearchCommittee(string search)
@@ -413,13 +422,22 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             bool retval = true;
             try
             {
-                retval = new CommitteeMastersRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Committee"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    retval = new CommitteeMastersRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Committee"), null);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+                }
             }
             catch (Exception ex)
             {
@@ -453,17 +471,19 @@ namespace ComplaintManagement.Controllers
 
         }
 
-        public ActionResult Edit(int id, bool isView)
+        public ActionResult Edit(string id, bool isView)
         {
             try
             {
-                CommitteeMasterVM CommitteeVM = new CommitteeMastersRepository().Get(id);
-                ViewBag.ViewState = isView;
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
-
-
-                return View("ManageCommitteeMaster", CommitteeVM);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+                    CommitteeMasterVM CommitteeVM = new CommitteeMastersRepository().Get(Convert.ToInt32(id));
+                    ViewBag.ViewState = isView;
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+                    return View("ManageCommitteeMaster", CommitteeVM);
+                }
             }
             catch (Exception ex)
             {
