@@ -25,14 +25,23 @@ namespace ComplaintManagement.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult HistoryIndex(int id)
+        public ActionResult HistoryIndex(string id)
         {
-            ViewBag.lstHistoryEntity = GetAllHistories(1, id).ToList();
-            ViewBag.name = id.ToString();
-            var DataTableDetail = new HomeController().getDataTableDetail("Entity", null);
-            ViewBag.Page = DataTableDetail.Item1;
-            ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+            if (!string.IsNullOrEmpty(id))
+            {
+                id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                ViewBag.lstHistoryEntity = GetAllHistories(1, Convert.ToInt32(id)).ToList();
+                ViewBag.name = id.ToString();
+                var DataTableDetail = new HomeController().getDataTableDetail("Entity", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+                return View();
+            }
+            else
+            {
+                return View("Index");
+            }
         }
         public ActionResult SearchEntity(string search)
         {
@@ -116,7 +125,7 @@ namespace ComplaintManagement.Controllers
             {
                 maxRows = 2147483647;
             }
-            
+
             var lst = new EntityMasterRepository().GetAll();
             lstCount = lst.Count;
             if (!string.IsNullOrEmpty(range))
@@ -202,7 +211,7 @@ namespace ComplaintManagement.Controllers
         [HttpGet]
         public ActionResult GetEntity(string range, int currentPage)
         {
-            ViewBag.lstEntity = GetAll(currentPage,range);
+            ViewBag.lstEntity = GetAll(currentPage, range);
             ViewBag.startDate = range.Split(',')[0];
             ViewBag.toDate = range.Split(',')[1];
 
@@ -212,13 +221,22 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             bool retval = true;
             try
             {
-                retval = new EntityMasterRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Entity"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    retval = new EntityMasterRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Entity"), null);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+                }
             }
             catch (Exception ex)
             {
@@ -248,14 +266,19 @@ namespace ComplaintManagement.Controllers
             return View("ManageEntityMaster", EntityMasterVM);
         }
 
-        public ActionResult Edit(int id, bool isView)
+        public ActionResult Edit(string id, bool isView)
         {
             try
             {
-                EntityMasterVM EntityVM = new EntityMasterRepository().Get(id);
-                ViewBag.ViewState = isView;
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                return View("ManageEntityMaster", EntityVM);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    EntityMasterVM EntityVM = new EntityMasterRepository().Get(Convert.ToInt32(id));
+                    ViewBag.ViewState = isView;
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    return View("ManageEntityMaster", EntityVM);
+                }
             }
             catch (Exception ex)
             {
