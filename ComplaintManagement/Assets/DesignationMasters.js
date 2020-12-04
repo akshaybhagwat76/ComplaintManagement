@@ -1,7 +1,4 @@
-﻿$(document).ready(function () {
-    $.noConflict();
-    // $("#myTable").DataTable();
-});
+﻿
 function deleteDesignation(id) {
 
     //$('#deleteModal').data('id', id).modal('show');

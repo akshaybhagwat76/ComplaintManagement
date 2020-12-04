@@ -1,9 +1,4 @@
 ﻿var isValidExcel = false;
-$(document).ready(function () {
-    $.noConflict();
-    // $("#myTable").DataTable();
-  
-});
 function searchKeyPress(e) {
 
     // look for window.event in case event isn't passed in

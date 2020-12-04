@@ -1,7 +1,4 @@
-﻿$(document).ready(function () {
-    $.noConflict();
-    // $("#myTable").DataTable();
-});
+﻿
 function searchKeyPress(e) {
   
     // look for window.event in case event isn't passed in
@@ -119,7 +116,6 @@ function filterGrid() {
     }
 }
 function PagerClick(index) {
-    debugger
     StartProcess();
     $("#hfCurrentPageIndex").val(index);
     var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : ""; var toDate = $("#toDate").val() == undefined ? "" : $("#toDate").val();

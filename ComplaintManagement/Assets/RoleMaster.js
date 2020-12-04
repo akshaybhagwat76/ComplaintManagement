@@ -1,7 +1,4 @@
-﻿$(document).ready(function () {
-    $.noConflict();
-    // $("#myTable").DataTable();
-});
+﻿
 function searchKeyPress(e) {
 
     // look for window.event in case event isn't passed in
@@ -114,7 +111,9 @@ function PagerClick(index) {
         range = fromDate + ',' + toDate;
     }
     location.href = '/Role/LoadRole?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
-} function column_sort() {
+}
+function column_sort() {
+    debugger
     getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
     comparer = (idx, asc) => (a, b) => ((v1, v2) =>
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
