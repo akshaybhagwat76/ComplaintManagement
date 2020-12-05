@@ -1,4 +1,6 @@
-﻿@{
+﻿@using ComplaintManagement.Helpers
+
+@{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
     var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
@@ -124,7 +126,7 @@
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="/UserMaster/Edit?id=@userId&isView=false">
+                        <a class="dropdown-item" href="/UserMaster/Edit?id=@CryptoEngineUtils.Encrypt(Convert.ToString(userId),true)&isView=false">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>
@@ -370,7 +372,7 @@
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-0">
-                                        @Html.LabelFor(model => model.DateOfJoining, new { @type = "Date"})
+                                        @Html.LabelFor(model => model.DateOfJoining, new { @type = "Date" })
                                         @Html.TextBoxFor(model => model.DateOfJoining, new { @type = "Date", @class = "form-control form-control-user required", @placeholder = "Name" })
 
                                     </div>
@@ -419,7 +421,7 @@
 
                                     </div>
                                 </div>
-                                @Html.Hidden("Doj", Model.DateOfJoining.HasValue? Model.DateOfJoining.Value.ToString("yyyy/MM/dd"):"")
+                                @Html.Hidden("Doj", Model.DateOfJoining.HasValue ? Model.DateOfJoining.Value.ToString("yyyy/MM/dd") : "")
 
 
                                 <div class="col-sm-12 text-right">

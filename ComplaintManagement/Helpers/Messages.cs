@@ -51,7 +51,8 @@
         public const string Active = "Active";
         public const string Inactive = "Inactive";
         public const string Status = "Status";
-        
+        public const string Id = "Id";
+
         public const string DataCategoryAlreadyExists = "This Category {0} already exists! - Row No. {1} and Column No. {2}";
         public const string DataCommitteeAlreadyExists = "This Committee {0} already exists! - Row No. {1} and Column No. {2}";
         public const string DataCompetencyAlreadyExists = "This Competency {0} already exists! - Row No. {1} and Column No. {2}";

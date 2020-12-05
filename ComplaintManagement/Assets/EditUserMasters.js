@@ -121,8 +121,8 @@ $('#delete-btn').click(function () {
                 toastr.error(error)
             }
         });
-    }
-})
+    
+});
 
 
 $(document).ready(function () {

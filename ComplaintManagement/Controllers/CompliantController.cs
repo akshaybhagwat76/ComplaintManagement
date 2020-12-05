@@ -48,7 +48,7 @@ namespace ComplaintManagement.Controllers
                 }
             }
             ViewBag.NavbarTitle = "Complaint Information";
-            UserVM.ComplaintStatus = Messages.Opened; UserVM.Id = UserVM.CompentencyId = 0;
+            UserVM.ComplaintStatus = Messages.Opened; UserVM.Id = UserVM.CompentencyId = 0; UserVM.DateOfJoining = DateTime.UtcNow.AddDays(5);
             return View(UserVM);
         }
         public ActionResult Edit(string id, bool isView)
@@ -71,6 +71,7 @@ namespace ComplaintManagement.Controllers
                         userMasterVM.Id = EmployeeCompliant_oneVM.Id;
                         userMasterVM.ComplaintStatus = EmployeeCompliant_oneVM.ComplaintStatus;
                         userMasterVM.CompentencyId = EmployeeCompliant_oneVM.UserId;
+                        userMasterVM.DateOfJoining = EmployeeCompliant_oneVM.DueDate;
                     }
                     ViewBag.Entity = new EntityMasterRepository().Get(userMasterVM.Company) != null ? new EntityMasterRepository().Get(userMasterVM.Company).EntityName : Messages.NotAvailable;
                     ViewBag.SBU = new SBUMasterRepository().Get(userMasterVM.SBUId) != null ? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU : Messages.NotAvailable;
@@ -105,9 +106,9 @@ namespace ComplaintManagement.Controllers
         [HttpPost]
         public ActionResult AddOrUpdateEmployeeCompliant(string EmpCompliantParams)
         {
+            List<string> filesName = new List<string>();
             try
             {
-                List<string> filesName = new List<string>();
                 if (Request.Files.Count > 0)
                 {
                     var files = Request.Files;
@@ -119,7 +120,7 @@ namespace ComplaintManagement.Controllers
                         //Checking file is available to save.  
                         if (file != null)
                         {
-                            var InputFileName = new Common().UniqueFileName();
+                            var InputFileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + new Common().UniqueFileName();
                             string strpath = InputFileName += System.IO.Path.GetExtension(file.FileName);
 
                             String path = Server.MapPath("~/Documents/");
@@ -133,11 +134,21 @@ namespace ComplaintManagement.Controllers
                             file.SaveAs(ServerSavePath);
                             filesName.Add(strpath);
                         }
-
                     }
                 }
                 if (!string.IsNullOrEmpty(EmpCompliantParams))
                 {
+                    var converter = new ExpandoObjectConverter();
+                    dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(EmpCompliantParams, converter);
+                    if (data.Id!=null && !string.IsNullOrEmpty(Convert.ToString(data.Id)))
+                    {
+                        string Id = Convert.ToString(data.Id);
+                        if (Id.Length > 5)
+                        {
+                            Id = CryptoEngineUtils.Decrypt(Id.Replace(" ", "+"), true);
+                            EmpCompliantParams = new Common().UpdateTokenValue(EmpCompliantParams, Messages.Id, Convert.ToInt32(Id).ToString());
+                        }
+                    }
                     var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliantMasterVM>(EmpCompliantParams);
                     EmployeeComplaintDto.Attachments = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
                     var User = new EmployeeComplaintMastersRepository().AddOrUpdate(EmployeeComplaintDto);
@@ -150,6 +161,22 @@ namespace ComplaintManagement.Controllers
             }
             catch (Exception ex)
             {
+                if (filesName.Count > 0)
+                {
+                    foreach (string file in filesName)
+                    {
+                        if (!string.IsNullOrEmpty(file))
+                        {
+                            string filePath = "~/Documents/" + file;
+
+                            if (System.IO.File.Exists(Server.MapPath(filePath)))
+                            {
+                                System.IO.File.Delete(Server.MapPath(filePath));
+                            }
+                        }
+                    }
+                }
+
                 ErrorSignal.FromCurrentContext().Raise(ex);
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
@@ -268,14 +295,14 @@ namespace ComplaintManagement.Controllers
                     id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
 
                     retval = new EmployeeComplaintMastersRepository().SubmitComplaint(Convert.ToInt32(id));
-                    return RedirectToAction("Index","Employee");
+                    return RedirectToAction("Index", "Employee");
                 }
                 return RedirectToAction("Edit", new { id = id, isView = false });
             }
             catch (Exception ex)
             {
                 ErrorSignal.FromCurrentContext().Raise(ex);
-                return RedirectToAction("Edit",new { id = id, isView = false });
+                return RedirectToAction("Edit", new { id = id, isView = false });
             }
         }
         [HttpPost]
@@ -293,7 +320,7 @@ namespace ComplaintManagement.Controllers
                         id = Convert.ToInt32(CryptoEngineUtils.Decrypt(data.Id.Replace(" ", "+"), true));
                     }
 
-                    new EmployeeComplaintMastersRepository().WithdrawComplaint(id,data.Remark);
+                    new EmployeeComplaintMastersRepository().WithdrawComplaint(id, data.Remark);
                     return new ReplyFormat().Success(Messages.SUCCESS);
                 }
                 return new ReplyFormat().Error(Messages.BAD_DATA);

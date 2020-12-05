@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 using System.Text;
 using System.Web;
@@ -64,7 +66,7 @@ namespace ComplaintManagement.Helpers
         {
             string filePath = "";
             string[] pd = filename.Split(',');
-            string NewFileName = RandomString(3) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + "."+pd[2];
+            string NewFileName = RandomString(3) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + "." + pd[2];
             byte[] imageBytes = Convert.FromBase64String(pd[1]);
             if (!Directory.Exists("~/Images/profile_pics"))
             {
@@ -90,13 +92,19 @@ namespace ComplaintManagement.Helpers
                 filePath = System.Web.HttpContext.Current.Server.MapPath("~/Imports/temps/" + NewFileName);
                 File.WriteAllBytes(filePath, imageBytes);
                 return System.Web.HttpContext.Current.Server.MapPath("~/Imports/temps/" + NewFileName);
-                
+
             }
             catch (Exception ex)
             {
-
-                return string.Empty;
+                return ex.Message.ToString();
             }
+        }
+
+        public string UpdateTokenValue(string jsonString, string TokenName, string newValue)
+        {
+            JObject jsonObj = (JObject)JsonConvert.DeserializeObject(jsonString);
+            jsonObj.Property(TokenName).Value = newValue;
+            return JsonConvert.SerializeObject(jsonObj);
         }
     }
 }

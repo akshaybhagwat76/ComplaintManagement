@@ -2,233 +2,235 @@
 @model ComplaintManagement.ViewModel.UserMasterVM
 @{
     ViewBag.Title = "Compliant_one";
+    string saltedId = CryptoEngineUtils.Encrypt(Convert.ToString(Model.Id),true);
 }
-<div id="content-wrapper" class="d-flex flex-column">
-    @Html.Hidden("UserId", Model.CompentencyId)
-    @Html.Hidden("Id", Model.Id)
-    @Html.Hidden("ComplaintStatus", Model.ComplaintStatus)
-    <!-- Main Content -->
-    <div id="content">
-        <!-- Topbar -->
-        @{Html.RenderPartial("_Compliant");}
-        <!-- End of Topbar -->
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-            <div class="preloader"></div>
-            <div class="page-title mb-3">
-                <h2 class="text-black m-0">Employee Information</h2>
-            </div>
-            <!-- Tab Bar -->
-            <div class="row">
-                <div class="col-xl-4 col-lg-5">
-                    <div class="card shadow mb-4 rounded-0 border-0 min-h-365">
-                        <!-- Card Body -->
-                        <div class="card-body">
-                            <div class="text-center form-group">
-                                <img src="@(!string.IsNullOrEmpty(Model.ImagePath)? "/Images/profile_pics/"+Model.ImagePath : "/Images/profile.png")" />
-                            </div>
-                            <div class="text-center">
-                                <h3 class="text-black font-weight-bold f-20 mt-3">@Model.EmployeeName</h3>
-                                <p class="text-danger">@Model.EmployeeId</p>
-                                <div class="row form-group mt-4">
-                                    <div class="col-md-6 border-right">
-                                        <p class="text-black mb-2">M</p>
-                                        <span>@Model.Gender</span>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p class="text-black mb-2">29</p>
-                                        <span>@Model.Age</span>
-                                    </div>
-                                </div>
-                                <p class="text-black f-20 font-weight-bold mt-4 mb-0">@Model.WorkEmail</p>
-                            </div>
-                        </div>
-                    </div>
+    <div id="content-wrapper" class="d-flex flex-column">
+        @Html.Hidden("UserId", Model.CompentencyId)
+        @Html.Hidden("Id", Model.Id)
+        @Html.Hidden("ComplaintStatus", Model.ComplaintStatus)
+        @Html.Hidden("DueDate",Model.DateOfJoining)
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+            @{Html.RenderPartial("_Compliant");}
+            <!-- End of Topbar -->
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <div class="preloader"></div>
+                <div class="page-title mb-3">
+                    <h2 class="text-black m-0">Employee Information</h2>
                 </div>
-                <div class="col-xl-8 col-lg-7">
-                    <div class="card shadow mb-4 rounded-0 border-0 min-h-365">
-                        <!-- Card Body -->
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <label>Time Type</label>
-                                    <p class="text-black font-weight-bold m-0">+@Model.TimeType</p>
+                <!-- Tab Bar -->
+                <div class="row">
+                    <div class="col-xl-4 col-lg-5">
+                        <div class="card shadow mb-4 rounded-0 border-0 min-h-365">
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <div class="text-center form-group">
+                                    <img src="@(!string.IsNullOrEmpty(Model.ImagePath)? "/Images/profile_pics/"+Model.ImagePath : "/Images/profile.png")" />
                                 </div>
-                                <div class="col-sm-4">
-                                    <label>Management Level</label>
-                                    <p class="text-black font-weight-bold m-0">@ViewBag.ManagementLevel</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Entity</label>
-                                    <p class="text-black font-weight-bold m-0">@ViewBag.Entity</p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-4 mb-3 mb-sm-0">
-                                    <label>LOS</label>
-                                    <p class="text-black font-weight-bold m-0">@ViewBag.LOS</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>SBU</label>
-                                    <p class="text-black font-weight-bold m-0">@ViewBag.SBU</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>SubSBU</label>
-                                    <p class="text-black font-weight-bold m-0">@ViewBag.SubSBU</p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <label>Competency</label>
-                                    <p class="text-black font-weight-bold m-0">@ViewBag.Competency</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Location</label>
-                                    <p class="text-black font-weight-bold m-0">@ViewBag.Location</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Region</label>
-                                    <p class="text-black font-weight-bold m-0">@ViewBag.Region</p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <label>Date Of Joining</label>
-                                    <p class="text-black font-weight-bold m-0">
-                                        @if (Model.DateOfJoining.HasValue)
-                                        {
-                                            var date = String.Format("{0}", Model.DateOfJoining.Value.ToString("dd/MM/yyyy"));
-                                            @Html.Raw(date);
-                                        }
-                                        else
-                                        {
-                                            @Html.Raw("N/A");
-                                        }
-                                    </p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Mobile No</label>
-                                    <p class="text-black font-weight-bold m-0">@Model.MobileNo</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Manager</label>
-                                    <p class="text-black font-weight-bold m-0">@Model.Manager</p>
+                                <div class="text-center">
+                                    <h3 class="text-black font-weight-bold f-20 mt-3">@Model.EmployeeName</h3>
+                                    <p class="text-danger">@Model.EmployeeId</p>
+                                    <div class="row form-group mt-4">
+                                        <div class="col-md-6 border-right">
+                                            <p class="text-black mb-2">M</p>
+                                            <span>@Model.Gender</span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="text-black mb-2">29</p>
+                                            <span>@Model.Age</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-black f-20 font-weight-bold mt-4 mb-0">@Model.WorkEmail</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-xl-8 col-lg-7">
+                        <div class="card shadow mb-4 rounded-0 border-0 min-h-365">
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label>Time Type</label>
+                                        <p class="text-black font-weight-bold m-0">+@Model.TimeType</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Management Level</label>
+                                        <p class="text-black font-weight-bold m-0">@ViewBag.ManagementLevel</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Entity</label>
+                                        <p class="text-black font-weight-bold m-0">@ViewBag.Entity</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-4 mb-3 mb-sm-0">
+                                        <label>LOS</label>
+                                        <p class="text-black font-weight-bold m-0">@ViewBag.LOS</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>SBU</label>
+                                        <p class="text-black font-weight-bold m-0">@ViewBag.SBU</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>SubSBU</label>
+                                        <p class="text-black font-weight-bold m-0">@ViewBag.SubSBU</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label>Competency</label>
+                                        <p class="text-black font-weight-bold m-0">@ViewBag.Competency</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Location</label>
+                                        <p class="text-black font-weight-bold m-0">@ViewBag.Location</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Region</label>
+                                        <p class="text-black font-weight-bold m-0">@ViewBag.Region</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label>Date Of Joining</label>
+                                        <p class="text-black font-weight-bold m-0">
+                                            @if (Model.DateOfJoining.HasValue)
+                                                                                    {
+                                                                                        var date = String.Format("{0}", Model.DateOfJoining.Value.ToString("dd/MM/yyyy"));
+                                                    @Html.Raw(date);
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                    @Html.Raw("N/A");
+                                                                                            }
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Mobile No</label>
+                                        <p class="text-black font-weight-bold m-0">@Model.MobileNo</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Manager</label>
+                                        <p class="text-black font-weight-bold m-0">@Model.Manager</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="card shadow mb-4 rounded-0 border-0">
-                <!-- Card Body -->
-                <div class="card-body">
-                    <form id="myForm">
-                        <div class="row form-group">
-                            <div class="col-md-4">
-                                @Html.Label("Category", new { @class = "requiredLabel" })
-                                @{
-                                    List<SelectListItem> listCategory = new List<SelectListItem>();
-                                    listCategory = new List<SelectListItem>();
-                                    listCategory.Add(new SelectListItem
-                                    {
-                                        Text = "",
-                                        Value = ""
-                                    });
-                                    listCategory.AddRange(ViewBag.lstCategories);
-                                }
+                <div class="card shadow mb-4 rounded-0 border-0">
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <form id="myForm">
+                            <div class="row form-group">
+                                <div class="col-md-4">
+                                    @Html.Label("Category", new { @class = "requiredLabel" })
+                                    @{
+List<SelectListItem> listCategory = new List<SelectListItem>();
+listCategory = new List<SelectListItem>();
+listCategory.Add(new SelectListItem
+{
+                                            Text = "",
+                                            Value = ""
+});
+listCategory.AddRange(ViewBag.lstCategories);
+                                    }
 
-                                @Html.DropDownList("CategoryId", (List<SelectListItem>)listCategory, new { @class = "form-control required" })
+                                    @Html.DropDownList("CategoryId", (List<SelectListItem>)listCategory, new { @class = "form-control required" })
 
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.Label("Sub Category", new { @class = "requiredLabel" })
+                                    @{
+List<SelectListItem> listSubCategoryId = new List<SelectListItem>();
+listSubCategoryId = new List<SelectListItem>();
+listSubCategoryId.Add(new SelectListItem
+{
+                                            Text = "",
+                                            Value = ""
+});
+listSubCategoryId.AddRange(ViewBag.lstSubCategories);
+                                    }
+
+                                    @Html.DropDownList("SubCategoryId", (List<SelectListItem>)listSubCategoryId, new { @class = "form-control required" })
+
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                @Html.Label("Sub Category", new { @class = "requiredLabel" })
-                                @{
-                                    List<SelectListItem> listSubCategoryId = new List<SelectListItem>();
-                                    listSubCategoryId = new List<SelectListItem>();
-                                    listSubCategoryId.Add(new SelectListItem
-                                    {
-                                        Text = "",
-                                        Value = ""
-                                    });
-                                    listSubCategoryId.AddRange(ViewBag.lstSubCategories);
-                                }
-
-                                @Html.DropDownList("SubCategoryId", (List<SelectListItem>)listSubCategoryId, new { @class = "form-control required" })
-
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-md-8">
-                                @Html.LabelFor(c => c.Remark, new { @class = "requiredLabel" })
-                                @Html.TextAreaFor(c => c.Remark, new { @class = "form-control required" })
-                            </div>
-                        </div>
-                        <div class="form-group" id="form-empData">
-                            @Html.Label("Attachments")
-                            <div class="row">
+                            <div class="row form-group">
                                 <div class="col-md-8">
+                                    @Html.LabelFor(c => c.Remark, new { @class = "requiredLabel" })
+                                    @Html.TextAreaFor(c => c.Remark, new { @class = "form-control required" })
+                                </div>
+                            </div>
+                            <div class="form-group" id="form-empData">
+                                @Html.Label("Attachments")
+                                <div class="row">
+                                    <div class="col-md-8">
 
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="attachementFile">
-                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="attachementFile">
+                                            <label class="custom-file-label" for="customFile">Choose file</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <a href="javascript:void(0)" onclick="addAttachement()" class="btn btn-danger rounded-circle btn-sm">
-                                        <i class="fas fa-plus"></i>
-                                    </a>
-                                </div>
-                                @if (!string.IsNullOrEmpty(Model.Attachments))
-                                {
-                                    <br />
-                                    <br />
-                                    if (Model.Attachments.Contains(","))
-                                    {
-                                        string[] array = Model.Attachments.Split(',');
-                                        foreach (var item in array)
+                                    <div class="col-md-1">
+                                        <a href="javascript:void(0)" onclick="addAttachement()" class="btn btn-danger rounded-circle btn-sm">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(Model.Attachments))
+{
+                                        <br />
+                                        <br />
+                                        if (Model.Attachments.Contains(","))
                                         {
-                                            if (item.Length > 3)
+                                            string[] array = Model.Attachments.Split(',');
+                                            foreach (var item in array)
                                             {
-                                                <div id="file_@item" class="col-md-6">
+                                                if (item.Length > 3)
+                                                {
+                                                    <div id="file_@item" class="col-md-6">
 
-                                                    @item &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@item')" title="remove"></span>
-                                                </div>
+                                                        <a href="/Files/DownloadFile?filePath=/Documents/@item" class="btn border-0 p-0">  @item </a>&nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@item')" title="remove"></span>
+                                                    </div>
+                                                }
                                             }
                                         }
-                                    }
 
-                                    else
-                                    {
+                                        else
+                                        {
 
-                                        <div id="file_@Model.Attachments" class="col-md-6">
+                                            <div id="file_@Model.Attachments" class="col-md-6">
 
-                                            @Model.Attachments &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@Model.Attachments')" title="remove"></span>
-                                        </div>
-                                        <br />
+                                                <a href="/Files/DownloadFile?filePath=/Documents/@Model.Attachments"  class="btn border-0 p-0">  @Model.Attachments </a> &nbsp; &nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@Model.Attachments')" title="remove"></span>
+                                            </div>
+                                            <br />
 
-                                        <br />
+                                            <br />
 
-                                    }
-                                }
+                                        }
+}
+                                </div>
                             </div>
-                        </div>
-                        <div class="text-right">
-                            <a href="javascript:void(0)" onclick="submitForm()" class="btn btn-danger btn-md">Save</a>
-                            <a href="/Compliant/SubmitComplaint?id=@CryptoEngineUtils.Encrypt(Convert.ToString(Model.Id),true)" class="btn btn-white border btn-md">Submit</a>
-                            <a href="/Employee/Index" class="btn btn-white border btn-md">Cancel</a>
-                            <label id="lblError" class="adderror"></label>
-                        </div>
-                    </form>
+                            <div class="text-right">
+                                <a href="javascript:void(0)" onclick="submitForm()" class="btn btn-danger btn-md">Save</a>
+                                <a href="/Compliant/SubmitComplaint?id=@saltedId" class="btn btn-white border btn-md">Submit</a>
+                                <a href="/Employee/Index" class="btn btn-white border btn-md">Cancel</a>
+                                <label id="lblError" class="adderror"></label>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
+            <!-- /.container-fluid -->
         </div>
-        <!-- /.container-fluid -->
+        <!-- End of Main Content -->
     </div>
-    <!-- End of Main Content -->
-</div>
-@Scripts.Render("~/Assets/EditEmployeeCompliant_OneMasters")
-@Html.Partial("_CommonDeleteModal")
-@Scripts.Render("~/Assets/Common")
+    @Scripts.Render("~/Assets/EditEmployeeCompliant_OneMasters")
+    @Html.Partial("_CommonDeleteModal")
+    @Scripts.Render("~/Assets/Common")

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using ComplaintManagement.Helpers
+
+@{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
     var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
@@ -119,7 +121,7 @@
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="/UserMaster/Edit?id=@userId&isView=false">
+                        <a class="dropdown-item" href="/UserMaster/Edit?id=@CryptoEngineUtils.Encrypt(Convert.ToString(userId),true)&isView=false">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>
@@ -364,7 +366,7 @@
                 enabled: false
             }
         },
-    });</script>    
+    });</script>
 
 <div class="modal" id="dueComplaints">
     <div class="modal-dialog modal-xl">

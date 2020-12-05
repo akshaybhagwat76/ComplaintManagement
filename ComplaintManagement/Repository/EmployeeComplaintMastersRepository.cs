@@ -41,10 +41,9 @@ namespace ComplaintManagement.Repository
                                 EmployeeComplaintVM.IsActive = true;
                                 EmployeeComplaintVM.CreatedDate = DateTime.UtcNow;
                                 EmployeeComplaintVM.CreatedBy = Convert.ToInt32(sid);
-                                EmployeeComplaintVM.DueDate = DateTime.UtcNow.AddDays(5);
                                 EmployeeComplaint = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMaster>(EmployeeComplaintVM);
                                 EmployeeComplaint.UserId = EmployeeComplaintVM.UserId = EmployeeComplaint.UserId == 0 ? Convert.ToInt32(sid) : EmployeeComplaint.UserId;
-                                 EmployeeComplaint.Status = true;
+                                EmployeeComplaint.Status = true;
                                 db.EmployeeComplaintMasters.Add(EmployeeComplaint);
                                 db.SaveChanges();
 
@@ -61,9 +60,17 @@ namespace ComplaintManagement.Repository
                                 EmployeeComplaintVM.CreatedBy = EmployeeComplaint.CreatedBy;
                                 EmployeeComplaintVM.UpdatedDate = DateTime.UtcNow;
                                 EmployeeComplaintVM.UpdatedBy = Convert.ToInt32(sid);
+                                if (!string.IsNullOrEmpty(EmployeeComplaint.Attachments))
+                                {
+                                    if (!string.IsNullOrEmpty(EmployeeComplaintVM.Attachments))
+                                    {
+                                        List<string> newAttachments = EmployeeComplaintVM.Attachments.Split(',').ToList();
+                                        List<string> oldAttachments = EmployeeComplaint.Attachments.Split(',').ToList();
+                                        EmployeeComplaintVM.Attachments = oldAttachments.Concat(newAttachments).ToList().SelectMany(x => x.Split(',').ToString()).ToString();
+                                    }
+                                }
                                 db.Entry(EmployeeComplaint).CurrentValues.SetValues(EmployeeComplaintVM);
                                 db.SaveChanges();
-                                dbContextTransaction.Commit();
 
                                 EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
                                 if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Updated; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
@@ -76,6 +83,22 @@ namespace ComplaintManagement.Repository
                         catch (Exception ex)
                         {
                             dbContextTransaction.Rollback();
+                            if (!string.IsNullOrEmpty(EmployeeComplaintVM.Attachments))
+                            {
+                                foreach (string file in EmployeeComplaintVM.Attachments.Split(','))
+                                {
+                                    if (!string.IsNullOrEmpty(file))
+                                    {
+                                        string filePath = "~/Documents/" + file;
+
+                                        if (File.Exists(HttpContext.Current.Server.MapPath(filePath)))
+                                        {
+                                            File.Delete(HttpContext.Current.Server.MapPath(filePath));
+                                        }
+
+                                    }
+                                }
+                            }
                             throw new Exception(ex.Message.ToString());
                         }
                     }
@@ -205,7 +228,7 @@ namespace ComplaintManagement.Repository
             return db.SaveChanges() > 0;
         }
 
-        public bool WithdrawComplaint(int id,string remarks)
+        public bool WithdrawComplaint(int id, string remarks)
         {
             var data = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == id);
             if (data != null && !string.IsNullOrEmpty(remarks))
@@ -242,7 +265,7 @@ namespace ComplaintManagement.Repository
                 if (Path.GetExtension(file) == ".xlsx" && !string.IsNullOrEmpty(sid))
                 {
                     var lstEmployee = new UserMastersRepository().GetAll();
-                    var lstCategory= new CategoryMastersRepository().GetAll();
+                    var lstCategory = new CategoryMastersRepository().GetAll();
                     var lstSubCategory = new SubCategoryMastersRepository().GetAll();
 
                     ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -318,9 +341,9 @@ namespace ComplaintManagement.Repository
                         {
                             string Remark = workSheet.Cells[i, CategoryNameIndex].Value?.ToString();
                             EmployeeCompliantMasterVM RemarkDto = new EmployeeCompliantMasterVM { Remark = Remark };
-                           
-                                throw new Exception(string.Format(Messages.DataCategoryAlreadyExists, new object[] { "Remarks", i, RemarkNameIndex }));
-                           
+
+                            throw new Exception(string.Format(Messages.DataCategoryAlreadyExists, new object[] { "Remarks", i, RemarkNameIndex }));
+
                         }
                         #region Status
                         //Status check

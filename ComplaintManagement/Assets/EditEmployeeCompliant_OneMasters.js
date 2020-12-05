@@ -14,6 +14,7 @@ function deleteFile() {
         url: "/Compliant/RemoveFIle",
         data: { fileName: fileName },
         success: function (response) {
+            StopProcess();
             if (response.status != "Fail") {
                 funToastr(true, response.msg);
                 document.getElementById("file_" + response.data).remove();
@@ -59,10 +60,11 @@ function submitForm() {
     else {
         $('#Remark').removeClass("adderror");
     }
-
+    debugger
     if (retval) {
         var data = {
             Id: $("#Id").val(),
+            DueDate: $("#DueDate").val(),
             CategoryId: $("#CategoryId").val(),
             SubCategoryId: $("#SubCategoryId").val(),
             Remark: $("#Remark").val(),
@@ -88,14 +90,14 @@ function submitForm() {
             success: function (response) {
                 if (response.status == "Fail") {
                     StopProcess();
-                    $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(data.error).show();
+                    $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
                 }
                 else {
                     window.location.href = '/Employee/Index';
                 }
             },
             error: function (error) {
-                funToastr(false, error);
+                funToastr(false, error.statusText);
             }
         });
     }
@@ -105,7 +107,7 @@ addAttachement = function () {
     if (attachementfiles && attachementfiles.length > 0) {
         var lastFile = attachementfiles[attachementfiles.length - 1];
         var index = attachementfiles.findIndex(x => x.file.name === lastFile.file.name);
-        var attachement = '<div id="file_' + lastFile.file.name + '" class="col-md-12">' + lastFile.file.name + ' &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeAttachementFile(' + index + ')" title="remove"></span></div>';
+        var attachement = '<br /><div id="file_' + lastFile.file.name + '" class="col-md-12">' + lastFile.file.name + ' &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeAttachementFile(' + index + ')" title="remove"></span></div>';
         $("#form-empData").append(attachement);
     }
 }
