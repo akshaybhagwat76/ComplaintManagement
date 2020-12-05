@@ -64,7 +64,6 @@ namespace ComplaintManagement.Controllers
             var lst = new EmployeeComplaintMastersRepository().GetAll();
             lstCount = lst.Count;
 
-
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');

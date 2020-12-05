@@ -14,5 +14,7 @@ namespace ComplaintManagement.ViewModel
         public string ActionType { get; set; }
         public string UserType { get; set; }
         public int ComplaintId { get; set; }
+        public string CreatedByName { get; set; }
+        public string UpdatedByName { get; set; }
     }
 }

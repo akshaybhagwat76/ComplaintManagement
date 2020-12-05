@@ -22,7 +22,6 @@ function searchEmployeeCompliant(searchText) {
     if (searchText !== null && searchText !== "") {
         location.href = "/Employee/searchEmployeeCompliant?search=" + searchText;
     }
-
 }
 
 function column_sort() {
@@ -52,7 +51,6 @@ widthdrawComplaint  = function (id) {
 
 
 withdrawComplaintForSubmission = function () {
-    debugger
     var id = $('#widthdrawModel').data('id');
     var retval = true;
     var str = $('#Remark').val();
@@ -149,9 +147,6 @@ function performAction(id, isView) {
     location.href = url;
 }
 
-addAttachement = function () {
-
-}
 
 function filterGrid() {
     var data = {
@@ -203,6 +198,36 @@ function PagerClick(index) {
     }
     else {
         location.href = '/Employee/LoadEmployeeComplain?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
+    }
+}
+
+function getHistory(id) {
+    if (id != "") {
+        var url = "/Compliant/GetHistoryByComplaint?ComplaintId=" + id;
+        debugger
+        $("#historyContent").load(url, function () {
+            $("#historyModal").modal("show");
+        })
+        //$.ajax({
+        //    type: "GET",
+        //    url: "/Compliant/GetHistoryByComplaint",
+        //    data: { ComplaintId: id },
+        //    success: function (data) {
+        //        debugger
+        //        if (data.status == "Fail") {
+        //            StopProcess();
+        //            funToastr(false, data.error);
+        //        }
+        //        else {
+        //            $("#historyModal").modal("show");
+        //        }
+        //    }, error: function (response) {
+        //        funToastr(false, response.responseText);
+        //    },
+        //    failure: function (response) {
+        //        funToastr(false, response.responseText);
+        //    }
+        //})
     }
 }
 

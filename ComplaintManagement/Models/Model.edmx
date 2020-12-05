@@ -130,7 +130,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="ModifiedBy" Type="int" />
           <Property Name="Remarks" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="ActionType" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="ActionType" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UserType" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="ComplaintId" Type="int" Nullable="false" />
         </EntityType>
@@ -1272,7 +1272,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="ModifiedBy" Type="Int32" />
           <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ActionType" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="ActionType" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="UserType" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
           <Property Name="ComplaintId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters" FromRole="EmployeeComplaintHistory" ToRole="EmployeeComplaintMaster" />
