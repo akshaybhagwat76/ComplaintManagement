@@ -6,7 +6,6 @@ using Elmah;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
@@ -33,6 +32,7 @@ namespace ComplaintManagement.Repository
                 {
                     using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
+                        this.db.Database.CommandTimeout = 180;
                         try
                         {
                             var EmployeeComplaint = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.Id);
@@ -50,6 +50,7 @@ namespace ComplaintManagement.Repository
                                 EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
                                 if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Added; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
                                 db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
+                                 new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus);
                                 db.SaveChanges();
                                 dbContextTransaction.Commit();
                             }
@@ -66,18 +67,26 @@ namespace ComplaintManagement.Repository
                                     {
                                         List<string> newAttachments = EmployeeComplaintVM.Attachments.Split(',').ToList();
                                         List<string> oldAttachments = EmployeeComplaint.Attachments.Split(',').ToList();
-                                        EmployeeComplaintVM.Attachments = oldAttachments.Concat(newAttachments).ToList().SelectMany(x => x.Split(',').ToString()).ToString();
+                                        List<string> updatedAttachements = new List<string>();
+                                        foreach (string fileName in oldAttachments.Concat(newAttachments).ToList())
+                                        {
+                                            if(!string.IsNullOrEmpty(fileName) && fileName.Length > 5)
+                                            {
+                                                updatedAttachements.Add(fileName);
+                                            }
+                                        }
+                                        EmployeeComplaintVM.Attachments =string.Join(",", updatedAttachements);
                                     }
                                 }
                                 db.Entry(EmployeeComplaint).CurrentValues.SetValues(EmployeeComplaintVM);
-                                db.SaveChanges();
 
                                 EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
                                 if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Updated; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
                                 db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
                                 db.SaveChanges();
-                                dbContextTransaction.Commit();
+                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id,EmployeeComplaint.ComplaintStatus);
 
+                                dbContextTransaction.Commit();
                             }
                         }
                         catch (Exception ex)
@@ -224,6 +233,8 @@ namespace ComplaintManagement.Repository
             {
                 data.IsSubmitted = true;
                 data.ComplaintStatus = Messages.SUBMITTED;
+
+                new EmployeeComplaintHistoryRepository().AddComplaintHistory(data.Remark,data.Id,data.ComplaintStatus);
             }
             return db.SaveChanges() > 0;
         }
@@ -236,6 +247,7 @@ namespace ComplaintManagement.Repository
                 data.IsSubmitted = false;
                 data.Remark = remarks;
                 data.ComplaintStatus = Messages.Withdrawn;
+                new EmployeeComplaintHistoryRepository().AddComplaintHistory(data.Remark, data.Id, data.ComplaintStatus);
             }
             return db.SaveChanges() > 0;
         }
@@ -285,9 +297,9 @@ namespace ComplaintManagement.Repository
                         }
                         else
                         {
-                            string LOS = workSheet.Cells[i, EmployeeIdIndex].Value?.ToString();
-                            var LOSDto = lstEmployee.FirstOrDefault(x => x.EmployeeName.ToLower() == LOS.ToLower());
-                            if (LOSDto != null)
+                            string Emp = workSheet.Cells[i, EmployeeIdIndex].Value?.ToString();
+                            var EmpDto = lstEmployee.FirstOrDefault(x => x.EmployeeName.ToLower() == Emp.ToLower());
+                            if (EmpDto != null)
                             {
                                 EmployeeComplaintMasterDto.UserId = EmployeeComplaintMasterDto.Id;
                             }
@@ -339,14 +351,13 @@ namespace ComplaintManagement.Repository
                         }
                         else
                         {
-                            string Remark = workSheet.Cells[i, CategoryNameIndex].Value?.ToString();
-                            EmployeeCompliantMasterVM RemarkDto = new EmployeeCompliantMasterVM { Remark = Remark };
-
-                            throw new Exception(string.Format(Messages.DataCategoryAlreadyExists, new object[] { "Remarks", i, RemarkNameIndex }));
-
+                            if(!new Common().HasSpecialCharacter(workSheet.Cells[i, RemarkNameIndex].Value?.ToString()))
+                            {
+                                EmployeeComplaintMasterDto.Remark = workSheet.Cells[i, RemarkNameIndex].Value?.ToString();
+                            }
                         }
-                        #region Status
-                        //Status check
+
+                  
                         if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
                         {
                             string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
@@ -366,42 +377,45 @@ namespace ComplaintManagement.Repository
                                 throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
                             }
                         }
-                        #endregion
+                       
                         EmployeeComplaintMasterDto.CreatedBy = Convert.ToInt32(sid);
                         EmployeeComplaintMasterDto.CreatedDate = DateTime.UtcNow;
                         EmployeeComplaintMasterDto.IsActive = true;
+                        EmployeeComplaintMasterDto.UserId = EmployeeComplaintMasterDto.UserId = EmployeeComplaintMasterDto.UserId == 0 ? Convert.ToInt32(sid) : EmployeeComplaintMasterDto.UserId;
+                        EmployeeComplaintMasterDto.Status = true;
+                        EmployeeComplaintMasterDto.DueDate = DateTime.UtcNow.AddDays(5);
                         importEmployeeComplaint.Add(EmployeeComplaintMasterDto);
                     }
-                    //using (var dbContextTransaction = db.Database.BeginTransaction())
-                    //{
-                    //    try
-                    //    {
-                    //        if (importEmployeeComplaint != null && importEmployeeComplaint.Count > 0)
-                    //        {
-                    //            db.CategoryMasters.AddRange(importEmployeeComplaint);
-                    //            db.SaveChanges();
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            if (importEmployeeComplaint != null && importEmployeeComplaint.Count > 0)
+                            {
+                                db.EmployeeComplaintMasters.AddRange(importEmployeeComplaint);
+                                db.SaveChanges();
 
-                    //            List<CategoryMasterVM> categoryDtoListVM = Mapper.Map<List<CategoryMaster>, List<CategoryMasterVM>>(importCategories);
+                                List<EmployeeComplaintMastersHistoryVM> employeeComplaintMasterVM = Mapper.Map<List<EmployeeComplaintMaster>, List<EmployeeComplaintMastersHistoryVM>>(importEmployeeComplaint);
 
-                    //            List<CategoryMasters_History> categoryMasters_History = Mapper.Map<List<CategoryMasterVM>, List<CategoryMasters_History>>(categoryDtoListVM);
-                    //            if (categoryMasters_History != null && categoryMasters_History.Count > 0)
-                    //            {
-                    //                categoryMasters_History.Select(c => { c.EntityState = Messages.Added; c.CategoryId = c.Id; return c; }).ToList();
-                    //            }
+                                List<EmployeeComplaintMastersHistory> HistoryDto = Mapper.Map<List<EmployeeComplaintMastersHistoryVM>, List<EmployeeComplaintMastersHistory>>(employeeComplaintMasterVM);
+                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                {
+                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.EmployeeComplaintMasterId = c.Id; return c; }).ToList();
+                                }
 
-                    //            db.CategoryMasters_History.AddRange(categoryMasters_History);
-                    //            db.SaveChanges();
+                                db.EmployeeComplaintMastersHistories.AddRange(HistoryDto);
+                                db.SaveChanges();
 
-                    //            dbContextTransaction.Commit();
-                    //            count = importCategories.Count;
-                    //        }
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        dbContextTransaction.Rollback();
-                    //        throw new Exception(ex.Message.ToString());
-                    //    }
-                    //}
+                                dbContextTransaction.Commit();
+                                count = importEmployeeComplaint.Count;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            throw new Exception(ex.Message.ToString());
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -411,7 +425,5 @@ namespace ComplaintManagement.Repository
             }
             return count;
         }
-
-
     }
 }

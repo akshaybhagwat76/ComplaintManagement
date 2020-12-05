@@ -12,19 +12,15 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Web;
-
 namespace ComplaintManagement.Repository
 {
     public class EntityMasterRepository
     {
-
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
-
         public EntityMasterRepository()
         {
 
         }
-
         public EntityMasterVM AddOrUpdate(EntityMasterVM EntityVM)
         {
             try
@@ -107,7 +103,6 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
-
         public List<EntityMasterVM> GetAll()
         {
 
@@ -139,17 +134,12 @@ namespace ComplaintManagement.Repository
             }
             return EntityList;
         }
-
         public EntityMasterVM Get(int id)
         {
             EntityMaster Entity = new EntityMaster();
             try
             {
                 Entity = db.EntityMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Entity == null)
-                {
-                    throw new Exception(Messages.BAD_DATA);
-                }
             }
             catch (Exception ex)
             {
@@ -158,7 +148,6 @@ namespace ComplaintManagement.Repository
             }
             return Mapper.Map<EntityMaster, EntityMasterVM>(Entity);
         }
-
         public List<EntityMasterHistoryVM> GetAllHistory()
         {
             List<EntityMasters_History> listdto = new List<EntityMasters_History>();
@@ -188,7 +177,6 @@ namespace ComplaintManagement.Repository
             }
             return lst;
         }
-
         public bool Delete(int id)
         {
             var data = db.EntityMasters.FirstOrDefault(p => p.Id == id);
@@ -202,7 +190,6 @@ namespace ComplaintManagement.Repository
         {
             return db.EntityMasters.Count(x => x.IsActive && x.EntityName.ToUpper() == EntityName.ToUpper()) > 0;
         }
-
         public bool IsExist(string EntityName, int id)
         {
             return db.EntityMasters.Count(x => x.IsActive && x.EntityName.ToUpper() == EntityName.ToUpper() && x.Id != id) > 0;
@@ -211,7 +198,6 @@ namespace ComplaintManagement.Repository
         {
             return new Common().SaveExcelFromBase64(file);
         }
-
         public int ImportEntity(string file)
         {
             List<EntityMaster> importEntity = new List<EntityMaster>();

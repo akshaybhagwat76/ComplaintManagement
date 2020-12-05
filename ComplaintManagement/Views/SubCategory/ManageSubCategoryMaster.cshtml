@@ -1,4 +1,5 @@
-﻿@using ComplaintManagement.Helpers
+﻿@model ComplaintManagement.ViewModel.SubCategoryMasterVM
+@using ComplaintManagement.Helpers
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -12,16 +13,12 @@
 
         if (c != null && cI != null && userIDInfo != null)
         {
-
             user = c.Value.ToString();
             userImage = cI.Value.ToString();
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
-}
-@model ComplaintManagement.ViewModel.SubCategoryMasterVM
-@{
-    ViewBag.Title = "ManageSubCategoryMaster";
+    ViewBag.Title = "Manage SubCategory";
 }
 @Html.Hidden("pageState", (object)ViewBag.ViewState)
 <!-- Content Wrapper -->
@@ -148,8 +145,9 @@
                     <div class="card shadow mb-4">
                         <!-- Card Body -->
                         <div class="card-body">
+                      
                             <form id="myForm" class="m-t" role="form" action="javascript:;">
-                                @Html.HiddenFor(model => model.Id)
+                                <input type="hidden" value="@Model.Id" id="Id" />
                                 <div class="form-group row">
                                     <div class="col-sm-9 mb-3">
                                         @Html.LabelFor(model => model.SubCategoryName, new { @class = "requiredLabel" })
@@ -191,3 +189,4 @@
         </div>
         @Scripts.Render("~/Assets/EditSubCategoryMasters")
     </div>
+</div>

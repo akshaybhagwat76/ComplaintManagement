@@ -12,19 +12,15 @@ using System.Threading;
 using System.Web;
 using System.IO;
 using OfficeOpenXml;
-
 namespace ComplaintManagement.Repository
 {
     public class SBUMasterRepository
     {
-
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
-
         public SBUMasterRepository()
         {
 
         }
-
         public SBUMasterVM AddOrUpdate(SBUMasterVM SBUVM)
         {
             try
@@ -104,7 +100,6 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
-
         public List<SBUMasterVM> GetAll()
         {
 
@@ -136,17 +131,12 @@ namespace ComplaintManagement.Repository
             }
             return SBUList;
         }
-
         public SBUMasterVM Get(int id)
         {
             SBUMaster SBU = new SBUMaster();
             try
             {
                 SBU = db.SBUMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (SBU == null)
-                {
-                    throw new Exception(Messages.BAD_DATA);
-                }
             }
             catch (Exception ex)
             {
@@ -155,7 +145,6 @@ namespace ComplaintManagement.Repository
             }
             return Mapper.Map<SBUMaster, SBUMasterVM>(SBU);
         }
-
         public List<SBUMasterHistoryVM> GetAllHistory()
         {
             List<SBUMasters_History> listdto = new List<SBUMasters_History>();
@@ -185,7 +174,6 @@ namespace ComplaintManagement.Repository
             }
             return lst;
         }
-
         public bool Delete(int id)
         {
             var data = db.SBUMasters.FirstOrDefault(p => p.Id == id);
@@ -195,22 +183,18 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
-
         public bool IsExist(string SBU)
         {
             return db.SBUMasters.Count(x => x.IsActive && x.SBU.ToUpper() == SBU.ToUpper()) > 0;
         }
-
         public bool IsExist(string SBU, int id)
         {
             return db.SBUMasters.Count(x => x.IsActive && x.SBU.ToUpper() == SBU.ToUpper() && x.Id != id) > 0;
         }
-
         public string UploadImportSBU(string file)
         {
             return new Common().SaveExcelFromBase64(file);
         }
-
         public int ImportSBU(string file)
         {
             List<SBUMaster> importSBU = new List<SBUMaster>();

@@ -119,6 +119,21 @@
           <Property Name="EntityState" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="DesignationId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="EmployeeComplaintHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="Remarks" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ActionType" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="UserType" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="ComplaintId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="EmployeeComplaintMasters">
           <Key>
             <PropertyRef Name="Id" />
@@ -463,6 +478,18 @@
           <Property Name="EntityState" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="UserMasterId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_EmployeeComplaintHistory_EmployeeComplaintMasters">
+          <End Role="EmployeeComplaintMasters" Type="Self.EmployeeComplaintMasters" Multiplicity="1" />
+          <End Role="EmployeeComplaintHistory" Type="Self.EmployeeComplaintHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeeComplaintMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmployeeComplaintHistory">
+              <PropertyRef Name="ComplaintId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_EmployeeComplaintMasters_UserMasters">
           <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="1" />
           <End Role="EmployeeComplaintMasters" Type="Self.EmployeeComplaintMasters" Multiplicity="*" />
@@ -556,6 +583,7 @@
           <EntitySet Name="CompetencyMasters_History" EntityType="Self.CompetencyMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DesignationMasters" EntityType="Self.DesignationMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DesignationMasters_History" EntityType="Self.DesignationMasters_History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeComplaintHistory" EntityType="Self.EmployeeComplaintHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeComplaintMasters" EntityType="Self.EmployeeComplaintMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeComplaintMastersHistory" EntityType="Self.EmployeeComplaintMastersHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntityMasters" EntityType="Self.EntityMasters" Schema="dbo" store:Type="Tables" />
@@ -576,6 +604,10 @@
           <EntitySet Name="SubSBUMasters_History" EntityType="Self.SubSBUMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMasters" EntityType="Self.UserMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMasters_History" EntityType="Self.UserMasters_History" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_EmployeeComplaintHistory_EmployeeComplaintMasters" Association="Self.FK_EmployeeComplaintHistory_EmployeeComplaintMasters">
+            <End Role="EmployeeComplaintMasters" EntitySet="EmployeeComplaintMasters" />
+            <End Role="EmployeeComplaintHistory" EntitySet="EmployeeComplaintHistory" />
+          </AssociationSet>
           <AssociationSet Name="FK_EmployeeComplaintMasters_UserMasters" Association="Self.FK_EmployeeComplaintMasters_UserMasters">
             <End Role="UserMasters" EntitySet="UserMasters" />
             <End Role="EmployeeComplaintMasters" EntitySet="EmployeeComplaintMasters" />
@@ -665,6 +697,11 @@
           <AssociationSet Name="FK_UserMasters_SubSBUMasters" Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters">
             <End Role="SubSBUMaster" EntitySet="SubSBUMasters" />
             <End Role="UserMaster" EntitySet="UserMasters" />
+          </AssociationSet>
+          <EntitySet Name="EmployeeComplaintHistories" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintHistory" />
+          <AssociationSet Name="FK_EmployeeComplaintHistory_EmployeeComplaintMasters" Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters">
+            <End Role="EmployeeComplaintMaster" EntitySet="EmployeeComplaintMasters" />
+            <End Role="EmployeeComplaintHistory" EntitySet="EmployeeComplaintHistories" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="CategoryMaster">
@@ -802,6 +839,7 @@
           <NavigationProperty Name="UserMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintMasters_UserMasters" FromRole="EmployeeComplaintMaster" ToRole="UserMaster" />
           <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="EmployeeComplaintHistories" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters" FromRole="EmployeeComplaintMaster" ToRole="EmployeeComplaintHistory" />
         </EntityType>
         <EntityType Name="EmployeeComplaintMastersHistory">
           <Key>
@@ -1220,6 +1258,34 @@
             </Principal>
             <Dependent Role="UserMaster">
               <PropertyRef Name="SubSBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EmployeeComplaintHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ActionType" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="UserType" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="ComplaintId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters" FromRole="EmployeeComplaintHistory" ToRole="EmployeeComplaintMaster" />
+        </EntityType>
+        <Association Name="FK_EmployeeComplaintHistory_EmployeeComplaintMasters">
+          <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" Role="EmployeeComplaintMaster" Multiplicity="1" />
+          <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintHistory" Role="EmployeeComplaintHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeeComplaintMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmployeeComplaintHistory">
+              <PropertyRef Name="ComplaintId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1711,6 +1777,22 @@
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
                 <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeComplaintHistories">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintHistory">
+              <MappingFragment StoreEntitySet="EmployeeComplaintHistory">
+                <ScalarProperty Name="ComplaintId" ColumnName="ComplaintId" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

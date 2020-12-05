@@ -7,7 +7,6 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -18,14 +17,11 @@ namespace ComplaintManagement.Repository
 {
     public class RegionMasterRepository
     {
-
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
-
         public RegionMasterRepository()
         {
 
         }
-
         public RegionMasterVM AddOrUpdate(RegionMasterVM RegionVM)
         {
             try
@@ -106,7 +102,6 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
-
         public List<RegionMasterVM> GetAll()
         {
 
@@ -138,17 +133,12 @@ namespace ComplaintManagement.Repository
             }
             return RegionList;
         }
-
         public RegionMasterVM Get(int id)
         {
             RegionMaster Region = new RegionMaster();
             try
             {
                 Region = db.RegionMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Region == null)
-                {
-                    throw new Exception(Messages.BAD_DATA);
-                }
             }
             catch (Exception ex)
             {
@@ -157,7 +147,6 @@ namespace ComplaintManagement.Repository
             }
             return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
         }
-
         public List<RegionMasterHistoryVM> GetAllHistory()
         {
             List<RegionMasters_History> listdto = new List<RegionMasters_History>();
@@ -187,7 +176,6 @@ namespace ComplaintManagement.Repository
             }
             return lst;
         }
-
         public bool Delete(int id)
         {
             var data = db.RegionMasters.FirstOrDefault(p => p.Id == id);
@@ -197,22 +185,18 @@ namespace ComplaintManagement.Repository
             }
             return db.SaveChanges() > 0;
         }
-
         public bool IsExist(string Region)
         {
             return db.RegionMasters.Count(x => x.IsActive && x.Region.ToUpper() == Region.ToUpper()) > 0;
         }
-
         public bool IsExist(string Region, int id)
         {
             return db.RegionMasters.Count(x => x.IsActive && x.Region.ToUpper() == Region.ToUpper() && x.Id != id) > 0;
         }
-
         public string UploadImportRegion(string file)
         {
             return new Common().SaveExcelFromBase64(file);
         }
-
         public int ImportRegion(string file)
         {
             List<RegionMaster> importRegion = new List<RegionMaster>();

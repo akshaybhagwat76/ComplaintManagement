@@ -4,7 +4,6 @@ using ComplaintManagement.ViewModel;
 using Elmah;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -29,14 +28,15 @@ namespace ComplaintManagement.Controllers
                .Select(c => c.Value).SingleOrDefault();
             UserMasterVM UserVM = new UserMastersRepository().Get(Convert.ToInt32(sid));
 
-            ViewBag.Entity = new EntityMasterRepository().Get(UserVM.Company).EntityName;
-            ViewBag.SBU = new SBUMasterRepository().Get(UserVM.SBUId).SBU;
-            ViewBag.SubSBU = new SubSBUMasterRepository().Get(UserVM.SubSBUId).SubSBU;
-            ViewBag.LOS = new LOSMasterRepository().Get(UserVM.LOSId).LOSName;
-            ViewBag.Competency = new CompetencyMastersRepository().Get(UserVM.CompentencyId).CompetencyName;
-            ViewBag.Location = new LocationMastersRepository().Get(UserVM.LocationId).LocationName;
-            ViewBag.Region = new RegionMasterRepository().Get(UserVM.RegionId).Region;
-            ViewBag.ManagementLevel = new DesignationMasterRepository().Get(UserVM.BusinessTitle).Designation;
+            ViewBag.Entity = UserVM.Company > 0 ? new EntityMasterRepository().Get(UserVM.Company) != null ? new EntityMasterRepository().Get(UserVM.Company).EntityName : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.SBU = UserVM.SBUId > 0 ? new SBUMasterRepository().Get(UserVM.SBUId) != null ? new SBUMasterRepository().Get(UserVM.SBUId).SBU : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.SubSBU = UserVM.SubSBUId > 0 ? new SubSBUMasterRepository().Get(UserVM.SubSBUId) != null ? new SubSBUMasterRepository().Get(UserVM.SubSBUId).SubSBU : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.LOS = UserVM.LOSId > 0 ? new LOSMasterRepository().Get(UserVM.LOSId) != null ? new LOSMasterRepository().Get(UserVM.LOSId).LOSName : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.Competency = UserVM.CompentencyId > 0 ? new CompetencyMastersRepository().Get(UserVM.CompentencyId) != null ? new CompetencyMastersRepository().Get(UserVM.CompentencyId).CompetencyName : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.Location = UserVM.LocationId > 0 ? new LocationMastersRepository().Get(UserVM.LocationId) != null ? new LocationMastersRepository().Get(UserVM.LocationId).LocationName : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.Region = UserVM.RegionId > 0 ? new RegionMasterRepository().Get(UserVM.RegionId) != null ? new RegionMasterRepository().Get(UserVM.RegionId).Region : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.ManagementLevel = UserVM.BusinessTitle > 0 ? new DesignationMasterRepository().Get(UserVM.BusinessTitle) != null ? new DesignationMasterRepository().Get(UserVM.BusinessTitle).Designation : Messages.NotAvailable : Messages.NotAvailable;
+
             ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
             ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
 
@@ -73,14 +73,15 @@ namespace ComplaintManagement.Controllers
                         userMasterVM.CompentencyId = EmployeeCompliant_oneVM.UserId;
                         userMasterVM.DateOfJoining = EmployeeCompliant_oneVM.DueDate;
                     }
-                    ViewBag.Entity = new EntityMasterRepository().Get(userMasterVM.Company) != null ? new EntityMasterRepository().Get(userMasterVM.Company).EntityName : Messages.NotAvailable;
-                    ViewBag.SBU = new SBUMasterRepository().Get(userMasterVM.SBUId) != null ? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU : Messages.NotAvailable;
-                    ViewBag.SubSBU = new SubSBUMasterRepository().Get(userMasterVM.SubSBUId) != null ? new SubSBUMasterRepository().Get(userMasterVM.SubSBUId).SubSBU : Messages.NotAvailable;
-                    ViewBag.LOS = new LOSMasterRepository().Get(userMasterVM.LOSId) != null ? new LOSMasterRepository().Get(userMasterVM.LOSId).LOSName : Messages.NotAvailable;
-                    ViewBag.Competency = new CompetencyMastersRepository().Get(userMasterVM.CompentencyId) != null ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName : Messages.NotAvailable;
-                    ViewBag.Location = new LocationMastersRepository().Get(userMasterVM.LocationId) != null ? new LocationMastersRepository().Get(userMasterVM.LocationId).LocationName : Messages.NotAvailable;
-                    ViewBag.Region = new RegionMasterRepository().Get(userMasterVM.RegionId) != null ? new RegionMasterRepository().Get(userMasterVM.RegionId).Region : Messages.Region;
-                    ViewBag.ManagementLevel = new DesignationMasterRepository().Get(userMasterVM.BusinessTitle).Designation;
+                    ViewBag.Entity = userMasterVM.Company > 0 ? new EntityMasterRepository().Get(userMasterVM.Company) != null ? new EntityMasterRepository().Get(userMasterVM.Company).EntityName : Messages.NotAvailable : Messages.NotAvailable;
+                    ViewBag.SBU = userMasterVM.SBUId > 0 ? new SBUMasterRepository().Get(userMasterVM.SBUId) != null ? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU : Messages.NotAvailable : Messages.NotAvailable;
+                    ViewBag.SubSBU = userMasterVM.SubSBUId > 0 ? new SubSBUMasterRepository().Get(userMasterVM.SubSBUId) != null ? new SubSBUMasterRepository().Get(userMasterVM.SubSBUId).SubSBU : Messages.NotAvailable : Messages.NotAvailable;
+                    ViewBag.LOS = userMasterVM.LOSId > 0 ? new LOSMasterRepository().Get(userMasterVM.LOSId) != null ? new LOSMasterRepository().Get(userMasterVM.LOSId).LOSName : Messages.NotAvailable : Messages.NotAvailable;
+                    ViewBag.Competency = userMasterVM.CompentencyId > 0 ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId) != null ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName : Messages.NotAvailable : Messages.NotAvailable;
+                    ViewBag.Location = userMasterVM.LocationId > 0 ? new LocationMastersRepository().Get(userMasterVM.LocationId) != null ? new LocationMastersRepository().Get(userMasterVM.LocationId).LocationName : Messages.NotAvailable : Messages.NotAvailable;
+                    ViewBag.Region = userMasterVM.RegionId > 0 ? new RegionMasterRepository().Get(userMasterVM.RegionId) != null ? new RegionMasterRepository().Get(userMasterVM.RegionId).Region : Messages.NotAvailable : Messages.NotAvailable;
+                    ViewBag.ManagementLevel = userMasterVM.BusinessTitle > 0 ? new DesignationMasterRepository().Get(userMasterVM.BusinessTitle) != null ? new DesignationMasterRepository().Get(userMasterVM.BusinessTitle).Designation : Messages.NotAvailable : Messages.NotAvailable;
+
                     ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
                     ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
 
@@ -140,7 +141,7 @@ namespace ComplaintManagement.Controllers
                 {
                     var converter = new ExpandoObjectConverter();
                     dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(EmpCompliantParams, converter);
-                    if (data.Id!=null && !string.IsNullOrEmpty(Convert.ToString(data.Id)))
+                    if (data.Id != null && !string.IsNullOrEmpty(Convert.ToString(data.Id)))
                     {
                         string Id = Convert.ToString(data.Id);
                         if (Id.Length > 5)
@@ -305,6 +306,7 @@ namespace ComplaintManagement.Controllers
                 return RedirectToAction("Edit", new { id = id, isView = false });
             }
         }
+
         [HttpPost]
         public ActionResult WithdrawComplaint(string withdrawData)
         {

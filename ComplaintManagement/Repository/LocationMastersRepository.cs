@@ -18,12 +18,10 @@ namespace ComplaintManagement.Repository
     public class LocationMastersRepository
     {
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
-
         public LocationMastersRepository()
         {
 
         }
-
         public LocationMasterVM AddOrUpdate(LocationMasterVM LocationVM)
         {
             try
@@ -105,7 +103,6 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
-
         public List<LocationMasterVM> GetAll()
         {
 
@@ -137,17 +134,12 @@ namespace ComplaintManagement.Repository
             }
             return LocationList;
         }
-
         public LocationMasterVM Get(int id)
         {
             LocationMaster Location = new LocationMaster();
             try
             {
                 Location = db.LocationMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Location == null)
-                {
-                    throw new Exception(Messages.BAD_DATA);
-                }
             }
             catch (Exception ex)
             {
@@ -156,7 +148,6 @@ namespace ComplaintManagement.Repository
             }
             return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
         }
-
         public List<LocationMasterHistoryVM> GetAllHistory()
         {
             List<LocationMasters_History> listdto = new List<LocationMasters_History>();
@@ -199,17 +190,14 @@ namespace ComplaintManagement.Repository
         {
             return db.LocationMasters.Count(x => x.IsActive && x.LocationName.ToUpper() == LocationName.ToUpper()) > 0;
         }
-
         public bool IsExist(string LocationName, int id)
         {
             return db.LocationMasters.Count(x => x.IsActive && x.LocationName.ToUpper() == LocationName.ToUpper() && x.Id != id) > 0;
         }
-
         public string UploadImportLocation(string file)
         {
             return new Common().SaveExcelFromBase64(file);
         }
-
         public int ImportLocation(string file)
         {
             List<LocationMaster> importLocation = new List<LocationMaster>();

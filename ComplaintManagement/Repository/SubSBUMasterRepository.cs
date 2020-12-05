@@ -142,10 +142,6 @@ namespace ComplaintManagement.Repository
             try
             {
                 SubSBU = db.SubSBUMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (SubSBU == null)
-                {
-                    throw new Exception(Messages.BAD_DATA);
-                }
             }
             catch (Exception ex)
             {

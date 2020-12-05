@@ -12,20 +12,15 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Web;
-
-
 namespace ComplaintManagement.Repository
 {
     public class DesignationMasterRepository
     {
-
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
-
         public DesignationMasterRepository()
         {
 
         }
-
         public DesignationMasterVM AddOrUpdate(DesignationMasterVM DesignationVM)
         {
             try
@@ -107,7 +102,6 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
-
         public List<DesignationMasterVM> GetAll()
         {
             List<DesignationMaster> Designation = new List<DesignationMaster>();
@@ -138,17 +132,12 @@ namespace ComplaintManagement.Repository
             }
             return DesignationList;
         }
-
         public DesignationMasterVM Get(int id)
         {
             DesignationMaster Designation = new DesignationMaster();
             try
             {
                 Designation = db.DesignationMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Designation == null)
-                {
-                    throw new Exception(Messages.BAD_DATA);
-                }
             }
             catch (Exception ex)
             {
@@ -157,7 +146,6 @@ namespace ComplaintManagement.Repository
             }
             return Mapper.Map<DesignationMaster, DesignationMasterVM>(Designation);
         }
-
         public List<DesignationMasterHistoryVM> GetAllHistory()
         {
             List<DesignationMasters_History> listdto = new List<DesignationMasters_History>();
@@ -187,7 +175,6 @@ namespace ComplaintManagement.Repository
             }
             return lst;
         }
-
         public bool Delete(int id)
         {
             var data = db.DesignationMasters.FirstOrDefault(p => p.Id == id);
@@ -201,17 +188,14 @@ namespace ComplaintManagement.Repository
         {
             return db.DesignationMasters.Count(x => x.IsActive && x.Designation.ToUpper() == Designation.ToUpper()) > 0;
         }
-
         public bool IsExist(string Designation, int id)
         {
             return db.DesignationMasters.Count(x => x.IsActive && x.Designation.ToUpper() == Designation.ToUpper() && x.Id != id) > 0;
         }
-
         public string UploadImportDesignation(string file)
         {
             return new Common().SaveExcelFromBase64(file);
         }
-
         public int ImportDesignation(string file)
         {
             List<DesignationMaster> importDesignation = new List<DesignationMaster>();

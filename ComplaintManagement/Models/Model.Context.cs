@@ -53,5 +53,6 @@ namespace ComplaintManagement.Models
         public virtual DbSet<SubSBUMasters_History> SubSBUMasters_History { get; set; }
         public virtual DbSet<UserMaster> UserMasters { get; set; }
         public virtual DbSet<UserMasters_History> UserMasters_History { get; set; }
+        public virtual DbSet<EmployeeComplaintHistory> EmployeeComplaintHistories { get; set; }
     }
 }

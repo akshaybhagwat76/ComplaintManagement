@@ -14,6 +14,12 @@ namespace ComplaintManagement.Models
     
     public partial class EmployeeComplaintMaster
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public EmployeeComplaintMaster()
+        {
+            this.EmployeeComplaintHistories = new HashSet<EmployeeComplaintHistory>();
+        }
+    
         public int Id { get; set; }
         public int UserId { get; set; }
         public int CategoryId { get; set; }
@@ -31,5 +37,7 @@ namespace ComplaintManagement.Models
         public bool IsSubmitted { get; set; }
     
         public virtual UserMaster UserMaster { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EmployeeComplaintHistory> EmployeeComplaintHistories { get; set; }
     }
 }

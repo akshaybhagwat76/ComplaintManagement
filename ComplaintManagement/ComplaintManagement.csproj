@@ -235,6 +235,9 @@
     <Compile Include="Models\DesignationMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EmployeeComplaintHistory.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\EmployeeComplaintMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -316,6 +319,7 @@
     <Compile Include="Repository\CompetencyMastersRepository.cs" />
     <Compile Include="Repository\CompliantMastersRepository.cs" />
     <Compile Include="Repository\DesignationMasterRepository.cs" />
+    <Compile Include="Repository\EmployeeComplaintHistoryRepository.cs" />
     <Compile Include="Repository\EmployeeComplaintMastersRepository.cs" />
     <Compile Include="Repository\EntityMasterRepository.cs" />
     <Compile Include="Repository\LocationMastersRepository.cs" />
@@ -334,6 +338,7 @@
     <Compile Include="ViewModel\CompetencyMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
     <Compile Include="ViewModel\CompliantSearchVM.cs" />
+    <Compile Include="ViewModel\EmployeeComplaintHistoryVM.cs" />
     <Compile Include="ViewModel\EmployeeComplaintMastersHistoryVM.cs" />
     <Compile Include="ViewModel\EmployeeCompliantMasterVM.cs" />
     <Compile Include="ViewModel\DesignationMasterHistoryVM.cs" />

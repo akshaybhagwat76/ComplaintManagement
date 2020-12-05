@@ -106,5 +106,16 @@ namespace ComplaintManagement.Helpers
             jsonObj.Property(TokenName).Value = newValue;
             return JsonConvert.SerializeObject(jsonObj);
         }
+        public bool HasSpecialCharacter(string s)
+        {
+            foreach (var c in s)
+            {
+                if (!char.IsLetterOrDigit(c))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

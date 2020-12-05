@@ -58,9 +58,11 @@ function submitForm() {
         funToastr(false, "Remarks cannot contain special characters.");
     }
     else {
-        $('#Remark').removeClass("adderror");
+        if (retval) {
+            $('#Remark').removeClass("adderror");
+        }
     }
-    debugger
+
     if (retval) {
         var data = {
             Id: $("#Id").val(),
@@ -74,7 +76,9 @@ function submitForm() {
         var formData = new FormData();
 
         for (var i = 0; i < attachementfiles.length; i++) {
-            formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
+            if (attachementfiles[i].file.IsDeleted == false) {
+                formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
+            }
         }
 
         data = JSON.stringify(data);
@@ -108,13 +112,15 @@ addAttachement = function () {
         var lastFile = attachementfiles[attachementfiles.length - 1];
         var index = attachementfiles.findIndex(x => x.file.name === lastFile.file.name);
         var attachement = '<br /><div id="file_' + lastFile.file.name + '" class="col-md-12">' + lastFile.file.name + ' &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeAttachementFile(' + index + ')" title="remove"></span></div>';
-        $("#form-empData").append(attachement);
+        $("#form-attachement").append(attachement);
     }
 }
 removeAttachementFile = function (index) {
     let getFile = attachementfiles[index];
-    document.getElementById("file_" + getFile.file.name).remove();
-    attachementfiles.splice(index, 1);
+    if (getFile !== undefined) {
+        document.getElementById("file_" + getFile.file.name).remove();
+        attachementfiles[index].file.IsDeleted = true;
+    }
 }
 
 // Import Attachement 
@@ -131,7 +137,8 @@ function addAttachementUploadedFile() {
         const filename = file.name;
         let last_dot = filename.lastIndexOf('.')
         let ext = "." + filename.slice(last_dot + 1);
-        var reader = new FileReader();
+        var reader = new FileReader(); let isdeleted = "IsDeleted";
+        file[isdeleted] = false;
         reader.onloadend = function () {
             attachementfiles.push({ file });
         }
