@@ -115,6 +115,7 @@ addAttachement = function () {
         $("#form-attachement").append(attachement);
     }
 }
+
 removeAttachementFile = function (index) {
     let getFile = attachementfiles[index];
     if (getFile !== undefined) {
@@ -125,9 +126,7 @@ removeAttachementFile = function (index) {
 
 // Import Attachement 
 var inputAttachement = document.getElementById('attachementFile');
-document.getElementById('attachementFile').addEventListener('change',
-    addAttachementUploadedFile,
-    false);
+document.getElementById('attachementFile').addEventListener('change', addAttachementUploadedFile,false);
 
 function addAttachementUploadedFile() {
     var files = this.files;

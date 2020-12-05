@@ -1,6 +1,7 @@
-﻿
+﻿<link href="~/Content/plugins/dataTables/datatables.min.css" rel="stylesheet" />
+
 <div class="table-responsive">
-    <table class="table f-14">
+    <table class="table f-14" id="historyTable">
         @if (ViewBag.lstComplaintHistory != null)
         {
             if (ViewBag.lstComplaintHistory.Count > 0)
@@ -44,3 +45,9 @@
         </tbody>
     </table>
 </div>
+<script src="~/Scripts/vendor/datatables/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#historyTable").dataTable();
+    })
+</script>
