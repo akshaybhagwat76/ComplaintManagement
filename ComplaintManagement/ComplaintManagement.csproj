@@ -244,6 +244,9 @@
     <Compile Include="Models\EmployeeComplaintMastersHistory.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EmployeeComplaintWorkFlow.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\EntityMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -340,6 +343,7 @@
     <Compile Include="ViewModel\CompliantSearchVM.cs" />
     <Compile Include="ViewModel\EmployeeComplaintHistoryVM.cs" />
     <Compile Include="ViewModel\EmployeeComplaintMastersHistoryVM.cs" />
+    <Compile Include="ViewModel\EmployeeComplaintWorkFlowVM.cs" />
     <Compile Include="ViewModel\EmployeeCompliantMasterVM.cs" />
     <Compile Include="ViewModel\DesignationMasterHistoryVM.cs" />
     <Compile Include="ViewModel\DesignationMasterVM.cs" />

@@ -96,6 +96,9 @@ namespace ComplaintManagement.App_Start
 
                 cfg.CreateMap<EmployeeComplaintHistoryVM, EmployeeComplaintHistory>();
                 cfg.CreateMap<EmployeeComplaintHistory, EmployeeComplaintHistoryVM>();
+
+                cfg.CreateMap<EmployeeComplaintWorkFlowVM, EmployeeComplaintWorkFlow>();
+                cfg.CreateMap<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>();
             });
         }
     }

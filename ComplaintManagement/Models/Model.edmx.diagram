@@ -42,6 +42,8 @@
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintHistory" Width="1.5" PointX="7.5" PointY="17.625" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" Width="1.5" PointX="7.5" PointY="22.25" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

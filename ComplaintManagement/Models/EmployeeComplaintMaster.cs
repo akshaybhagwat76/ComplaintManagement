@@ -18,6 +18,7 @@ namespace ComplaintManagement.Models
         public EmployeeComplaintMaster()
         {
             this.EmployeeComplaintHistories = new HashSet<EmployeeComplaintHistory>();
+            this.EmployeeComplaintWorkFlows = new HashSet<EmployeeComplaintWorkFlow>();
         }
     
         public int Id { get; set; }
@@ -39,5 +40,7 @@ namespace ComplaintManagement.Models
         public virtual UserMaster UserMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EmployeeComplaintHistory> EmployeeComplaintHistories { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EmployeeComplaintWorkFlow> EmployeeComplaintWorkFlows { get; set; }
     }
 }
