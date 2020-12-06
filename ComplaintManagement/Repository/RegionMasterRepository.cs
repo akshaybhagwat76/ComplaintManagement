@@ -42,7 +42,7 @@ namespace ComplaintManagement.Repository
                             {
                                 RegionVM.IsActive = true;
                                 RegionVM.CreatedDate = DateTime.UtcNow;
-                                RegionVM.UserId = 1;
+                                RegionVM.UserId = Convert.ToInt32(sid);
                                 RegionVM.CreatedBy = Convert.ToInt32(sid);
                                 Region = Mapper.Map<RegionMasterVM, RegionMaster>(RegionVM);
                                 if (IsExist(Region.Region))
@@ -56,7 +56,7 @@ namespace ComplaintManagement.Repository
                                 if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.RegionId = Region.Id; };
                                 db.RegionMasters_History.Add(historyObj);
                                 db.SaveChanges();
-
+                                dbContextTransaction.Commit();
                                 return Mapper.Map<RegionMaster, RegionMasterVM>(Region);
                             }
                             else

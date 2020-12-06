@@ -41,7 +41,7 @@ namespace ComplaintManagement.Repository
                             {
                                 SBUVM.IsActive = true;
                                 SBUVM.CreatedDate = DateTime.UtcNow;
-                                SBUVM.UserId = 1;
+                                SBUVM.UserId = Convert.ToInt32(sid);
                                 SBUVM.CreatedBy = Convert.ToInt32(sid);
                                 SBU = Mapper.Map<SBUMasterVM, SBUMaster>(SBUVM);
                                 if (IsExist(SBU.SBU))
@@ -50,7 +50,7 @@ namespace ComplaintManagement.Repository
                                 }
                                 db.SBUMasters.Add(SBU);
                                 db.SaveChanges();
-
+                                dbContextTransaction.Commit();
                                 SBUMasters_History historyObj = Mapper.Map<SBUMasterVM, SBUMasters_History>(SBUVM);
                                 if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.SBUId = SBU.Id; };
                                 db.SBUMasters_History.Add(historyObj);

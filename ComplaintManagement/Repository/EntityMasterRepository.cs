@@ -41,7 +41,7 @@ namespace ComplaintManagement.Repository
                             {
                                 EntityVM.IsActive = true;
                                 EntityVM.CreatedDate = DateTime.UtcNow;
-                                EntityVM.UserId = 1;
+                                EntityVM.UserId = Convert.ToInt32(sid);
                                 EntityVM.CreatedBy = Convert.ToInt32(sid);
                                 Entity = Mapper.Map<EntityMasterVM, EntityMaster>(EntityVM);
                                 if (IsExist(Entity.EntityName))

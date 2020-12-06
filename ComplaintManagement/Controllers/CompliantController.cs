@@ -62,6 +62,7 @@ namespace ComplaintManagement.Controllers
 
                     EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(Convert.ToInt32(id));
                     UserMasterVM userMasterVM = new UserMastersRepository().Get(EmployeeCompliant_oneVM.UserId);
+                    ViewBag.Competency = userMasterVM.CompentencyId > 0 ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId) != null ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName : Messages.NotAvailable : Messages.NotAvailable;
                     if (EmployeeCompliant_oneVM != null)
                     {
                         userMasterVM.CategoryId = EmployeeCompliant_oneVM.CategoryId;
@@ -77,7 +78,6 @@ namespace ComplaintManagement.Controllers
                     ViewBag.SBU = userMasterVM.SBUId > 0 ? new SBUMasterRepository().Get(userMasterVM.SBUId) != null ? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.SubSBU = userMasterVM.SubSBUId > 0 ? new SubSBUMasterRepository().Get(userMasterVM.SubSBUId) != null ? new SubSBUMasterRepository().Get(userMasterVM.SubSBUId).SubSBU : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.LOS = userMasterVM.LOSId > 0 ? new LOSMasterRepository().Get(userMasterVM.LOSId) != null ? new LOSMasterRepository().Get(userMasterVM.LOSId).LOSName : Messages.NotAvailable : Messages.NotAvailable;
-                    ViewBag.Competency = userMasterVM.CompentencyId > 0 ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId) != null ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.Location = userMasterVM.LocationId > 0 ? new LocationMastersRepository().Get(userMasterVM.LocationId) != null ? new LocationMastersRepository().Get(userMasterVM.LocationId).LocationName : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.Region = userMasterVM.RegionId > 0 ? new RegionMasterRepository().Get(userMasterVM.RegionId) != null ? new RegionMasterRepository().Get(userMasterVM.RegionId).Region : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.ManagementLevel = userMasterVM.BusinessTitle > 0 ? new DesignationMasterRepository().Get(userMasterVM.BusinessTitle) != null ? new DesignationMasterRepository().Get(userMasterVM.BusinessTitle).Designation : Messages.NotAvailable : Messages.NotAvailable;

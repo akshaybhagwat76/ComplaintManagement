@@ -44,7 +44,7 @@ namespace ComplaintManagement.Repository
                             {
                                 SubSBUVM.IsActive = true;
                                 SubSBUVM.CreatedDate = DateTime.UtcNow;
-                                SubSBUVM.UserId = 1;
+                                SubSBUVM.UserId = Convert.ToInt32(sid);
                                 SubSBUVM.CreatedBy = Convert.ToInt32(sid);
                                 SubSBU = Mapper.Map<SubSBUMasterVM, SubSBUMaster>(SubSBUVM);
                                 if (IsExist(SubSBU.SubSBU))
@@ -58,6 +58,7 @@ namespace ComplaintManagement.Repository
                                 if (historyObj != null) { historyObj.EntityState = Messages.Added; historyObj.SubSBUId = SubSBU.Id; };
                                 db.SubSBUMasters_History.Add(historyObj);
                                 db.SaveChanges();
+                                dbContextTransaction.Commit();
 
                                 return Mapper.Map<SubSBUMaster, SubSBUMasterVM>(SubSBU);
                             }

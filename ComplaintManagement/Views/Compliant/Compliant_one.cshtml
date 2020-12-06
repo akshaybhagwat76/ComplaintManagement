@@ -27,7 +27,7 @@
                         <!-- Card Body -->
                         <div class="card-body">
                             <div class="text-center form-group">
-                                <img src="@(!string.IsNullOrEmpty(Model.ImagePath)? "/Images/profile_pics/"+Model.ImagePath : "/Images/profile.png")" />
+                                <img  src="@(!string.IsNullOrEmpty(Model.ImagePath)? "/Images/profile_pics/"+Model.ImagePath : "/Images/profile.png")" class="img-preview-profile" />
                             </div>
                             <div class="text-center">
                                 <h3 class="text-black font-weight-bold f-20 mt-3">@Model.EmployeeName</h3>

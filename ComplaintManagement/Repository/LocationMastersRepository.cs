@@ -42,7 +42,7 @@ namespace ComplaintManagement.Repository
                             {
                                 LocationVM.IsActive = true;
                                 LocationVM.CreatedDate = DateTime.UtcNow;
-                                LocationVM.UserId = 1;
+                                LocationVM.UserId = Convert.ToInt32(sid);
                                 LocationVM.CreatedBy = Convert.ToInt32(sid);
                                 Location = Mapper.Map<LocationMasterVM, LocationMaster>(LocationVM);
                                 if (IsExist(Location.LocationName))
@@ -57,7 +57,7 @@ namespace ComplaintManagement.Repository
                                 if (historyObj != null) { historyObj.EntityState = Messages.Updated; historyObj.LocationId = Location.Id; };
                                 db.LocationMasters_History.Add(historyObj);
                                 db.SaveChanges();
-
+                                dbContextTransaction.Commit();
                                 return Mapper.Map<LocationMaster, LocationMasterVM>(Location);
                             }
                             else

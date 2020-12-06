@@ -46,7 +46,7 @@ namespace ComplaintManagement.Repository
                             {
                                 CompetencyVM.IsActive = true;
                                 CompetencyVM.CreatedDate = DateTime.UtcNow;
-                                CompetencyVM.UserId = 1;
+                                CompetencyVM.UserId = Convert.ToInt32(sid);
                                 CompetencyVM.CreatedBy = Convert.ToInt32(sid);
                                 Competency = Mapper.Map<CompetencyMasterVM, CompetencyMaster>(CompetencyVM);
                                 if (IsExist(Competency.CompetencyName))

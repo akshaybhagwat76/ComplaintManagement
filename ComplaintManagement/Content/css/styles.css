@@ -248,6 +248,11 @@ footer.sticky-footer {
         margin: auto 5px
     }
 }
+
+.img-preview-profile {
+    width: 200px;
+    height: 130px;
+}
 .none {
     display: none
 }
@@ -374,4 +379,4 @@ table#paginator {
     .pagination a:hover:not(.active) {
         background-color: #ddd;
         border-radius: 5px;
-    }   
+    }
