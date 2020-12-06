@@ -267,7 +267,7 @@ namespace ComplaintManagement.Repository
             EmployeeComplaintMaster EmployeeComplaintMasterDto = null;
             int count = 0;
             #region Indexes 
-            int EmployeeIdIndex = 1; int CategoryNameIndex = 2; int SubCategoryNameIndex = 3; int RemarkNameIndex = 4; int StatusIndex = 5;
+            int CategoryNameIndex = 1; int SubCategoryNameIndex = 2; int RemarkNameIndex = 3; 
             #endregion
 
             string[] statuses = { "active", "inactive" };
@@ -294,24 +294,9 @@ namespace ComplaintManagement.Repository
                             continue;
                         }
                         EmployeeComplaintMasterDto = new EmployeeComplaintMaster();
-                        //Employee check
-                        if (string.IsNullOrEmpty(workSheet.Cells[i, EmployeeIdIndex].Value?.ToString()))
-                        {
-                            throw new Exception(string.Format(Messages.FieldIsRequired, new object[] { "Employee Name", i, EmployeeIdIndex }));
-                        }
-                        else
-                        {
-                            string Emp = workSheet.Cells[i, EmployeeIdIndex].Value?.ToString();
-                            var EmpDto = lstEmployee.FirstOrDefault(x => x.EmployeeName.ToLower() == Emp.ToLower());
-                            if (EmpDto != null)
-                            {
-                                EmployeeComplaintMasterDto.UserId = EmployeeComplaintMasterDto.Id;
-                            }
-                            else
-                            {
-                                throw new Exception(string.Format(Messages.DataEmpNOTExists, new object[] { "Employee Name", i, EmployeeIdIndex }));
-                            }
-                        }
+
+                        EmployeeComplaintMasterDto.UserId = Convert.ToInt32(sid);
+
                         // Category Name
                         if (string.IsNullOrEmpty(workSheet.Cells[i, CategoryNameIndex].Value?.ToString()))
                         {
@@ -359,34 +344,19 @@ namespace ComplaintManagement.Repository
                             {
                                 EmployeeComplaintMasterDto.Remark = workSheet.Cells[i, RemarkNameIndex].Value?.ToString();
                             }
-                        }
-
-                  
-                        if (!string.IsNullOrEmpty(workSheet.Cells[i, StatusIndex].Value?.ToString()))
-                        {
-                            string Status = workSheet.Cells[i, StatusIndex].Value?.ToString();
-                            if (statuses.Any(Status.ToLower().Contains))
-                            {
-                                if (workSheet.Cells[i, StatusIndex].Value?.ToString().ToLower() == Messages.Active.ToLower())
-                                {
-                                    EmployeeComplaintMasterDto.Status = true;
-                                }
-                                else
-                                {
-                                    EmployeeComplaintMasterDto.Status = false;
-                                }
-                            }
                             else
                             {
-                                throw new Exception(string.Format(Messages.StatusInvalid, new object[] { i, StatusIndex }));
+                                throw new Exception(string.Format(Messages.FieldIsInvalid, new object[] { "Remarks", i, RemarkNameIndex }));
                             }
                         }
+
+
+                        EmployeeComplaintMasterDto.ComplaintStatus = Messages.Opened;
                        
                         EmployeeComplaintMasterDto.CreatedBy = Convert.ToInt32(sid);
                         EmployeeComplaintMasterDto.CreatedDate = DateTime.UtcNow;
-                        EmployeeComplaintMasterDto.IsActive = true;
+                        EmployeeComplaintMasterDto.IsActive =  EmployeeComplaintMasterDto.Status =true;
                         EmployeeComplaintMasterDto.UserId = EmployeeComplaintMasterDto.UserId = EmployeeComplaintMasterDto.UserId == 0 ? Convert.ToInt32(sid) : EmployeeComplaintMasterDto.UserId;
-                        EmployeeComplaintMasterDto.Status = true;
                         EmployeeComplaintMasterDto.DueDate = DateTime.UtcNow.AddDays(5);
                         importEmployeeComplaint.Add(EmployeeComplaintMasterDto);
                     }
@@ -399,15 +369,10 @@ namespace ComplaintManagement.Repository
                                 db.EmployeeComplaintMasters.AddRange(importEmployeeComplaint);
                                 db.SaveChanges();
 
-                                List<EmployeeComplaintMastersHistoryVM> employeeComplaintMasterVM = Mapper.Map<List<EmployeeComplaintMaster>, List<EmployeeComplaintMastersHistoryVM>>(importEmployeeComplaint);
-
-                                List<EmployeeComplaintMastersHistory> HistoryDto = Mapper.Map<List<EmployeeComplaintMastersHistoryVM>, List<EmployeeComplaintMastersHistory>>(employeeComplaintMasterVM);
-                                if (HistoryDto != null && HistoryDto.Count > 0)
+                                foreach (EmployeeComplaintMaster item in importEmployeeComplaint)
                                 {
-                                    HistoryDto.Select(c => { c.EntityState = Messages.Added; c.EmployeeComplaintMasterId = c.Id; return c; }).ToList();
+                                    new EmployeeComplaintHistoryRepository().AddComplaintHistory(item.Remark, item.Id,item.ComplaintStatus, db);
                                 }
-
-                                db.EmployeeComplaintMastersHistories.AddRange(HistoryDto);
                                 db.SaveChanges();
 
                                 dbContextTransaction.Commit();

@@ -472,6 +472,7 @@
     <Content Include="Imports\Samples\Committee\Committee.xlsx" />
     <Content Include="Imports\Samples\Role\Role.xlsx" />
     <Content Include="Imports\Samples\User\Users.xlsx" />
+    <Content Include="Imports\Samples\EmployeeCompliant\EmployeeCompliant.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

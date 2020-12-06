@@ -77,6 +77,7 @@
         public const string StatusInvalid = "Please select status active or inactive - Row No. {1} and Column No. {2}";
         public const string EmpManagerPattern = "Employee ID or name or email";
         public const string DataEmpNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
+        public const string FieldIsInvalid = "{0} should not contain special characters - Row No. {1} and Column No. {2}";
 
         public const string DataNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
         public const string EmailFormat = "Please work email in email format - Row No. {0} and Column No. {1}";
