@@ -28,7 +28,7 @@
                 </strong>
             </td>
             <td class="text-black text-center">
-                @if (!string.IsNullOrEmpty(item.Attachments) && item.Attachments.Length > 0)
+                @if (!string.IsNullOrEmpty(item.Attachments) && item.Attachments.Length > 5)
                 {
                     <strong>
                         <a  href="/Employee/DownloadAttachments?files=@item.Attachments">

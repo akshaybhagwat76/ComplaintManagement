@@ -77,6 +77,10 @@ namespace ComplaintManagement.Repository
                                         }
                                         EmployeeComplaintVM.Attachments =string.Join(",", updatedAttachements);
                                     }
+                                    else
+                                    {
+                                        EmployeeComplaintVM.Attachments = EmployeeComplaint.Attachments;
+                                    }
                                 }
                                 db.Entry(EmployeeComplaint).CurrentValues.SetValues(EmployeeComplaintVM);
 

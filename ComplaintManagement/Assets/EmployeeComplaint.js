@@ -171,8 +171,8 @@ function filterGrid() {
             }
             else {
                 StopProcess();
-                $("#tblList").find('tbody').empty();
-                $("#tblList").find('tbody').html(data.data.Url);
+                $("#myTable").find('tbody').empty();
+                $("#myTable").find('tbody').html(data.data.Url);
             }
         }, error: function (response) {
             funToastr(false, response.responseText);
@@ -204,30 +204,9 @@ function PagerClick(index) {
 function getHistory(id) {
     if (id != "") {
         var url = "/Compliant/GetHistoryByComplaint?ComplaintId=" + id;
-        debugger
         $("#historyContent").load(url, function () {
             $("#historyModal").modal("show");
         })
-        //$.ajax({
-        //    type: "GET",
-        //    url: "/Compliant/GetHistoryByComplaint",
-        //    data: { ComplaintId: id },
-        //    success: function (data) {
-        //        debugger
-        //        if (data.status == "Fail") {
-        //            StopProcess();
-        //            funToastr(false, data.error);
-        //        }
-        //        else {
-        //            $("#historyModal").modal("show");
-        //        }
-        //    }, error: function (response) {
-        //        funToastr(false, response.responseText);
-        //    },
-        //    failure: function (response) {
-        //        funToastr(false, response.responseText);
-        //    }
-        //})
     }
 }
 
