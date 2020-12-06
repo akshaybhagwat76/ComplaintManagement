@@ -181,9 +181,9 @@ namespace ComplaintManagement.Controllers
                     string[] docfileArray = Directory.GetFiles(Server.MapPath("~/Documents/"));
                     string[] filesArray = files.Split(new string[] { "," }, StringSplitOptions.None);
 
-                    foreach (var file in filesArray)
+                    foreach (string file in filesArray)
                     {
-                        if (file != null)
+                        if (file != null && !string.IsNullOrEmpty(file) && file.Length>5)
                         {
                             if (docfileArray.FirstOrDefault(x => x.Contains(file)) != null)
                             {

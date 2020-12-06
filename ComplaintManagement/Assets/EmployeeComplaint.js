@@ -238,7 +238,6 @@ function importExcel() {
         } else {
             funToastr(false, 'Please choose an excel file');
         }
-
     }
 };
 
