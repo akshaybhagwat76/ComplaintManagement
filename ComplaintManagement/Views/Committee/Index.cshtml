@@ -168,15 +168,21 @@
                             </ul>
                         </div>
                         <div class="col-md-2">
-                            <ul class="nav">
-                                <li class="nav-item mr-4">
-                                    <a href="/Committee/Create" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
-                                </li>
-                                <li class="nav-item">
-                                    <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
-                                </li>
-                            </ul>
-                        </div>
+                            @if (data.Length < 1)
+                            {
+                                <ul class="nav">
+
+                                    <li class="nav-item mr-4">
+                                        <a href="/Committee/Create" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
+                                    </li>
+                                    </ul>
+                                    }
+
+                            
+                            </div>
                     </div>
                 </div>
             </div>
