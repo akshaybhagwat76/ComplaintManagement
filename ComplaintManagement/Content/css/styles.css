@@ -352,9 +352,7 @@ table#paginator {
     table#paginator, table#paginator table#paginator td {
         border: 0px solid #ccc;
     }
-.pagination {
-    display: inline-block;
-}
+
 
     .pagination a {
         color: black;
@@ -380,3 +378,6 @@ table#paginator {
         background-color: #ddd;
         border-radius: 5px;
     }
+div.dataTables_wrapper div.dataTables_paginate ul.pagination{
+    justify-content:flex-end;
+}
