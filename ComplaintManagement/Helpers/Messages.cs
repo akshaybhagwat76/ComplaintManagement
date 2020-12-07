@@ -6,6 +6,10 @@
         public const string SUCCESS = "Success";
         public const string ALREADY_EXISTS = "Already exists";
 
+        public const string NormalUser = "Normal";
+        public const string HRUser = "HR";
+        public const string AdminUser = "Admin";
+
         public const string BAD_DATA = "Bad or Invalid data";
         public const string USER_EXISTS = "User already exists";
         public const string LOGIN_TYPE_FACEBOOK = "Facebook";

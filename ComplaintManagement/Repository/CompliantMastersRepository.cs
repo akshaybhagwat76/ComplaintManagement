@@ -4,6 +4,7 @@ using ComplaintManagement.Models;
 using ComplaintManagement.ViewModel;
 using Elmah;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Security.Claims;
@@ -197,5 +198,38 @@ namespace ComplaintManagement.Repository
         //    return db.SaveChanges() > 0;
         //}
 
+        public DashboardVM GetDashboardCounts()
+        {
+            DashboardVM Dashboard = new DashboardVM();
+            try
+            {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                var Role = identity.Claims.Where(c => c.Type == ClaimTypes.Role)
+               .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid) && !string.IsNullOrEmpty(Role))
+                {
+                    List<EmployeeComplaintMaster> employeeComplaintMaster = db.EmployeeComplaintMasters.Where(x => x.IsActive).ToList();
+                    if (employeeComplaintMaster != null)
+                    {
+                        if (Role.ToLower() == Messages.HRUser.ToLower())
+                        {
+                            //employeeComplaintMaster = employeeComplaintMaster.Where(i => i.CreatedBy == Convert.ToInt32(sid)).ToList();
+                            Dashboard.OverDueComplaints = employeeComplaintMaster.Where(x => x.DueDate >= DateTime.UtcNow).Count();
+                            Dashboard.DueComplaints = employeeComplaintMaster.Where(x => x.ComplaintStatus == Messages.SUBMITTED && x.DueDate <= DateTime.Now).Count();
+                            //das
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return Dashboard;
+        }
     }
 }
