@@ -21,11 +21,6 @@ namespace ComplaintManagement.Repository
     {
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public CompetencyMastersRepository()
-        {
-
-        }
-
         public CompetencyMasterVM AddOrUpdate(CompetencyMasterVM CompetencyVM)
         {
             try

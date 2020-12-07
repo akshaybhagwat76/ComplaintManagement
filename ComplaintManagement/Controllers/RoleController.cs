@@ -394,9 +394,10 @@ namespace ComplaintManagement.Controllers
                                 List<string> LOSIdLst = new List<string>();
                                 foreach (string LOSItem in array)
                                 {
-                                    if (!string.IsNullOrEmpty(LOSItem))
+                                    var LOSDto = lstLOS.Where(x => x.Id == Convert.ToInt32(LOSItem)).FirstOrDefault();
+                                    if (!string.IsNullOrEmpty(LOSItem) && LOSDto != null)
                                     {
-                                        LOSIdLst.Add(lstLOS.Where(x => x.Id == Convert.ToInt32(LOSItem)).FirstOrDefault().LOSName);
+                                        LOSIdLst.Add(LOSDto.LOSName);
                                     }
                                 }
                                 if (LOSIdLst.Count > 0)

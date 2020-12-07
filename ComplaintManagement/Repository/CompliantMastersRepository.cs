@@ -207,8 +207,8 @@ namespace ComplaintManagement.Repository
 
                 var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
                    .Select(c => c.Value).SingleOrDefault();
-                var Role = identity.Claims.Where(c => c.Type == ClaimTypes.Role)
-               .Select(c => c.Value).SingleOrDefault();
+                var Role = identity.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+
                 if (!string.IsNullOrEmpty(sid) && !string.IsNullOrEmpty(Role))
                 {
                     List<EmployeeComplaintMaster> employeeComplaintMaster = db.EmployeeComplaintMasters.Where(x => x.IsActive).ToList();
@@ -219,7 +219,7 @@ namespace ComplaintManagement.Repository
                             //employeeComplaintMaster = employeeComplaintMaster.Where(i => i.CreatedBy == Convert.ToInt32(sid)).ToList();
                             Dashboard.OverDueComplaints = employeeComplaintMaster.Where(x => x.DueDate >= DateTime.UtcNow).Count();
                             Dashboard.DueComplaints = employeeComplaintMaster.Where(x => x.ComplaintStatus == Messages.SUBMITTED && x.DueDate <= DateTime.Now).Count();
-                            //das
+                            //Dashboard.AwaitingComplaints = employeeComplaintMaster.Where(x=>x.)                        
                         }
                     }
                 }

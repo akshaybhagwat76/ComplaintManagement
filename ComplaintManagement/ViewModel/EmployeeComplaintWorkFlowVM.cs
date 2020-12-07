@@ -18,6 +18,7 @@ namespace ComplaintManagement.ViewModel
         public int SBUId { get; set; }
         public int SubSBUId { get; set; }
         public int CompentencyId { get; set; }
+        public string AssignedUserRoles { get; set; }
 
     }
 }

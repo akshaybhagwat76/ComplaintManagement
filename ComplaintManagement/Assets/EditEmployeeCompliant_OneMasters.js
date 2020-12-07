@@ -11,11 +11,11 @@ function deleteFile() {
     StartProcess();
     $.ajax({
         type: "POST",
-        url: "/Compliant/RemoveFIle",
+        url: "/Compliant/RemoveFile",
         data: { fileName: fileName },
         success: function (response) {
             StopProcess();
-            if (response.status != "Fail") {
+            if (response.status !== "Fail") {
                 funToastr(true, response.msg);
                 document.getElementById("file_" + response.data).remove();
                 $('#deleteModal').modal('hide');
@@ -126,7 +126,7 @@ removeAttachementFile = function (index) {
 
 // Import Attachement 
 var inputAttachement = document.getElementById('attachementFile');
-document.getElementById('attachementFile').addEventListener('change', addAttachementUploadedFile,false);
+document.getElementById('attachementFile').addEventListener('change', addAttachementUploadedFile, false);
 
 function addAttachementUploadedFile() {
     var files = this.files;
@@ -143,4 +143,25 @@ function addAttachementUploadedFile() {
         }
         reader.readAsDataURL(file);
     }
+}
+
+submitComplaint = function (id) {
+    StartProcess();
+    $.ajax({
+        type: "GET",
+        url: "/Compliant/SubmitComplaint",
+        data: { id: id },
+        success: function (response) {
+            StopProcess();
+            if (response.status === "Fail") {
+                $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+            }
+            else {
+                $("#lblError").removeClass("success").removeClass("adderror").addClass("success").text(response.data).show();
+            }
+        },
+        error: function (error) {
+            funToastr(false, error.statusText);
+        }
+    });
 }

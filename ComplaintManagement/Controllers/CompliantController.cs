@@ -272,7 +272,7 @@ namespace ComplaintManagement.Controllers
             ViewBag.NavbarTitle = "Committee";
             return View();
         }
-        public ActionResult RemoveFIle(string fileName)
+        public ActionResult RemoveFile(string fileName)
         {
             try
             {
@@ -286,6 +286,7 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+        [HttpGet]
         public ActionResult SubmitComplaint(string id)
         {
             bool retval = true;
@@ -296,14 +297,15 @@ namespace ComplaintManagement.Controllers
                     id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
 
                     retval = new EmployeeComplaintMastersRepository().SubmitComplaint(Convert.ToInt32(id));
-                    return RedirectToAction("Index", "Employee");
+                    return new ReplyFormat().Success(Messages.SUCCESS, Messages.ComplaintSubmitted);
                 }
-                return RedirectToAction("Edit", new { id = id, isView = false });
+                //return RedirectToAction("Edit", new { id = id, isView = false });
+                return new ReplyFormat().Error(Messages.RoleMasterComplaintCriteriaNotFound);
             }
             catch (Exception ex)
             {
                 ErrorSignal.FromCurrentContext().Raise(ex);
-                return RedirectToAction("Edit", new { id = id, isView = false });
+                return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
 
