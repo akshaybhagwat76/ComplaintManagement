@@ -147,7 +147,6 @@ function performAction(id, isView) {
     location.href = url;
 }
 
-
 function filterGrid() {
     var data = {
         fromDate: document.getElementById("fromDate").value,
@@ -202,7 +201,7 @@ function PagerClick(index) {
 }
 
 function getHistory(id) {
-    if (id != "") {
+    if (id !== "") {
         var url = "/Compliant/GetHistoryByComplaint?ComplaintId=" + id;
         $("#historyContent").load(url, function () {
             $("#historyModal").modal("show");

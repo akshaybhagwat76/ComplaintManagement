@@ -157,6 +157,7 @@ submitComplaint = function (id) {
                 $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
             }
             else {
+                $("#btnSave").addClass("disabled-div");
                 $("#lblError").removeClass("success").removeClass("adderror").addClass("success").text(response.data).show();
             }
         },

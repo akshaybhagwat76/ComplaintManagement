@@ -30,6 +30,8 @@ namespace ComplaintManagement.Models
         public int SubSBUId { get; set; }
         public int CompentencyId { get; set; }
         public string AssignedUserRoles { get; set; }
+        public System.DateTime DueDate { get; set; }
+        public Nullable<System.DateTime> CommitteeDueDate { get; set; }
     
         public virtual EmployeeComplaintMaster EmployeeComplaintMaster { get; set; }
     }

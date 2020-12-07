@@ -1,30 +1,32 @@
 ﻿@using ComplaintManagement.Helpers
-
+@model ComplaintManagement.ViewModel.DashboardVM
 @{
     var user = ""; var userImage = string.Empty;
-    int userId = 0;
+    int userId = 0; string userRole = string.Empty;
     var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+    ViewBag.Title = "Home Page";
 
     if (claimsIdentity != null)
     {
         var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Name);
         var cI = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.UserData);
         var userIDInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Sid);
+        var userRoleInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
 
-        if (c != null && cI != null && userIDInfo != null)
+        if (c != null && cI != null && userIDInfo != null && userRoleInfo != null)
         {
-
+            userRole = userRoleInfo.Value;
             user = c.Value.ToString();
             userImage = cI.Value.ToString();
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
 }
-@{
-    ViewBag.Title = "Home Page";
-}
 
 <div id="content-wrapper" class="d-flex flex-column">
+    @Html.Hidden("Role", userRole)
+    <div class="preloader"></div>
+
     <!-- Main Content -->
     <div id="content">
         <!-- Topbar -->
@@ -144,16 +146,16 @@
                 <div class="card-body text-black">
                     <div class="row">
                         <div class="col-md-4 text-center">
-                            <h2 class="font-weight-bold">10</h2>
-                            <a href="#dueComplaints" data-toggle="modal" class="text-dark"><strong>Due Complaints</strong></a>
+                            <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
+                            <a onclick="getDueComplaints()" id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><strong>Due Complaints</strong></a>
                         </div>
                         <div class="col-md-4 text-center">
-                            <h2 class="font-weight-bold">20</h2>
-                            <a href="#overdueComplaints" data-toggle="modal" class="text-dark"><strong>Overdue Complaints</strong></a>
+                            <h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2>
+                            <a onclick="getOverDueComplaints()" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><strong>Overdue Complaints</strong></a>
                         </div>
                         <div class="col-md-4 text-center">
-                            <h2 class="font-weight-bold">05</h2>
-                            <a href="#awaitingComplaints" data-toggle="modal" class="text-dark"><strong>Awaiting My Approval Complaints</strong></a>
+                            <h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2>
+                            <a id="awaitingComplaint" onclick="getAwaitingComplaint()" class="text-dark btn border-0 p-0"><strong>Awaiting My Approval Complaints</strong></a>
                         </div>
                     </div>
                 </div>
@@ -169,7 +171,6 @@
                                 <li class="nav-item mr-3">
                                     <input type="text" class="form-control" placeholder="To Date" />
                                 </li>
-
                             </ul>
                         </div>
                         <div class="col-md-2">
@@ -236,190 +237,26 @@
     </div>
     <!-- End of Main Content -->
 </div>
-<script src="https://www.chartjs.org/dist/2.9.4/Chart.min.js"></script>
-<!--<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>-->
-<script>
-    var ctx = document.getElementById("categoryChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        position: 'right',
-        type: 'pie',
-        data: {
-            labels: ["", "", "", "", ""],
-            datasets: [{
-                backgroundColor: [
-                    "#be5168",
-                    "#993767",
-                    "#3c8e9d",
-                    "#e9d78e",
-                    "#e2975d",
-                    "#e16552"
-                ],
-                data: [50, 55, 60, 33, 45, 60]
-            }]
-        },
-        // Configuration options go here
-        options: {
-            legend: {
-                position: 'right'
-            },
-            tooltips: {
-                enabled: false
-            }
-        },
-        //plugins: {
-        //   datalabels: {
-        //        formatter: (value, ctx) => {
-        //           let datasets = ctx.chart.data.datasets;
-        //           if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
-        //               let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-        //               let percentage = Math.round((value / sum) * 100) + '%';
-        //               return percentage;
-        //           } else {
-        //               return percentage;
-        //           }
-        //        }
-        //    }
-        //}
-    });
+@Scripts.Render("~/plugins/Chart")
+@Scripts.Render("~/Assets/EmployeeComplaintDashboard")
 
+@*<div class="modal" id="dueComplaints">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-black font-weight-bold">Due Complaints</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-    var ctx = document.getElementById("subcategoryChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        position: 'right',
-        type: 'pie',
-        data: {
-            labels: ["Reyas", "Chu", "Williams"],
-            datasets: [{
-                backgroundColor: [
-                    "#7a61ba",
-                    "#d8b655",
-                    "#4198d7"
-                ],
-                data: [50, 55, 60]
-            }]
-        },
-        // Configuration options go here
-        options: {
-            legend: {
-                position: 'right',
-                labels: {
-                    usePointStyle: true
-                }
-            },
-            tooltips: {
-                enabled: false
-            }
-        },
-    });
-
-
-    var ctx = document.getElementById("losChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        position: 'right',
-        type: 'pie',
-        data: {
-            labels: ["Green", "Blue", "Purple", "Purple"],
-            datasets: [{
-                backgroundColor: [
-                    "#50514f",
-                    "#eec683",
-                    "#81ddc6",
-                    "#f45e58"
-                ],
-                data: [50, 55, 60, 55]
-            }]
-        },
-        // Configuration options go here
-        options: {
-            legend: {
-                display: false
-            },
-            tooltips: {
-                enabled: false
-            }
-        },
-    });
-
-
-    var ctx = document.getElementById("overallChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        position: 'right',
-        type: 'pie',
-        data: {
-            datasets: [{
-                backgroundColor: [
-                    "#5a9bd5",
-                    "#4472c5",
-                    "#ed7d32",
-                    "#a5a5a5",
-                    "#ffc100"
-                ],
-                data: [50, 55, 60, 55, 50]
-            }]
-        },
-        // Configuration options go here
-        options: {
-            legend: {
-                display: false
-            },
-            tooltips: {
-                enabled: false
-            }
-        },
-    });</script>
-
-<div class="modal" id="dueComplaints">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-black font-weight-bold">Due Complaints</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table f-14">
-                        <thead>
-                            <tr>
-                                <td>LOS</td>
-                                <td>Category</td>
-                                <td>Sub-Category</td>
-                                <td>Created By</td>
-                                <td>Created On</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                <td class="text-black"><strong>test22222</strong></td>
-                                <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                <td class="text-black"><strong>test22222</strong></td>
-                                <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                <td class="text-black"><strong>test22222</strong></td>
-                                <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </div>*@
 
-<div class="modal" id="overdueComplaints">
+@*<div class="modal" id="overdueComplaints">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -468,55 +305,8 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 
-<div class="modal" id="awaitingComplaints">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-black font-weight-bold">Awaiting My Approval Complaints</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table f-14">
-                        <thead>
-                            <tr>
-                                <td>LOS</td>
-                                <td>Category</td>
-                                <td>Sub-Category</td>
-                                <td>Created By</td>
-                                <td>Created On</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                <td class="text-black"><strong>test22222</strong></td>
-                                <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                <td class="text-black"><strong>test22222</strong></td>
-                                <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                <td class="text-black"><strong>test22222</strong></td>
-                                <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@Html.Partial("_ComplaintAwaiting")
+@Html.Partial("_ComplaintDue")
+@Html.Partial("_ComplaintOverDue")

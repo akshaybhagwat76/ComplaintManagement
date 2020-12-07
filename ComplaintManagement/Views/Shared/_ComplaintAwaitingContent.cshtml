@@ -1,0 +1,50 @@
+﻿@using ComplaintManagement.Helpers
+<div class="table-responsive">
+    <table class="table f-14 border" id="awaitingTable" style="width:100%">
+        @if (ViewBag.lstComplaintAwaiting != null)
+        {
+            if (ViewBag.lstComplaintAwaiting.Count > 0)
+            {
+                <thead>
+                    <tr>
+                        <td>LOS</td>
+                        <td>Category</td>
+                        <td>Sub-Category</td>
+                        <td>Created By</td>
+                        <td>Created On</td>
+                    </tr>
+                </thead>
+            }
+        }
+        <tbody>
+            @if (ViewBag.lstComplaintAwaiting != null)
+            {
+                if (ViewBag.lstComplaintAwaiting.Count > 0)
+                {
+                    foreach (var item in ViewBag.lstComplaintAwaiting)
+                    {
+                        <tr>
+                            <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)">@item.LOSName</strong></td>
+                            <td class="text-black"><strong>@item.Category</strong></td>
+                            <td class="text-black"><strong>@item.SubCategory</strong></td>
+                            <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                            <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5"><label>No data found.</label></td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5"><label>No data found.</label></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -93,6 +93,10 @@ namespace ComplaintManagement
                       "~/Scripts/vendor/datatables/datatables.min.js",
                       "~/Scripts/vendor/datatables/responsive.min.js"));
 
+            // Chart 
+            bundles.Add(new ScriptBundle("~/plugins/Chart").Include(
+                      "~/Scripts/vendor/chart.js/Chart.min.js"));
+
             // dataPicker styles
             bundles.Add(new StyleBundle("~/plugins/dataPickerStyles").Include(
                       "~/Content/plugins/datepicker/datepicker3.css"));
@@ -224,6 +228,18 @@ namespace ComplaintManagement
             // Employee Compliant Master
             bundles.Add(new ScriptBundle("~/Assets/EmployeeComplaint").Include(
                       "~/Assets/EmployeeComplaint.js"));
+
+            // Employee Compliant Content
+            bundles.Add(new ScriptBundle("~/Assets/EmployeeComplaintHistoryContent").Include(
+                      "~/Assets/_ComplaintHistoryContent.js"));
+
+            // Employee Compliant Dashboard
+            bundles.Add(new ScriptBundle("~/Assets/EmployeeComplaintDashboard").Include(
+                      "~/Assets/Dashboard.js"));
+
+            // Employee Awaiting Compliants
+            bundles.Add(new ScriptBundle("~/Assets/EmployeeComplaintAwaiting").Include(
+                      "~/Assets/_ComplaintAwaitingContent.js"));
         }
     }
 }

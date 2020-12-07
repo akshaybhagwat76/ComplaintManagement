@@ -375,6 +375,7 @@
     <Content Include="Assets\CommitteeMasters.js" />
     <Content Include="Assets\common.js" />
     <Content Include="Assets\CompetencyMasters.js" />
+    <Content Include="Assets\Dashboard.js" />
     <Content Include="Assets\DesignationMasters.js" />
     <Content Include="Assets\EditCategoryMaster.js" />
     <Content Include="Assets\EditCommitteeMaster.js" />
@@ -401,6 +402,8 @@
     <Content Include="Assets\SubCategoryMasters.js" />
     <Content Include="Assets\SubSBUMasters.js" />
     <Content Include="Assets\UserMasters.js" />
+    <Content Include="Assets\_ComplaintAwaitingContent.js" />
+    <Content Include="Assets\_ComplaintHistoryContent.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -2380,6 +2383,12 @@
     <Content Include="Views\Shared\_WithdrawComplaint.cshtml" />
     <Content Include="Views\Shared\_GetHistory.cshtml" />
     <Content Include="Views\Shared\_ComplaintHistoryContent.cshtml" />
+    <Content Include="Views\Shared\_ComplaintAwaiting.cshtml" />
+    <Content Include="Views\Shared\_ComplaintAwaitingContent.cshtml" />
+    <Content Include="Views\Shared\_ComplaintDue.cshtml" />
+    <Content Include="Views\Shared\_ComplaintDueContent.cshtml" />
+    <Content Include="Views\Shared\_ComplaintOverDue.cshtml" />
+    <Content Include="Views\Shared\_ComplaintOverDueContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

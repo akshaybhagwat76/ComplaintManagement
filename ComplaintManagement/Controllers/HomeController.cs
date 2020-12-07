@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComplaintManagement.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,7 @@ namespace ComplaintManagement.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return View(new CompliantMastersRepository().GetDashboardCounts());
         }
 
         public ActionResult Index1()

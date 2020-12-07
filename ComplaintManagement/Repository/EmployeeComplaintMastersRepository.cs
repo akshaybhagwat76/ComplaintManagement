@@ -6,6 +6,7 @@ using Elmah;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
@@ -171,7 +172,46 @@ namespace ComplaintManagement.Repository
             }
             return EmployeeCompliant_oneList;
         }
+        public List<EmployeeCompliantMasterVM> GetAllList()
+        {
+            List<EmployeeComplaintMaster> EmployeeComplaint = new List<EmployeeComplaintMaster>();
+            List<EmployeeCompliantMasterVM> EmployeeCompliant_oneList = new List<EmployeeCompliantMasterVM>();
+            try
+            {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
+                    EmployeeComplaint = db.EmployeeComplaintMasters.Where(i => i.IsActive).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                    if (EmployeeComplaint != null && EmployeeComplaint.Count > 0 && usersList != null && usersList.Count > 0)
+                    {
+                        foreach (EmployeeComplaintMaster item in EmployeeComplaint)
+                        {
+                            EmployeeCompliantMasterVM catObj = Mapper.Map<EmployeeComplaintMaster, EmployeeCompliantMasterVM>(item);
+                            if (catObj != null)
+                            {
+                                catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                                catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.UpdatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.UpdatedBy).EmployeeName : Messages.NotAvailable;
+                                catObj.CategoryName = new CategoryMastersRepository().Get(item.CategoryId) != null ? new CategoryMastersRepository().Get(item.CategoryId).CategoryName : Messages.NotAvailable;
+                                catObj.SubCategoryName = new SubCategoryMastersRepository().Get(item.SubCategoryId) != null ? new SubCategoryMastersRepository().Get(item.SubCategoryId).SubCategoryName : Messages.NotAvailable;
+                                catObj.EmployeeName = usersList.FirstOrDefault(x => x.Id == catObj.UserId) != null ? usersList.FirstOrDefault(x => x.Id == catObj.UserId).EmployeeName : Messages.NotAvailable;
+
+                                EmployeeCompliant_oneList.Add(catObj);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return EmployeeCompliant_oneList;
+        }
         public List<CategoryMasterHistoryVM> GetAllHistory()
         {
             List<CategoryMasters_History> category = new List<CategoryMasters_History>();
@@ -325,18 +365,19 @@ namespace ComplaintManagement.Repository
                                     employeeComplaintWorkFlowDto.Remarks = Complaintdata.Remark;
                                     employeeComplaintWorkFlowDto.UserType = identity.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
                                     employeeComplaintWorkFlowDto.RoleId = rolesId;
-                                    employeeComplaintWorkFlowDto.AssignedUserRoles = assignedUsersroleId;
+                                    employeeComplaintWorkFlowDto.AssignedUserRoles = assignedUsersroleId; employeeComplaintWorkFlowDto.DueDate = Complaintdata.DueDate;
                                     employeeComplaintWorkFlowDto.LOSId = losId; employeeComplaintWorkFlowDto.SBUId = SBUId; employeeComplaintWorkFlowDto.SubSBUId = subSBUId; employeeComplaintWorkFlowDto.CompentencyId = competencyId;
                                 }
                             }
 
-                            Complaintdata.IsSubmitted = true;
-                            Complaintdata.ComplaintStatus = Messages.SUBMITTED;
+                            var employeeComplaint = db.EmployeeComplaintMasters.Find(Complaintdata.Id);
 
-
+                            employeeComplaint.IsSubmitted = true;
+                            employeeComplaint.ComplaintStatus = Messages.SUBMITTED;
+                          
                             new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Complaintdata.ComplaintStatus, db);
                             db.SaveChanges();
-                            if(employeeComplaintWorkFlowDto!=null && employeeComplaintWorkFlowDto.ComplaintId > 0)
+                            if (employeeComplaintWorkFlowDto!=null && employeeComplaintWorkFlowDto.ComplaintId > 0)
                             {
                                 new EmployeeWorkFlowRepository().AddOrUpdate(employeeComplaintWorkFlowDto,db);
                             }

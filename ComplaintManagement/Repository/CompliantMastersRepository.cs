@@ -211,16 +211,29 @@ namespace ComplaintManagement.Repository
 
                 if (!string.IsNullOrEmpty(sid) && !string.IsNullOrEmpty(Role))
                 {
-                    List<EmployeeComplaintMaster> employeeComplaintMaster = db.EmployeeComplaintMasters.Where(x => x.IsActive).ToList();
+                    List<EmployeeCompliantMasterVM> employeeComplaintMaster = new EmployeeComplaintMastersRepository().GetAll();
+                    List<EmployeeComplaintWorkFlowVM> employeeComplaintWorkFlowList = new EmployeeWorkFlowRepository().GetAll();
                     if (employeeComplaintMaster != null)
                     {
-                        if (Role.ToLower() == Messages.HRUser.ToLower())
+                        foreach (EmployeeComplaintWorkFlowVM workFlow in employeeComplaintWorkFlowList)
                         {
-                            //employeeComplaintMaster = employeeComplaintMaster.Where(i => i.CreatedBy == Convert.ToInt32(sid)).ToList();
-                            Dashboard.OverDueComplaints = employeeComplaintMaster.Where(x => x.DueDate >= DateTime.UtcNow).Count();
-                            Dashboard.DueComplaints = employeeComplaintMaster.Where(x => x.ComplaintStatus == Messages.SUBMITTED && x.DueDate <= DateTime.Now).Count();
-                            //Dashboard.AwaitingComplaints = employeeComplaintMaster.Where(x=>x.)                        
+                            if (workFlow.AssignedUserRoles != null && !string.IsNullOrEmpty(workFlow.AssignedUserRoles) && workFlow.AssignedUserRoles.Length > 0)
+                            {
+                                string[] assignedUsers = employeeComplaintWorkFlowList.Select(s => s.AssignedUserRoles).ToArray();
+                                foreach (string userId in assignedUsers)
+                                {
+                                    if (Convert.ToInt32(userId) == Convert.ToInt32(sid))
+                                    {
+                                        Dashboard.DueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate >= DateTime.Now).Count();
+                                        Dashboard.OverDueComplaints = employeeComplaintWorkFlowList.Where(x => x.DueDate <= DateTime.UtcNow).Count();
+                                    }
+                                }
+                            }
                         }
+                    }
+                    if (Role.ToLower() == Messages.NormalUser.ToLower())
+                    {
+                        Dashboard.AwaitingComplaints = employeeComplaintMaster.Where(x => x.ComplaintStatus == Messages.SUBMITTED && x.CreatedBy == Convert.ToInt32(sid)).Count();
                     }
                 }
             }
