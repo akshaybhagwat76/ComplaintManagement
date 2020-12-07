@@ -355,5 +355,49 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+
+        [HttpGet]
+        public ActionResult GetAwaitingComplaints()
+        {
+            try
+            {
+                ViewBag.lstComplaintAwaiting = new EmployeeComplaintHistoryRepository().GetAllAwaitingComplaints();
+                return PartialView("_ComplaintAwaitingContent");
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetDueComplaints()
+        {
+            try
+            {
+                ViewBag.lstComplaintDue = new EmployeeComplaintHistoryRepository().GetAllDueComplaints();
+                return PartialView("_ComplaintDueContent");
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+        [HttpGet]
+        public ActionResult GetOverDueComplaints()
+        {
+            try
+            {
+                ViewBag.lstComplaintOverDue = new EmployeeComplaintHistoryRepository().GetAllOverDueComplaints();
+                return PartialView("_ComplaintOverDueContent");
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿<div class="table-responsive">
-    <table class="table f-14 border" id="historyTable"  style="width:100%">
+    <table class="table f-14 border" id="historyTable" style="width:100%">
         @if (ViewBag.lstComplaintHistory != null)
         {
             if (ViewBag.lstComplaintHistory.Count > 0)
@@ -47,16 +47,3 @@
     </tbody>
     </table>
 </div>
-@*<script src="~/Scripts/vendor/datatables/jquery.dataTables.min.js"></script>*@
-<script>
-    $(document).ready(function () {
-        //$("#historyTable").dataTable();
-        var table = $('#historyTable').DataTable({
-        });
-        $(table.table().container()).removeClass('form-inline');
-        addClassFunction()
-        function addClassFunction() {
-            $('.pagination a').addClass('page-link');
-        }
-    })
-</script>

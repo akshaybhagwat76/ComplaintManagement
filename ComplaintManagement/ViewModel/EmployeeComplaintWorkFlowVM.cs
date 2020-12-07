@@ -15,10 +15,16 @@ namespace ComplaintManagement.ViewModel
         public int ComplaintId { get; set; }
         public string RoleId { get; set; }
         public int LOSId { get; set; }
+        public string LOSName { get; set; }
+        public string Category { get; set; }
+        public string SubCategory { get; set; }
         public int SBUId { get; set; }
         public int SubSBUId { get; set; }
         public int CompentencyId { get; set; }
         public string AssignedUserRoles { get; set; }
-
+        public string CreatedByName { get; set; }
+        public string UpdatedByName { get; set; }
+        public System.DateTime DueDate { get; set; }
+        public Nullable<System.DateTime> CommitteeDueDate { get; set; }
     }
 }

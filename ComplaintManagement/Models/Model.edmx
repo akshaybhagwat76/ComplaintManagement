@@ -196,6 +196,8 @@
           <Property Name="SubSBUId" Type="int" Nullable="false" />
           <Property Name="CompentencyId" Type="int" Nullable="false" />
           <Property Name="AssignedUserRoles" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DueDate" Type="datetime" Nullable="false" />
+          <Property Name="CommitteeDueDate" Type="datetime" />
         </EntityType>
         <EntityType Name="EntityMasters">
           <Key>
@@ -1354,6 +1356,8 @@
           <Property Name="CompentencyId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" FromRole="EmployeeComplaintWorkFlow" ToRole="EmployeeComplaintMaster" />
           <Property Name="AssignedUserRoles" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CommitteeDueDate" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters">
           <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" Role="EmployeeComplaintMaster" Multiplicity="1" />
@@ -1878,6 +1882,8 @@
           <EntitySetMapping Name="EmployeeComplaintWorkFlows">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow">
               <MappingFragment StoreEntitySet="EmployeeComplaintWorkFlow">
+                <ScalarProperty Name="CommitteeDueDate" ColumnName="CommitteeDueDate" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
                 <ScalarProperty Name="AssignedUserRoles" ColumnName="AssignedUserRoles" />
                 <ScalarProperty Name="CompentencyId" ColumnName="CompentencyId" />
                 <ScalarProperty Name="SubSBUId" ColumnName="SubSBUId" />

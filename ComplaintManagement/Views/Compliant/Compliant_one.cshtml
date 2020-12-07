@@ -5,6 +5,8 @@
     string saltedId = CryptoEngineUtils.Encrypt(Convert.ToString(Model.Id), true);
 }
 <div id="content-wrapper" class="d-flex flex-column">
+    <div class="preloader"></div>
+
     @Html.Hidden("UserId", Model.CompentencyId)
     @Html.Hidden("Id", Model.Id)
     @Html.Hidden("ComplaintStatus", Model.ComplaintStatus)
@@ -27,7 +29,7 @@
                         <!-- Card Body -->
                         <div class="card-body">
                             <div class="text-center form-group">
-                                <img  src="@(!string.IsNullOrEmpty(Model.ImagePath)? "/Images/profile_pics/"+Model.ImagePath : "/Images/profile.png")" class="img-preview-profile" />
+                                <img src="@(!string.IsNullOrEmpty(Model.ImagePath)? "/Images/profile_pics/"+Model.ImagePath : "/Images/profile.png")" class="img-preview-profile" />
                             </div>
                             <div class="text-center">
                                 <h3 class="text-black font-weight-bold f-20 mt-3">@Model.EmployeeName</h3>
@@ -215,8 +217,8 @@
                             </div>
                         </div>
                         <div class="text-right">
-                            <a href="javascript:void(0)" onclick="submitForm()" class="btn btn-danger btn-md">Save</a>
-                            <a href="javascript:void(0)" onclick="submitComplaint('@saltedId')" class="btn btn-white border btn-md">Submit</a>
+                            <a href="javascript:void(0)" id="btnSave" onclick="submitForm()" class="btn btn-danger btn-md">Save</a>
+                            <a href="javascript:void(0)" id="btnSubmit" onclick="submitComplaint('@saltedId')" class="btn btn-white border btn-md">Submit</a>
                             <a href="/Employee/Index" class="btn btn-white border btn-md">Cancel</a>
                             <label id="lblError" class="adderror"></label>
                         </div>
