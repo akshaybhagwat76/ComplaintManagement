@@ -11,11 +11,11 @@ function deleteFile() {
     StartProcess();
     $.ajax({
         type: "POST",
-        url: "/Compliant/RemoveFIle",
+        url: "/Compliant/RemoveFile",
         data: { fileName: fileName },
         success: function (response) {
             StopProcess();
-            if (response.status != "Fail") {
+            if (response.status !== "Fail") {
                 funToastr(true, response.msg);
                 document.getElementById("file_" + response.data).remove();
                 $('#deleteModal').modal('hide');
@@ -126,7 +126,7 @@ removeAttachementFile = function (index) {
 
 // Import Attachement 
 var inputAttachement = document.getElementById('attachementFile');
-document.getElementById('attachementFile').addEventListener('change', addAttachementUploadedFile,false);
+document.getElementById('attachementFile').addEventListener('change', addAttachementUploadedFile, false);
 
 function addAttachementUploadedFile() {
     var files = this.files;
@@ -150,16 +150,14 @@ submitComplaint = function (id) {
     $.ajax({
         type: "GET",
         url: "/Compliant/SubmitComplaint",
-        data: formData,
-        contentType: false,
-        processData: false,
+        data: { id: id },
         success: function (response) {
-            if (response.status == "Fail") {
-                StopProcess();
+            StopProcess();
+            if (response.status === "Fail") {
                 $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
             }
             else {
-                window.location.href = '/Employee/Index';
+                $("#lblError").removeClass("success").removeClass("adderror").addClass("success").text(response.data).show();
             }
         },
         error: function (error) {

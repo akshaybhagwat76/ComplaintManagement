@@ -195,6 +195,7 @@
           <Property Name="SBUId" Type="int" Nullable="false" />
           <Property Name="SubSBUId" Type="int" Nullable="false" />
           <Property Name="CompentencyId" Type="int" Nullable="false" />
+          <Property Name="AssignedUserRoles" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="EntityMasters">
           <Key>
@@ -1352,6 +1353,7 @@
           <Property Name="SubSBUId" Type="Int32" Nullable="false" />
           <Property Name="CompentencyId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" FromRole="EmployeeComplaintWorkFlow" ToRole="EmployeeComplaintMaster" />
+          <Property Name="AssignedUserRoles" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters">
           <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" Role="EmployeeComplaintMaster" Multiplicity="1" />
@@ -1876,6 +1878,7 @@
           <EntitySetMapping Name="EmployeeComplaintWorkFlows">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow">
               <MappingFragment StoreEntitySet="EmployeeComplaintWorkFlow">
+                <ScalarProperty Name="AssignedUserRoles" ColumnName="AssignedUserRoles" />
                 <ScalarProperty Name="CompentencyId" ColumnName="CompentencyId" />
                 <ScalarProperty Name="SubSBUId" ColumnName="SubSBUId" />
                 <ScalarProperty Name="SBUId" ColumnName="SBUId" />

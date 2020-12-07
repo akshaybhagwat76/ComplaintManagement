@@ -60,7 +60,6 @@ namespace ComplaintManagement.Repository
                     }
                     catch (Exception ex)
                     {
-
                         throw new Exception(ex.Message.ToString());
                     }
                 }

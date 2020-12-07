@@ -245,6 +245,7 @@ namespace ComplaintManagement.Repository
                         {
                             List<RoleMasterVM> roleMasterLineItem = new List<RoleMasterVM>();
                             var userData = new UserMastersRepository().Get(Complaintdata.CreatedBy); string rolesId = string.Empty;
+                            string assignedUsersroleId = string.Empty;
                             if (userData != null && userData.LOSId > 0 && userData.CompentencyId > 0 && userData.SBUId > 0 && userData.SubSBUId > 0)
                             {
                                 int losId = userData.LOSId; int competencyId = userData.CompentencyId; int SBUId = userData.SBUId; int subSBUId = userData.SubSBUId;
@@ -312,17 +313,19 @@ namespace ComplaintManagement.Repository
                                 }
                                 if (roleMasterLineItem.Count == 0)
                                 {
-                                    throw new Exception(Messages.RoleMasterComplainyCriteriaNotFound);
+                                    throw new Exception(Messages.RoleMasterComplaintCriteriaNotFound);
                                 }
                                 else
                                 {
                                     var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
                                     roleMasterLineItem.ForEach(x => rolesId = string.Join(",", x.Id));
+                                    roleMasterLineItem.ForEach(x => assignedUsersroleId= string.Join(",", x.UserId));
                                     employeeComplaintWorkFlowDto.ActionType = Messages.SUBMITTED;
                                     employeeComplaintWorkFlowDto.ComplaintId = Complaintdata.Id;
                                     employeeComplaintWorkFlowDto.Remarks = Complaintdata.Remark;
                                     employeeComplaintWorkFlowDto.UserType = identity.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
                                     employeeComplaintWorkFlowDto.RoleId = rolesId;
+                                    employeeComplaintWorkFlowDto.AssignedUserRoles = assignedUsersroleId;
                                     employeeComplaintWorkFlowDto.LOSId = losId; employeeComplaintWorkFlowDto.SBUId = SBUId; employeeComplaintWorkFlowDto.SubSBUId = subSBUId; employeeComplaintWorkFlowDto.CompentencyId = competencyId;
                                 }
                             }
