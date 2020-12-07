@@ -6,6 +6,7 @@
 }
 <div id="content-wrapper" class="d-flex flex-column">
     <div class="preloader"></div>
+    @Html.Hidden("pageState", (object)ViewBag.ViewState)
 
     @Html.Hidden("UserId", Model.CompentencyId)
     @Html.Hidden("Id", Model.Id)

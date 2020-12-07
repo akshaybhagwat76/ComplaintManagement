@@ -5,7 +5,20 @@ function removeFile(id) {
     $('#deleteModal').modal('show');
     document.getElementById("delete-btn").addEventListener("click", deleteFile);
 }
+$(document).ready(function () {
+    if ($("#pageState").val() != null && $("#pageState").val() != "") {
+        let page_state = JSON.parse($("#pageState").val().toLowerCase());
+        if (page_state) {
+            $(".text-right").addClass("hide")
+            $('.container-fluid').addClass("disabled-div");
+        }
+        else {
+            $(".text-right").removeClass("hide")
 
+            $('.container-fluid').removeClass("disabled-div");
+        }
+    }
+});
 function deleteFile() {
     var fileName = $('#deleteModal').data('id');
     StartProcess();
