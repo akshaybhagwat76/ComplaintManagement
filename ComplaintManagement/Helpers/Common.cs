@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Web;
@@ -58,6 +59,17 @@ namespace ComplaintManagement.Helpers
             }
         }
 
+        public int[] StringToIntArray(string values)
+        {
+            List<int> valuesConvertedInt = new List<int>();
+            Array.ForEach(values.Split(",".ToCharArray()), s =>
+            {
+                int currentInt;
+                if (Int32.TryParse(s, out currentInt))
+                    valuesConvertedInt.Add(currentInt);
+            });
+            return valuesConvertedInt.ToArray();
+        }
         public string UniqueFileName()
         {
             return DateTime.Now.ToString("ddMMyyyyhhmmss");

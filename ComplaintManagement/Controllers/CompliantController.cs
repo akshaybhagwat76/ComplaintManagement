@@ -296,14 +296,15 @@ namespace ComplaintManagement.Controllers
                     id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
 
                     retval = new EmployeeComplaintMastersRepository().SubmitComplaint(Convert.ToInt32(id));
-                    return RedirectToAction("Index", "Employee");
+                    return new ReplyFormat().Success(Messages.SUCCESS, null);
                 }
-                return RedirectToAction("Edit", new { id = id, isView = false });
+                //return RedirectToAction("Edit", new { id = id, isView = false });
+                return new ReplyFormat().Error(ex.Message.ToString());
             }
             catch (Exception ex)
             {
                 ErrorSignal.FromCurrentContext().Raise(ex);
-                return RedirectToAction("Edit", new { id = id, isView = false });
+                return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
 

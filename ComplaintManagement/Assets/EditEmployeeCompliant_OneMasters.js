@@ -144,3 +144,26 @@ function addAttachementUploadedFile() {
         reader.readAsDataURL(file);
     }
 }
+
+submitComplaint = function (id) {
+    StartProcess();
+    $.ajax({
+        type: "GET",
+        url: "/Compliant/SubmitComplaint",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.status == "Fail") {
+                StopProcess();
+                $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+            }
+            else {
+                window.location.href = '/Employee/Index';
+            }
+        },
+        error: function (error) {
+            funToastr(false, error.statusText);
+        }
+    });
+}

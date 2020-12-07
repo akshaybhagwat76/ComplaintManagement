@@ -50,7 +50,7 @@ namespace ComplaintManagement.Repository
                                 EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
                                 if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Added; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
                                 db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
-                                 new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus,db);
+                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
                                 db.SaveChanges();
                                 dbContextTransaction.Commit();
                             }
@@ -70,12 +70,12 @@ namespace ComplaintManagement.Repository
                                         List<string> updatedAttachements = new List<string>();
                                         foreach (string fileName in oldAttachments.Concat(newAttachments).ToList())
                                         {
-                                            if(!string.IsNullOrEmpty(fileName) && fileName.Length > 5)
+                                            if (!string.IsNullOrEmpty(fileName) && fileName.Length > 5)
                                             {
                                                 updatedAttachements.Add(fileName);
                                             }
                                         }
-                                        EmployeeComplaintVM.Attachments =string.Join(",", updatedAttachements);
+                                        EmployeeComplaintVM.Attachments = string.Join(",", updatedAttachements);
                                     }
                                     else
                                     {
@@ -87,7 +87,7 @@ namespace ComplaintManagement.Repository
                                 EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
                                 if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Updated; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
                                 db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
-                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id,EmployeeComplaint.ComplaintStatus,db);
+                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
                                 db.SaveChanges();
 
                                 dbContextTransaction.Commit();
@@ -220,6 +220,7 @@ namespace ComplaintManagement.Repository
             }
             return Mapper.Map<EmployeeComplaintMaster, EmployeeCompliantMasterVM>(EmployeeComplaint);
         }
+
         public bool Delete(int id)
         {
             var data = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == id);
@@ -232,33 +233,155 @@ namespace ComplaintManagement.Repository
 
         public bool SubmitComplaint(int id)
         {
-            var data = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == id);
-            if (data != null)
+            var Complaintdata = Get(id);
+            using (var dbContextTransaction = db.Database.BeginTransaction())
             {
-                data.IsSubmitted = true;
-                data.ComplaintStatus = Messages.SUBMITTED;
+                try
+                {
+                    EmployeeComplaintWorkFlowVM employeeComplaintWorkFlowDto = new EmployeeComplaintWorkFlowVM();
+                    if (Complaintdata != null)
+                    {
+                        if (Complaintdata.CreatedBy > 0)
+                        {
+                            List<RoleMasterVM> roleMasterLineItem = new List<RoleMasterVM>();
+                            var userData = new UserMastersRepository().Get(Complaintdata.CreatedBy); string rolesId = string.Empty;
+                            if (userData != null && userData.LOSId > 0 && userData.CompentencyId > 0 && userData.SBUId > 0 && userData.SubSBUId > 0)
+                            {
+                                int losId = userData.LOSId; int competencyId = userData.CompentencyId; int SBUId = userData.SBUId; int subSBUId = userData.SubSBUId;
+                                var rolesMaster = new RoleMasterRepoitory().GetAll();
+                                if (rolesMaster != null && rolesMaster.Count > 0)
+                                {
+                                    foreach (RoleMasterVM role in rolesMaster)
+                                    {
+                                        bool isLOSValid = false; bool isSBUValid = false;
+                                        bool isSUBSBUValid = false; bool isComptencyValid = false;
+                                        if (role != null)
+                                        {
+                                            if (!string.IsNullOrEmpty(role.LOSId))
+                                            {
+                                                int[] LosList = new Common().StringToIntArray(role.LOSId);
+                                                foreach (int los in LosList)
+                                                {
+                                                    if (los > 0 && los == losId)
+                                                    {
+                                                        isLOSValid = true;
+                                                    }
+                                                }
+                                            }
+                                            if (!string.IsNullOrEmpty(role.CompetencyId))
+                                            {
+                                                int[] CompetencyList = new Common().StringToIntArray(role.CompetencyId);
+                                                foreach (int Competency in CompetencyList)
+                                                {
+                                                    if (Competency > 0 && Competency == competencyId)
+                                                    {
+                                                        isComptencyValid = true;
+                                                    }
+                                                }
+                                            }
+                                            if (!string.IsNullOrEmpty(role.SBUId))
+                                            {
+                                                int[] SBUList = new Common().StringToIntArray(role.SBUId);
+                                                foreach (int SBU in SBUList)
+                                                {
+                                                    if (SBU > 0 && SBU == SBUId)
+                                                    {
+                                                        isSBUValid = true;
+                                                    }
+                                                }
+                                            }
+                                            if (!string.IsNullOrEmpty(role.SubSBUId))
+                                            {
+                                                int[] SubSBUList = new Common().StringToIntArray(role.SubSBUId);
+                                                foreach (int SUBSbu in SubSBUList)
+                                                {
+                                                    if (SUBSbu > 0 && SUBSbu == subSBUId)
+                                                    {
+                                                        isSUBSBUValid = true;
+                                                    }
+                                                }
+                                            }
 
-                new EmployeeComplaintHistoryRepository().AddComplaintHistory(data.Remark,data.Id,data.ComplaintStatus,db);
+                                            //Final Criteria Check
+                                            if (isLOSValid && isComptencyValid && isSBUValid && isSUBSBUValid)
+                                            {
+                                                roleMasterLineItem.Add(role);
+                                            }
+                                        }
+                                    }
+                                }
+                                if (roleMasterLineItem.Count == 0)
+                                {
+                                    throw new Exception(Messages.RoleMasterComplainyCriteriaNotFound);
+                                }
+                                else
+                                {
+                                    var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                                    roleMasterLineItem.ForEach(x => rolesId = string.Join(",", x.Id));
+                                    employeeComplaintWorkFlowDto.ActionType = Messages.SUBMITTED;
+                                    employeeComplaintWorkFlowDto.ComplaintId = Complaintdata.Id;
+                                    employeeComplaintWorkFlowDto.Remarks = Complaintdata.Remark;
+                                    employeeComplaintWorkFlowDto.UserType = identity.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+                                    employeeComplaintWorkFlowDto.RoleId = rolesId;
+                                    employeeComplaintWorkFlowDto.LOSId = losId; employeeComplaintWorkFlowDto.SBUId = SBUId; employeeComplaintWorkFlowDto.SubSBUId = subSBUId; employeeComplaintWorkFlowDto.CompentencyId = competencyId;
+                                }
+                            }
+
+                            Complaintdata.IsSubmitted = true;
+                            Complaintdata.ComplaintStatus = Messages.SUBMITTED;
+
+
+                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Complaintdata.ComplaintStatus, db);
+                            db.SaveChanges();
+                            if(employeeComplaintWorkFlowDto!=null && employeeComplaintWorkFlowDto.ComplaintId > 0)
+                            {
+                                new EmployeeWorkFlowRepository().AddOrUpdate(employeeComplaintWorkFlowDto,db);
+                            }
+                            dbContextTransaction.Commit();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    dbContextTransaction.Rollback();
+                    throw new Exception(ex.Message.ToString());
+                }
             }
-            return db.SaveChanges() > 0;
+            return false;
         }
 
         public bool WithdrawComplaint(int id, string remarks)
         {
-            var data = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == id);
-            if (data != null && !string.IsNullOrEmpty(remarks))
+            try
             {
-                data.IsSubmitted = false;
-                data.Remark = remarks;
-                data.ComplaintStatus = Messages.Withdrawn;
-                new EmployeeComplaintHistoryRepository().AddComplaintHistory(data.Remark, data.Id, data.ComplaintStatus,db);
+                var data = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == id);
+                if (data != null && !string.IsNullOrEmpty(remarks))
+                {
+                    data.IsSubmitted = false;
+                    data.Remark = remarks;
+                    data.ComplaintStatus = Messages.Withdrawn;
+                    new EmployeeComplaintHistoryRepository().AddComplaintHistory(data.Remark, data.Id, data.ComplaintStatus, db);
+                }
+                return db.SaveChanges() > 0;
             }
-            return db.SaveChanges() > 0;
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
         }
 
         public string UploadImportEmployeeCompliant(string file)
         {
-            return new Common().SaveExcelFromBase64(file);
+            try
+            {
+                return new Common().SaveExcelFromBase64(file);
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
         }
 
         public int ImportEmployeeCompliant(string file)
@@ -267,7 +390,7 @@ namespace ComplaintManagement.Repository
             EmployeeComplaintMaster EmployeeComplaintMasterDto = null;
             int count = 0;
             #region Indexes 
-            int CategoryNameIndex = 1; int SubCategoryNameIndex = 2; int RemarkNameIndex = 3; 
+            int CategoryNameIndex = 1; int SubCategoryNameIndex = 2; int RemarkNameIndex = 3;
             #endregion
 
             string[] statuses = { "active", "inactive" };
@@ -340,7 +463,7 @@ namespace ComplaintManagement.Repository
                         }
                         else
                         {
-                            if(!new Common().HasSpecialCharacter(workSheet.Cells[i, RemarkNameIndex].Value?.ToString()))
+                            if (!new Common().HasSpecialCharacter(workSheet.Cells[i, RemarkNameIndex].Value?.ToString()))
                             {
                                 EmployeeComplaintMasterDto.Remark = workSheet.Cells[i, RemarkNameIndex].Value?.ToString();
                             }
@@ -352,10 +475,10 @@ namespace ComplaintManagement.Repository
 
 
                         EmployeeComplaintMasterDto.ComplaintStatus = Messages.Opened;
-                       
+
                         EmployeeComplaintMasterDto.CreatedBy = Convert.ToInt32(sid);
                         EmployeeComplaintMasterDto.CreatedDate = DateTime.UtcNow;
-                        EmployeeComplaintMasterDto.IsActive =  EmployeeComplaintMasterDto.Status =true;
+                        EmployeeComplaintMasterDto.IsActive = EmployeeComplaintMasterDto.Status = true;
                         EmployeeComplaintMasterDto.UserId = EmployeeComplaintMasterDto.UserId = EmployeeComplaintMasterDto.UserId == 0 ? Convert.ToInt32(sid) : EmployeeComplaintMasterDto.UserId;
                         EmployeeComplaintMasterDto.DueDate = DateTime.UtcNow.AddDays(5);
                         importEmployeeComplaint.Add(EmployeeComplaintMasterDto);
@@ -371,7 +494,7 @@ namespace ComplaintManagement.Repository
 
                                 foreach (EmployeeComplaintMaster item in importEmployeeComplaint)
                                 {
-                                    new EmployeeComplaintHistoryRepository().AddComplaintHistory(item.Remark, item.Id,item.ComplaintStatus, db);
+                                    new EmployeeComplaintHistoryRepository().AddComplaintHistory(item.Remark, item.Id, item.ComplaintStatus, db);
                                 }
                                 db.SaveChanges();
 
