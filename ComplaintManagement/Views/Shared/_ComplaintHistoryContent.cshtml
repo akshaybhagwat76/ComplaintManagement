@@ -1,53 +1,62 @@
-﻿<link href="~/Content/plugins/dataTables/datatables.min.css" rel="stylesheet" />
-
-<div class="table-responsive">
-    <table class="table f-14" id="historyTable">
+﻿<div class="table-responsive">
+    <table class="table f-14 border" id="historyTable"  style="width:100%">
         @if (ViewBag.lstComplaintHistory != null)
         {
             if (ViewBag.lstComplaintHistory.Count > 0)
             {
                 <thead>
                     <tr>
-                        <td>Created By</td>
-                        <td>Created On</td>
-                        <td>Remarks</td>
-                        <td>Type</td>
-                        <td>Action</td>
+                        <td class="border-top-0">Created By</td>
+                        <td class="border-top-0">Created On</td>
+                        <td class="border-top-0">Remarks</td>
+                        <td class="border-top-0">Type</td>
+                        <td class="border-top-0">Action</td>
                     </tr>
                 </thead>
             }
         }
-        <tbody>
-            @if (ViewBag.lstComplaintHistory != null)
+    <tbody>
+        @if (ViewBag.lstComplaintHistory != null)
+        {
+            if (ViewBag.lstComplaintHistory.Count > 0)
             {
-                if (ViewBag.lstComplaintHistory.Count > 0)
+                foreach (var item in ViewBag.lstComplaintHistory)
                 {
-                    foreach (var item in ViewBag.lstComplaintHistory)
-                    {
-                        <tr>
-                            <td class="text-black"><strong>@item.CreatedByName</strong></td>
-                            <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
-                            <td class="text-black"><strong>@item.Remarks</strong></td>
-                            <td class="text-black"><strong>@item.UserType</strong></td>
-                            <td class="text-black"><strong>@item.ActionType</strong></td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <label>No data found.</label>
+                    <tr>
+                        <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                        <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                        <td class="text-black"><strong>@item.Remarks</strong></td>
+                        <td class="text-black"><strong>@item.UserType</strong></td>
+                        <td class="text-black"><strong>@item.ActionType</strong></td>
+                    </tr>
                 }
             }
             else
             {
-                <label>No data found.</label>
+                <tr>
+                    <td colspan="5"><label>No data found.</label></td>
+                </tr>
             }
-        </tbody>
+        }
+        else
+        {
+            <tr>
+                <td colspan="5"><label>No data found.</label></td>
+            </tr>
+        }
+    </tbody>
     </table>
 </div>
-<script src="~/Scripts/vendor/datatables/jquery.dataTables.min.js"></script>
+@*<script src="~/Scripts/vendor/datatables/jquery.dataTables.min.js"></script>*@
 <script>
     $(document).ready(function () {
-        $("#historyTable").dataTable();
+        //$("#historyTable").dataTable();
+        var table = $('#historyTable').DataTable({
+        });
+        $(table.table().container()).removeClass('form-inline');
+        addClassFunction()
+        function addClassFunction() {
+            $('.pagination a').addClass('page-link');
+        }
     })
 </script>
