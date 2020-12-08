@@ -165,7 +165,7 @@ getAwaitingComplaint = function () {
                         text = text.replace("<strong", "<strong class='id'");
 
                         $("body").append(text)
-                        let isView = false; let id = $(".id").attr("id");
+                        let isView = true; let id = $(".id").attr("id");
                         let url = `/Compliant/Edit?id=${id}&isView=${isView}`
                         location.href = url;
                     }

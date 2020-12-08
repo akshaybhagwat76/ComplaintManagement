@@ -121,7 +121,7 @@ namespace ComplaintManagement.Repository
                             {
                                 if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.SUBMITTED.ToLower() && employeeComplaintWorkFlowDto.CreatedBy == Convert.ToInt32(sid))
                                 {
-                                    employeeComplaintWorkFlowDto.Id = employeeComplaintWorkFlowDto.Id;
+                                    employeeComplaintWorkFlowDto.Id = employeeComplaintWorkFlowDto.ComplaintId;
                                     employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
                                     employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
                                     employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
