@@ -30,5 +30,6 @@ namespace ComplaintManagement.ViewModel
         public int EmployeeComplaintMasterId { get; set; }
         public System.DateTime DueDate { get; set; }
         public bool IsSubmitted { get; set; }
+        public int HRUserId { get; set; }
     }
 }

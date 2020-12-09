@@ -561,5 +561,118 @@ namespace ComplaintManagement.Repository
             }
             return count;
         }
+
+
+        public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM EmployeeComplaintVM,String Id,int Hrid)
+        {
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                int ids = Convert.ToInt32(Id);
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
+                    {
+                        this.db.Database.CommandTimeout = 180;
+                        try
+                        {
+                            var EmployeeComplaint = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
+                            if (Id != null)
+                            {
+                                HR_Role roles = new HR_Role();
+                                roles.IsActive = true;
+                                roles.CreatedDate = DateTime.UtcNow;
+                                roles.ComplentId = ids;
+                                roles.UserId = EmployeeComplaintVM.UserId;
+                                roles.HRUserId = Hrid;
+                                roles.Status = "SaveHRComplaint";
+                                db.HR_Role.Add(roles);
+                                db.SaveChanges();
+
+                                //EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
+                                //if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Added; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
+                                //db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
+                                //new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
+                                //db.SaveChanges();
+                                dbContextTransaction.Commit();
+                            }
+                            else
+                            {
+                                EmployeeComplaintVM.IsActive = true;
+                                EmployeeComplaintVM.CreatedDate = EmployeeComplaint.CreatedDate;
+                                EmployeeComplaintVM.CreatedBy = EmployeeComplaint.CreatedBy;
+                                EmployeeComplaintVM.UpdatedDate = DateTime.UtcNow;
+                                EmployeeComplaintVM.UpdatedBy = Convert.ToInt32(sid);
+                                if (!string.IsNullOrEmpty(EmployeeComplaint.Attachments))
+                                {
+                                    if (!string.IsNullOrEmpty(EmployeeComplaintVM.Attachments))
+                                    {
+                                        List<string> newAttachments = EmployeeComplaintVM.Attachments.Split(',').ToList();
+                                        List<string> oldAttachments = EmployeeComplaint.Attachments.Split(',').ToList();
+                                        List<string> updatedAttachements = new List<string>();
+                                        foreach (string fileName in oldAttachments.Concat(newAttachments).ToList())
+                                        {
+                                            if (!string.IsNullOrEmpty(fileName) && fileName.Length > 5)
+                                            {
+                                                updatedAttachements.Add(fileName);
+                                            }
+                                        }
+                                        EmployeeComplaintVM.Attachments = string.Join(",", updatedAttachements);
+                                    }
+                                    else
+                                    {
+                                        EmployeeComplaintVM.Attachments = EmployeeComplaint.Attachments;
+                                    }
+                                }
+                                db.Entry(EmployeeComplaint).CurrentValues.SetValues(EmployeeComplaintVM);
+
+                                EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
+                                if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Updated; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
+                                db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
+                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
+                                db.SaveChanges();
+
+                                dbContextTransaction.Commit();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            if (!string.IsNullOrEmpty(EmployeeComplaintVM.Attachments))
+                            {
+                                foreach (string file in EmployeeComplaintVM.Attachments.Split(','))
+                                {
+                                    if (!string.IsNullOrEmpty(file))
+                                    {
+                                        string filePath = "~/Documents/" + file;
+
+                                        if (File.Exists(HttpContext.Current.Server.MapPath(filePath)))
+                                        {
+                                            File.Delete(HttpContext.Current.Server.MapPath(filePath));
+                                        }
+
+                                    }
+                                }
+                            }
+                            throw new Exception(ex.Message.ToString());
+                        }
+                    }
+                }
+                return new EmployeeCompliantMasterVM();
+            }
+            catch (DbEntityValidationException dve)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
+                throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+        }
     }
 }

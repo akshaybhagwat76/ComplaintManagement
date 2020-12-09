@@ -253,6 +253,9 @@
     <Compile Include="Models\EntityMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\HR_Role.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\LocationMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -392,6 +395,7 @@
     <Content Include="Assets\EditSubSBUMasters.js" />
     <Content Include="Assets\EditUserMasters.js" />
     <Content Include="Assets\EmployeeComplaint.js" />
+    <Content Include="Assets\EmployeeComplaint_TwoMaster.js" />
     <Content Include="Assets\EntityMasters.js" />
     <Content Include="Assets\LocationMasters.js" />
     <Content Include="Assets\Login.js" />

@@ -49,6 +49,7 @@ namespace ComplaintManagement.Controllers
             {
                 var user = new UserMastersRepository().Login(LoginVM);
                 Session["EmployeeId"] = user.EmployeeId;
+                Session["id"] = user.Id;
                 SignInUser(user.WorkEmail, user.Id.ToString(), user.EmployeeName, user.ImagePath, user.Type, false);
                 return new ReplyFormat().Success(Messages.SUCCESS, null);
             }

@@ -51,7 +51,8 @@ namespace ComplaintManagement.Controllers
             UserVM.ComplaintStatus = Messages.Opened; UserVM.Id = UserVM.CompentencyId = 0; UserVM.DateOfJoining = DateTime.UtcNow.AddDays(5);
             return View(UserVM);
         }
-        public ActionResult Edit(string id, bool isView)
+     
+        public ActionResult Edit(string id, bool isView,string isRedirect)
         {
             EmployeeCompliantMasterVM EmployeeCompliant_oneVM = new EmployeeCompliantMasterVM();
             try
@@ -59,8 +60,8 @@ namespace ComplaintManagement.Controllers
                 if (!string.IsNullOrEmpty(id))
                 {
                     id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
-
-                    EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(Convert.ToInt32(id));
+                    int ids = Convert.ToInt32(id);
+                    EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(ids);
                     UserMasterVM userMasterVM = new UserMastersRepository().Get(EmployeeCompliant_oneVM.UserId);
                     ViewBag.Competency = userMasterVM.CompentencyId > 0 ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId) != null ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName : Messages.NotAvailable : Messages.NotAvailable;
                     if (EmployeeCompliant_oneVM != null)
@@ -92,9 +93,23 @@ namespace ComplaintManagement.Controllers
                             userMasterVM.ImagePath = string.Empty;
                         }
                     }
+
+                
                     ViewBag.ViewState = isView;
                     ViewBag.PageType = !isView ? "Edit" : "View";
-                    return View("Compliant_one", userMasterVM);
+                    if(isRedirect!="2")
+                    {
+                    
+                        return View("Compliant_one", userMasterVM);
+
+                    }
+                    else
+                    {
+                        ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId ==ids).ToList();
+                        ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+
+                        return View("Compliant_two", userMasterVM);
+                    }
                 }
             }
             catch (Exception ex)
@@ -264,8 +279,39 @@ namespace ComplaintManagement.Controllers
         }
         public ActionResult Compliant_two()
         {
+
             ViewBag.NavbarTitle = "BHU Approval";
-            return View();
+
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+               .Select(c => c.Value).SingleOrDefault();
+            UserMasterVM UserVM = new UserMastersRepository().Get(Convert.ToInt32(sid));
+
+            ViewBag.Entity = UserVM.Company > 0 ? new EntityMasterRepository().Get(UserVM.Company) != null ? new EntityMasterRepository().Get(UserVM.Company).EntityName : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.SBU = UserVM.SBUId > 0 ? new SBUMasterRepository().Get(UserVM.SBUId) != null ? new SBUMasterRepository().Get(UserVM.SBUId).SBU : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.SubSBU = UserVM.SubSBUId > 0 ? new SubSBUMasterRepository().Get(UserVM.SubSBUId) != null ? new SubSBUMasterRepository().Get(UserVM.SubSBUId).SubSBU : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.LOS = UserVM.LOSId > 0 ? new LOSMasterRepository().Get(UserVM.LOSId) != null ? new LOSMasterRepository().Get(UserVM.LOSId).LOSName : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.Competency = UserVM.CompentencyId > 0 ? new CompetencyMastersRepository().Get(UserVM.CompentencyId) != null ? new CompetencyMastersRepository().Get(UserVM.CompentencyId).CompetencyName : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.Location = UserVM.LocationId > 0 ? new LocationMastersRepository().Get(UserVM.LocationId) != null ? new LocationMastersRepository().Get(UserVM.LocationId).LocationName : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.Region = UserVM.RegionId > 0 ? new RegionMasterRepository().Get(UserVM.RegionId) != null ? new RegionMasterRepository().Get(UserVM.RegionId).Region : Messages.NotAvailable : Messages.NotAvailable;
+            ViewBag.ManagementLevel = UserVM.BusinessTitle > 0 ? new DesignationMasterRepository().Get(UserVM.BusinessTitle) != null ? new DesignationMasterRepository().Get(UserVM.BusinessTitle).Designation : Messages.NotAvailable : Messages.NotAvailable;
+
+            ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
+            ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
+            ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId ==Convert.ToInt32(sid)).ToList();
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+            if (!string.IsNullOrEmpty(UserVM.ImagePath))
+            {
+                if (!new Common().GetFilePathExist(UserVM.ImagePath))
+                {
+                    UserVM.ImagePath = string.Empty;
+                }
+            }
+            ViewBag.NavbarTitle = "Complaint Information";
+            UserVM.ComplaintStatus = Messages.Opened; UserVM.Id = UserVM.CompentencyId = 0; UserVM.DateOfJoining = DateTime.UtcNow.AddDays(5);
+            return View(UserVM);
+
         }
         public ActionResult Compliant_three()
         {
@@ -395,6 +441,81 @@ namespace ComplaintManagement.Controllers
             }
             catch (Exception ex)
             {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+        //9/12/2020
+
+        [HttpPost]
+        public ActionResult AddOrEmployeeCompliantHR(string EmpCompliantParams,String Id)
+        {
+            List<string> filesName = new List<string>();
+            try
+            {
+                string ids = CryptoEngineUtils.Decrypt(Id.Replace(" ", "+"), true);
+                //e id--user master(hr)
+                   var Hrid= Session["id"];
+                if (Request.Files.Count > 0)
+                {
+                    var files = Request.Files;
+
+                    //iterating through multiple file collection   
+                    foreach (string str in files)
+                    {
+                        HttpPostedFileBase file = Request.Files[str] as HttpPostedFileBase;
+                        //Checking file is available to save.  
+                        if (file != null)
+                        {
+                            var InputFileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + new Common().UniqueFileName();
+                            string strpath = InputFileName += System.IO.Path.GetExtension(file.FileName);
+
+                            String path = Server.MapPath("~/Documents/");
+                            if (!Directory.Exists(path))
+                            {
+                                Directory.CreateDirectory(path);
+                            }
+
+                            var ServerSavePath = Path.Combine(Server.MapPath("~/Documents/") + strpath);
+                            //Save file to server folder  
+                            file.SaveAs(ServerSavePath);
+                            filesName.Add(strpath);
+                        }
+                    }
+                }
+                if (!string.IsNullOrEmpty(EmpCompliantParams))
+                {
+                    var converter = new ExpandoObjectConverter();
+                    dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(EmpCompliantParams, converter);
+                 
+                    var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliantMasterVM>(EmpCompliantParams);
+                    EmployeeComplaintDto.Attachments = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
+                    var User = new EmployeeComplaintMastersRepository().SaveHRComplaint(EmployeeComplaintDto,ids,Convert.ToInt32(Hrid));
+                    return new ReplyFormat().Success(Messages.SUCCESS, User);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (filesName.Count > 0)
+                {
+                    foreach (string file in filesName)
+                    {
+                        if (!string.IsNullOrEmpty(file))
+                        {
+                            string filePath = "~/Documents/" + file;
+
+                            if (System.IO.File.Exists(Server.MapPath(filePath)))
+                            {
+                                System.IO.File.Delete(Server.MapPath(filePath));
+                            }
+                        }
+                    }
+                }
+
                 ErrorSignal.FromCurrentContext().Raise(ex);
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
