@@ -118,7 +118,7 @@
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="/UserMaster/Edit?id=@userId&isView=false">
+                        <a class="dropdown-item" href="/UserMaster/Edit?id=@CryptoEngineUtils.Encrypt(Convert.ToString(userId),true)&isView=false">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>
@@ -164,15 +164,17 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table f-14" id="myTable">
-                                        <tr>
-                                            <td class="text-center">Region</td>
-                                            <td class="text-center">Created Date</td>
-                                            <td class="text-center">Entity State</td>
-                                            <td class="text-center">Created By</td>
-                                            <td class="text-center">Modified Date</td>
-                                            <td class="text-center">Modified By</td>
-                                            <td class="text-center">Status</td>
-                                        </tr>
+                                        <thead>
+                                            <tr>
+                                                <td class="text-center">Region</td>
+                                                <td class="text-center">Created Date</td>
+                                                <td class="text-center">Entity State</td>
+                                                <td class="text-center">Created By</td>
+                                                <td class="text-center">Modified Date</td>
+                                                <td class="text-center">Modified By</td>
+                                                <td class="text-center">Status</td>
+                                            </tr>
+                                        </thead>
                                         <tbody>
 
                                             @foreach (var item in ViewBag.lstRegionHistory)
@@ -207,6 +209,7 @@
                                             }
                                         </tbody>
                                     </table>
+                                </div>
                                     <br />
                                     <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
                                         <tr>
@@ -228,7 +231,6 @@
                                         </tr>
                                     </table>
                                     <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
-                                </div>
                             </div>
                         </div>
                     </div>

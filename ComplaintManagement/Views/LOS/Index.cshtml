@@ -125,7 +125,7 @@
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="/UserMaster/Edit?id=@userId&isView=false">
+                        <a class="dropdown-item" href="/UserMaster/Edit?id=@CryptoEngineUtils.Encrypt(Convert.ToString(userId),true)&isView=false">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>
@@ -205,59 +205,60 @@
                                         <tbody>
                                             @foreach (var item in data)
                                             {
-                                            <tr>
-                                                <td class="text-black text-center"><strong>@item.LOSName</strong></td>
-                                                <td class="text-black text-center"><strong>@item.SBU</strong></td>
-                                                <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CompetencyName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.CreatedDate != null)
-                                                        {
-                                                            var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-                                                            @Html.Raw(DateTime
-                                                        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-                                                        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-                                                        }
-                                                    </strong>
-                                                </td>
-                                                <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.UpdatedDate != null)
-                                                        {
-                                                            var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-                                                            @Html.Raw(DateTime
-                                                        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-                                                        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-                                                        }
+                                                <tr>
+                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CompetencyName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.CreatedDate != null)
+                                                            {
+                                                                var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+                                                                @Html.Raw(DateTime
+                                                            .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+                                                            .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                                            }
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.UpdatedDate != null)
+                                                            {
+                                                                var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+                                                                @Html.Raw(DateTime
+                                                            .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+                                                            .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Raw(Messages.NotAvailable.ToString())
+                                                            }
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+
+
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.Status == true)
+                                                            {@Html.Raw("Active") }
                                                         else
-                                                        {
-                                                            @Html.Raw(Messages.NotAvailable.ToString())
-                                                        }
-                                                    </strong>
-                                                </td>
-                                                <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
-
-
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.Status == true)
-                                                        {@Html.Raw("Active") }
-                                                    else
-                                                    { @Html.Raw("Inactive")}
-                                                    </strong>
-                                                </td>
-                                                <td class="text-center">
-                                                    <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="deleteLOS('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                    <a href="/LOS/HistoryIndex?id=@item.Id" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
-                                                </td>
-                                            </tr>
+                                                        { @Html.Raw("Inactive")}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-center text-nowrap">
+                                                        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="deleteLOS('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                        <a href="/LOS/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
+                                                    </td>
+                                                </tr>
                                             }
                                         </tbody>
                                     </table>
+                                </div>
                                     <br />
                                     <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
                                         <tr>
@@ -279,7 +280,6 @@
                                         </tr>
                                     </table>
                                     <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
-                                </div>
                             </div>
                         </div>
                     </div>

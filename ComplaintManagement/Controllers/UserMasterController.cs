@@ -28,15 +28,24 @@ namespace ComplaintManagement.Controllers
 
         }
         [HttpGet]
-        public ActionResult HistoryIndex(int id)
+        public ActionResult HistoryIndex(String id)
         {
-            var lst = GetAllHistory(1, id);
-            ViewBag.name = id.ToString();
-            var DataTableDetail = new HomeController().getDataTableDetail("User", null);
-            ViewBag.lstUserHistory = JsonConvert.SerializeObject(lst);
-            ViewBag.Page = DataTableDetail.Item1;
-            ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+            if (!string.IsNullOrEmpty(id))
+            {
+                id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                var lst = GetAllHistory(1, Convert.ToInt32(id));
+                ViewBag.name = id.ToString();
+                var DataTableDetail = new HomeController().getDataTableDetail("User", null);
+                ViewBag.lstUserHistory = JsonConvert.SerializeObject(lst);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+                return View();
+            }
+            else
+            {
+                return View("Index");
+            }
 
         }
         public ActionResult SearchUser(string search)
@@ -447,13 +456,21 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(String id)
         {
             bool retval = true;
             try
             {
-                retval = new UserMastersRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "User"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+                    retval = new UserMastersRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "User"), null);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+                }
             }
             catch (Exception ex)
             {
@@ -516,32 +533,36 @@ namespace ComplaintManagement.Controllers
 
         }
 
-        public ActionResult Edit(int id, bool isView)
+        public ActionResult Edit(String id, bool isView)
         {
             try
             {
-
-                ViewBag.lstDesignation = new DesignationMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.Designation, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstEntity = new EntityMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EntityName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstSBU = new SBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstLOS = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstLocation = new LocationMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LocationName, Value = d.Id.ToString() }).ToList();
-                ViewBag.lstRegion = new RegionMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.Region, Value = d.Id.ToString() }).ToList();
-                ViewBag.ViewState = isView;
-
-                UserMasterVM UserVM = new UserMastersRepository().Get(id);
-                if (!string.IsNullOrEmpty(UserVM.ImagePath))
+                if (!string.IsNullOrEmpty(id))
                 {
-                    if (!new Common().GetFilePathExist(UserVM.ImagePath))
-                    {
-                        UserVM.ImagePath = string.Empty;
-                    }
-                }
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
 
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                return View("ManageUserMaster", UserVM);
+                    ViewBag.lstDesignation = new DesignationMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.Designation, Value = d.Id.ToString() }).ToList();
+                    ViewBag.lstEntity = new EntityMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EntityName, Value = d.Id.ToString() }).ToList();
+                    ViewBag.lstSBU = new SBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
+                    ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
+                    ViewBag.lstLOS = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
+                    ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
+                    ViewBag.lstLocation = new LocationMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LocationName, Value = d.Id.ToString() }).ToList();
+                    ViewBag.lstRegion = new RegionMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.Region, Value = d.Id.ToString() }).ToList();
+                    ViewBag.ViewState = isView;
+
+                    UserMasterVM UserVM = new UserMastersRepository().Get(Convert.ToInt32(id));
+                    if (!string.IsNullOrEmpty(UserVM.ImagePath))
+                    {
+                        if (!new Common().GetFilePathExist(UserVM.ImagePath))
+                        {
+                            UserVM.ImagePath = string.Empty;
+                        }
+                    }
+
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    return View("ManageUserMaster", UserVM);
+                }
             }
             catch (Exception ex)
             {

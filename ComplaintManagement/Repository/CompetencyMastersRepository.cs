@@ -21,11 +21,6 @@ namespace ComplaintManagement.Repository
     {
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public CompetencyMastersRepository()
-        {
-
-        }
-
         public CompetencyMasterVM AddOrUpdate(CompetencyMasterVM CompetencyVM)
         {
             try
@@ -46,7 +41,7 @@ namespace ComplaintManagement.Repository
                             {
                                 CompetencyVM.IsActive = true;
                                 CompetencyVM.CreatedDate = DateTime.UtcNow;
-                                CompetencyVM.UserId = 1;
+                                CompetencyVM.UserId = Convert.ToInt32(sid);
                                 CompetencyVM.CreatedBy = Convert.ToInt32(sid);
                                 Competency = Mapper.Map<CompetencyMasterVM, CompetencyMaster>(CompetencyVM);
                                 if (IsExist(Competency.CompetencyName))
@@ -174,10 +169,6 @@ namespace ComplaintManagement.Repository
             try
             {
                 Competency = db.CompetencyMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (Competency == null)
-                {
-                    throw new Exception(Messages.BAD_DATA);
-                }
             }
             catch (Exception ex)
             {

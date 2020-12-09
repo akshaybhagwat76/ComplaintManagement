@@ -27,14 +27,23 @@ namespace ComplaintManagement.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult HistoryIndex(int id)
+        public ActionResult HistoryIndex(string id)
         {
-            ViewBag.lstCategoriesHistory = GetAllHistories(1, id).ToList();
-            ViewBag.name = id.ToString();
-            var DataTableDetail = new HomeController().getDataTableDetail("Categories History", null);
-            ViewBag.Page = DataTableDetail.Item1;
-            ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+            if (!string.IsNullOrEmpty(id))
+            {
+                id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                ViewBag.lstCategoriesHistory = GetAllHistories(1, Convert.ToInt32(id)).ToList();
+                ViewBag.name = id.ToString();
+                var DataTableDetail = new HomeController().getDataTableDetail("Categories History", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+                return View();
+            }
+            else
+            {
+                return View("Index");
+            }
         }
 
         public ActionResult SearchCategories(string search)
@@ -224,13 +233,22 @@ namespace ComplaintManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             bool retval = true;
             try
             {
-                retval = new CategoryMastersRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "category"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    retval = new CategoryMastersRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "category"), null);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+                }
             }
             catch (Exception ex)
             {
@@ -262,14 +280,19 @@ namespace ComplaintManagement.Controllers
             return View("ManageCategoryMaster", categoryMasterVM);
         }
 
-        public ActionResult Edit(int id, bool isView)
+        public ActionResult Edit(string id, bool isView)
         {
             try
             {
-                CategoryMasterVM categoryVM = new CategoryMastersRepository().Get(id);
-                ViewBag.ViewState = isView;
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                return View("ManageCategoryMaster", categoryVM);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    CategoryMasterVM categoryVM = new CategoryMastersRepository().Get(Convert.ToInt32(id));
+                    ViewBag.ViewState = isView;
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    return View("ManageCategoryMaster", categoryVM);
+                }
             }
             catch (Exception ex)
             {

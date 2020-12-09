@@ -24,14 +24,23 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
-        public ActionResult HistoryIndex(int id)
+        public ActionResult HistoryIndex(String id)
         {
-            ViewBag.lstLocationHistory = GetAllHistories(1, id).ToList();
-            ViewBag.name = id.ToString();
-            var DataTableDetail = new HomeController().getDataTableDetail("Location", null);
-            ViewBag.Page = DataTableDetail.Item1;
-            ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+            if (!string.IsNullOrEmpty(id))
+            {
+                id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                ViewBag.lstLocationHistory = GetAllHistories(1, Convert.ToInt32(id)).ToList();
+                ViewBag.name = id.ToString();
+                var DataTableDetail = new HomeController().getDataTableDetail("Location", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+                return View();
+            }
+            else
+            {
+                return View("Index");
+            }
         }
         public ActionResult SearchLocation(string search)
         {
@@ -186,13 +195,21 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(String id)
         {
             bool retval = true;
             try
             {
-                retval = new LocationMastersRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Location"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+                    retval = new LocationMastersRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Location"), null);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+                }
             }
             catch (Exception ex)
             {
@@ -223,14 +240,18 @@ namespace ComplaintManagement.Controllers
             
         }
 
-        public ActionResult Edit(int id, bool isView)
+        public ActionResult Edit(String id, bool isView)
         {
             try
             {
-                LocationMasterVM LocationVM = new LocationMastersRepository().Get(id);
-                ViewBag.ViewState = isView;
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                return View("ManageLocationMaster", LocationVM);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+                    LocationMasterVM LocationVM = new LocationMastersRepository().Get(Convert.ToInt32(id));
+                    ViewBag.ViewState = isView;
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    return View("ManageLocationMaster", LocationVM);
+                }
             }
             catch (Exception ex)
             {

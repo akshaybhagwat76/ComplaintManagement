@@ -75,7 +75,6 @@ function checkDuplicate() {
     var data = { SubCategoryName: SubCategoryName, Id: Id }
     if (SubCategoryName !== "") {
         $.post("/SubCategory/CheckIfExist", { data: data }, function (data) {
-            debugger
             if (data != null) {
                 if (data.data) {
                     isValidSubCategory = true;

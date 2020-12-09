@@ -1,7 +1,4 @@
-﻿$(document).ready(function () {
-    $.noConflict();
-    // $("#myTable").DataTable();
-});
+﻿
 function searchKeyPress(e) {
 
     // look for window.event in case event isn't passed in
@@ -21,46 +18,14 @@ function search(searchText) {
 }
 function deleteRole(id) {
 
-    //$('#deleteModal').data('id', id).modal('show');
-    //$('#deleteModal').modal('show');
-    Confirm('Are you sure?', 'You will not be able to recover this', 'Yes', 'Cancel', id); /*change*/
-
+    $('#deleteModal').data('id', id).modal('show');
+    $('#deleteModal').modal('show');
 }
 
 
-function Confirm(title, msg, $true, $false, $link) { /*change*/
-    var $content = "<div class='dialog-ovelay'>" +
-        "<div class='dialog'><header>" +
-        " <h3> " + title + " </h3> " +
-        "<i class='fa fa-close'></i>" +
-        "</header>" +
-        "<div class='dialog-msg'>" +
-        " <p> " + msg + " </p> " +
-        "</div>" +
-        "<footer>" +
-        "<div class='controls' style='margin-left: 235px;'>" +
-        " <button class='button button-danger doAction'>" + $true + "</button> " +
-        " <button class='button button-default cancelAction'>" + $false + "</button> " +
-        "</div>" +
-        "</footer>" +
-        "</div>" +
-        "</div>";
-    $('body').prepend($content);
-    $('.doAction').click(function () {
-        deleteAction($link);
-        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
-            $(this).remove();
-        });
-    });
-    $('.cancelAction, .fa-close').click(function () {
-        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
-            $(this).remove();
-        });
-    });
 
-}
-
-function deleteAction(id) {
+$('#delete-btn').click(function () {
+    var id = $('#deleteModal').data('id');
     StartProcess();
     $.ajax({
         type: "POST",
@@ -80,7 +45,7 @@ function deleteAction(id) {
             toastr.error(error)
         }
     });
-};
+});
 function performAction(id, isView) {
     let url = `/Role/Edit?id=${id}&isView=${isView}`
     location.href = url;
@@ -114,7 +79,9 @@ function PagerClick(index) {
         range = fromDate + ',' + toDate;
     }
     location.href = '/Role/LoadRole?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
-} function column_sort() {
+}
+function column_sort() {
+    debugger
     getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
     comparer = (idx, asc) => (a, b) => ((v1, v2) =>
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)

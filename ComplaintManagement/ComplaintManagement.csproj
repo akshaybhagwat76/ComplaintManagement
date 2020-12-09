@@ -60,6 +60,9 @@
     <Reference Include="EPPlus, Version=5.4.2.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.5.4.2\lib\net45\EPPlus.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ionic.Zip.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -203,9 +206,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Common.cs" />
+    <Compile Include="Helpers\CryptoEngineUtils.cs" />
     <Compile Include="Helpers\Infrastructure.cs" />
     <Compile Include="Helpers\Messages.cs" />
     <Compile Include="Helpers\ReplyFormat.cs" />
+    <Compile Include="Helpers\ViewExtensions.cs" />
     <Compile Include="Models\CategoryMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -228,6 +233,18 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DesignationMasters_History.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmployeeComplaintHistory.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmployeeComplaintMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmployeeComplaintMastersHistory.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmployeeComplaintWorkFlow.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EntityMaster.cs">
@@ -303,7 +320,11 @@
     <Compile Include="Repository\CategoryMastersRepository.cs" />
     <Compile Include="Repository\CommitteeMastersRepository.cs" />
     <Compile Include="Repository\CompetencyMastersRepository.cs" />
+    <Compile Include="Repository\CompliantMastersRepository.cs" />
     <Compile Include="Repository\DesignationMasterRepository.cs" />
+    <Compile Include="Repository\EmployeeComplaintHistoryRepository.cs" />
+    <Compile Include="Repository\EmployeeComplaintMastersRepository.cs" />
+    <Compile Include="Repository\EmployeeWorkFlowRepository.cs" />
     <Compile Include="Repository\EntityMasterRepository.cs" />
     <Compile Include="Repository\LocationMastersRepository.cs" />
     <Compile Include="Repository\RegionMasterRepository.cs" />
@@ -320,6 +341,12 @@
     <Compile Include="ViewModel\CommitteeMasterVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
+    <Compile Include="ViewModel\CompliantSearchVM.cs" />
+    <Compile Include="ViewModel\DashboardVM.cs" />
+    <Compile Include="ViewModel\EmployeeComplaintHistoryVM.cs" />
+    <Compile Include="ViewModel\EmployeeComplaintMastersHistoryVM.cs" />
+    <Compile Include="ViewModel\EmployeeComplaintWorkFlowVM.cs" />
+    <Compile Include="ViewModel\EmployeeCompliantMasterVM.cs" />
     <Compile Include="ViewModel\DesignationMasterHistoryVM.cs" />
     <Compile Include="ViewModel\DesignationMasterVM.cs" />
     <Compile Include="ViewModel\EntityMasterHistoryVM.cs" />
@@ -348,11 +375,13 @@
     <Content Include="Assets\CommitteeMasters.js" />
     <Content Include="Assets\common.js" />
     <Content Include="Assets\CompetencyMasters.js" />
+    <Content Include="Assets\Dashboard.js" />
     <Content Include="Assets\DesignationMasters.js" />
     <Content Include="Assets\EditCategoryMaster.js" />
     <Content Include="Assets\EditCommitteeMaster.js" />
     <Content Include="Assets\EditCompetencyMasters.js" />
     <Content Include="Assets\EditDesignationMasters.js" />
+    <Content Include="Assets\EditEmployeeCompliant_OneMasters.js" />
     <Content Include="Assets\EditEntityMasters.js" />
     <Content Include="Assets\EditLocationMasters.js" />
     <Content Include="Assets\EditLOSMasters.js" />
@@ -362,6 +391,7 @@
     <Content Include="Assets\EditSubCategoryMasters.js" />
     <Content Include="Assets\EditSubSBUMasters.js" />
     <Content Include="Assets\EditUserMasters.js" />
+    <Content Include="Assets\EmployeeComplaint.js" />
     <Content Include="Assets\EntityMasters.js" />
     <Content Include="Assets\LocationMasters.js" />
     <Content Include="Assets\Login.js" />
@@ -372,6 +402,8 @@
     <Content Include="Assets\SubCategoryMasters.js" />
     <Content Include="Assets\SubSBUMasters.js" />
     <Content Include="Assets\UserMasters.js" />
+    <Content Include="Assets\_ComplaintAwaitingContent.js" />
+    <Content Include="Assets\_ComplaintHistoryContent.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -449,6 +481,7 @@
     <Content Include="Imports\Samples\Committee\Committee.xlsx" />
     <Content Include="Imports\Samples\Role\Role.xlsx" />
     <Content Include="Imports\Samples\User\Users.xlsx" />
+    <Content Include="Imports\Samples\EmployeeCompliant\EmployeeCompliant.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -2328,10 +2361,6 @@
     <Content Include="Views\Committee\Index.cshtml" />
     <Content Include="Views\Shared\_CommonDeleteModal.cshtml" />
     <Content Include="Views\Employee\Index.cshtml" />
-    <Content Include="Views\Compliant\Compliant_one.cshtml" />
-    <Content Include="Views\Compliant\Compliant_two.cshtml" />
-    <Content Include="Views\Compliant\Compliant_three.cshtml" />
-    <Content Include="Views\Compliant\_Compliant.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Category\HistoryIndex.cshtml" />
     <Content Include="Views\Committee\HistoryIndex.cshtml" />
@@ -2346,9 +2375,24 @@
     <Content Include="Views\LOS\HistoryIndex.cshtml" />
     <Content Include="Views\Role\HistoryIndex.cshtml" />
     <Content Include="Views\UserMaster\HistoryIndex.cshtml" />
+    <Content Include="Views\Employee\_EmployeeListView.cshtml" />
+    <Content Include="Views\Compliant\Compliant_one.cshtml" />
+    <Content Include="Views\Compliant\Compliant_three.cshtml" />
+    <Content Include="Views\Compliant\Compliant_two.cshtml" />
+    <Content Include="Views\Compliant\_Compliant.cshtml" />
+    <Content Include="Views\Shared\_WithdrawComplaint.cshtml" />
+    <Content Include="Views\Shared\_GetHistory.cshtml" />
+    <Content Include="Views\Shared\_ComplaintHistoryContent.cshtml" />
+    <Content Include="Views\Shared\_ComplaintAwaiting.cshtml" />
+    <Content Include="Views\Shared\_ComplaintAwaitingContent.cshtml" />
+    <Content Include="Views\Shared\_ComplaintDue.cshtml" />
+    <Content Include="Views\Shared\_ComplaintDueContent.cshtml" />
+    <Content Include="Views\Shared\_ComplaintOverDue.cshtml" />
+    <Content Include="Views\Shared\_ComplaintOverDueContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Documents\" />
     <Folder Include="Views\Files\" />
   </ItemGroup>
   <ItemGroup>

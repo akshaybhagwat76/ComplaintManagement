@@ -24,14 +24,22 @@ namespace ComplaintManagement.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult HistoryIndex(int id)
+        public ActionResult HistoryIndex(string id)
         {
-            ViewBag.lstCompetencyHistory = GetAllHistories(1, id).ToList();
-            ViewBag.name = id.ToString();
-            var DataTableDetail = new HomeController().getDataTableDetail("Competency", null);
-            ViewBag.Page = DataTableDetail.Item1;
-            ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+            if (!string.IsNullOrEmpty(id))
+            {
+                id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+                ViewBag.lstCompetencyHistory = GetAllHistories(1, Convert.ToInt32(id)).ToList();
+                ViewBag.name = id.ToString();
+                var DataTableDetail = new HomeController().getDataTableDetail("Competency", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+                return View();
+            }
+            else
+            {
+                return View("Index");
+            }
         }
         [HttpGet]
         public ActionResult searchCompetency(string search)
@@ -217,13 +225,23 @@ namespace ComplaintManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             bool retval = true;
             try
             {
-                retval = new CompetencyMastersRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Competency"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    retval = new CompetencyMastersRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Competency"), null);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+
+                }
             }
             catch (Exception ex)
             {
@@ -257,14 +275,19 @@ namespace ComplaintManagement.Controllers
             
         }
 
-        public ActionResult Edit(int id,bool isView)
+        public ActionResult Edit(string id,bool isView)
         {
             try
             {
-                CompetencyMasterVM CompetencyVM = new CompetencyMastersRepository().Get(id);
-                ViewBag.ViewState = isView;
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                return View("ManageCompetencyMaster", CompetencyVM);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    CompetencyMasterVM CompetencyVM = new CompetencyMastersRepository().Get(Convert.ToInt32(id));
+                    ViewBag.ViewState = isView;
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    return View("ManageCompetencyMaster", CompetencyVM);
+                }
             }
             catch (Exception ex)
             {

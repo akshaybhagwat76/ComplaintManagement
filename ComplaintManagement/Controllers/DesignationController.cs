@@ -25,14 +25,23 @@ namespace ComplaintManagement.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult HistoryIndex(int id)
+        public ActionResult HistoryIndex(string id)
         {
-            ViewBag.lstHistoryDesignation = GetAllHistories(1, id).ToList();
-            ViewBag.name = id.ToString();
-            var DataTableDetail = new HomeController().getDataTableDetail("Designation", null);
-            ViewBag.Page = DataTableDetail.Item1;
-            ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+            if (!string.IsNullOrEmpty(id))
+            {
+                id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                ViewBag.lstHistoryDesignation = GetAllHistories(1, Convert.ToInt32(id)).ToList();
+                ViewBag.name = id.ToString();
+                var DataTableDetail = new HomeController().getDataTableDetail("Designation", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+                return View();
+            }
+            else
+            {
+                return View("Index");
+            }
         }
         public ActionResult searchDesignation(string search)
         {
@@ -213,13 +222,23 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             bool retval = true;
             try
             {
-                retval = new DesignationMasterRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Designation"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    retval = new DesignationMasterRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Designation"), null);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+
+                }
             }
             catch (Exception ex)
             {
@@ -250,15 +269,20 @@ namespace ComplaintManagement.Controllers
 
         }
 
-        public ActionResult Edit(int Id, bool isView)
+        public ActionResult Edit(string Id, bool isView)
         {
             try
             {
-                DesignationMasterVM DesignationVM = new DesignationMasterRepository().Get(Id);
-                ViewBag.PageType = "Edit";
-                ViewBag.ViewState = isView;
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                return View("ManageDesignationMaster", DesignationVM);
+                if (!string.IsNullOrEmpty(Id))
+                {
+                    Id = CryptoEngineUtils.Decrypt(Id.Replace(" ", "+"), true);
+
+                    DesignationMasterVM DesignationVM = new DesignationMasterRepository().Get(Convert.ToInt32(Id));
+                    ViewBag.PageType = "Edit";
+                    ViewBag.ViewState = isView;
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    return View("ManageDesignationMaster", DesignationVM);
+                }
             }
             catch (Exception ex)
             {

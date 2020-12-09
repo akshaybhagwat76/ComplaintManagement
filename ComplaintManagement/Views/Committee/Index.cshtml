@@ -28,6 +28,7 @@
 
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
+
     <!-- Main Content -->
     <div id="content">
         <!-- Topbar -->
@@ -126,7 +127,7 @@
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="/UserMaster/Edit?id=@userId&isView=false">
+                        <a class="dropdown-item" href="/UserMaster/Edit?id=@CryptoEngineUtils.Encrypt(Convert.ToString(userId),true)&isView=false">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>
@@ -167,16 +168,19 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="col-md-2">
-                            <ul class="nav">
-                                <li class="nav-item mr-4">
-                                    <a href="/Committee/Create" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
-                                </li>
-                                <li class="nav-item">
-                                    <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
-                                </li>
-                            </ul>
-                        </div>
+                        @if (data.Length < 1)
+                        {
+                            <div class="col-md-2">
+                                <ul class="nav">
+                                    <li class="nav-item mr-4">
+                                        <a href="/Committee/Create" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -244,11 +248,11 @@
                                                         { @Html.Raw("Inactive")}
                                                         </strong>
                                                     </td>
-                                                    <td class="text-center">
-                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                        <a href="javascript:void(0)" onclick="deleteCommittee('@item.Id')" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                        <a href="javascript:void(0)" onclick="performAction('@item.Id',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                        <a href="/Committee/HistoryIndex?id=@item.Id" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
+                                                    <td class="text-center text-nowrap">
+                                                        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="deleteCommittee('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                        <a href="/Committee/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)">&nbsp;<i class="fas fa-history text-danger"></i></a>
                                                     </td>
                                                 </tr>
                                             }
@@ -256,28 +260,28 @@
                                         </tbody>
 
                                     </table>
-                                    <br />
-                                    <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            @for (int i = 1; i <= ViewBag.PageCount; i++)
-                                            {
-                                                <td>
-                                                    <div class="pagination">
-                                                        @if (i != ViewBag.CurrentPageIndex)
-                                                        {
-                                                            <a href="javascript:PagerClick(@i);">@i</a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span>@i</span>
-                                                        }
-                                                    </div>
-                                                </td>
-                                            }
-                                        </tr>
-                                    </table>
-                                    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
                                 </div>
+                                <br />
+                                <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        @for (int i = 1; i <= ViewBag.PageCount; i++)
+                                        {
+                                            <td>
+                                                <div class="pagination">
+                                                    @if (i != ViewBag.CurrentPageIndex)
+                                                    {
+                                                        <a href="javascript:PagerClick(@i);">@i</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@i</span>
+                                                    }
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                </table>
+                                <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
                             </div>
                         </div>
                     </div>

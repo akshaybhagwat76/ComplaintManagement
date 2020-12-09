@@ -43,7 +43,7 @@ namespace ComplaintManagement.Repository
                             {
                                 SubcategoryVM.IsActive = true;
                                 SubcategoryVM.CreatedDate = DateTime.UtcNow;
-                                SubcategoryVM.UserId = 1;
+                                SubcategoryVM.UserId = Convert.ToInt32(sid);
                                 SubcategoryVM.CreatedBy = Convert.ToInt32(sid);
                                 Subcategory = Mapper.Map<SubCategoryMasterVM, SubCategoryMaster>(SubcategoryVM);
                                 if (IsExist(Subcategory.SubCategoryName))

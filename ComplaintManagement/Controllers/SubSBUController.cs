@@ -24,14 +24,23 @@ namespace ComplaintManagement.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult HistoryIndex(int id)
+        public ActionResult HistoryIndex(String id)
         {
-            ViewBag.lstSubSBUHistory = GetAllHistories(1, id).ToList();
-            ViewBag.name = id.ToString();
-            var DataTableDetail = new HomeController().getDataTableDetail("SubSBU", null);
-            ViewBag.Page = DataTableDetail.Item1;
-            ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+            if (!string.IsNullOrEmpty(id))
+            {
+                id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                ViewBag.lstSubSBUHistory = GetAllHistories(1, Convert.ToInt32(id)).ToList();
+                ViewBag.name = id.ToString();
+                var DataTableDetail = new HomeController().getDataTableDetail("SubSBU", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+                return View();
+            }
+            else
+            {
+                return View("Index");
+            }
         }
         public ActionResult searchSubSBU(string search)
         {
@@ -182,13 +191,21 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(String id)
         {
             bool retval = true;
             try
             {
-                retval = new SubSBUMasterRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "SubSBU"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+                    retval = new SubSBUMasterRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "SubSBU"), null);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+                }
             }
             catch (Exception ex)
             {
@@ -219,14 +236,18 @@ namespace ComplaintManagement.Controllers
             
         }
 
-        public ActionResult Edit(int id, bool isView)
+        public ActionResult Edit(String id, bool isView)
         {
             try
             {
-                SubSBUMasterVM SubSBUVM = new SubSBUMasterRepository().Get(id);
-                ViewBag.ViewState = isView;
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                return View("ManageSubSBUMaster", SubSBUVM);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+                    SubSBUMasterVM SubSBUVM = new SubSBUMasterRepository().Get(Convert.ToInt32(id));
+                    ViewBag.ViewState = isView;
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    return View("ManageSubSBUMaster", SubSBUVM);
+                }
             }
             catch (Exception ex)
             {

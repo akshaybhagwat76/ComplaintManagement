@@ -27,7 +27,6 @@
 }
 
 <!-- Page Wrapper -->
-<div id="wrapper">
     @Html.Hidden("history", (object)ViewBag.name)
 
     <!-- Content Wrapper -->
@@ -125,7 +124,7 @@
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="/UserMaster/Edit?id=@userId&isView=false">
+                            <a class="dropdown-item" href="/UserMaster/Edit?id=@CryptoEngineUtils.Encrypt(Convert.ToString(userId),true)&isView=false">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
@@ -143,12 +142,7 @@
             <!-- End of Topbar -->
             <!-- Begin Page Content -->
             <a href="/UserMaster/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
-
-
-
-
             <div class="container-fluid">
-
                 <div class="preloader"></div>
                 <div class="page-title">
                     <h2 class="text-black">User History</h2>
@@ -174,10 +168,10 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table f-14" width="100%" id="myTable">
+                                        <table class="table f-14" id="myTable">
                                             <thead>
                                                 <tr>
-                                                    <td width="12%">Employee Name</td>
+                                                    <td >Employee Name</td>
                                                     <td>Created Date</td>
                                                     @*   <td>Created By</td>*@
                                                     @*<td>Modified Date</td>*@
@@ -200,8 +194,8 @@
                                                 @foreach (var item in data)
                                                 {
                                                     <tr>
-                                                        <td class="text-black text-center pl-2"><strong>@item.EmployeeName</strong></td>
-                                                        <td class="text-black text-center pl-2">
+                                                        <td class="text-black text-center"><strong>@item.EmployeeName</strong></td>
+                                                        <td class="text-black text-center">
                                                             <strong>
                                                                 @if (item.CreatedDate != null)
                                                                 {
@@ -226,7 +220,7 @@
                                                         </strong>
                                                     </td>*@
                                                         @*<td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>*@
-                                                        <td class="text-black text-center pl-2">
+                                                        <td class="text-black text-center">
                                                             <strong>
                                                                 @if (item.Status == true)
                                                                 {@Html.Raw("Active") }
@@ -236,20 +230,21 @@
                                                         </td>
                                                         <td class="text-black text-center pl-2"><strong>@item.CreatedByName</strong></td>
 
-                                                        <td class="text-black text-center pl-2"><strong>@item.TimeType</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.BusinessTitle</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.EntityState</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.Company</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.LOS</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.SBU</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.SubSBU</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.Competency</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.Region</strong></td>
-                                                        <td class="text-black text-center pl-2"><strong>@item.Manager</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.TimeType</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.BusinessTitle</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.EntityState</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.Company</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.LOS</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.SubSBU</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.Competency</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.Region</strong></td>
+                                                        <td class="text-black text-center"><strong>@item.Manager</strong></td>
                                                     </tr>
                                                 }
                                             </tbody>
                                         </table>
+                                    </div>
                                         <br />
                                         <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
                                             <tr>
@@ -271,7 +266,6 @@
                                             </tr>
                                         </table>
                                         <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -283,8 +277,6 @@
         <!-- End of Main Content -->
     </div>
     <!-- End of Content Wrapper -->
-</div>
-
 <div class="modal" tabindex="-1" id="uploadFile">
     <div class="modal-dialog modal-lg">
         <div class="modal-content border-0 rounded-0">
@@ -320,9 +312,9 @@
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
-@Scripts.Render("~/Assets/Common")
+@*@Scripts.Render("~/Assets/Common")*@
 @Html.Partial("_CommonDeleteModal")
-@Scripts.Render("~/Assets/UserMasters")
+@*@Scripts.Render("~/Assets/UserMasters")*@
 <script>
     var pageLength=@ViewBag.PageIndex;
     var page = @ViewBag.Page;

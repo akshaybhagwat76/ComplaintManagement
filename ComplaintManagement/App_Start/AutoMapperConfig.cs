@@ -87,6 +87,18 @@ namespace ComplaintManagement.App_Start
 
                 cfg.CreateMap<RoleMasterHistoryVM, RoleMasters_History>();
                 cfg.CreateMap<RoleMasters_History, RoleMasterHistoryVM>();
+
+                cfg.CreateMap<EmployeeCompliantMasterVM, EmployeeComplaintMaster>();
+                cfg.CreateMap<EmployeeComplaintMaster, EmployeeCompliantMasterVM>();
+
+                cfg.CreateMap<EmployeeComplaintMastersHistoryVM, EmployeeComplaintMastersHistory>();
+                cfg.CreateMap<EmployeeComplaintMastersHistory, EmployeeComplaintMastersHistoryVM>();
+
+                cfg.CreateMap<EmployeeComplaintHistoryVM, EmployeeComplaintHistory>();
+                cfg.CreateMap<EmployeeComplaintHistory, EmployeeComplaintHistoryVM>();
+
+                cfg.CreateMap<EmployeeComplaintWorkFlowVM, EmployeeComplaintWorkFlow>();
+                cfg.CreateMap<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>();
             });
         }
     }

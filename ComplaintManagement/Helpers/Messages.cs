@@ -6,12 +6,18 @@
         public const string SUCCESS = "Success";
         public const string ALREADY_EXISTS = "Already exists";
 
+        public const string NormalUser = "Normal";
+        public const string HRUser = "HR";
+        public const string AdminUser = "Admin";
+
         public const string BAD_DATA = "Bad or Invalid data";
         public const string USER_EXISTS = "User already exists";
         public const string LOGIN_TYPE_FACEBOOK = "Facebook";
         public const string LOGIN_TYPE_LOCAL = "Local";
         public const string WORK_EMAIL_EXIST = "Work email is already exist.";
         public const string EMP_ID_EXIST = "Employee Id is already exist.";
+        public const string RoleMasterComplaintCriteriaNotFound = "Role master master is not defined in given criteria with LOS,SUBSBU,SBU,Competency.";
+        public const string ComplaintSubmitted = "Complaint has been submitted.";
 
         public const string USER_ALREADY_REWARDED = "User is already rewarded";
         public const string USER_DONT_HAVE_ENOUGH_AMOUNT = "User have not wallet amount in his account";
@@ -43,11 +49,16 @@
         public const string Added = "Added";
         public const string Updated = "Updated";
 
+        public const string Opened = "Opened";
+        public const string Closed = "Closed";
+        public const string Withdrawn = "Withdrawn";
+
         public const string PRODUCT_IMAGE = "Product";
         public const string Active = "Active";
         public const string Inactive = "Inactive";
         public const string Status = "Status";
-        
+        public const string Id = "Id";
+
         public const string DataCategoryAlreadyExists = "This Category {0} already exists! - Row No. {1} and Column No. {2}";
         public const string DataCommitteeAlreadyExists = "This Committee {0} already exists! - Row No. {1} and Column No. {2}";
         public const string DataCompetencyAlreadyExists = "This Competency {0} already exists! - Row No. {1} and Column No. {2}";
@@ -72,6 +83,8 @@
         public const string StatusInvalid = "Please select status active or inactive - Row No. {1} and Column No. {2}";
         public const string EmpManagerPattern = "Employee ID or name or email";
         public const string DataEmpNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
+        public const string FieldIsInvalid = "{0} should not contain special characters - Row No. {1} and Column No. {2}";
+
         public const string DataNOTExists = "{0} not exists! - Row No. {1} and Column No. {2}";
         public const string EmailFormat = "Please work email in email format - Row No. {0} and Column No. {1}";
         public const string AgeInvalid = "Please select age in digit only - Row No. {0} and Column No. {1}";
@@ -109,7 +122,7 @@
         public const string ACCOUNT_ACTIVATION = "About your account activation from pithplay.com";
         //Order statuses
 
-        public const string SUBMITTED = "submitted";
+        public const string SUBMITTED = "Submitted";
         public const string ORDERED = "ordered";
         public const string WORKING = "working";
         public const string DELIVERED = "delivered";

@@ -12,16 +12,15 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Web;
+
 namespace ComplaintManagement.Repository
 {
     public class LOSMasterRepository
     {
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
-
         public LOSMasterRepository()
         {
         }
-
         public LOSMasterVM AddOrUpdate(LOSMasterVM LOSVM)
         {
             try
@@ -42,7 +41,7 @@ namespace ComplaintManagement.Repository
                             {
                                 LOSVM.IsActive = true;
                                 LOSVM.CreatedDate = DateTime.UtcNow;
-                                LOSVM.UserId = 1;
+                                LOSVM.UserId = Convert.ToInt32(sid);
                                 LOSVM.CreatedBy = Convert.ToInt32(sid);
                                 LOS = Mapper.Map<LOSMasterVM, LOSMaster>(LOSVM);
                                 if (IsExist(LOS.LOSName))
@@ -56,7 +55,7 @@ namespace ComplaintManagement.Repository
                                 db.LOSMasters_History.Add(historyObj);
                                 db.SaveChanges();
 
-
+                                dbContextTransaction.Commit();
                                 return Mapper.Map<LOSMaster, LOSMasterVM>(LOS);
                             }
                             else
@@ -101,7 +100,6 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
-
         public List<LOSMasterVM> GetAll()
         {
             List<LOSMaster> LOS = new List<LOSMaster>();
@@ -132,17 +130,12 @@ namespace ComplaintManagement.Repository
             }
             return LOSList;
         }
-
         public LOSMasterVM Get(int id)
         {
             LOSMaster los = new LOSMaster();
             try
             {
                 los = db.LOSMasters.FirstOrDefault(i => i.Id == id && i.IsActive);
-                if (los == null)
-                {
-                    throw new Exception(Messages.BAD_DATA);
-                }
             }
             catch (Exception ex)
             {
@@ -151,7 +144,6 @@ namespace ComplaintManagement.Repository
             }
             return Mapper.Map<LOSMaster, LOSMasterVM>(los);
         }
-
         public List<LOSMasterHistoryVM> GetAllHistory()
         {
             List<LOSMasters_History> listdto = new List<LOSMasters_History>();
@@ -181,7 +173,6 @@ namespace ComplaintManagement.Repository
             }
             return lst;
         }
-
         public bool Delete(int id)
         {
             var data = db.LOSMasters.FirstOrDefault(p => p.Id == id);
@@ -195,17 +186,14 @@ namespace ComplaintManagement.Repository
         {
             return db.LOSMasters.Count(x => x.IsActive && x.LOSName.ToUpper() == LOSName.ToUpper()) > 0;
         }
-
         public bool IsExist(string LOSName, int id)
         {
             return db.LOSMasters.Count(x => x.IsActive && x.LOSName.ToUpper() == LOSName.ToUpper() && x.Id != id) > 0;
         }
-
         public string UploadImportLOS(string file)
         {
             return new Common().SaveExcelFromBase64(file);
         }
-
         public int ImportImportLOS(string file)
         {
             List<LOSMaster> importLOS = new List<LOSMaster>();
@@ -440,6 +428,5 @@ namespace ComplaintManagement.Repository
             }
             return count;
         }
-       
     }
 }

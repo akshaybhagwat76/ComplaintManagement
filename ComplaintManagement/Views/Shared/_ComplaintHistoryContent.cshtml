@@ -1,0 +1,49 @@
+﻿<div class="table-responsive">
+    <table class="table f-14 border" id="historyTable" style="width:100%">
+        @if (ViewBag.lstComplaintHistory != null)
+        {
+            if (ViewBag.lstComplaintHistory.Count > 0)
+            {
+                <thead>
+                    <tr>
+                        <td class="border-top-0">Created By</td>
+                        <td class="border-top-0">Created On</td>
+                        <td class="border-top-0">Remarks</td>
+                        <td class="border-top-0">Type</td>
+                        <td class="border-top-0">Action</td>
+                    </tr>
+                </thead>
+            }
+        }
+    <tbody>
+        @if (ViewBag.lstComplaintHistory != null)
+        {
+            if (ViewBag.lstComplaintHistory.Count > 0)
+            {
+                foreach (var item in ViewBag.lstComplaintHistory)
+                {
+                    <tr>
+                        <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                        <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                        <td class="text-black"><strong>@item.Remarks</strong></td>
+                        <td class="text-black"><strong>@item.UserType</strong></td>
+                        <td class="text-black"><strong>@item.ActionType</strong></td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5"><label>No data found.</label></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5"><label>No data found.</label></td>
+            </tr>
+        }
+    </tbody>
+    </table>
+</div>

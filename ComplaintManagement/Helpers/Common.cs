@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Web;
@@ -29,6 +32,14 @@ namespace ComplaintManagement.Helpers
                 File.Delete(HttpContext.Current.Server.MapPath(filePath));
             }
         }
+        public void RemoveDoc(string fileName)
+        {
+            string filePath = "~/Documents/" + fileName;
+            if (File.Exists(HttpContext.Current.Server.MapPath(filePath)))
+            {
+                File.Delete(HttpContext.Current.Server.MapPath(filePath));
+            }
+        }
 
         public bool GetFilePathExist(string fileName)
         {
@@ -48,11 +59,26 @@ namespace ComplaintManagement.Helpers
             }
         }
 
+        public int[] StringToIntArray(string values)
+        {
+            List<int> valuesConvertedInt = new List<int>();
+            Array.ForEach(values.Split(",".ToCharArray()), s =>
+            {
+                int currentInt;
+                if (Int32.TryParse(s, out currentInt))
+                    valuesConvertedInt.Add(currentInt);
+            });
+            return valuesConvertedInt.ToArray();
+        }
+        public string UniqueFileName()
+        {
+            return DateTime.Now.ToString("ddMMyyyyhhmmss");
+        }
         public string SaveImageFromBase64(string filename)
         {
             string filePath = "";
             string[] pd = filename.Split(',');
-            string NewFileName = RandomString(3) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + "."+pd[2];
+            string NewFileName = RandomString(3) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + "." + pd[2];
             byte[] imageBytes = Convert.FromBase64String(pd[1]);
             if (!Directory.Exists("~/Images/profile_pics"))
             {
@@ -78,13 +104,30 @@ namespace ComplaintManagement.Helpers
                 filePath = System.Web.HttpContext.Current.Server.MapPath("~/Imports/temps/" + NewFileName);
                 File.WriteAllBytes(filePath, imageBytes);
                 return System.Web.HttpContext.Current.Server.MapPath("~/Imports/temps/" + NewFileName);
-                
+
             }
             catch (Exception ex)
             {
-
-                return string.Empty;
+                return ex.Message.ToString();
             }
+        }
+
+        public string UpdateTokenValue(string jsonString, string TokenName, string newValue)
+        {
+            JObject jsonObj = (JObject)JsonConvert.DeserializeObject(jsonString);
+            jsonObj.Property(TokenName).Value = newValue;
+            return JsonConvert.SerializeObject(jsonObj);
+        }
+        public bool HasSpecialCharacter(string s)
+        {
+            foreach (var c in s)
+            {
+                if (!char.IsLetterOrDigit(c))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

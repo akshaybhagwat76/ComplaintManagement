@@ -25,14 +25,23 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
-        public ActionResult HistoryIndex(int id)
+        public ActionResult HistoryIndex(String id)
         {
-            ViewBag.lstRegionHistory = GetAllHistories(1, id).ToList();
-            ViewBag.name = id.ToString();
-            var DataTableDetail = new HomeController().getDataTableDetail("Region", null);
-            ViewBag.Page = DataTableDetail.Item1;
-            ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+            if (!string.IsNullOrEmpty(id))
+            {
+                id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                ViewBag.lstRegionHistory = GetAllHistories(1, Convert.ToInt32(id)).ToList();
+                ViewBag.name = id.ToString();
+                var DataTableDetail = new HomeController().getDataTableDetail("Region", null);
+                ViewBag.Page = DataTableDetail.Item1;
+                ViewBag.PageIndex = DataTableDetail.Item2;
+                return View();
+            }
+            else
+            {
+                return View("Index");
+            }
         }
         public ActionResult SearchRegion(string search)
         {
@@ -214,13 +223,21 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(String id)
         {
             bool retval = true;
             try
             {
-                retval = new RegionMasterRepository().Delete(id);
-                return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Region"), null);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+                    retval = new RegionMasterRepository().Delete(Convert.ToInt32(id));
+                    return new ReplyFormat().Success(string.Format(Messages.DELETE_MESSAGE, "Region"), null);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+                }
             }
             catch (Exception ex)
             {
@@ -250,14 +267,19 @@ namespace ComplaintManagement.Controllers
             return View("ManageRegionMaster", RegionMasterVM);
         }
 
-        public ActionResult Edit(int id, bool isView)
+        public ActionResult Edit(String id, bool isView)
         {
             try
             {
-                RegionMasterVM RegionVM = new RegionMasterRepository().Get(id);
-                ViewBag.ViewState = isView;
-                ViewBag.PageType = !isView ? "Edit" : "View";
-                return View("ManageRegionMaster", RegionVM);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
+
+                    RegionMasterVM RegionVM = new RegionMasterRepository().Get(Convert.ToInt32(id));
+                    ViewBag.ViewState = isView;
+                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    return View("ManageRegionMaster", RegionVM);
+                }
             }
             catch (Exception ex)
             {
