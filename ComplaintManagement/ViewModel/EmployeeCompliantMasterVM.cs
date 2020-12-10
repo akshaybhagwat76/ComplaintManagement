@@ -18,6 +18,7 @@ namespace ComplaintManagement.ViewModel
         public string Remark { get; set; }
         [DisplayName("Attachments")]
         public string Attachments { get; set; }
+        public string Attachments1 { get; set; }
         public bool IsActive { get; set; }
         public bool Status { get; set; }
         public string CreatedByName { get; set; }
@@ -31,4 +32,5 @@ namespace ComplaintManagement.ViewModel
         public System.DateTime DueDate { get; set; }
         public bool IsSubmitted { get; set; }
     }
+
 }

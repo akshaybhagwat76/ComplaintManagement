@@ -56,6 +56,7 @@ namespace ComplaintManagement.ViewModel
         public string CreatedByName { get; set; }
         public string UpdatedByName { get; set; }
         public int UserMasterId { get; set; }
+        public string UserId { get; set; }
 
         public System.DateTime CreatedDate { get; set; }
         [DisplayName("Category")]
@@ -66,5 +67,13 @@ namespace ComplaintManagement.ViewModel
         public string Remark { get; set; }
         [DisplayName("Attachments")]
         public string Attachments { get; set; }
+        [DisplayName("Case Type")]
+        public string CashTypeId { get; set; }
+        [DisplayName("Involved Users")]
+        public string InvolvedUsersId { get; set; }
+        [DisplayName("Remarks")]
+        public string RemarkCommittee { get; set; }
+        [DisplayName("Attachments")]
+        public string AttachmentsCommittee { get; set; }
     }
 }

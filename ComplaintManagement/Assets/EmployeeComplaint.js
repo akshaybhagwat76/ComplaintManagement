@@ -143,7 +143,8 @@ $('#delete-btn').click(function () {
 });
 
 function performAction(id, isView) {
-    let url = `/Compliant/Edit?id=${id}&isView=${isView}`
+    let isRedirect = "1";
+    let url = `/Compliant/Edit?id=${id}&isView=${isView}&isRedirect=${isRedirect}`
     location.href = url;
 }
 

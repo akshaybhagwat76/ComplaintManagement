@@ -10,11 +10,13 @@ using Elmah;
 using ComplaintManagement.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using ComplaintManagement.Models;
 
 namespace ComplaintManagement.Controllers
 {
     public class AccountController : Controller
     {
+        private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
         // GET: Account     
         [HttpGet]
         public ActionResult Index(string returnUrl)
@@ -49,6 +51,16 @@ namespace ComplaintManagement.Controllers
             {
                 var user = new UserMastersRepository().Login(LoginVM);
                 Session["EmployeeId"] = user.EmployeeId;
+                Session["id"] = user.Id;
+                var CommitteeMemberData= (from u in db.CommitteeMasters
+                                          where u.IsActive
+                                          select u).FirstOrDefault();
+                var isCommitteeUserAssigned = CommitteeMemberData.UserId.Split(',').Where(i => i.ToString() == user.Id.ToString()).Count() > 0;
+                if (isCommitteeUserAssigned)
+                {
+                    user.Type = Messages.Committee;
+                }
+
                 SignInUser(user.WorkEmail, user.Id.ToString(), user.EmployeeName, user.ImagePath, user.Type, false);
                 return new ReplyFormat().Success(Messages.SUCCESS, null);
             }

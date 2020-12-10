@@ -123,6 +123,7 @@
         //Order statuses
 
         public const string SUBMITTED = "Submitted";
+        public const string COMMITTEE = "Committee";
         public const string ORDERED = "ordered";
         public const string WORKING = "working";
         public const string DELIVERED = "delivered";

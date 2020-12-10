@@ -28,9 +28,32 @@
     @*@Scripts.Render("~/bundles/bootstrap")*@
     @*@Scripts.Render("~/plugins/dataTables")*@
     @*@Scripts.Render("~/sb-admin2/jquery")*@
-        @Scripts.Render("~/sb-admin2/jquery")
+    @Scripts.Render("~/sb-admin2/jquery")
 
     <!--<link href="css/helper.css" rel="stylesheet">-->
+
+
+    @{
+        string userRole = string.Empty;
+        var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+        if (claimsIdentity != null)
+        {
+            var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Name);
+            var cI = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.UserData);
+            var userIDInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Sid);
+            var userRoleInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
+
+            if (c != null && cI != null && userIDInfo != null && userRoleInfo != null)
+            {
+                userRole = userRoleInfo.Value;
+                //user = c.Value.ToString();
+                //userImage = cI.Value.ToString();
+                //userId = Convert.ToInt32(userIDInfo.Value.ToString());
+            }
+        }
+    }
+
+
     @*@{
             UserMasterVM userProfile = new UserMasterVM();
             int userId = 0;
@@ -89,8 +112,18 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="/Employee/Index">Employee</a>
                         <a class="collapse-item" href="/Compliant/Compliant_one">Compliant_one</a>
-                        <a class="collapse-item" href="/Compliant/Compliant_two">Compliant_two</a>
-                        <a class="collapse-item" href="/Compliant/Compliant_three">Compliant_three</a>
+                        @{
+                            if (userRole == Messages.HRUser)
+                            {
+                                <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">Compliant_two</a>
+                            }
+                            else if (userRole == Messages.Committee)
+                            {
+                                <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Compliant_three</a>
+                            }
+                        }
+
+
                     </div>
                 </div>
             </li>

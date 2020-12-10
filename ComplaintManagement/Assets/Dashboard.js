@@ -195,7 +195,8 @@ function getDueComplaints(){
 
                         $("body").append(text)
                         let isView = false; let id = $(".id").attr("id");
-                        let url = `/Compliant/Edit?id=${id}&isView=${isView}`
+                        let isRedirect = "2";
+                        let url = `/Compliant/Edit?id=${id}&isView=${isView}&isRedirect=${isRedirect}`
                         location.href = url;
                     }
                 }
@@ -224,7 +225,8 @@ function getOverDueComplaints() {
 
                         $("body").append(text)
                         let isView = false; let id = $(".id").attr("id");
-                        let url = `/Compliant/Edit?id=${id}&isView=${isView}`
+                        let isRedirect = "2";
+                        let url = `/Compliant/Edit?id=${id}&isView=${isView}&isRedirect=${isRedirect}`
                         location.href = url;
                     }
                 }

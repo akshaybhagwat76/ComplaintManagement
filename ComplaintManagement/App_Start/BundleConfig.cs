@@ -225,6 +225,10 @@ namespace ComplaintManagement
             bundles.Add(new ScriptBundle("~/Assets/EditEmployeeCompliant_OneMasters").Include(
                       "~/Assets/EditEmployeeCompliant_OneMasters.js"));
 
+            //Edit Role Masters
+            bundles.Add(new ScriptBundle("~/Assets/EditEmployeeCompliant_ThreeMasters").Include(
+                      "~/Assets/EditEmployeeCompliant_ThreeMasters.js"));
+
             // Employee Compliant Master
             bundles.Add(new ScriptBundle("~/Assets/EmployeeComplaint").Include(
                       "~/Assets/EmployeeComplaint.js"));

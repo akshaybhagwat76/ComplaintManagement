@@ -223,6 +223,9 @@
     <Compile Include="Models\CommitteeMasters_History.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CommitteeRole.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CompetencyMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -251,6 +254,9 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EntityMasters_History.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\HR_Role.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LocationMaster.cs">
@@ -367,6 +373,7 @@
     <Compile Include="ViewModel\SubSBUMasterHistoryVM.cs" />
     <Compile Include="ViewModel\SubSBUMasterVM.cs" />
     <Compile Include="ViewModel\UserMasterHistoryVM.cs" />
+    <Compile Include="ViewModel\HrRoleUserMasterVM.cs" />
     <Compile Include="ViewModel\UserMasterVM.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -381,6 +388,7 @@
     <Content Include="Assets\EditCommitteeMaster.js" />
     <Content Include="Assets\EditCompetencyMasters.js" />
     <Content Include="Assets\EditDesignationMasters.js" />
+    <Content Include="Assets\EditEmployeeCompliant_ThreeMasters.js" />
     <Content Include="Assets\EditEmployeeCompliant_OneMasters.js" />
     <Content Include="Assets\EditEntityMasters.js" />
     <Content Include="Assets\EditLocationMasters.js" />
@@ -413,6 +421,7 @@
     <Content Include="Content\css\sb-admin-2.css" />
     <Content Include="Content\css\sb-admin-2.min.css" />
     <Content Include="Content\css\styles.css" />
+    <Content Include="Content\fSelect.css" />
     <Content Include="Content\img\login.png" />
     <Content Include="Content\img\undraw_posting_photo.svg" />
     <Content Include="Content\plugins\blitzer\jquery-ui.css" />
@@ -484,6 +493,7 @@
     <Content Include="Imports\Samples\EmployeeCompliant\EmployeeCompliant.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\fSelect.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -2389,6 +2399,8 @@
     <Content Include="Views\Shared\_ComplaintDueContent.cshtml" />
     <Content Include="Views\Shared\_ComplaintOverDue.cshtml" />
     <Content Include="Views\Shared\_ComplaintOverDueContent.cshtml" />
+    <Content Include="Views\Compliant\ComplaintThree_Index.cshtml" />
+    <Content Include="Views\Compliant\ComplaintTwo_Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

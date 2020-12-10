@@ -131,6 +131,146 @@ namespace ComplaintManagement.Repository
             }
         }
 
+        public UserMasterVM AddOrUpdateSaveCommittee(UserMasterVM EmployeeComplaintVM,int CommitteUserid)
+        {
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
+                    {
+                        this.db.Database.CommandTimeout = 180;
+                        try
+                        {
+                            CommitteeRole commitRole = new CommitteeRole();
+                            var EmployeeComplaint = db.CommitteeRoles.FirstOrDefault(p => p.Id == EmployeeComplaintVM.Id);
+                            int? Id = EmployeeComplaintVM.Id;
+
+                            commitRole.IsActive = true;
+                            commitRole.CreatedDate = DateTime.UtcNow;
+                            //EmployeeComplaint = Mapper.Map<CommitteeRole, CommitteeRole>(EmployeeComplaintVM);
+                            commitRole.Userid = Id;
+                            commitRole.Status = 1; //committee save
+                            commitRole.ComplaintId = 1;
+                            commitRole.InvolvedUsersId = EmployeeComplaintVM.InvolvedUsersId;
+                            commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
+                            commitRole.CommitteeUserId = CommitteUserid;
+                            commitRole.Remark = EmployeeComplaintVM.RemarkCommittee;
+                            db.CommitteeRoles.Add(commitRole);
+                            db.SaveChanges();
+                            dbContextTransaction.Commit();
+
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            if (!string.IsNullOrEmpty(EmployeeComplaintVM.AttachmentsCommittee))
+                            {
+                                foreach (string file in EmployeeComplaintVM.Attachments.Split(','))
+                                {
+                                    if (!string.IsNullOrEmpty(file))
+                                    {
+                                        string filePath = "~/Documents/" + file;
+
+                                        if (File.Exists(HttpContext.Current.Server.MapPath(filePath)))
+                                        {
+                                            File.Delete(HttpContext.Current.Server.MapPath(filePath));
+                                        }
+
+                                    }
+                                }
+                            }
+                            throw new Exception(ex.Message.ToString());
+                        }
+                    }
+                }
+                return new UserMasterVM();
+            }
+            catch (DbEntityValidationException dve)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
+                throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
+        public UserMasterVM AddOrUpdateBackToBUHCCommittee(UserMasterVM EmployeeComplaintVM, int CommitteUserid)
+        {
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
+                    {
+                        this.db.Database.CommandTimeout = 180;
+                        try
+                        {
+                            CommitteeRole commitRole = new CommitteeRole();
+                            var EmployeeComplaint = db.CommitteeRoles.FirstOrDefault(p => p.Id == EmployeeComplaintVM.Id);
+                            int? Id = EmployeeComplaintVM.Id;
+
+                            commitRole.IsActive = true;
+                            commitRole.CreatedDate = DateTime.UtcNow;
+                            commitRole.Userid = Id;
+                            commitRole.Status = 2; //committee Back to buhc
+                            commitRole.ComplaintId = 1;
+                            commitRole.InvolvedUsersId = EmployeeComplaintVM.InvolvedUsersId;
+                            commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
+                            commitRole.CommitteeUserId = CommitteUserid;
+                            commitRole.Remark = EmployeeComplaintVM.RemarkCommittee;
+                            db.CommitteeRoles.Add(commitRole);
+                            db.SaveChanges();
+                            dbContextTransaction.Commit();
+
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            if (!string.IsNullOrEmpty(EmployeeComplaintVM.AttachmentsCommittee))
+                            {
+                                foreach (string file in EmployeeComplaintVM.Attachments.Split(','))
+                                {
+                                    if (!string.IsNullOrEmpty(file))
+                                    {
+                                        string filePath = "~/Documents/" + file;
+
+                                        if (File.Exists(HttpContext.Current.Server.MapPath(filePath)))
+                                        {
+                                            File.Delete(HttpContext.Current.Server.MapPath(filePath));
+                                        }
+
+                                    }
+                                }
+                            }
+                            throw new Exception(ex.Message.ToString());
+                        }
+                    }
+                }
+                return new UserMasterVM();
+            }
+            catch (DbEntityValidationException dve)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
+                throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+        }
         public List<EmployeeCompliantMasterVM> GetAll()
         {
             List<EmployeeComplaintMaster> EmployeeComplaint = new List<EmployeeComplaintMaster>();
@@ -261,6 +401,27 @@ namespace ComplaintManagement.Repository
             return Mapper.Map<EmployeeComplaintMaster, EmployeeCompliantMasterVM>(EmployeeComplaint);
         }
 
+        //public HrRoleUserMasterVM GetHrRole(int id)
+        //{
+        //    HrRoleUserMasterVM hrRoleUserMasterVM = new HrRoleUserMasterVM();
+        //    try
+        //    {
+        //        hrRoleUserMasterVM = db.HR_Role.FirstOrDefault(i.IsActive && i => i.HRUserId == id );
+        //        if (hrRoleUserMasterVM == null)
+        //        {
+        //            throw new Exception(Messages.BAD_DATA);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+        //        throw new Exception(ex.Message.ToString());
+        //    }
+        //    return Mapper.Map<HR_Role, HrRoleUserMasterVM>(hrRoleUserMasterVM);
+        //}
+
+
+
         public bool Delete(int id)
         {
             var data = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == id);
@@ -359,7 +520,7 @@ namespace ComplaintManagement.Repository
                                 {
                                     var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
                                     roleMasterLineItem.ForEach(x => rolesId = string.Join(",", x.Id));
-                                    roleMasterLineItem.ForEach(x => assignedUsersroleId= string.Join(",", x.UserId));
+                                    roleMasterLineItem.ForEach(x => assignedUsersroleId = string.Join(",", x.UserId));
                                     employeeComplaintWorkFlowDto.ActionType = Messages.SUBMITTED;
                                     employeeComplaintWorkFlowDto.ComplaintId = Complaintdata.Id;
                                     employeeComplaintWorkFlowDto.Remarks = Complaintdata.Remark;
@@ -374,12 +535,12 @@ namespace ComplaintManagement.Repository
 
                             employeeComplaint.IsSubmitted = true;
                             employeeComplaint.ComplaintStatus = Messages.SUBMITTED;
-                          
+
                             new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Complaintdata.ComplaintStatus, db);
                             db.SaveChanges();
-                            if (employeeComplaintWorkFlowDto!=null && employeeComplaintWorkFlowDto.ComplaintId > 0)
+                            if (employeeComplaintWorkFlowDto != null && employeeComplaintWorkFlowDto.ComplaintId > 0)
                             {
-                                new EmployeeWorkFlowRepository().AddOrUpdate(employeeComplaintWorkFlowDto,db);
+                                new EmployeeWorkFlowRepository().AddOrUpdate(employeeComplaintWorkFlowDto, db);
                             }
                             dbContextTransaction.Commit();
                         }
@@ -561,5 +722,118 @@ namespace ComplaintManagement.Repository
             }
             return count;
         }
+
+        //Aman work
+
+        public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM EmployeeComplaintVM, String Id, int Hrid, string UserInvolved, int Status)
+        {
+            try
+            {
+                //Get the current claims principal
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                int ids = Convert.ToInt32(Id);
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
+                    {
+                        this.db.Database.CommandTimeout = 180;
+                        try
+                        {
+                            var EmployeeComplaint = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
+                            if (Id != null)
+                            {
+                                if (Status == 1)
+                                {
+                                    HR_Role roles = new HR_Role();
+                                    roles.IsActive = true;
+                                    roles.CreatedDate = DateTime.UtcNow;
+                                    roles.ComplentId = ids;
+                                    roles.UserId = EmployeeComplaintVM.UserId;
+                                    roles.HRUserId = Hrid;
+                                    roles.InvolvedUsersId = UserInvolved;
+                                    roles.Attachement = EmployeeComplaintVM.Attachments1;
+                                    roles.Status = "SaveHRComplaint";
+
+                                    db.HR_Role.Add(roles);
+                                    db.SaveChanges();
+                                }
+                                else if (Status == 2)
+                                {
+                                    HR_Role roles = new HR_Role();
+                                    roles.IsActive = true;
+                                    roles.CreatedDate = DateTime.UtcNow;
+                                    roles.ComplentId = ids;
+                                    roles.UserId = EmployeeComplaintVM.UserId;
+                                    roles.HRUserId = Hrid;
+                                    roles.InvolvedUsersId = UserInvolved;
+                                    roles.Attachement = EmployeeComplaintVM.Attachments1;
+                                    roles.Status = "PushHRComplaint";
+                                    db.HR_Role.Add(roles);
+                                    db.SaveChanges();
+
+                                    EmployeeComplaintWorkFlowVM VM = new EmployeeComplaintWorkFlowVM();
+                                    VM.ActionType = "Committe";
+                                    db.SaveChanges();
+
+                                    EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
+                                    hrs.CreatedBy = EmployeeComplaint.UserId;
+                                    hrs.CreatedDate = DateTime.UtcNow;
+                                    hrs.IsActive = true;
+                                    hrs.Remarks =
+                                    hrs.ActionType = "Committed";
+                                    hrs.UserType = "Normal";
+                                    hrs.ComplaintId = ids;
+                                    db.SaveChanges();
+
+                                }
+                                //EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
+                                //if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Added; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
+                                //db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
+                                //new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
+                                //db.SaveChanges();
+                                dbContextTransaction.Commit();
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            if (!string.IsNullOrEmpty(EmployeeComplaintVM.Attachments))
+                            {
+                                foreach (string file in EmployeeComplaintVM.Attachments.Split(','))
+                                {
+                                    if (!string.IsNullOrEmpty(file))
+                                    {
+                                        string filePath = "~/Documents/" + file;
+
+                                        if (File.Exists(HttpContext.Current.Server.MapPath(filePath)))
+                                        {
+                                            File.Delete(HttpContext.Current.Server.MapPath(filePath));
+                                        }
+
+                                    }
+                                }
+                            }
+                            throw new Exception(ex.Message.ToString());
+                        }
+                    }
+                }
+                return new EmployeeCompliantMasterVM();
+            }
+            catch (DbEntityValidationException dve)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
+                throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
+
     }
 }

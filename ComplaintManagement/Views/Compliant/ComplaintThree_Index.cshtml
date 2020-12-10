@@ -1,0 +1,286 @@
+﻿@using ComplaintManagement.Helpers
+@{
+    var user = ""; var userImage = string.Empty;
+    int userId = 0;
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+    if (claimsIdentity != null)
+    {
+        var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Name);
+        var cI = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.UserData);
+        var userIDInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Sid);
+
+        if (c != null && cI != null && userIDInfo != null)
+        {
+
+            user = c.Value.ToString();
+            userImage = cI.Value.ToString();
+            userId = Convert.ToInt32(userIDInfo.Value.ToString());
+        }
+    }
+}
+@{
+    ViewBag.Title = "ComplaintThree_Index";
+}
+
+<div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-header topbar mb-4 static-top shadow">
+            <!-- Sidebar Toggle (Topbar) -->
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                <i class="fa fa-bars"></i>
+            </button>
+            <h4 class="text-white m-0">Complaint Information</h4>
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <form class="d-none d-sm-inline-block form-inline my-3 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" onkeypress="return searchKeyPress(event);" id="txtSearch" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                            <i class="fas fa-search fa-sm" id="searchIcon"></i>
+                        </div>
+                    </form>
+                </li>
+                <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                <li class="nav-item dropdown no-arrow d-sm-none">
+                    <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <!-- Dropdown - Messages -->
+                    <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                        <form class="form-inline mr-auto w-100 navbar-search">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                <i class="fas fa-search fa-sm" id="searchIcon"></i>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+
+                <!-- Nav Item - Alerts -->
+                <li class="nav-item dropdown no-arrow mx-1">
+                    <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bell fa-fw text-white"></i>
+                        <!-- Counter - Alerts -->
+                        <span class="badge badge-danger badge-counter">3+</span>
+                    </a>
+                    <!-- Dropdown - Alerts -->
+                    <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                        <h6 class="dropdown-header">
+                            Alerts Center
+                        </h6>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-primary">
+                                    <i class="fas fa-file-alt text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">December 12, 2019</div>
+                                <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                            </div>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-success">
+                                    <i class="fas fa-donate text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">December 7, 2019</div>
+                                $290.29 has been deposited into your account!
+                            </div>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-warning">
+                                    <i class="fas fa-exclamation-triangle text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">December 2, 2019</div>
+                                Spending Alert: We've noticed unusually high spending for your account.
+                            </div>
+                        </a>
+                        <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                    </div>
+                </li>
+
+                <div class="topbar-divider d-none d-sm-block"></div>
+
+                <!-- Nav Item - User Information -->
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="mr-2 d-none d-lg-inline text-white small">@user</span>
+                        <img class="img-profile rounded-circle" src="@userImage">
+                    </a>
+                    <!-- Dropdown - User Information -->
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="/UserMaster/Edit?id=@CryptoEngineUtils.Encrypt(Convert.ToString(userId),true)&isView=false">
+                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+
+            </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+            <div class="preloader"></div>
+            <div class="page-title">
+                <h2 class="text-black">Employee Information</h2>
+            </div>
+            <div class="card mb-4 rounded-0 border-0">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
+                        </div>
+                        <div class="col-lg-2">
+                            <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
+                        </div>
+                        <div class="col-lg-3">
+                            @{
+                                List<SelectListItem> listCategory = new List<SelectListItem>();
+                                listCategory = new List<SelectListItem>();
+                                listCategory.Add(new SelectListItem
+                                {
+                                    Text = "Select Category",
+                                    Value = ""
+                                });
+                                listCategory.AddRange(ViewBag.lstCategories);
+                            }
+                            @Html.DropDownList("CategoryId", (List<SelectListItem>)listCategory, new { @class = "form-control required" })
+                        </div>
+                        <div class="col-lg-3">
+                            @{
+                                List<SelectListItem> listSubCategoryId = new List<SelectListItem>();
+                                listSubCategoryId = new List<SelectListItem>();
+                                listSubCategoryId.Add(new SelectListItem
+                                {
+                                    Text = "Select SubCategory",
+                                    Value = ""
+                                });
+                                listSubCategoryId.AddRange(ViewBag.lstSubCategories);
+                            }
+
+                            @Html.DropDownList("SubCategoryId", (List<SelectListItem>)listSubCategoryId, new { @class = "form-control required" })
+                        </div>
+                        <div class="col-lg-2">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                    <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab Bar -->
+            <div class="user-list">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card mb-4 rounded-0 border-0">
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table f-14" id="myTable">
+                                        @if (ViewBag.lstEmployeeComplaint != null)
+                                        {
+                                            if (ViewBag.lstEmployeeComplaint.Count > 0)
+                                            {
+                                                <thead>
+                                                    <tr>
+                                                        <td>LOS</td>
+                                                        <td>Category</td>
+                                                        <td>Sub-Category</td>
+                                                        <td>Created By</td>
+                                                        <td>Created On</td>
+                                                        <td class="text-center">Action</td>
+                                                    </tr>
+                                                </thead>
+                                            }
+                                        }
+                                        <tbody>
+                                            @if (ViewBag.lstEmployeeComplaint != null)
+                                            {
+                                                if (ViewBag.lstEmployeeComplaint.Count > 0)
+                                                {
+                                                    foreach (var item in ViewBag.lstEmployeeComplaint)
+                                                    {
+                                                        <tr>
+                                                            <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)">@item.LOSName</strong></td>
+                                                            <td class="text-black"><strong>@item.Category</strong></td>
+                                                            <td class="text-black"><strong>@item.SubCategory</strong></td>
+                                                            <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                                                            <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                                                            <td class="text-center text-nowrap">
+                                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td colspan="5"><label>No data found.</label></td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="5"><label>No data found.</label></td>
+                                                </tr>
+                                            }
+                                    </table>
+                                </div>
+                                <br />
+                                <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        @for (int i = 1; i <= ViewBag.PageCount; i++)
+                                        {
+                                            <td>
+                                                <div class="pagination">
+                                                    @if (i != ViewBag.CurrentPageIndex)
+                                                    {
+                                                        <a href="javascript:PagerClick(@i);">@i</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@i</span>
+                                                    }
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                </table>
+                                <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+</div>
+@Scripts.Render("~/Assets/Common")
+@Scripts.Render("~/Assets/EditEmployeeCompliant_ThreeMasters")
+
+
+
+
+
+
