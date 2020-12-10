@@ -180,7 +180,6 @@ submitComplaint = function (id) {
         }
     });
 }
-<<<<<<< HEAD
 addAttachement1 = function () {
     if (attachementfiles1 && attachementfiles1.length > 0) {
         var lastFile = attachementfiles1[attachementfiles1.length - 1];
@@ -210,8 +209,6 @@ function addAttachementUploadedFile1() {
         reader.readAsDataURL(file);
     }
 }
-=======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
 
 function SubmitComplaintHr() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
@@ -259,7 +256,6 @@ function SubmitComplaintHr() {
 
     if (retval) {
         var data = {
-<<<<<<< HEAD
 
             DueDate: $("#DueDate").val(),
             CategoryId: $("#CategoryId").val(),
@@ -332,39 +328,7 @@ function PushComplaintHr() {
     if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
         retval = false;
         $('#Remark').addClass("adderror");
-        funToastr(false, "Remarks cannot contain special characters.");
     }
-    else {
-        if (retval) {
-            $('#Remark').removeClass("adderror");
-        }
-    }
-    var str1 = $('#Remarked').val();
-    if (/^[a-zA-Z0-9- ]*$/.test(str1) == false) {
-        retval = false;
-        $('#Remarked').addClass("adderror");
-        funToastr(false, "Remarks cannot contain special characters.");
-    }
-    else {
-        if (retval) {
-            $('#Remarked').removeClass("adderror");
-        }
-    }
-
-    if (retval) {
-        var data = {
-
-=======
-            
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
-            DueDate: $("#DueDate").val(),
-            CategoryId: $("#CategoryId").val(),
-            SubCategoryId: $("#SubCategoryId").val(),
-            Remark: $("#Remark").val(),
-            UserId: $("#UserId").val(),
-            ComplaintStatus: $("#ComplaintStatus").val()
-        }
-<<<<<<< HEAD
 
         var Id = $("#Id").val();
         var UserInvolved = $(".test").val();
@@ -373,26 +337,22 @@ function PushComplaintHr() {
         for (var i = 0; i < attachementfiles1.length; i++) {
             if (attachementfiles1[i].file.IsDeleted == false) {
                 formData.append(attachementfiles1[i].file.name, attachementfiles1[i].file);
-=======
+
         var Id = $("#Id").val();
         var formData = new FormData();
 
         for (var i = 0; i < attachementfiles.length; i++) {
             if (attachementfiles[i].file.IsDeleted == false) {
                 formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
             }
         }
 
         data = JSON.stringify(data);
         formData.append("EmpCompliantParams", data);
         formData.append("Id", Id);
-<<<<<<< HEAD
         formData.append("UserInvolved", UserInvolved);
         formData.append("Status", 2);
 
-=======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
 
         StartProcess();
         $.ajax({

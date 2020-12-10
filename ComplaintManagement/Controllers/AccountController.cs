@@ -52,7 +52,7 @@ namespace ComplaintManagement.Controllers
                 var user = new UserMastersRepository().Login(LoginVM);
                 Session["EmployeeId"] = user.EmployeeId;
                 Session["id"] = user.Id;
-<<<<<<< HEAD
+
                 var CommitteeMemberData= (from u in db.CommitteeMasters
                                           where u.IsActive
                                           select u).FirstOrDefault();
@@ -62,8 +62,7 @@ namespace ComplaintManagement.Controllers
                     user.Type = Messages.Committee;
                 }
 
-=======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
+
                 SignInUser(user.WorkEmail, user.Id.ToString(), user.EmployeeName, user.ImagePath, user.Type, false);
                 return new ReplyFormat().Success(Messages.SUCCESS, null);
             }

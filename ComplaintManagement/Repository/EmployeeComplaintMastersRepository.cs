@@ -723,14 +723,10 @@ namespace ComplaintManagement.Repository
             return count;
         }
 
-<<<<<<< HEAD
+
         //Aman work
 
         public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM EmployeeComplaintVM, String Id, int Hrid, string UserInvolved, int Status)
-=======
-
-        public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM EmployeeComplaintVM,String Id,int Hrid)
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
         {
             try
             {
@@ -749,7 +745,7 @@ namespace ComplaintManagement.Repository
                             var EmployeeComplaint = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
                             if (Id != null)
                             {
-<<<<<<< HEAD
+
                                 if (Status == 1)
                                 {
                                     HR_Role roles = new HR_Role();
@@ -794,28 +790,10 @@ namespace ComplaintManagement.Repository
                                     db.SaveChanges();
 
                                 }
-=======
-                                HR_Role roles = new HR_Role();
-                                roles.IsActive = true;
-                                roles.CreatedDate = DateTime.UtcNow;
-                                roles.ComplentId = ids;
-                                roles.UserId = EmployeeComplaintVM.UserId;
-                                roles.HRUserId = Hrid;
-                                roles.Status = "SaveHRComplaint";
-                                db.HR_Role.Add(roles);
-                                db.SaveChanges();
-
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
-                                //EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
-                                //if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Added; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
-                                //db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
-                                //new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
-                                //db.SaveChanges();
                                 dbContextTransaction.Commit();
                             }
-<<<<<<< HEAD
 
-=======
+
                             else
                             {
                                 EmployeeComplaintVM.IsActive = true;
@@ -854,7 +832,6 @@ namespace ComplaintManagement.Repository
 
                                 dbContextTransaction.Commit();
                             }
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
                         }
                         catch (Exception ex)
                         {
@@ -892,10 +869,6 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
     }
 }

@@ -57,10 +57,6 @@ namespace ComplaintManagement.ViewModel
         public string UpdatedByName { get; set; }
         public int UserMasterId { get; set; }
         public string UserId { get; set; }
-<<<<<<< HEAD
-
-=======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
         public System.DateTime CreatedDate { get; set; }
         [DisplayName("Category")]
         public int CategoryId { get; set; }

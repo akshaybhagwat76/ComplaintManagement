@@ -224,13 +224,8 @@ namespace ComplaintManagement.Repository
                                 {
                                     if (Convert.ToInt32(userId) == Convert.ToInt32(sid))
                                     {
-<<<<<<< HEAD
                                         Dashboard.DueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate >= DateTime.Now && Convert.ToInt32(x.AssignedUserRoles) == Convert.ToInt32(sid)).Count();
                                         Dashboard.OverDueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED &&  x.DueDate <= DateTime.UtcNow && Convert.ToInt32(x.AssignedUserRoles) == Convert.ToInt32(sid)).Count();
-=======
-                                        Dashboard.DueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate >= DateTime.Now).Count();
-                                        Dashboard.OverDueComplaints = employeeComplaintWorkFlowList.Where(x => x.DueDate >= DateTime.UtcNow).Count();
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
                                     }
                                 }
                             }

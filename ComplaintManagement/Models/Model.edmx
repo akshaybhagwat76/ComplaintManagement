@@ -784,10 +784,7 @@
             <End Role="EmployeeComplaintWorkFlow" EntitySet="EmployeeComplaintWorkFlows" />
           </AssociationSet>
           <EntitySet Name="HR_Role" EntityType="DB_A6A061_complaintuserModel.HR_Role" />
-<<<<<<< HEAD
           <EntitySet Name="CommitteeRoles" EntityType="DB_A6A061_complaintuserModel.CommitteeRole" />
-=======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
         </EntityContainer>
         <EntityType Name="CategoryMaster">
           <Key>
@@ -1428,7 +1425,6 @@
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="HRUserId" Type="Int32" />
         </EntityType>
-<<<<<<< HEAD
         <EntityType Name="CommitteeRole">
           <Key>
             <PropertyRef Name="Id" />
@@ -1445,8 +1441,6 @@
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="CommitteeUserId" Type="Int32" />
         </EntityType>
-=======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1997,7 +1991,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-<<<<<<< HEAD
           <EntitySetMapping Name="CommitteeRoles">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CommitteeRole">
               <MappingFragment StoreEntitySet="CommitteeRole">
@@ -2015,8 +2008,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-=======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

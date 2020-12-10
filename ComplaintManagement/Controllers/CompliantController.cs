@@ -53,12 +53,9 @@ namespace ComplaintManagement.Controllers
             UserVM.ComplaintStatus = Messages.Opened; UserVM.Id = UserVM.CompentencyId = 0; UserVM.DateOfJoining = DateTime.UtcNow.AddDays(5);
             return View(UserVM);
         }
-<<<<<<< HEAD
-        public ActionResult Edit(string id, bool isView, string isRedirect)
-=======
+
      
         public ActionResult Edit(string id, bool isView,string isRedirect)
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
         {
             EmployeeCompliantMasterVM EmployeeCompliant_oneVM = new EmployeeCompliantMasterVM();
             try
@@ -67,11 +64,8 @@ namespace ComplaintManagement.Controllers
                 {
                     id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
                     int ids = Convert.ToInt32(id);
-<<<<<<< HEAD
                     EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(Convert.ToInt32(id));
-=======
-                    EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(ids);
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
+                    //EmployeeCompliant_oneVM = new EmployeeComplaintMastersRepository().Get(ids);
                     UserMasterVM userMasterVM = new UserMastersRepository().Get(EmployeeCompliant_oneVM.UserId);
                     ViewBag.Competency = userMasterVM.CompentencyId > 0 ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId) != null ? new CompetencyMastersRepository().Get(userMasterVM.CompentencyId).CompetencyName : Messages.NotAvailable : Messages.NotAvailable;
                     if (EmployeeCompliant_oneVM != null)
@@ -116,7 +110,6 @@ namespace ComplaintManagement.Controllers
                 
                     ViewBag.ViewState = isView;
                     ViewBag.PageType = !isView ? "Edit" : "View";
-<<<<<<< HEAD
                     if (isRedirect == "2")
                     {
                         ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == ids).ToList();
@@ -131,20 +124,7 @@ namespace ComplaintManagement.Controllers
                     else
                     {
                         return View("Compliant_one", userMasterVM);
-=======
-                    if(isRedirect!="2")
-                    {
-                    
-                        return View("Compliant_one", userMasterVM);
 
-                    }
-                    else
-                    {
-                        ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId ==ids).ToList();
-                        ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
-
-                        return View("Compliant_two", userMasterVM);
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
                     }
                 }
             }
@@ -328,10 +308,6 @@ namespace ComplaintManagement.Controllers
         {
 
             ViewBag.NavbarTitle = "BHU Approval";
-<<<<<<< HEAD
-=======
-
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
             var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
@@ -349,11 +325,10 @@ namespace ComplaintManagement.Controllers
 
             ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
             ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
-<<<<<<< HEAD
             ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(sid)).ToList();
-=======
+
             ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId ==Convert.ToInt32(sid)).ToList();
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
+
             ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
             if (!string.IsNullOrEmpty(UserVM.ImagePath))
             {
@@ -365,11 +340,6 @@ namespace ComplaintManagement.Controllers
             ViewBag.NavbarTitle = "Complaint Information";
             UserVM.ComplaintStatus = Messages.Opened; UserVM.Id = UserVM.CompentencyId = 0; UserVM.DateOfJoining = DateTime.UtcNow.AddDays(5);
             return View(UserVM);
-<<<<<<< HEAD
-          
-=======
-
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
         }
         public ActionResult Compliant_three(string id, bool isView)
         {
@@ -757,7 +727,7 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
-<<<<<<< HEAD
+
 
         [HttpGet]
         public ActionResult ComplaintThree_Index()
@@ -785,24 +755,20 @@ namespace ComplaintManagement.Controllers
         }
 
         //Aman work
-        public ActionResult AddOrEmployeeCompliantHR(string[] Attachments1, string EmpCompliantParams, String Id, string UserInvolved, int Status)
-=======
-        //9/12/2020
-
         [HttpPost]
-        public ActionResult AddOrEmployeeCompliantHR(string EmpCompliantParams,String Id)
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
+        public ActionResult AddOrEmployeeCompliantHR(string[] Attachments1, string EmpCompliantParams, String Id, string UserInvolved, int Status)
+
+        
+
+        
+        
         {
             List<string> filesName = new List<string>();
             try
             {
                 string ids = CryptoEngineUtils.Decrypt(Id.Replace(" ", "+"), true);
                 //e id--user master(hr)
-<<<<<<< HEAD
                 var Hrid = Session["id"];
-=======
-                   var Hrid= Session["id"];
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
                 if (Request.Files.Count > 0)
                 {
                     var files = Request.Files;
@@ -834,17 +800,11 @@ namespace ComplaintManagement.Controllers
                 {
                     var converter = new ExpandoObjectConverter();
                     dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(EmpCompliantParams, converter);
-<<<<<<< HEAD
+
 
                     var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliantMasterVM>(EmpCompliantParams);
                     EmployeeComplaintDto.Attachments1 = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
                     var User = new EmployeeComplaintMastersRepository().SaveHRComplaint(EmployeeComplaintDto, ids, Convert.ToInt32(Hrid), UserInvolved, Status);
-=======
-                 
-                    var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliantMasterVM>(EmpCompliantParams);
-                    EmployeeComplaintDto.Attachments = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
-                    var User = new EmployeeComplaintMastersRepository().SaveHRComplaint(EmployeeComplaintDto,ids,Convert.ToInt32(Hrid));
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
                     return new ReplyFormat().Success(Messages.SUCCESS, User);
                 }
                 else
@@ -874,10 +834,6 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
     }
 }
