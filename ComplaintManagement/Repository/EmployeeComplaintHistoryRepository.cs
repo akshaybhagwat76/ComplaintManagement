@@ -247,7 +247,10 @@ namespace ComplaintManagement.Repository
                                     var isHrUserAssigned = employeeComplaintWorkFlowDto.AssignedUserRoles.Split(',').Where(i => i.ToString() == sid).Count() > 0;
 
 
+<<<<<<< HEAD
                                     //if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.SUBMITTED.ToLower() && employeeComplaintWorkFlowDto.DueDate <= DateTime.UtcNow && isHrUserAssigned)
+=======
+>>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
                                     if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.SUBMITTED.ToLower() && employeeComplaintWorkFlowDto.DueDate >= DateTime.UtcNow && isHrUserAssigned)
                                     {
                                         employeeComplaintWorkFlowDto.Id = employeeComplaintWorkFlowDto.Id;

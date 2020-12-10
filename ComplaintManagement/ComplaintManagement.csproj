@@ -400,6 +400,7 @@
     <Content Include="Assets\EditSubSBUMasters.js" />
     <Content Include="Assets\EditUserMasters.js" />
     <Content Include="Assets\EmployeeComplaint.js" />
+    <Content Include="Assets\EmployeeComplaint_TwoMaster.js" />
     <Content Include="Assets\EntityMasters.js" />
     <Content Include="Assets\LocationMasters.js" />
     <Content Include="Assets\Login.js" />
