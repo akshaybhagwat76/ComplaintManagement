@@ -3,6 +3,7 @@
     var user = ""; var userImage = string.Empty;
     int userId = 0;
     var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+    ViewBag.Title = "Categories";
 
     if (claimsIdentity != null)
     {
@@ -18,9 +19,6 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
-}
-@{
-    ViewBag.Title = "Index";
 }
 
 <div id="content-wrapper" class="d-flex flex-column">

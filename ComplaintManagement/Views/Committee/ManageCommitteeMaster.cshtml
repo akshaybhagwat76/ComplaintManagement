@@ -1,4 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.CommitteeMasterVM
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -18,10 +19,7 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
-}
-@model ComplaintManagement.ViewModel.CommitteeMasterVM
-@{
-    ViewBag.Title = "ManageCommitteeMaster";
+    ViewBag.Title = "Manage Committee";
 }
 
 @Html.Hidden("pageState", (object)ViewBag.ViewState)

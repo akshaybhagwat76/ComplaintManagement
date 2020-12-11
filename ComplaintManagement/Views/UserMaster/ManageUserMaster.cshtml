@@ -1,5 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
-
+@model ComplaintManagement.ViewModel.UserMasterVM
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -19,14 +19,10 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
-}
-@model ComplaintManagement.ViewModel.UserMasterVM
-@{
-    ViewBag.Title = "ManageUserMaster";
+    ViewBag.Title = "Manage User";
     dynamic SBUdata = Json.Encode(ViewBag.lstSBU);
     dynamic SubSBUdata = Json.Encode(ViewBag.lstSubSBU);
     dynamic Competency = Json.Encode(ViewBag.lstCompetency);
-
 }
 
 @Html.Hidden("pageState", (object)ViewBag.ViewState)

@@ -20,12 +20,9 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
-}
-@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "User master's";
     dynamic data = Json.Decode(ViewBag.lstUser);
 }
-
 <!-- Page Wrapper -->
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">

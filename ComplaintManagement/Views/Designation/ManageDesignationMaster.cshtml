@@ -1,4 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.DesignationMasterVM
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -18,10 +19,7 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
-}
-@model ComplaintManagement.ViewModel.DesignationMasterVM
-@{
-    ViewBag.Title = "ManageDesignationMaster";
+    ViewBag.Title = "Manage Designation";
 }
 @Html.Hidden("pageState", (object)ViewBag.ViewState)
 <!-- Content Wrapper -->

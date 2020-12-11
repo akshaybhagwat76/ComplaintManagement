@@ -1,4 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.SBUMasterVM
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -18,12 +19,8 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
+    ViewBag.Title = "Manage SBU";
 }
-@model ComplaintManagement.ViewModel.SBUMasterVM
-@{
-    ViewBag.Title = "ManageSBUMaster";
-}
-
 <!-- Content Wrapper -->
 @Html.Hidden("pageState", (object)ViewBag.ViewState)
 <div id="content-wrapper" class="d-flex flex-column">

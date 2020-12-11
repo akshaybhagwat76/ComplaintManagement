@@ -290,7 +290,7 @@ namespace ComplaintManagement.Controllers
 
                     CategoryMasterVM categoryVM = new CategoryMastersRepository().Get(Convert.ToInt32(id));
                     ViewBag.ViewState = isView;
-                    ViewBag.PageType = !isView ? "Edit" : "View";
+                    ViewBag.PageType = !isView ? "Edit Category" : "View";
                     return View("ManageCategoryMaster", categoryVM);
                 }
             }

@@ -1,4 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.CompetencyMasterVM
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -18,12 +19,8 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
+    ViewBag.Title = "Manage Competency";
 }
-@model ComplaintManagement.ViewModel.CompetencyMasterVM
-@{
-    ViewBag.Title = "ManageCompetencyMaster";
-}
-
 @Html.Hidden("pageState", (object)ViewBag.ViewState)
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
