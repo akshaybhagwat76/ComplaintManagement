@@ -11,7 +11,7 @@
     @Html.Hidden("UserId", Model.CompentencyId)
     @Html.Hidden("Id", Model.Id)
     @Html.Hidden("ComplaintStatus", Model.ComplaintStatus)
-    @Html.Hidden("DueDate", Model.DateOfJoining)
+    @Html.Hidden("DueDate", Model.DateOfJoining.GetValueOrDefault().ToString("MM/dd/yyyy"))
     <!-- Main Content -->
     <div id="content">
         <!-- Topbar -->

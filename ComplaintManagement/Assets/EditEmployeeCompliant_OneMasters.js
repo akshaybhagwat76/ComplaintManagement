@@ -160,25 +160,103 @@ function addAttachementUploadedFile() {
 }
 
 submitComplaint = function (id) {
-    StartProcess();
-    $.ajax({
-        type: "GET",
-        url: "/Compliant/SubmitComplaint",
-        data: { id: id },
-        success: function (response) {
-            StopProcess();
-            if (response.status === "Fail") {
-                $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+    if ($("#Id").val() !== "0") {
+        StartProcess();
+        $.ajax({
+            type: "GET",
+            url: "/Compliant/SubmitComplaint",
+            data: { id: id },
+            success: function (response) {
+                StopProcess();
+                if (response.status === "Fail") {
+                    $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+                }
+                else {
+                    $("#btnSave").addClass("disabled-div");
+                    $("#lblError").removeClass("success").removeClass("adderror").addClass("success").text(response.data).show();
+                }
+            },
+            error: function (error) {
+                funToastr(false, error.statusText);
+            }
+        });
+    }
+    else {
+        $("#lblError").removeClass("success").removeClass("adderror").text('');
+        var retval = true;
+        $("#myForm .required").each(function () {
+            if (!$(this).val()) {
+                var $label = $("<label class='adderror'>").text('This field is required.');
+                if ($(this).parent().find("label").length == 1) {
+                    $(this).parent().append($label);
+
+                    $(this).addClass("adderror");
+                }
+                retval = false;
             }
             else {
-                $("#btnSave").addClass("disabled-div");
-                $("#lblError").removeClass("success").removeClass("adderror").addClass("success").text(response.data).show();
+                if ($(this).parent().find("label").length > 1) {
+                    $(this).parent().find("label:eq(1)").remove();
+                    $(this).removeClass("adderror");
+                }
             }
-        },
-        error: function (error) {
-            funToastr(false, error.statusText);
+        });
+
+        var str = $('#Remark').val();
+        if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
+            retval = false;
+            $('#Remark').addClass("adderror");
+            funToastr(false, "Remarks cannot contain special characters.");
         }
-    });
+        else {
+            if (retval) {
+                $('#Remark').removeClass("adderror");
+            }
+        }
+
+        if (retval) {
+            var data = {
+                Id: $("#Id").val(),
+                DueDate: $("#DueDate").val(),
+                CategoryId: $("#CategoryId").val(),
+                SubCategoryId: $("#SubCategoryId").val(),
+                Remark: $("#Remark").val(),
+                UserId: $("#UserId").val(),
+                ComplaintStatus: "Submitted"
+            }
+            var formData = new FormData();
+
+            for (var i = 0; i < attachementfiles.length; i++) {
+                if (attachementfiles[i].file.IsDeleted == false) {
+                    formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
+                }
+            }
+
+            data = JSON.stringify(data);
+            formData.append("EmpCompliantParams", data);
+
+            StartProcess();
+            $.ajax({
+                type: "POST",
+                url: "/Compliant/AddOrUpdateEmployeeCompliant",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status == "Fail") {
+                        StopProcess();
+                        $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+                    }
+                    else {
+                        window.location.href = '/Employee/Index';
+                    }
+                },
+                error: function (error) {
+                    funToastr(false, error.statusText);
+                }
+            });
+        }
+    }
 }
 addAttachement1 = function () {
     if (attachementfiles1 && attachementfiles1.length > 0) {
@@ -330,49 +408,50 @@ function PushComplaintHr() {
         $('#Remark').addClass("adderror");
     }
 
-        var Id = $("#Id").val();
-        var UserInvolved = $(".test").val();
-        var formData = new FormData();
+    var Id = $("#Id").val();
+    var UserInvolved = $(".test").val();
+    var formData = new FormData();
 
-        for (var i = 0; i < attachementfiles1.length; i++) {
-            if (attachementfiles1[i].file.IsDeleted == false) {
-                formData.append(attachementfiles1[i].file.name, attachementfiles1[i].file);
+    for (var i = 0; i < attachementfiles1.length; i++) {
+        if (attachementfiles1[i].file.IsDeleted == false) {
+            formData.append(attachementfiles1[i].file.name, attachementfiles1[i].file);
 
-        var Id = $("#Id").val();
-        var formData = new FormData();
+            var Id = $("#Id").val();
+            var formData = new FormData();
 
-        for (var i = 0; i < attachementfiles.length; i++) {
-            if (attachementfiles[i].file.IsDeleted == false) {
-                formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
+            for (var i = 0; i < attachementfiles.length; i++) {
+                if (attachementfiles[i].file.IsDeleted == false) {
+                    formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
+                }
             }
+
+            data = JSON.stringify(data);
+            formData.append("EmpCompliantParams", data);
+            formData.append("Id", Id);
+            formData.append("UserInvolved", UserInvolved);
+            formData.append("Status", 2);
+
+
+            StartProcess();
+            $.ajax({
+                type: "POST",
+                url: "/Compliant/AddOrEmployeeCompliantHR",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status == "Fail") {
+                        StopProcess();
+                        $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+                    }
+                    else {
+                        window.location.href = '/Employee/Index';
+                    }
+                },
+                error: function (error) {
+                    funToastr(false, error.statusText);
+                }
+            });
         }
-
-        data = JSON.stringify(data);
-        formData.append("EmpCompliantParams", data);
-        formData.append("Id", Id);
-        formData.append("UserInvolved", UserInvolved);
-        formData.append("Status", 2);
-
-
-        StartProcess();
-        $.ajax({
-            type: "POST",
-            url: "/Compliant/AddOrEmployeeCompliantHR",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                if (response.status == "Fail") {
-                    StopProcess();
-                    $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
-                }
-                else {
-                    window.location.href = '/Employee/Index';
-                }
-            },
-            error: function (error) {
-                funToastr(false, error.statusText);
-            }
-        });
-    }
+    };
 }
