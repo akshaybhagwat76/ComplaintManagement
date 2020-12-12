@@ -138,9 +138,9 @@
         <div class="container-fluid">
             <div class="preloader"></div>
             <div class="page-title">
-                <h2 class="text-black">Employee Information</h2>
+                <h2 class="text-black">Complaint Information</h2>
             </div>
-            <div class="card mb-4 rounded-0 border-0">
+            <div class="card mb-4 rounded-0 border-0" style="display:none;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-2">
@@ -219,13 +219,14 @@
                                                     foreach (var item in ViewBag.lstEmployeeComplaint)
                                                     {
                                                         <tr>
-                                                            <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)">@item.LOSName</strong></td>
+                                                            <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
                                                             <td class="text-black"><strong>@item.Category</strong></td>
                                                             <td class="text-black"><strong>@item.SubCategory</strong></td>
                                                             <td class="text-black"><strong>@item.CreatedByName</strong></td>
                                                             <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
                                                             <td class="text-center text-nowrap">
-                                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                                <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-info text-danger"></i></a>
                                                             </td>
                                                         </tr>
                                                     }
@@ -278,6 +279,7 @@
 </div>
 @Scripts.Render("~/Assets/Common")
 @Scripts.Render("~/Assets/EditEmployeeCompliant_ThreeMasters")
+@Html.Partial("_GetHistory")
 
 
 

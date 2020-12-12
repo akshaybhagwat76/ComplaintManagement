@@ -34,7 +34,6 @@
                             </div>
                             <div class="text-center">
                                 <h3 class="text-black font-weight-bold f-20 mt-3">@Model.EmployeeName</h3>
-                                <p class="text-danger">PRC0053</p>
                                 <div class="row form-group mt-4">
                                     <div class="col-md-6 border-right">
                                         <p class="text-black mb-2">M</p>
@@ -130,6 +129,48 @@
             <div class="card shadow mb-4 rounded-0 border-0">
                 <!-- Card Body -->
                 <div class="card-body">
+                    <form>
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                <label>Category</label>
+                                <p class="text-black font-weight-bold m-0">@ViewBag.CategoryName</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Sub Category</label>
+                                <p class="text-black font-weight-bold m-0">@ViewBag.SubCategoryName</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Remarks</label>
+                                <p class="text-black font-weight-bold m-0">@Model.Remark</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                <label>Attachment</label>
+                                <p class="text-black font-weight-bold m-0">
+                                    
+                                    @if (!string.IsNullOrEmpty(@Model.Attachments) && @Model.Attachments.Length > 5)
+                                    {
+                                        <strong>
+                                            <a href="/Employee/DownloadAttachments?files=@Model.Attachments">
+                                                <i class="fas fa-download fa-fw"></i>
+                                            </a>
+                                        </strong>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(Messages.NotAvailable.ToString())
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                        
+                    </form>
+                </div>
+
+                <div class="card-body" style="display:none;">
                     <form id="myForm">
                         <div class="row form-group">
                             <div class="col-md-4">
@@ -218,10 +259,10 @@
                         </div>
                         <hr>
                         <!--<div class="text-right">
-                            <a href="/Account/LogOff" class="btn btn-danger btn-md">Save</a>
-                            <a href="/Account/LogOff" class="btn btn-white border btn-md">Submit</a>
-                            <a href="/Account/LogOff" class="btn btn-white border btn-md">Cancel</a>
-                        </div>-->
+                <a href="/Account/LogOff" class="btn btn-danger btn-md">Save</a>
+                <a href="/Account/LogOff" class="btn btn-white border btn-md">Submit</a>
+                <a href="/Account/LogOff" class="btn btn-white border btn-md">Cancel</a>
+            </div>-->
                     </form>
                 </div>
             </div>
@@ -235,30 +276,48 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table text-black m-0">
-
+                                    @if (ViewBag.lstComplaintHistory != null)
+                                    {
+                                        if (ViewBag.lstComplaintHistory.Count > 0)
+                                        {
+                                            <thead>
+                                                <tr>
+                                                    <td class="border-top-0">Created By</td>
+                                                    <td class="border-top-0">Created On</td>
+                                                    <td class="border-top-0">Remarks</td>
+                                                    <td class="border-top-0">Type</td>
+                                                    <td class="border-top-0">Action</td>
+                                                </tr>
+                                            </thead>
+                                        }
+                                    }
                                     <tbody>
                                         @if (ViewBag.lstComplaintHistory != null)
                                         {
-                                            foreach (var item in ViewBag.lstComplaintHistory)
+                                            if (ViewBag.lstComplaintHistory.Count > 0)
+                                            {
+                                                foreach (var item in ViewBag.lstComplaintHistory)
+                                                {
+                                                    <tr>
+                                                        <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                                                        <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                                                        <td class="text-black"><strong>@item.Remarks</strong></td>
+                                                        <td class="text-black"><strong>@item.UserType</strong></td>
+                                                        <td class="text-black"><strong>@item.ActionType</strong></td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
                                             {
                                                 <tr>
-                                                    <td>Created By</td>
-                                                    <td>Created On</td>
-                                                    <td>Comments</td>
+                                                    <td colspan="5"><label>No data found.</label></td>
                                                 </tr>
-                                                <tr>
-                                                    <th>@item.CreatedByName</th>
-                                                    <th>@item.CreatedDate.ToString("dd/MM/yyyy")</th>
-                                                    <th>@item.Remarks</th>
-                                                </tr>
-
                                             }
-
                                         }
                                         else
                                         {
                                             <tr>
-                                                <th colspan="3">No Record</th>
+                                                <td colspan="5"><label>No data found.</label></td>
                                             </tr>
                                         }
                                     </tbody>
@@ -274,8 +333,7 @@
                     <form id="myForm">
                         <div class="row form-group">
                             <div class="col-md-8">
-                                <label>Remark</label>
-                                @Html.Label("Remarked", new { @class = "requiredLabel", id = "Remarked" })
+                                @Html.Label("Remarked", new { @class = "requiredLabel", id = "Remark" })
                                 @Html.TextArea("Remarked", new { @class = "form-control required", id = "Remarked" })
                             </div>
                         </div>
@@ -298,9 +356,9 @@
                         <div class="row form-group">
                             <div class="col-md-8">
                                 <label>Case Type</label>
-                                <select class="form-control">
-                                    <option selected>Actionable</option>
-                                    <option>Non Actionable</option>
+                                <select class="form-control requiredLabel" id="CaseType">
+                                    <option value="Actionable" selected>Actionable</option>
+                                    <option value="NonActionable">Non Actionable</option>
                                 </select>
                             </div>
                         </div>
@@ -320,17 +378,13 @@
                                 <br />
                                 @Html.DropDownListFor(model => model.UserId, (List<SelectListItem>)listUser, new { @class = "form-control test required", multiple = "multiple" })
 
-                                @Html.DropDownListFor(model => model.UserId, (List<SelectListItem>)listUser, new { @class = "form-control  required" })
 
                             </div>
                         </div>
                         <div class="text-right">
                             <a href="javascript:void(0)" class="btn btn-white border btn-md" onclick="PushComplaintHr()">Push to Committee</a>
                             <a href="javascript:void(0)" id="btnSubmit" onclick="SubmitComplaintHr()" class="btn btn-danger btn-md">Save</a>
-                            <a href="/Account/LogOff" class="btn btn-white border btn-md">Push to Committee</a>
-                            <a href="javascript:void(0)" id="btnSubmit" onclick="SubmitComplaintHr()" class="btn btn-danger btn-md">Save</a>
-                            <a href="/Account/LogOff" class="btn btn-white border btn-md">Close</a>
-                            <a href="/Account/LogOff" class="btn btn-white border btn-md">Back</a>
+                            <a href="javascript:void(0)" onclick="SubmitGOBack()" class="btn btn-white border btn-md">Back</a>
                         </div>
                     </form>
                 </div>

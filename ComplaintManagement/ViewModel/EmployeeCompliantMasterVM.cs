@@ -32,6 +32,7 @@ namespace ComplaintManagement.ViewModel
         public System.DateTime DueDate { get; set; }
         public bool IsSubmitted { get; set; }
         public int HRUserId { get; set; }
+        public string CaseType { get; set; }
     }
 
 }

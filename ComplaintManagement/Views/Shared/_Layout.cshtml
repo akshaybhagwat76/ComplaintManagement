@@ -110,22 +110,26 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="/Employee/Index">Employee</a>
-                        <a class="collapse-item" href="/Compliant/Compliant_one">Compliant_one</a>
+
+                        @*<a class="collapse-item" href="/Compliant/Compliant_one">Compliant_one</a>*@
                         @{
                             if (userRole == Messages.HRUser)
                             {
-                                <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">Compliant_two</a>
+                                <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
                             }
                             else if (userRole == Messages.Committee)
                             {
-                                <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Compliant_three</a>
+                                <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint Listing</a>
                             }
                             else
                             {
-                                <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">Compliant_two</a>
-                                <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Compliant_three</a>
+                                <a class="collapse-item" href="/Employee/Index">Complaint Listing</a>
                             }
+                            @*else if (userRole != Messages.NormalUser)
+            {
+                <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
+                <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint Listing</a>
+            }*@
                         }
 
 

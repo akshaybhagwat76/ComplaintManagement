@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Compliant_one";
     string saltedId = CryptoEngineUtils.Encrypt(Convert.ToString(Model.Id), true);
+    string Id = Convert.ToString(Model.Id);
 }
 <div id="content-wrapper" class="d-flex flex-column">
     <div class="preloader"></div>
@@ -218,8 +219,8 @@
                             </div>
                         </div>
                         <div class="text-right">
-                            <a href="javascript:void(0)" id="btnSave" onclick="submitForm()" class="btn btn-danger btn-md">Save</a>
-                            <a href="javascript:void(0)" id="btnSubmit" onclick="submitComplaint('@saltedId')" class="btn btn-white border btn-md">Submit</a>
+                            <a href="javascript:void(0)" id="btnSave" onclick="submitForm('A')" class="btn btn-danger btn-md">Save</a>
+                            <a href="javascript:void(0)" id="btnSubmit" onclick="ComplaintSubmit('@saltedId','@Id')" class="btn btn-white border btn-md">Submit</a>
                             <a href="/Employee/Index" class="btn btn-white border btn-md">Cancel</a>
                             <label id="lblError" class="adderror"></label>
                         </div>

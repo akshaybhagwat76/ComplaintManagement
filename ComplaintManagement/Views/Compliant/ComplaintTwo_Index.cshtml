@@ -138,9 +138,9 @@
         <div class="container-fluid">
             <div class="preloader"></div>
             <div class="page-title">
-                <h2 class="text-black">Employee Information</h2>
+                <h2 class="text-black">Complaint Information</h2>
             </div>
-            <div class="card mb-4 rounded-0 border-0">
+            <div class="card mb-4 rounded-0 border-0" style="display:none;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-2">
@@ -226,6 +226,7 @@
                                                             <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
                                                             <td class="text-center text-nowrap">
                                                                 <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)',false)" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                                <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-info text-danger"></i></a>
                                                             </td>
                                                         </tr>
                                                     }
@@ -277,6 +278,7 @@
     <!-- End of Main Content -->
 </div>
 @Scripts.Render("~/Assets/Common")
+@Html.Partial("_CommonDeleteModal")
 @Html.Partial("_GetHistory")
 <script>
     function performAction(id, isView) {
@@ -284,8 +286,15 @@
         let url = `/Compliant/Edit?id=${id}&isView=${isView}&isRedirect=${isRedirect}`
         location.href = url;
     }
+    function getHistory(id) {
+        if (id !== "") {
+            var url = "/Compliant/GetHistoryByComplaint?ComplaintId=" + id;
+            $("#historyContent").load(url, function () {
+                $("#historyModal").modal("show");
+            })
+        }
+    }
 
-  
 </script>
 
 

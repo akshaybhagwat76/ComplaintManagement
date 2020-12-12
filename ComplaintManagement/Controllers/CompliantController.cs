@@ -5,6 +5,7 @@ using ComplaintManagement.ViewModel;
 using Elmah;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -54,8 +55,8 @@ namespace ComplaintManagement.Controllers
             return View(UserVM);
         }
 
-     
-        public ActionResult Edit(string id, bool isView,string isRedirect)
+
+        public ActionResult Edit(string id, bool isView, string isRedirect)
         {
             EmployeeCompliantMasterVM EmployeeCompliant_oneVM = new EmployeeCompliantMasterVM();
             try
@@ -107,7 +108,7 @@ namespace ComplaintManagement.Controllers
                         }
                     }
 
-                
+
                     ViewBag.ViewState = isView;
                     ViewBag.PageType = !isView ? "Edit" : "View";
                     if (isRedirect == "2")
@@ -147,7 +148,7 @@ namespace ComplaintManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddOrUpdateEmployeeCompliant(string EmpCompliantParams)
+        public ActionResult AddOrUpdateEmployeeCompliant(string EmpCompliantParams, string flag)
         {
             List<string> filesName = new List<string>();
             try
@@ -194,8 +195,16 @@ namespace ComplaintManagement.Controllers
                     }
                     var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliantMasterVM>(EmpCompliantParams);
                     EmployeeComplaintDto.Attachments = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
-                    var User = new EmployeeComplaintMastersRepository().AddOrUpdate(EmployeeComplaintDto);
-                    return new ReplyFormat().Success(Messages.SUCCESS, User);
+                    var User = new EmployeeComplaintMastersRepository().AddOrUpdate(EmployeeComplaintDto,flag);
+                    if (flag == "B")
+                    {
+                        flag = null;
+                        return RedirectToAction("SubmitComplaint", new { id = CryptoEngineUtils.Encrypt(Convert.ToString(User.EmployeeComplaintMasterId), true)  });
+                    }
+                    else
+                    {
+                        return new ReplyFormat().Success(Messages.SUCCESS, User);
+                    }
                 }
                 else
                 {
@@ -310,6 +319,7 @@ namespace ComplaintManagement.Controllers
             ViewBag.NavbarTitle = "BHU Approval";
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+
             var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
                .Select(c => c.Value).SingleOrDefault();
             UserMasterVM UserVM = new UserMastersRepository().Get(Convert.ToInt32(sid));
@@ -327,7 +337,7 @@ namespace ComplaintManagement.Controllers
             ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
             ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(sid)).ToList();
 
-            ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId ==Convert.ToInt32(sid)).ToList();
+            ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(sid)).ToList();
 
             ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
             if (!string.IsNullOrEmpty(UserVM.ImagePath))
@@ -379,7 +389,7 @@ namespace ComplaintManagement.Controllers
                     ViewBag.CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(EmployeeCompliant_oneVM.CategoryId)).CategoryName;
                     ViewBag.SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(EmployeeCompliant_oneVM.SubCategoryId)).SubCategoryName;
 
-                    ViewBag.CashType = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+                    //ViewBag.CashType = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
                     ViewBag.InvolvedUsers = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
 
                     ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(EmployeeCompliant_oneVM.Id)).ToList();
@@ -400,7 +410,16 @@ namespace ComplaintManagement.Controllers
                     ViewBag.HrRoleManagementLevel = userMasterVM.BusinessTitle > 0 ? new DesignationMasterRepository().Get(hrRoleData.BusinessTitle) != null ? new DesignationMasterRepository().Get(hrRoleData.BusinessTitle).Designation : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.Competency = hrRoleData.CompentencyId > 0 ? new CompetencyMastersRepository().Get(hrRoleData.CompentencyId) != null ? new CompetencyMastersRepository().Get(hrRoleData.CompentencyId).CompetencyName : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.HrRoleInvolvedUsers = GetCommaSeparatedUser(HrRole.InvolvedUsersId);
-                    ViewBag.HrRoleCaseType = GetCommaSeparatedUser(HrRole.CaseType);
+                    ViewBag.HrRoleCaseType = HrRole.CaseType;
+
+                    var CommitteeRoleData= db.CommitteeRoles.FirstOrDefault(i => i.ComplaintId == (complaintId));
+                    if(CommitteeRoleData != null)
+                    {
+                        userMasterVM.AttachmentsCommittee = CommitteeRoleData.Attachment;
+                        userMasterVM.RemarkCommittee = CommitteeRoleData.Remark;
+                        userMasterVM.CashTypeId = CommitteeRoleData.CashTypeId;
+                        userMasterVM.InvolvedUsersId = CommitteeRoleData.InvolvedUsersId;
+                    }
 
                     if (!string.IsNullOrEmpty(userMasterVM.ImagePath))
                     {
@@ -420,16 +439,17 @@ namespace ComplaintManagement.Controllers
 
         }
         [HttpPost]
-        public ActionResult SaveEmployeeCommitteeCompliant(string EmpCompliantParams)
+        public ActionResult SaveEmployeeCommitteeCompliant(string EmpCompliantParams,string UserInvolved)
         {
             List<string> filesName = new List<string>();
             try
             {
                 var CommitteUserid = Session["id"];
+
                 if (Request.Files.Count > 0)
                 {
                     var files = Request.Files;
-                    
+
 
                     //iterating through multiple file collection   
                     foreach (string str in files)
@@ -458,18 +478,19 @@ namespace ComplaintManagement.Controllers
                 {
                     var converter = new ExpandoObjectConverter();
                     dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(EmpCompliantParams, converter);
-                    if (data.Id != null && !string.IsNullOrEmpty(Convert.ToString(data.Id)))
+
+                    
+                    
+                    if (!string.IsNullOrEmpty(data.ComplaintId))
                     {
-                        string Id = Convert.ToString(data.Id);
-                        if (Id.Length > 5)
-                        {
-                            Id = CryptoEngineUtils.Decrypt(Id.Replace(" ", "+"), true);
-                            EmpCompliantParams = new Common().UpdateTokenValue(EmpCompliantParams, Messages.Id, Convert.ToInt32(Id).ToString());
-                        }
+                        data.ComplaintId = CryptoEngineUtils.Decrypt(data.ComplaintId.Replace(" ", "+"), true);
+                        JObject jsonObj = (JObject)JsonConvert.DeserializeObject(EmpCompliantParams);
+                        jsonObj.Property("ComplaintId").Value = data.ComplaintId;
+                        EmpCompliantParams=JsonConvert.SerializeObject(jsonObj);
                     }
                     var EmployeeComplaintDto = JsonConvert.DeserializeObject<UserMasterVM>(EmpCompliantParams);
                     EmployeeComplaintDto.AttachmentsCommittee = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
-                    var User = new EmployeeComplaintMastersRepository().AddOrUpdateSaveCommittee(EmployeeComplaintDto, Convert.ToInt32(CommitteUserid));
+                    var User = new EmployeeComplaintMastersRepository().AddOrUpdateSaveCommittee(EmployeeComplaintDto, UserInvolved);
                     return new ReplyFormat().Success(Messages.SUCCESS, User);
                 }
                 else
@@ -501,12 +522,13 @@ namespace ComplaintManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult BackToBUHCEmployeeCommitteeCompliant(string EmpCompliantParams)
+        public ActionResult BackToBUHCEmployeeCommitteeCompliant(string EmpCompliantParams, string UserInvolved)
         {
             List<string> filesName = new List<string>();
             try
             {
                 var CommitteUserid = Session["id"];
+
                 if (Request.Files.Count > 0)
                 {
                     var files = Request.Files;
@@ -539,18 +561,19 @@ namespace ComplaintManagement.Controllers
                 {
                     var converter = new ExpandoObjectConverter();
                     dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(EmpCompliantParams, converter);
-                    if (data.Id != null && !string.IsNullOrEmpty(Convert.ToString(data.Id)))
+
+
+
+                    if (!string.IsNullOrEmpty(data.ComplaintId))
                     {
-                        string Id = Convert.ToString(data.Id);
-                        if (Id.Length > 5)
-                        {
-                            Id = CryptoEngineUtils.Decrypt(Id.Replace(" ", "+"), true);
-                            EmpCompliantParams = new Common().UpdateTokenValue(EmpCompliantParams, Messages.Id, Convert.ToInt32(Id).ToString());
-                        }
+                        data.ComplaintId = CryptoEngineUtils.Decrypt(data.ComplaintId.Replace(" ", "+"), true);
+                        JObject jsonObj = (JObject)JsonConvert.DeserializeObject(EmpCompliantParams);
+                        jsonObj.Property("ComplaintId").Value = data.ComplaintId;
+                        EmpCompliantParams = JsonConvert.SerializeObject(jsonObj);
                     }
                     var EmployeeComplaintDto = JsonConvert.DeserializeObject<UserMasterVM>(EmpCompliantParams);
                     EmployeeComplaintDto.AttachmentsCommittee = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
-                    var User = new EmployeeComplaintMastersRepository().AddOrUpdateSaveCommittee(EmployeeComplaintDto, Convert.ToInt32(CommitteUserid));
+                    var User = new EmployeeComplaintMastersRepository().AddOrUpdateBackToBUHCCommittee(EmployeeComplaintDto, UserInvolved);
                     return new ReplyFormat().Success(Messages.SUCCESS, User);
                 }
                 else
@@ -580,6 +603,7 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+        
         public string GetCommaSeparatedUser(string UserIds)
         {
             try
@@ -756,12 +780,9 @@ namespace ComplaintManagement.Controllers
 
         //Aman work
         [HttpPost]
-        public ActionResult AddOrEmployeeCompliantHR(string[] Attachments1, string EmpCompliantParams, String Id, string UserInvolved, int Status)
 
-        
+        public ActionResult AddOrEmployeeCompliantHR(string EmpCompliantParams, String Id, string UserInvolved, int Status)
 
-        
-        
         {
             List<string> filesName = new List<string>();
             try
@@ -800,8 +821,6 @@ namespace ComplaintManagement.Controllers
                 {
                     var converter = new ExpandoObjectConverter();
                     dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(EmpCompliantParams, converter);
-
-
                     var EmployeeComplaintDto = JsonConvert.DeserializeObject<EmployeeCompliantMasterVM>(EmpCompliantParams);
                     EmployeeComplaintDto.Attachments1 = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
                     var User = new EmployeeComplaintMastersRepository().SaveHRComplaint(EmployeeComplaintDto, ids, Convert.ToInt32(Hrid), UserInvolved, Status);
@@ -834,6 +853,7 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+
 
     }
 }

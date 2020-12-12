@@ -69,7 +69,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Userid" Type="int" />
-          <Property Name="Status" Type="int" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" />
           <Property Name="ComplaintId" Type="int" />
           <Property Name="Remark" Type="nvarchar" MaxLength="500" />
           <Property Name="CashTypeId" Type="nvarchar" MaxLength="100" />
@@ -78,6 +78,7 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="CommitteeUserId" Type="int" />
+          <Property Name="Attachment" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="CompetencyMasters">
           <Key>
@@ -147,7 +148,7 @@
           <Property Name="ModifiedBy" Type="int" />
           <Property Name="Remarks" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ActionType" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="UserType" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="UserType" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="ComplaintId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="EmployeeComplaintMasters">
@@ -1356,7 +1357,7 @@
           <Property Name="ModifiedBy" Type="Int32" />
           <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ActionType" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="UserType" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="UserType" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="ComplaintId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters" FromRole="EmployeeComplaintHistory" ToRole="EmployeeComplaintMaster" />
         </EntityType>
@@ -1431,7 +1432,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Userid" Type="Int32" />
-          <Property Name="Status" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ComplaintId" Type="Int32" />
           <Property Name="Remark" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="CashTypeId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
@@ -1440,6 +1441,7 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="CommitteeUserId" Type="Int32" />
+          <Property Name="Attachment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1994,6 +1996,7 @@
           <EntitySetMapping Name="CommitteeRoles">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CommitteeRole">
               <MappingFragment StoreEntitySet="CommitteeRole">
+                <ScalarProperty Name="Attachment" ColumnName="Attachment" />
                 <ScalarProperty Name="CommitteeUserId" ColumnName="CommitteeUserId" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />

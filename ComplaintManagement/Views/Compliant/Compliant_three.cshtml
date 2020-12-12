@@ -6,12 +6,13 @@
     var hrRoleDateOfJoin = ViewBag.HrRoleData.DateOfJoining;
 
 }
-
+<link href="~/Content/fSelect.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/fSelect.js"></script>
 <div id="content-wrapper" class="d-flex flex-column">
     @Html.Hidden("pageState", (object)ViewBag.ViewState)
 
     @Html.Hidden("UserId", Model.CompentencyId)
-    @Html.Hidden("Id", Model.Id)
+    @Html.Hidden("Id", Model.ComplaintId)
     @Html.Hidden("ComplaintStatus", Model.ComplaintStatus)
     @Html.Hidden("DueDate", Model.DateOfJoining)
     <!-- Main Content -->
@@ -22,7 +23,7 @@
         <!-- Begin Page Content -->
         <div class="container-fluid">
             <div class="page-title mb-3">
-                <h2 class="text-black">Employee Information</h2>
+                <h2 class="text-black">Complaint Information</h2>
             </div>
             <!-- Tab Bar -->
             <div class="row">
@@ -151,7 +152,20 @@
                         <div class="row form-group">
                             <div class="col-md-4">
                                 <label>Attachment</label>
-                                <p class="text-black font-weight-bold m-0">@Model.Attachments</p>
+                                <p class="text-black font-weight-bold m-0">
+                                    @if (!string.IsNullOrEmpty(@Model.Attachments) && @Model.Attachments.Length > 5)
+                                    {
+                                        <strong>
+                                            <a href="/Employee/DownloadAttachments?files=@Model.Attachments">
+                                                <i class="fas fa-download fa-fw"></i>
+                                            </a>
+                                        </strong>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(Messages.NotAvailable.ToString())
+                                    }
+                                </p>
                             </div>
                         </div>
                         <hr>
@@ -245,18 +259,18 @@
                                 <div class="col-sm-4">
                                     <label>Date of Joining</label>
                                     <p class="text-black font-weight-bold m-0">
-                                            @if (hrRoleDateOfJoin !=null)
-                                            {
-                                                var date = String.Format("{0}", hrRoleDateOfJoin.ToString("dd/MM/yyyy"));
+                                        @if (hrRoleDateOfJoin != null)
+                                        {
+                                            var date = String.Format("{0}", hrRoleDateOfJoin.ToString("dd/MM/yyyy"));
 
-                                                @Html.Raw(date);
-                                            }
-                                            else
-                                            {
-                                                @Html.Raw("N/A");
-                                            }
-                                        </p>
-                                    </div>
+                                            @Html.Raw(date);
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("N/A");
+                                        }
+                                    </p>
+                                </div>
                                 <div class="col-sm-4">
                                     <label>Mobile No.</label>
                                     <p class="text-black font-weight-bold m-0">@ViewBag.HrRoleData.MobileNo</p>
@@ -281,7 +295,20 @@
                             </div>
                             <div class="col-md-6">
                                 <label>Attachment</label>
-                                <p class="text-black font-weight-bold m-0">@ViewBag.HrRole.Attachement</p>
+                                <p class="text-black font-weight-bold m-0">
+                                    @if (!string.IsNullOrEmpty(@ViewBag.HrRole.Attachement) && @ViewBag.HrRole.Attachement.Length > 5)
+                                    {
+                                        <strong>
+                                            <a href="/Employee/DownloadAttachments?files=@ViewBag.HrRole.Attachement">
+                                                <i class="fas fa-download fa-fw"></i>
+                                            </a>
+                                        </strong>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(Messages.NotAvailable.ToString())
+                                    }
+                                </p>
                             </div>
                         </div>
                         <hr>
@@ -317,7 +344,9 @@
                                                 <tr>
                                                     <td class="border-top-0">Created By</td>
                                                     <td class="border-top-0">Created On</td>
-                                                    <td class="border-top-0">Comments</td>
+                                                    <td class="border-top-0">Remarks</td>
+                                                    <td class="border-top-0">Type</td>
+                                                    <td class="border-top-0">Action</td>
                                                 </tr>
                                             </thead>
                                         }
@@ -333,6 +362,8 @@
                                                         <td class="text-black"><strong>@item.CreatedByName</strong></td>
                                                         <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
                                                         <td class="text-black"><strong>@item.Remarks</strong></td>
+                                                        <td class="text-black"><strong>@item.UserType</strong></td>
+                                                        <td class="text-black"><strong>@item.ActionType</strong></td>
                                                     </tr>
                                                 }
                                             }
@@ -417,24 +448,16 @@
                                 @*<label>Case Type</label>*@
                                 @*<select class="form-control"></select>*@
                                 @Html.Label("Case Type", new { @class = "requiredLabel" })
-                                @{
-                                    List<SelectListItem> listCashType = new List<SelectListItem>();
-                                    listCashType = new List<SelectListItem>();
-                                    listCashType.Add(new SelectListItem
-                                    {
-                                        Text = "",
-                                        Value = ""
-                                    });
-                                    listCashType.AddRange(ViewBag.CashType);
-                                }
+                                <select class="form-control requiredLabel" id="CashTypeId">
+                                    <option value="Actionable" selected>Actionable</option>
+                                    <option value="NonActionable">Non Actionable</option>
+                                </select>
 
-                                @Html.DropDownList("CashTypeId", (List<SelectListItem>)listCashType, new { @class = "form-control required" })
+                                @*@Html.DropDownList("CashTypeId", (List<SelectListItem>)listCashType, new { @class = "form-control required" })*@
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-md-8">
-                                @*<label>Involved Users</label>
-                <select class="form-control"></select>*@
                                 @Html.Label("Involved Users", new { @class = "requiredLabel" })
                                 @{
                                     List<SelectListItem> listInvolvedUsers = new List<SelectListItem>();
@@ -446,14 +469,14 @@
                                     });
                                     listInvolvedUsers.AddRange(ViewBag.InvolvedUsers);
                                 }
-
-                                @Html.DropDownList("InvolvedUsersId", (List<SelectListItem>)listInvolvedUsers, new { @class = "form-control required" })
+                                <br />
+                                @Html.DropDownList("InvolvedUsersId", (List<SelectListItem>)listInvolvedUsers, new { @class = "form-control multipleddl required", multiple = "multiple" })
                             </div>
                         </div>
                         <div class="text-right">
                             <a href="javascript:void(0)" id="btnBackToBUHCSave" onclick="submitBackToBUHCForm()" class="btn btn-danger btn-md">Back to BUHC</a>
                             <a href="javascript:void(0)" id="btnSave" onclick="submitForm()" class="btn btn-danger btn-md">Save</a>
-                            <a href="/Account/LogOff" class="btn btn-white border btn-md">Back</a>
+                            <a href="javascript:void(0)" id="btnBackSave" onclick="submitBackForm()" class="btn btn-danger btn-md">Back</a>
                             <label id="lblError" class="adderror"></label>
                         </div>
                     </form>
@@ -464,5 +487,7 @@
     </div>
     <!-- End of Main Content -->
 </div>
+
 @Scripts.Render("~/Assets/EditEmployeeCompliant_ThreeMasters")
 @Scripts.Render("~/Assets/Common")
+

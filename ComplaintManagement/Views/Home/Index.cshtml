@@ -21,6 +21,9 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
+    var DueComplaints = Model.DueComplaints;
+    var OverDueComplaints = Model.OverDueComplaints;
+    var AwaitingComplaints = Model.AwaitingComplaints;
 }
 
 <div id="content-wrapper" class="d-flex flex-column">
@@ -146,23 +149,56 @@
                 <div class="card-body text-black">
                     <div class="row">
                         <div class="col-md-4 text-center">
+                            @*<h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>*@
+                            @{
+
+                                if (DueComplaints > 0)
+                                {
+                                                        <a onclick="getDueComplaints()" id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
+                                                            <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
+                                                            <strong>Due Complaints</strong>
+                                                        </a>
+                                }
+                                else
+                                {
+                        <a id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
                             <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
-                            <a onclick="getDueComplaints()" id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><strong>Due Complaints</strong></a>
+                            <strong>Due Complaints</strong>
+                        </a>
+                                }
+                            }
+
                         </div>
                         <div class="col-md-4 text-center">
-                            <h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2>
-                            <a onclick="getOverDueComplaints()" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><strong>Overdue Complaints</strong></a>
+                            @{
+                                if (DueComplaints > 0)
+                                {
+                                    <a onclick="getOverDueComplaints()" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
+                                }
+                                else
+                                {
+                                    <a id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
+                                }
+                            }
                         </div>
                         <div class="col-md-4 text-center">
-                            <h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2>
-                            <a id="awaitingComplaint" onclick="getAwaitingComplaint()" class="text-dark btn border-0 p-0"><strong>Awaiting My Approval Complaints</strong></a>
+                            @{
+                                if (AwaitingComplaints > 0)
+                                {
+                                    <a id="awaitingComplaint" onclick="getAwaitingComplaint()" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
+                                }
+                                else
+                                {
+                                    <a id="awaitingComplaint" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
+                                }
+                            }
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card mb-4 rounded-0 border-0">
+            @*<div class="card mb-4 rounded-0 border-0">
                 <div class="card-body py-2">
-                    <div class="row justify-content-between">
+                    <div class="ow justify-content-between">
                         <div class="col-md-10">
                             <ul class="nav">
                                 <li class="nav-item mr-3">
@@ -182,7 +218,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>*@
             <!-- Tab Bar -->
             <div class="user-list">
                 <div class="row">

@@ -20,7 +20,7 @@ namespace ComplaintManagement.Repository
     {
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public EmployeeCompliantMasterVM AddOrUpdate(EmployeeCompliantMasterVM EmployeeComplaintVM)
+        public EmployeeCompliantMasterVM AddOrUpdate(EmployeeCompliantMasterVM EmployeeComplaintVM,string flag=null)
         {
             try
             {
@@ -47,6 +47,8 @@ namespace ComplaintManagement.Repository
                                 EmployeeComplaint.Status = true;
                                 db.EmployeeComplaintMasters.Add(EmployeeComplaint);
                                 db.SaveChanges();
+
+                                EmployeeComplaintVM.EmployeeComplaintMasterId = EmployeeComplaint.Id;
 
                                 EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
                                 if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Added; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
@@ -117,7 +119,15 @@ namespace ComplaintManagement.Repository
                         }
                     }
                 }
-                return new EmployeeCompliantMasterVM();
+                if (flag == "B")
+                {
+                    return EmployeeComplaintVM;
+                }
+                else
+                {
+                    return new EmployeeCompliantMasterVM();
+                }
+                
             }
             catch (DbEntityValidationException dve)
             {
@@ -131,7 +141,7 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public UserMasterVM AddOrUpdateSaveCommittee(UserMasterVM EmployeeComplaintVM,int CommitteUserid)
+        public UserMasterVM AddOrUpdateSaveCommittee(UserMasterVM EmployeeComplaintVM, string UserInvolved)
         {
             try
             {
@@ -139,6 +149,7 @@ namespace ComplaintManagement.Repository
                 var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
                 var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
                    .Select(c => c.Value).SingleOrDefault();
+
                 if (!string.IsNullOrEmpty(sid))
                 {
                     using (var dbContextTransaction = db.Database.BeginTransaction())
@@ -146,23 +157,62 @@ namespace ComplaintManagement.Repository
                         this.db.Database.CommandTimeout = 180;
                         try
                         {
-                            CommitteeRole commitRole = new CommitteeRole();
-                            var EmployeeComplaint = db.CommitteeRoles.FirstOrDefault(p => p.Id == EmployeeComplaintVM.Id);
-                            int? Id = EmployeeComplaintVM.Id;
+                            //CommitteeRole commitRole = new CommitteeRole();
+                            var commitRole = db.CommitteeRoles.FirstOrDefault(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId);
 
-                            commitRole.IsActive = true;
-                            commitRole.CreatedDate = DateTime.UtcNow;
-                            //EmployeeComplaint = Mapper.Map<CommitteeRole, CommitteeRole>(EmployeeComplaintVM);
-                            commitRole.Userid = Id;
-                            commitRole.Status = 1; //committee save
-                            commitRole.ComplaintId = 1;
-                            commitRole.InvolvedUsersId = EmployeeComplaintVM.InvolvedUsersId;
-                            commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
-                            commitRole.CommitteeUserId = CommitteUserid;
-                            commitRole.Remark = EmployeeComplaintVM.RemarkCommittee;
-                            db.CommitteeRoles.Add(commitRole);
-                            db.SaveChanges();
-                            dbContextTransaction.Commit();
+                            if (commitRole == null)
+                            {
+                                commitRole = new CommitteeRole();
+                                commitRole.IsActive = true;
+                                commitRole.CreatedDate = DateTime.UtcNow;
+                                commitRole.Userid = Convert.ToInt32(EmployeeComplaintVM.UserId);
+                                commitRole.Status = "CommitteeSubmitted"; //committee save
+                                commitRole.ComplaintId = EmployeeComplaintVM.ComplaintId;
+                                commitRole.InvolvedUsersId = UserInvolved;
+                                commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
+                                commitRole.CommitteeUserId = Convert.ToInt32(sid);
+                                commitRole.Remark = EmployeeComplaintVM.RemarkCommittee;
+                                commitRole.Attachment = EmployeeComplaintVM.AttachmentsCommittee;
+                                db.CommitteeRoles.Add(commitRole);
+                                db.SaveChanges();
+
+                                //var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.ComplaintId);
+                                //if (ComplaintMaster != null)
+                                //{
+                                //    ComplaintMaster.ComplaintStatus = "CommitteeSubmitted";
+                                //    ComplaintMaster.UpdatedDate = DateTime.UtcNow;
+                                //    ComplaintMaster.UpdatedBy = Convert.ToInt32(sid);
+                                //    ComplaintMaster.Remark = EmployeeComplaintVM.RemarkCommittee;
+                                //    db.Entry(ComplaintMaster).State = EntityState.Modified;
+                                //    db.SaveChanges();
+                                //}
+
+                                //var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId);
+                                //if (WorkFlow != null)
+                                //{
+                                //    WorkFlow.ActionType = "CommitteeSubmitted";
+                                //    WorkFlow.UpdatedDate = DateTime.UtcNow;
+                                //    db.Entry(WorkFlow).State = EntityState.Modified;
+
+                                //    db.SaveChanges();
+                                //}
+
+                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, "CommitteeSubmitted", db);
+                                dbContextTransaction.Commit();
+                            }
+                            else
+                            {
+                                commitRole.IsActive = true;
+                                commitRole.UpdatedDate = DateTime.UtcNow;
+                                commitRole.Status = "CommitteeSubmitted";
+                                commitRole.InvolvedUsersId = UserInvolved;
+                                commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
+                                commitRole.Remark = EmployeeComplaintVM.RemarkCommittee;
+                                commitRole.Attachment = EmployeeComplaintVM.AttachmentsCommittee;
+                                db.Entry(commitRole).State = EntityState.Modified;
+                                db.SaveChanges();
+                                dbContextTransaction.Commit();
+                            }
 
                         }
                         catch (Exception ex)
@@ -170,7 +220,7 @@ namespace ComplaintManagement.Repository
                             dbContextTransaction.Rollback();
                             if (!string.IsNullOrEmpty(EmployeeComplaintVM.AttachmentsCommittee))
                             {
-                                foreach (string file in EmployeeComplaintVM.Attachments.Split(','))
+                                foreach (string file in EmployeeComplaintVM.AttachmentsCommittee.Split(','))
                                 {
                                     if (!string.IsNullOrEmpty(file))
                                     {
@@ -202,7 +252,7 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public UserMasterVM AddOrUpdateBackToBUHCCommittee(UserMasterVM EmployeeComplaintVM, int CommitteUserid)
+        public UserMasterVM AddOrUpdateBackToBUHCCommittee(UserMasterVM EmployeeComplaintVM, string UserInvolved)
         {
             try
             {
@@ -210,6 +260,7 @@ namespace ComplaintManagement.Repository
                 var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
                 var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
                    .Select(c => c.Value).SingleOrDefault();
+
                 if (!string.IsNullOrEmpty(sid))
                 {
                     using (var dbContextTransaction = db.Database.BeginTransaction())
@@ -217,21 +268,60 @@ namespace ComplaintManagement.Repository
                         this.db.Database.CommandTimeout = 180;
                         try
                         {
-                            CommitteeRole commitRole = new CommitteeRole();
-                            var EmployeeComplaint = db.CommitteeRoles.FirstOrDefault(p => p.Id == EmployeeComplaintVM.Id);
-                            int? Id = EmployeeComplaintVM.Id;
+                            //CommitteeRole commitRole = new CommitteeRole();
+                            var commitRole = db.CommitteeRoles.FirstOrDefault(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId);
 
-                            commitRole.IsActive = true;
-                            commitRole.CreatedDate = DateTime.UtcNow;
-                            commitRole.Userid = Id;
-                            commitRole.Status = 2; //committee Back to buhc
-                            commitRole.ComplaintId = 1;
-                            commitRole.InvolvedUsersId = EmployeeComplaintVM.InvolvedUsersId;
-                            commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
-                            commitRole.CommitteeUserId = CommitteUserid;
-                            commitRole.Remark = EmployeeComplaintVM.RemarkCommittee;
-                            db.CommitteeRoles.Add(commitRole);
-                            db.SaveChanges();
+                            if (commitRole == null)
+                            {
+                                commitRole = new CommitteeRole();
+                                commitRole.IsActive = true;
+                                commitRole.CreatedDate = DateTime.UtcNow;
+                                commitRole.Userid = Convert.ToInt32(EmployeeComplaintVM.UserId);
+                                commitRole.Status = Messages.SUBMITTED; //committee save
+                                commitRole.ComplaintId = EmployeeComplaintVM.ComplaintId;
+                                commitRole.InvolvedUsersId = UserInvolved;
+                                commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
+                                commitRole.CommitteeUserId = Convert.ToInt32(sid);
+                                commitRole.Remark = EmployeeComplaintVM.RemarkCommittee;
+                                commitRole.Attachment = EmployeeComplaintVM.AttachmentsCommittee;
+                                db.CommitteeRoles.Add(commitRole);
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                commitRole.IsActive = true;
+                                commitRole.UpdatedDate = DateTime.UtcNow;
+                                commitRole.Status = Messages.SUBMITTED;
+                                commitRole.InvolvedUsersId = UserInvolved;
+                                commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
+                                commitRole.Remark = EmployeeComplaintVM.RemarkCommittee;
+                                commitRole.Attachment = EmployeeComplaintVM.AttachmentsCommittee;
+                                db.Entry(commitRole).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                            var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.ComplaintId);
+                            if (ComplaintMaster != null)
+                            {
+                                ComplaintMaster.ComplaintStatus = Messages.SUBMITTED;
+                                ComplaintMaster.UpdatedDate = DateTime.UtcNow;
+                                ComplaintMaster.UpdatedBy = Convert.ToInt32(sid);
+                                ComplaintMaster.Remark = EmployeeComplaintVM.RemarkCommittee;
+                                db.Entry(ComplaintMaster).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+
+                            var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId);
+                            if (WorkFlow != null)
+                            {
+                                WorkFlow.ActionType = Messages.SUBMITTED;
+                                WorkFlow.UpdatedDate = DateTime.UtcNow;
+                                WorkFlow.Remarks= EmployeeComplaintVM.RemarkCommittee;
+                                db.Entry(WorkFlow).State = EntityState.Modified;
+
+                                db.SaveChanges();
+                            }
+
+                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, Messages.SUBMITTED, db);
                             dbContextTransaction.Commit();
 
                         }
@@ -240,7 +330,7 @@ namespace ComplaintManagement.Repository
                             dbContextTransaction.Rollback();
                             if (!string.IsNullOrEmpty(EmployeeComplaintVM.AttachmentsCommittee))
                             {
-                                foreach (string file in EmployeeComplaintVM.Attachments.Split(','))
+                                foreach (string file in EmployeeComplaintVM.AttachmentsCommittee.Split(','))
                                 {
                                     if (!string.IsNullOrEmpty(file))
                                     {
@@ -298,7 +388,6 @@ namespace ComplaintManagement.Repository
                                 catObj.CategoryName = new CategoryMastersRepository().Get(item.CategoryId) != null ? new CategoryMastersRepository().Get(item.CategoryId).CategoryName : Messages.NotAvailable;
                                 catObj.SubCategoryName = new SubCategoryMastersRepository().Get(item.SubCategoryId) != null ? new SubCategoryMastersRepository().Get(item.SubCategoryId).SubCategoryName : Messages.NotAvailable;
                                 catObj.EmployeeName = usersList.FirstOrDefault(x => x.Id == catObj.UserId) != null ? usersList.FirstOrDefault(x => x.Id == catObj.UserId).EmployeeName : Messages.NotAvailable;
-
                                 EmployeeCompliant_oneList.Add(catObj);
                             }
                         }
@@ -753,6 +842,8 @@ namespace ComplaintManagement.Repository
                                     roles.CreatedDate = DateTime.UtcNow;
                                     roles.ComplentId = ids;
                                     roles.UserId = EmployeeComplaintVM.UserId;
+                                    roles.Remark = EmployeeComplaintVM.Remark;
+                                    roles.CaseType = EmployeeComplaintVM.CaseType;
                                     roles.HRUserId = Hrid;
                                     roles.InvolvedUsersId = UserInvolved;
                                     roles.Attachement = EmployeeComplaintVM.Attachments1;
@@ -760,6 +851,28 @@ namespace ComplaintManagement.Repository
 
                                     db.HR_Role.Add(roles);
                                     db.SaveChanges();
+
+                                    var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
+                                    if (WorkFlow != null)
+                                    {
+                                        WorkFlow.ActionType = Messages.SUBMITTED;
+                                        WorkFlow.UpdatedDate = DateTime.UtcNow;
+                                        WorkFlow.Remarks = EmployeeComplaint.Remark;
+                                        db.Entry(WorkFlow).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+
+                                    EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
+                                    hrs.CreatedBy = EmployeeComplaint.UserId;
+                                    hrs.CreatedDate = DateTime.UtcNow;
+                                    hrs.IsActive = true;
+                                    hrs.Remarks = EmployeeComplaint.Remark;
+                                    hrs.ActionType = "SaveHRComplaint";
+                                    hrs.UserType = Messages.NormalUser;
+                                    hrs.ComplaintId = ids;
+                                    db.EmployeeComplaintHistories.Add(hrs);
+                                    db.SaveChanges();
+
                                 }
                                 else if (Status == 2)
                                 {
@@ -768,28 +881,76 @@ namespace ComplaintManagement.Repository
                                     roles.CreatedDate = DateTime.UtcNow;
                                     roles.ComplentId = ids;
                                     roles.UserId = EmployeeComplaintVM.UserId;
+                                    roles.Remark = EmployeeComplaintVM.Remark;
+                                    roles.CaseType = EmployeeComplaintVM.CaseType;
                                     roles.HRUserId = Hrid;
                                     roles.InvolvedUsersId = UserInvolved;
                                     roles.Attachement = EmployeeComplaintVM.Attachments1;
-                                    roles.Status = "PushHRComplaint";
+                                    roles.Status = Messages.COMMITTEE;
                                     db.HR_Role.Add(roles);
                                     db.SaveChanges();
 
-                                    EmployeeComplaintWorkFlowVM VM = new EmployeeComplaintWorkFlowVM();
-                                    VM.ActionType = "Committe";
-                                    db.SaveChanges();
+                                    var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
+                                    if (WorkFlow != null)
+                                    {
+                                        WorkFlow.ActionType = Messages.COMMITTEE;
+                                        WorkFlow.UpdatedDate = DateTime.UtcNow;
+                                        WorkFlow.Remarks = EmployeeComplaint.Remark;
+                                        db.Entry(WorkFlow).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+
+                                    var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
+                                    if (ComplaintMaster != null)
+                                    {
+                                        ComplaintMaster.ComplaintStatus = Messages.COMMITTEE;
+                                        ComplaintMaster.UpdatedDate = DateTime.UtcNow;
+                                        ComplaintMaster.UpdatedBy = Convert.ToInt32(sid);
+                                        db.Entry(ComplaintMaster).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+
 
                                     EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
                                     hrs.CreatedBy = EmployeeComplaint.UserId;
                                     hrs.CreatedDate = DateTime.UtcNow;
                                     hrs.IsActive = true;
-                                    hrs.Remarks =
-                                    hrs.ActionType = "Committed";
-                                    hrs.UserType = "Normal";
+                                    hrs.Remarks = EmployeeComplaint.Remark;
+                                    hrs.ActionType = Messages.COMMITTEE;
+                                    hrs.UserType = Messages.NormalUser;
                                     hrs.ComplaintId = ids;
+                                    db.EmployeeComplaintHistories.Add(hrs);
                                     db.SaveChanges();
 
                                 }
+
+                                else if (Status == 3)
+                                {
+
+                                    var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
+                                    if (WorkFlow != null)
+                                    {
+                                        WorkFlow.ActionType = Messages.Opened;
+                                        WorkFlow.UpdatedDate = DateTime.UtcNow;
+                                        WorkFlow.Remarks = EmployeeComplaint.Remark;
+                                        db.Entry(WorkFlow).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+
+                                    EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
+                                    hrs.CreatedBy = EmployeeComplaint.UserId;
+                                    hrs.CreatedDate = DateTime.UtcNow;
+                                    hrs.IsActive = true;
+                                    hrs.Remarks = EmployeeComplaint.Remark;
+                                    hrs.ActionType = Messages.Opened;
+                                    hrs.UserType = Messages.NormalUser;
+                                    hrs.ComplaintId = ids;
+                                    db.EmployeeComplaintHistories.Add(hrs);
+                                    db.SaveChanges();
+
+                                }
+
+
                                 dbContextTransaction.Commit();
                             }
 

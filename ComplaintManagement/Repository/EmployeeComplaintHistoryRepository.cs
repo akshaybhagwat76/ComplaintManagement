@@ -20,7 +20,8 @@ namespace ComplaintManagement.Repository
             try
             {
                 var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-
+                string usertypeValue = identity.Claims.Where(c => c.Type == ClaimTypes.Role)
+                   .Select(c => c.Value).SingleOrDefault();
                 var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
                    .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(sid))
@@ -32,8 +33,7 @@ namespace ComplaintManagement.Repository
                     employeeComplaintHistory.Remarks = remarks;
                     employeeComplaintHistory.ComplaintId = complaintId;
                     employeeComplaintHistory.ActionType = actionType;
-                    employeeComplaintHistory.UserType = identity.Claims.Where(c => c.Type == ClaimTypes.Role)
-                   .Select(c => c.Value).SingleOrDefault();
+                    employeeComplaintHistory.UserType = usertypeValue;
                     db.EmployeeComplaintHistories.Add(employeeComplaintHistory);
                     db.SaveChanges();
                 }
@@ -177,12 +177,9 @@ namespace ComplaintManagement.Repository
                         {
                             foreach (EmployeeComplaintWorkFlowVM employeeComplaintWorkFlowDto in EmployeeComplaintWorkFlowList)
                             {
-                                if (!string.IsNullOrEmpty(employeeComplaintWorkFlowDto.AssignedUserRoles))
+                                if (Role == Messages.Committee)
                                 {
-                                    var isHrUserAssigned = employeeComplaintWorkFlowDto.AssignedUserRoles.Split(',').Where(i => i.ToString() == sid).Count() > 0;
-
-
-                                    if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.SUBMITTED.ToLower() && employeeComplaintWorkFlowDto.DueDate>=DateTime.UtcNow && isHrUserAssigned)
+                                    if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.Committee.ToLower() && employeeComplaintWorkFlowDto.DueDate >= DateTime.UtcNow)
                                     {
                                         employeeComplaintWorkFlowDto.UserType = employeeComplaintWorkFlowDto.UserType;
                                         employeeComplaintWorkFlowDto.Id = employeeComplaintWorkFlowDto.Id;
@@ -199,6 +196,34 @@ namespace ComplaintManagement.Repository
                                         if (employeeComplaintWorkFlowDto.Id > 0 && !string.IsNullOrEmpty(employeeComplaintWorkFlowDto.CreatedByName) && !string.IsNullOrEmpty(employeeComplaintWorkFlowDto.LOSName))
                                         {
                                             EmployeeComplaintWorkFlowListDto.Add(employeeComplaintWorkFlowDto);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (!string.IsNullOrEmpty(employeeComplaintWorkFlowDto.AssignedUserRoles))
+                                    {
+                                        var isHrUserAssigned = employeeComplaintWorkFlowDto.AssignedUserRoles.Split(',').Where(i => i.ToString() == sid).Count() > 0;
+
+
+                                        if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.SUBMITTED.ToLower() && employeeComplaintWorkFlowDto.DueDate >= DateTime.UtcNow && isHrUserAssigned)
+                                        {
+                                            employeeComplaintWorkFlowDto.UserType = employeeComplaintWorkFlowDto.UserType;
+                                            employeeComplaintWorkFlowDto.Id = employeeComplaintWorkFlowDto.Id;
+                                            employeeComplaintWorkFlowDto.ComplaintId = employeeComplaintWorkFlowDto.ComplaintId;
+                                            employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
+                                            employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
+                                            employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
+                                            EmployeeCompliantMasterVM employeeCompliantMasterDto = EmployeeComplaintList.Where(x => x.Id == employeeComplaintWorkFlowDto.ComplaintId).FirstOrDefault();
+                                            if (employeeCompliantMasterDto != null && employeeCompliantMasterDto.CategoryId > 0 && employeeCompliantMasterDto.SubCategoryId > 0)
+                                            {
+                                                employeeComplaintWorkFlowDto.Category = categoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.CategoryId) != null ? categoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.CategoryId).CategoryName : Messages.NotAvailable;
+                                                employeeComplaintWorkFlowDto.SubCategory = SubcategoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.SubCategoryId) != null ? SubcategoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.SubCategoryId).SubCategoryName : Messages.NotAvailable;
+                                            }
+                                            if (employeeComplaintWorkFlowDto.Id > 0 && !string.IsNullOrEmpty(employeeComplaintWorkFlowDto.CreatedByName) && !string.IsNullOrEmpty(employeeComplaintWorkFlowDto.LOSName))
+                                            {
+                                                EmployeeComplaintWorkFlowListDto.Add(employeeComplaintWorkFlowDto);
+                                            }
                                         }
                                     }
                                 }
@@ -305,29 +330,24 @@ namespace ComplaintManagement.Repository
                         {
                             foreach (EmployeeComplaintWorkFlowVM employeeComplaintWorkFlowDto in EmployeeComplaintWorkFlowList)
                             {
-                                if (!string.IsNullOrEmpty(employeeComplaintWorkFlowDto.AssignedUserRoles))
+                                //if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.SUBMITTED.ToLower() && employeeComplaintWorkFlowDto.DueDate <= DateTime.UtcNow && isHrUserAssigned)
+                                if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.Committee.ToLower())
                                 {
-                                    var isHrUserAssigned = employeeComplaintWorkFlowDto.AssignedUserRoles.Split(',').Where(i => i.ToString() == sid).Count() > 0;
-
-
-                                    //if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.SUBMITTED.ToLower() && employeeComplaintWorkFlowDto.DueDate <= DateTime.UtcNow && isHrUserAssigned)
-                                    if (employeeComplaintWorkFlowDto.ActionType.ToLower() == Messages.Committee.ToLower() && employeeComplaintWorkFlowDto.DueDate >= DateTime.UtcNow && isHrUserAssigned)
+                                    employeeComplaintWorkFlowDto.Id = employeeComplaintWorkFlowDto.Id;
+                                    employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
+                                    employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
+                                    employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
+                                    EmployeeCompliantMasterVM employeeCompliantMasterDto = EmployeeComplaintList.Where(x => x.Id == employeeComplaintWorkFlowDto.ComplaintId).FirstOrDefault();
+                                    if (employeeCompliantMasterDto != null && employeeCompliantMasterDto.CategoryId > 0 && employeeCompliantMasterDto.SubCategoryId > 0)
                                     {
-                                        employeeComplaintWorkFlowDto.Id = employeeComplaintWorkFlowDto.Id;
-                                        employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
-                                        employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
-                                        employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
-                                        EmployeeCompliantMasterVM employeeCompliantMasterDto = EmployeeComplaintList.Where(x => x.Id == employeeComplaintWorkFlowDto.ComplaintId).FirstOrDefault();
-                                        if (employeeCompliantMasterDto != null && employeeCompliantMasterDto.CategoryId > 0 && employeeCompliantMasterDto.SubCategoryId > 0)
-                                        {
-                                            employeeComplaintWorkFlowDto.Category = categoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.CategoryId) != null ? categoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.CategoryId).CategoryName : Messages.NotAvailable;
-                                            employeeComplaintWorkFlowDto.SubCategory = SubcategoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.SubCategoryId) != null ? SubcategoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.SubCategoryId).SubCategoryName : Messages.NotAvailable;
-                                        }
-                                        if (employeeComplaintWorkFlowDto.Id > 0 && !string.IsNullOrEmpty(employeeComplaintWorkFlowDto.CreatedByName) && !string.IsNullOrEmpty(employeeComplaintWorkFlowDto.LOSName))
-                                        {
-                                            EmployeeComplaintWorkFlowListDto.Add(employeeComplaintWorkFlowDto);
-                                        }
+                                        employeeComplaintWorkFlowDto.Category = categoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.CategoryId) != null ? categoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.CategoryId).CategoryName : Messages.NotAvailable;
+                                        employeeComplaintWorkFlowDto.SubCategory = SubcategoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.SubCategoryId) != null ? SubcategoryMasters.FirstOrDefault(x => x.Id == employeeCompliantMasterDto.SubCategoryId).SubCategoryName : Messages.NotAvailable;
                                     }
+                                    if (employeeComplaintWorkFlowDto.Id > 0 && !string.IsNullOrEmpty(employeeComplaintWorkFlowDto.CreatedByName) && !string.IsNullOrEmpty(employeeComplaintWorkFlowDto.LOSName))
+                                    {
+                                        EmployeeComplaintWorkFlowListDto.Add(employeeComplaintWorkFlowDto);
+                                    }
+
                                 }
                             }
                         }

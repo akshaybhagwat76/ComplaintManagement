@@ -6,6 +6,14 @@ function removeFile(id) {
     document.getElementById("delete-btn").addEventListener("click", deleteFile);
 }
 $(document).ready(function () {
+    $('.multipleddl').fSelect();
+
+    var InvolvedUsersId = $('#InvolvedUsersId').val();
+    var selectedOptions = InvolvedUsersId.split(",");
+    for (var i in selectedOptions) {
+        var optionVal = selectedOptions[i];
+        $("#InvolvedUsersId").find("option[value=" + optionVal + "]").prop("selected", "selected");
+    }
     if ($("#pageState").val() != null && $("#pageState").val() != "") {
         let page_state = JSON.parse($("#pageState").val().toLowerCase());
         if (page_state) {
@@ -43,8 +51,8 @@ function deleteFile() {
     });
 }
 
-function performAction(id, isView) {
-    let url = `/Compliant/Compliant_three?id=${id}&isView=${isView}`
+function performAction(ComplaintId, isView,Id) {
+    let url = `/Compliant/Compliant_three?Id=${ComplaintId}&isView=${isView}`
     location.href = url;
 }
 
@@ -83,7 +91,7 @@ function submitForm() {
 
     if (retval) {
         var data = {
-            Id: $("#Id").val(),
+            ComplaintId: $("#Id").val(),
             DueDate: $("#DueDate").val(),
             CategoryId: $("#CategoryId").val(),
             SubCategoryId: $("#SubCategoryId").val(),
@@ -91,19 +99,21 @@ function submitForm() {
             UserId: $("#UserId").val(),
             ComplaintStatus: $("#ComplaintStatus").val(),
             CashTypeId: $("#CashTypeId").val(),
-            InvolvedUsersId: $("#InvolvedUsersId").val()
+            //InvolvedUsersId: $(".multipleddl").val()
         }
         var formData = new FormData();
-
+        var UserInvolved = $(".multipleddl").val();
         for (var i = 0; i < attachementfiles.length; i++) {
             if (attachementfiles[i].file.IsDeleted == false) {
                 formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
+                
             }
         }
+        
 
         data = JSON.stringify(data);
         formData.append("EmpCompliantParams", data);
-
+        formData.append("UserInvolved", UserInvolved);
         StartProcess();
         $.ajax({
             type: "POST",
@@ -162,7 +172,7 @@ function submitBackToBUHCForm() {
 
     if (retval) {
         var data = {
-            Id: $("#Id").val(),
+            ComplaintId: $("#Id").val(),
             DueDate: $("#DueDate").val(),
             CategoryId: $("#CategoryId").val(),
             SubCategoryId: $("#SubCategoryId").val(),
@@ -170,13 +180,14 @@ function submitBackToBUHCForm() {
             UserId: $("#UserId").val(),
             ComplaintStatus: $("#ComplaintStatus").val(),
             CashTypeId: $("#CashTypeId").val(),
-            InvolvedUsersId: $("#InvolvedUsersId").val()
+            //InvolvedUsersId: $("#InvolvedUsersId").val()
         }
         var formData = new FormData();
 
         for (var i = 0; i < attachementfiles.length; i++) {
             if (attachementfiles[i].file.IsDeleted == false) {
                 formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
+                formData.append("UserInvolved", $(".multipleddl").val());
             }
         }
 
@@ -204,6 +215,11 @@ function submitBackToBUHCForm() {
             }
         });
     }
+}
+
+function submitBackForm() {
+    let url = `/Compliant/ComplaintThree_Index`
+    location.href = url;
 }
 
 addAttachement = function () {
@@ -244,24 +260,11 @@ function addAttachementUploadedFile() {
     }
 }
 
-//submitComplaint = function (id) {
-//    StartProcess();
-//    $.ajax({
-//        type: "GET",
-//        url: "/Compliant/SubmitComplaint",
-//        data: { id: id },
-//        success: function (response) {
-//            StopProcess();
-//            if (response.status === "Fail") {
-//                $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
-//            }
-//            else {
-//                $("#btnSave").addClass("disabled-div");
-//                $("#lblError").removeClass("success").removeClass("adderror").addClass("success").text(response.data).show();
-//            }
-//        },
-//        error: function (error) {
-//            funToastr(false, error.statusText);
-//        }
-//    });
-//}
+function getHistory(id) {
+    if (id !== "") {
+        var url = "/Compliant/GetHistoryByComplaint?ComplaintId=" + id;
+        $("#historyContent").load(url, function () {
+            $("#historyModal").modal("show");
+        })
+    }
+}
