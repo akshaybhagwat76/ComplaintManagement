@@ -18,9 +18,7 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
-}
-@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Sub categories histories";
 }
 @Html.Hidden("history", (object)ViewBag.name)
 
@@ -190,27 +188,27 @@
 
                                     </table>
                                 </div>
-                                    <br />
-                                    <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            @for (int i = 1; i <= ViewBag.PageCount; i++)
-                                            {
-                                                <td>
-                                                    <div class="pagination">
-                                                        @if (i != ViewBag.CurrentPageIndex)
-                                                        {
-                                                            <a href="javascript:PagerClick(@i);">@i</a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span>@i</span>
-                                                        }
-                                                    </div>
-                                                </td>
-                                            }
-                                        </tr>
-                                    </table>
-                                    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+                                <br />
+                                <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        @for (int i = 1; i <= ViewBag.PageCount; i++)
+                                        {
+                                            <td>
+                                                <div class="pagination">
+                                                    @if (i != ViewBag.CurrentPageIndex)
+                                                    {
+                                                        <a href="javascript:PagerClick(@i);">@i</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@i</span>
+                                                    }
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                </table>
+                                <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
                             </div>
                         </div>
                     </div>
@@ -254,3 +252,6 @@
     var pageLength=@ViewBag.PageIndex;
     var page = @ViewBag.Page;
         </script>
+
+    </div>
+</div>

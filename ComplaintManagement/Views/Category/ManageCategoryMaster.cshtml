@@ -1,4 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.CategoryMasterVM
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -18,11 +19,9 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
+    ViewBag.Title = "Manage Category";
 }
-@model ComplaintManagement.ViewModel.CategoryMasterVM
-@{
-    ViewBag.Title = "ManageCategoryMaster";
-}
+
 <!-- Content Wrapper -->
 @Html.Hidden("pageState", (object)ViewBag.ViewState)
 <div id="content-wrapper" class="d-flex flex-column">
@@ -194,3 +193,4 @@
         @Scripts.Render("~/Assets/EditCategoryMasters")
 
     </div>
+</div>

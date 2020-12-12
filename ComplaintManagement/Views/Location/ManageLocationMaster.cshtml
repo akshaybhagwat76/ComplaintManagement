@@ -1,4 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.LocationMasterVM
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -18,12 +19,8 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
+    ViewBag.Title = "Manage Location";
 }
-@model ComplaintManagement.ViewModel.LocationMasterVM
-@{
-    ViewBag.Title = "ManageLocationMaster";
-}
-
 <!-- Content Wrapper -->
 
 @Html.Hidden("pageState", (object)ViewBag.ViewState)
@@ -204,7 +201,6 @@
     <!-- End of Main Content -->
 </div>
 <!-- End of Content Wrapper -->
-    </div>
 <!-- End of Page Wrapper -->
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">

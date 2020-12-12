@@ -18,11 +18,8 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
+    ViewBag.Title = "Region's";
 }
-@{
-    ViewBag.Title = "Index";
-}
-
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
     @Html.Hidden("history", (object)ViewBag.name)
@@ -242,7 +239,6 @@
     <!-- End of Main Content -->
 </div>
 <!-- End of Content Wrapper -->
-    </div>
 <!-- End of Page Wrapper -->
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">

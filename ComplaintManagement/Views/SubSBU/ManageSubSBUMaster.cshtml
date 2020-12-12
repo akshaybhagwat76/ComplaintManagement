@@ -1,4 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.SubSBUMasterVM
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -18,10 +19,7 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
-}
-@model ComplaintManagement.ViewModel.SubSBUMasterVM
-@{
-    ViewBag.Title = "ManageSubSBUMaster";
+    ViewBag.Title = "Manage SubSBU";
 }
 @Html.Hidden("pageState", (object)ViewBag.ViewState)
 <!-- Content Wrapper -->
@@ -195,7 +193,6 @@
     <!-- End of Main Content -->
 </div>
 <!-- End of Content Wrapper -->
-    </div>
 <!-- End of Page Wrapper -->
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">

@@ -1,4 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.LOSMasterVM
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0;
@@ -18,10 +19,7 @@
             userId = Convert.ToInt32(userIDInfo.Value.ToString());
         }
     }
-}
-@model ComplaintManagement.ViewModel.LOSMasterVM
-@{
-    ViewBag.Title = "ManageLOSMaster";
+    ViewBag.Title = "Manage LOS";
 }
 @Styles.Render("~/Content/plugins/select2/select2Styles")
 <!-- Content Wrapper -->

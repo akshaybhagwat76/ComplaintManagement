@@ -1,7 +1,7 @@
 ﻿@using ComplaintManagement.Helpers
 @model ComplaintManagement.ViewModel.UserMasterVM
 @{
-    ViewBag.Title = "Compliant_one";
+    ViewBag.Title = "Manage Employee Compliant";
     string saltedId = CryptoEngineUtils.Encrypt(Convert.ToString(Model.Id), true);
     string Id = Convert.ToString(Model.Id);
 }
