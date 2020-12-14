@@ -230,10 +230,14 @@ namespace ComplaintManagement.Repository
                                     string[] assignedUsers = employeeComplaintWorkFlowList.Select(s => s.AssignedUserRoles).ToArray();
                                     foreach (string userId in assignedUsers)
                                     {
-                                        if (Convert.ToInt32(userId) == Convert.ToInt32(sid))
+                                        string[] assignedUsersId = userId.Split(',');
+                                        foreach (string Id in assignedUsersId)
                                         {
-                                            Dashboard.DueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate >= DateTime.Now && Convert.ToInt32(x.AssignedUserRoles) == Convert.ToInt32(sid)).Count();
-                                            Dashboard.OverDueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate <= DateTime.UtcNow && Convert.ToInt32(x.AssignedUserRoles) == Convert.ToInt32(sid)).Count();
+                                            if (Convert.ToInt32(Id) == Convert.ToInt32(sid))
+                                            {
+                                                Dashboard.DueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate >= DateTime.Now && x.AssignedUserRoles.Split(',').Contains(sid)).Count();  //&& Convert.ToInt32(x.AssignedUserRoles) == Convert.ToInt32(sid) 
+                                                Dashboard.OverDueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate <= DateTime.UtcNow && x.AssignedUserRoles.Split(',').Contains(sid)).Count();
+                                            }
                                         }
                                     }
                                 }
