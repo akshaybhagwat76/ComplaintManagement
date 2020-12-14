@@ -116,6 +116,17 @@ namespace ComplaintManagement.Controllers
                         ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == ids).ToList();
                         ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
 
+                        var HrRole = db.HR_Role.FirstOrDefault(i => i.ComplentId == (ids));
+                        if (HrRole != null)
+                        {
+                            userMasterVM.Ramarked = HrRole.Remark;
+                            userMasterVM.Attachments = HrRole.Attachement;
+                            userMasterVM.CaseType = HrRole.CaseType;
+                            //userMasterVM.InvolvedUsersId = HrRole.CaseType;
+                        }
+
+
+
                         return View("Compliant_two", userMasterVM);
                     }
                     else if (isRedirect == "3")
@@ -336,9 +347,6 @@ namespace ComplaintManagement.Controllers
             ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
             ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
             ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(sid)).ToList();
-
-            ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(sid)).ToList();
-
             ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
             if (!string.IsNullOrEmpty(UserVM.ImagePath))
             {
@@ -347,6 +355,12 @@ namespace ComplaintManagement.Controllers
                     UserVM.ImagePath = string.Empty;
                 }
             }
+
+            //var HrRole = db.HR_Role.FirstOrDefault(i => i.ComplentId == (complaintId));
+            //ViewBag.HrRole = HrRole;
+            //var hrRoleData = new UserMastersRepository().Get(Convert.ToInt32(HrRole.HRUserId));
+            //ViewBag.HrRoleData = hrRoleData;
+
             ViewBag.NavbarTitle = "Complaint Information";
             UserVM.ComplaintStatus = Messages.Opened; UserVM.Id = UserVM.CompentencyId = 0; UserVM.DateOfJoining = DateTime.UtcNow.AddDays(5);
             return View(UserVM);

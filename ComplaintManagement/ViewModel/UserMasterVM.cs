@@ -66,6 +66,9 @@ namespace ComplaintManagement.ViewModel
         public string Remark { get; set; }
         [DisplayName("Remarked")]
         public string Ramarked { get; set; }
+        [DisplayName("Case Type")]
+        public string CaseType { get; set; }
+        
 
         [DisplayName("Attachments")]
         public string Attachments { get; set; }

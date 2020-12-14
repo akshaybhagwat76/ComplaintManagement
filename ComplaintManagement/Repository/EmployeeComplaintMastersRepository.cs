@@ -625,7 +625,7 @@ namespace ComplaintManagement.Repository
                             employeeComplaint.IsSubmitted = true;
                             employeeComplaint.ComplaintStatus = Messages.SUBMITTED;
 
-                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Complaintdata.ComplaintStatus, db);
+                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Messages.SUBMITTED, db);
                             db.SaveChanges();
                             if (employeeComplaintWorkFlowDto != null && employeeComplaintWorkFlowDto.ComplaintId > 0)
                             {
@@ -654,8 +654,16 @@ namespace ComplaintManagement.Repository
                     data.IsSubmitted = false;
                     data.Remark = remarks;
                     data.ComplaintStatus = Messages.Withdrawn;
-                    new EmployeeComplaintHistoryRepository().AddComplaintHistory(data.Remark, data.Id, data.ComplaintStatus, db);
+                    
                 }
+                var dataWorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == id);
+                if (dataWorkFlow != null && !string.IsNullOrEmpty(remarks))
+                {
+                    dataWorkFlow.UpdatedDate = DateTime.UtcNow;
+                    dataWorkFlow.Remarks = remarks;
+                    dataWorkFlow.ActionType = Messages.Withdrawn;
+                }
+                new EmployeeComplaintHistoryRepository().AddComplaintHistory(data.Remark, data.Id, Messages.Withdrawn, db);
                 return db.SaveChanges() > 0;
             }
             catch (Exception ex)

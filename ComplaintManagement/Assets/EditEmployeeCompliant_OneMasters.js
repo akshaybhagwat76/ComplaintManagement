@@ -303,7 +303,7 @@ function SubmitComplaintHr() {
                     $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
                 }
                 else {
-                    window.location.href = '/Employee/Index';
+                    window.location.href = '/Compliant/ComplaintTwo_Index';
                 }
             },
             error: function (error) {
@@ -397,7 +397,7 @@ function PushComplaintHr() {
                             $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
                         }
                         else {
-                            window.location.href = '/Employee/Index';
+                            window.location.href = '/Compliant/ComplaintTwo_Index';
                         }
                     },
                     error: function (error) {
