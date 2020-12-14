@@ -269,7 +269,7 @@ function SubmitComplaintHr() {
             DueDate: $("#DueDate").val(),
             CategoryId: $("#CategoryId").val(),
             SubCategoryId: $("#SubCategoryId").val(),
-            Remark: $("#Remark").val(),
+            Remark: $("#Ramarked").val(),
             CaseType: $("#CaseType option:selected").val(),
             UserId: $("#UserId").val(),
             ComplaintStatus: $("#ComplaintStatus").val()
@@ -363,7 +363,7 @@ function PushComplaintHr() {
             DueDate: $("#DueDate").val(),
             CategoryId: $("#CategoryId").val(),
             SubCategoryId: $("#SubCategoryId").val(),
-            Remark: $("#Remarked").val(),
+            Remark: $("#Ramarked").val(),
             UserId: $("#UserId").val(),
             CaseType: $("#CaseType option:selected").val(),
             ComplaintStatus: $("#ComplaintStatus").val(),
@@ -408,7 +408,38 @@ function PushComplaintHr() {
         }
     }
 }
+function CloseComplaintHr() {
+    var Id = $("#Id").val();
+    var UserId = $("#UserId").val();
+    var formData = new FormData();
 
+    formData.append("Id", Id);
+    formData.append("UserId", UserId);
+            
+
+
+            StartProcess();
+            $.ajax({
+                type: "POST",
+                url: "/Compliant/ComplaintTwo_Close",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status == "Fail") {
+                        StopProcess();
+                        $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+                    }
+                    else {
+                        window.location.href = '/Compliant/ComplaintTwo_Index';
+                    }
+                },
+                error: function (error) {
+                    funToastr(false, error.statusText);
+                }
+            });
+        }
+    
 
 
 
