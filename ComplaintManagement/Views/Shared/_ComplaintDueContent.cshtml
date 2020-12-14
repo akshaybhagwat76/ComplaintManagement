@@ -1,4 +1,9 @@
 ﻿@using ComplaintManagement.Helpers
+<style>
+    table#dueTable thead .sorting_desc:after {
+        content: '';
+    }
+</style>
 <div class="table-responsive">
     <table class="table f-14 border" id="dueTable" style="width:100%">
         @if (ViewBag.lstComplaintDue != null)

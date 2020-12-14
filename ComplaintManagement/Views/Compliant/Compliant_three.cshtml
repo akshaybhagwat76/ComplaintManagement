@@ -414,7 +414,7 @@
                                 <div class="row col-md-12">
                                     @if (!string.IsNullOrEmpty(Model.AttachmentsCommittee))
                                     {
-                                        <br /> <br />
+                                        @*<br /> <br />*@
                                         if (Model.AttachmentsCommittee.Contains(","))
                                         {
 
@@ -424,7 +424,7 @@
                                                 if (item.Length > 3)
                                                 {
                                                     <div id="file_@item" class="col-md-6 ml-2">
-                                                        <br /> <br />
+                                                        @*<br /> <br />*@
                                                         <a href="/Files/DownloadFile?filePath=/Documents/@item" class="btn border-0 p-0">  @item </a>&nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@item')" title="remove"></span>
                                                     </div>
                                                 }
@@ -437,7 +437,7 @@
 
                                                 <a href="/Files/DownloadFile?filePath=/Documents/@Model.AttachmentsCommittee" class="btn border-0 p-0">  @Model.AttachmentsCommittee </a> &nbsp; &nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@Model.Attachments')" title="remove"></span>
                                             </div>
-                                            <br /> <br />
+                                            @*<br /> <br />*@
                                         }
                                     }
                                 </div>
@@ -448,12 +448,14 @@
                                 @*<label>Case Type</label>*@
                                 @*<select class="form-control"></select>*@
                                 @Html.Label("Case Type", new { @class = "requiredLabel" })
-                                <select class="form-control requiredLabel" id="CashTypeId">
-                                    <option value="Actionable" selected>Actionable</option>
-                                    <option value="NonActionable">Non Actionable</option>
-                                </select>
+                               
+                                @{
+                                    var listCashType = new List<SelectListItem>();
+                                    listCashType.Add(new SelectListItem { Text = "Actionable", Value = "Actionable" });
+                                    listCashType.Add(new SelectListItem { Text = "Non Actionable", Value = "NonActionable" });
+                                }
 
-                                @*@Html.DropDownList("CashTypeId", (List<SelectListItem>)listCashType, new { @class = "form-control required" })*@
+                                @Html.DropDownList("CashTypeId", (List<SelectListItem>)listCashType, new { @class = "form-control required" })
                             </div>
                         </div>
                         <div class="row form-group">

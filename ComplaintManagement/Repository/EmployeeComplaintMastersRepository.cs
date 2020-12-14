@@ -608,8 +608,12 @@ namespace ComplaintManagement.Repository
                                 else
                                 {
                                     var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-                                    roleMasterLineItem.ForEach(x => rolesId = string.Join(",", x.Id));
-                                    roleMasterLineItem.ForEach(x => assignedUsersroleId = string.Join(",", x.UserId));
+                                    //roleMasterLineItem.ForEach(x => rolesId = string.Join(",", x.Id));
+                                    // roleMasterLineItem.ForEach(x => assignedUsersroleId = string.Join(",", x.UserId));
+
+                                    assignedUsersroleId = string.Join(",", roleMasterLineItem.Select(x => x.UserId).ToList());
+                                    rolesId = string.Join(",", roleMasterLineItem.Select(x => x.Id).ToList());
+
                                     employeeComplaintWorkFlowDto.ActionType = Messages.SUBMITTED;
                                     employeeComplaintWorkFlowDto.ComplaintId = Complaintdata.Id;
                                     employeeComplaintWorkFlowDto.Remarks = Complaintdata.Remark;

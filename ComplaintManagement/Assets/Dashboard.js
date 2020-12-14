@@ -175,7 +175,7 @@ getAwaitingComplaint = function () {
     })
 }
 
-function getDueComplaints(){
+function getDueComplaints() {
     StartProcess();
     var url = "/Compliant/GetDueComplaints";
     $("#dueComplaintsContent").load(url, function () {
@@ -196,8 +196,15 @@ function getDueComplaints(){
                         $("body").append(text)
                         let isView = false; let id = $(".id").attr("id");
                         let isRedirect = "2";
-                        let url = `/Compliant/Edit?id=${id}&isView=${isView}&isRedirect=${isRedirect}`
-                        location.href = url;
+                        var currentUserrole = $("#Role").val();
+                        if (currentUserrole == "Committee") {
+                            let url = `/Compliant/Compliant_three?Id=${id}&isView=${isView}`
+                            location.href = url;
+                        } else {
+                            let url = `/Compliant/Edit?id=${id}&isView=${isView}&isRedirect=${isRedirect}`
+                            location.href = url;
+                        }
+                       
                     }
                 }
             }
@@ -226,8 +233,14 @@ function getOverDueComplaints() {
                         $("body").append(text)
                         let isView = false; let id = $(".id").attr("id");
                         let isRedirect = "2";
-                        let url = `/Compliant/Edit?id=${id}&isView=${isView}&isRedirect=${isRedirect}`
-                        location.href = url;
+                        var currentUserrole = $("#Role").val();
+                        if (currentUserrole == "Committee") {
+                            let url = `/Compliant/Compliant_three?Id=${id}&isView=${isView}`
+                            location.href = url;
+                        } else {
+                            let url = `/Compliant/Edit?id=${id}&isView=${isView}&isRedirect=${isRedirect}`
+                            location.href = url;
+                        }
                     }
                 }
             }
