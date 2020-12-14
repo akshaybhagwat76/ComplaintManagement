@@ -8,6 +8,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -868,6 +869,41 @@ namespace ComplaintManagement.Controllers
             }
         }
 
+        //14/12/2020
+       public ActionResult ComplaintTwo_Close(string Id,string UserId)
+        {
+            try
+            {
+                string id = CryptoEngineUtils.Decrypt(Id.Replace(" ", "+"), true);
+                int ids = Convert.ToInt32(id);
+                var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
+                if (WorkFlow != null)
+                {
+                    WorkFlow.ActionType = Messages.Opened;
+                    WorkFlow.UpdatedDate = DateTime.UtcNow;
+                    WorkFlow.IsActive = false;
+                    //WorkFlow.Remarks = EmployeeComplaint.Remark;
+                    db.Entry(WorkFlow).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                }
+
+                var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
+                if (ComplaintMaster != null)
+                {
+                    ComplaintMaster.ComplaintStatus = Messages.COMMITTEE;
+                    ComplaintMaster.UpdatedDate = DateTime.UtcNow;
+                    ComplaintMaster.IsActive = false;
+                    db.Entry(ComplaintMaster).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+          return RedirectToAction("ComplaintTwo_Index");
+        }
 
     }
 }

@@ -16,6 +16,8 @@ namespace ComplaintManagement.ViewModel
         public Nullable<int> UpdatedBy { get; set; }
         [DisplayName("Remark")]
         public string Remark { get; set; }
+        [DisplayName("Remarked")]
+        public string Remarked { get; set; }
         [DisplayName("Attachments")]
         public string Attachments { get; set; }
         public string Attachments1 { get; set; }
