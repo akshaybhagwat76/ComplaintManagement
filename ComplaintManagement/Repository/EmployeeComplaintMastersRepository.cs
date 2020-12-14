@@ -827,7 +827,10 @@ namespace ComplaintManagement.Repository
 
         //Aman work
 
-        public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM EmployeeComplaintVM, String Id, int Hrid, string UserInvolved, int Status)
+  
+
+
+public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM EmployeeComplaintVM, String Id, int Hrid, string UserInvolved, int Status)
         {
             try
             {
@@ -876,7 +879,7 @@ namespace ComplaintManagement.Repository
                                     {
                                         WorkFlow.ActionType = Messages.SUBMITTED;
                                         WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        //WorkFlow.Remarks = EmployeeComplaint.Remark;
+                                        WorkFlow.Remarks = remark;
                                         db.Entry(WorkFlow).State = EntityState.Modified;
                                         db.SaveChanges();
                                     }
@@ -914,7 +917,7 @@ namespace ComplaintManagement.Repository
                                     {
                                         WorkFlow.ActionType = Messages.COMMITTEE;
                                         WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        //WorkFlow.Remarks = EmployeeComplaint.Remark;
+                                        WorkFlow.Remarks = remark;
                                         db.Entry(WorkFlow).State = EntityState.Modified;
                                         db.SaveChanges();
                                     }
@@ -930,15 +933,15 @@ namespace ComplaintManagement.Repository
                                     }
 
 
-                                    EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
-                                    hrs.CreatedBy = Convert.ToInt32(sid);
-                                    hrs.CreatedDate = DateTime.UtcNow;
-                                    hrs.IsActive = true;
-                                    hrs.Remarks = remark;
-                                    hrs.ActionType = Messages.COMMITTEE;
-                                    hrs.UserType = Messages.NormalUser;
-                                    hrs.ComplaintId = ids;
-                                    db.EmployeeComplaintHistories.Add(hrs);
+                                    EmployeeComplaintHistory hrst = new EmployeeComplaintHistory();
+                                    hrst.CreatedBy = Convert.ToInt32(sid);
+                                    hrst.CreatedDate = DateTime.UtcNow;
+                                    hrst.IsActive = true;
+                                    hrst.Remarks = remark;
+                                    hrst.ActionType = Messages.COMMITTEE;
+                                    hrst.UserType = Messages.NormalUser;
+                                    hrst.ComplaintId = ids;
+                                    db.EmployeeComplaintHistories.Add(hrst);
                                     db.SaveChanges();
 
                                 }
@@ -951,7 +954,7 @@ namespace ComplaintManagement.Repository
                                     {
                                         WorkFlow.ActionType = Messages.Opened;
                                         WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        //WorkFlow.Remarks = EmployeeComplaint.Remark;
+                                        WorkFlow.Remarks = remark;
                                         db.Entry(WorkFlow).State = EntityState.Modified;
                                         db.SaveChanges();
                                     }
@@ -977,6 +980,16 @@ namespace ComplaintManagement.Repository
                             {
                                 if (Status == 1)
                                 {
+                                    EmployeeComplaintHistory hrs1 = new EmployeeComplaintHistory();
+                                    hrs1.CreatedBy = Convert.ToInt32(sid);
+                                    hrs1.CreatedDate = DateTime.UtcNow;
+                                    hrs1.IsActive = true;
+                                    hrs1.Remarks = remark;
+                                    hrs1.ActionType = "Save";
+                                    hrs1.UserType = Messages.NormalUser;
+                                    hrs1.ComplaintId = ids;
+                                    db.EmployeeComplaintHistories.Add(hrs1);
+                                    db.SaveChanges();
 
                                     HRRole.IsActive = true;
                                     HRRole.CreatedDate = DateTime.UtcNow;
@@ -991,26 +1004,19 @@ namespace ComplaintManagement.Repository
                                     db.Entry(HRRole).State = EntityState.Modified;
                                     db.SaveChanges();
 
+                                  
+
                                     var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
                                     if (WorkFlow != null)
                                     {
                                         WorkFlow.ActionType = Messages.SUBMITTED;
                                         WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        //WorkFlow.Remarks = EmployeeComplaint.Remark;
+                                        WorkFlow.Remarks = remark;
                                         db.Entry(WorkFlow).State = EntityState.Modified;
                                         db.SaveChanges();
                                     }
 
-                                    EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
-                                    hrs.CreatedBy = Convert.ToInt32(sid);
-                                    hrs.CreatedDate = DateTime.UtcNow;
-                                    hrs.IsActive = true;
-                                    hrs.Remarks = remark;
-                                    hrs.ActionType = "Save";
-                                    hrs.UserType = Messages.NormalUser;
-                                    hrs.ComplaintId = ids;
-                                    db.EmployeeComplaintHistories.Add(hrs);
-                                    db.SaveChanges();
+                               
 
                                 }
                                 else if (Status == 2)
@@ -1034,7 +1040,7 @@ namespace ComplaintManagement.Repository
                                     {
                                         WorkFlow.ActionType = Messages.COMMITTEE;
                                         WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        //WorkFlow.Remarks = EmployeeComplaint.Remark;
+                                        WorkFlow.Remarks = remark;
                                         db.Entry(WorkFlow).State = EntityState.Modified;
                                         db.SaveChanges();
                                     }
@@ -1089,19 +1095,15 @@ namespace ComplaintManagement.Repository
 
                                 }
 
-
-                              
-
-
                             }
-                        
 
 
-                                db.SaveChanges();
 
-                                
-                            }
-                        
+                          
+
+
+                        }
+
                         catch (Exception ex)
                         {
                             dbContextTransaction.Rollback();
@@ -1138,6 +1140,8 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
+
+
 
     }
 }
