@@ -235,7 +235,7 @@ namespace ComplaintManagement.Repository
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
-                throw new Exception(ex.Message.ToString());
+                throw ex;
             }
             return EmployeeComplaintWorkFlowListDto;
         }

@@ -138,6 +138,13 @@ removeAttachementFile = function (index) {
         attachementfiles[index].file.IsDeleted = true;
     }
 }
+removeAttachementFile1 = function (index) {
+    let getFile = attachementfiles1[index];
+    if (getFile !== undefined) {
+        document.getElementById("file_" + getFile.file.name).remove();
+        attachementfiles1[index].file.IsDeleted = true;
+    }
+}
 
 // Import Attachement 
 var inputAttachement = document.getElementById('attachementFile');
@@ -193,7 +200,7 @@ addAttachement1 = function () {
     if (attachementfiles1 && attachementfiles1.length > 0) {
         var lastFile = attachementfiles1[attachementfiles1.length - 1];
         var index = attachementfiles1.findIndex(x => x.file.name === lastFile.file.name);
-        var attachement1 = '<br /><div id="file_' + lastFile.file.name + '" class="col-md-12">' + lastFile.file.name + ' &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeAttachementFile(' + index + ')" title="remove"></span></div>';
+        var attachement1 = '<br /><div id="file_' + lastFile.file.name + '" class="col-md-12">' + lastFile.file.name + ' &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeAttachementFile1(' + index + ')" title="remove"></span></div>';
         $("#form-attachement1").append(attachement1);
     }
 }

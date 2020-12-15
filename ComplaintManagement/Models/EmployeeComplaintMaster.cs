@@ -30,7 +30,6 @@ namespace ComplaintManagement.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<int> UpdatedBy { get; set; }
         public string Remark { get; set; }
-      
         public string Attachments { get; set; }
         public bool IsActive { get; set; }
         public bool Status { get; set; }
