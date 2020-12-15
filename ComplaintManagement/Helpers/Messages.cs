@@ -132,6 +132,7 @@
         public const string CANCELLED = "cancelled";
         public const string COMPLETED = "completed";
         public const string XLSX = ".xlsx";
+        public const string InProgress = "In-Progress";
 
         //Image paths
         public const string LOGOIMG = "logo";

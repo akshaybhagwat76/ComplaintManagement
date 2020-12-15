@@ -49,12 +49,14 @@ namespace ComplaintManagement.Repository
                                 db.SaveChanges();
 
                                 EmployeeComplaintVM.EmployeeComplaintMasterId = EmployeeComplaint.Id;
-
-                                EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
-                                if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Added; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
-                                db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
-                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
-                                db.SaveChanges();
+                                if (flag != "B")
+                                {
+                                    EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
+                                    if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Added; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
+                                    db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
+                                    new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
+                                    db.SaveChanges();
+                                }
                                 dbContextTransaction.Commit();
                             }
                             else
@@ -87,12 +89,14 @@ namespace ComplaintManagement.Repository
                                 }
                                 db.Entry(EmployeeComplaint).CurrentValues.SetValues(EmployeeComplaintVM);
 
-                                EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
-                                if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Updated; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
-                                db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
-                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
-                                db.SaveChanges();
-
+                                if (flag != "B")
+                                {
+                                    EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
+                                    if (EmployeeComplaintMasters_History != null) { EmployeeComplaintMasters_History.EntityState = Messages.Updated; EmployeeComplaintMasters_History.EmployeeComplaintMasterId = EmployeeComplaintMasters_History.Id; };
+                                    db.EmployeeComplaintMastersHistories.Add(EmployeeComplaintMasters_History);
+                                    new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaint.Remark, EmployeeComplaint.Id, EmployeeComplaint.ComplaintStatus, db);
+                                    db.SaveChanges();
+                                }
                                 dbContextTransaction.Commit();
                             }
                         }
@@ -307,7 +311,7 @@ namespace ComplaintManagement.Repository
                                 ComplaintMaster.ComplaintStatus = Messages.SUBMITTED;
                                 ComplaintMaster.UpdatedDate = DateTime.UtcNow;
                                 ComplaintMaster.UpdatedBy = Convert.ToInt32(sid);
-                                ComplaintMaster.Remark = EmployeeComplaintVM.RemarkCommittee;
+                                //ComplaintMaster.Remark = EmployeeComplaintVM.RemarkCommittee;
                                 db.Entry(ComplaintMaster).State = EntityState.Modified;
                                 db.SaveChanges();
                             }
@@ -317,13 +321,13 @@ namespace ComplaintManagement.Repository
                             {
                                 WorkFlow.ActionType = Messages.SUBMITTED;
                                 WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                WorkFlow.Remarks = EmployeeComplaintVM.RemarkCommittee;
+                                //WorkFlow.Remarks = EmployeeComplaintVM.RemarkCommittee;
                                 db.Entry(WorkFlow).State = EntityState.Modified;
 
                                 db.SaveChanges();
                             }
 
-                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, Messages.SUBMITTED, db);
+                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, Messages.InProgress, db);
                             dbContextTransaction.Commit();
 
                         }
@@ -631,7 +635,7 @@ namespace ComplaintManagement.Repository
                             employeeComplaint.IsSubmitted = true;
                             employeeComplaint.ComplaintStatus = Messages.SUBMITTED;
 
-                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Messages.SUBMITTED, db);
+                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Messages.InProgress, db);
                             db.SaveChanges();
                             if (employeeComplaintWorkFlowDto != null && employeeComplaintWorkFlowDto.ComplaintId > 0)
                             {

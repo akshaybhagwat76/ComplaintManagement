@@ -45,7 +45,7 @@
                         if (returnUrl != null && returnUrl != "")
                             window.location.href = $('#myForm').data("url");
                         else
-                            window.location.href = '/Category/Index';
+                            window.location.href = '/home/index';
                     }
                 }
             });
