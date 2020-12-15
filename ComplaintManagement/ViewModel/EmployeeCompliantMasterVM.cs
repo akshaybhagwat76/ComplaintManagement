@@ -35,6 +35,7 @@ namespace ComplaintManagement.ViewModel
         public bool IsSubmitted { get; set; }
         public int HRUserId { get; set; }
         public string CaseType { get; set; }
+        public string LastPerformedBy { get; set; }
     }
 
 }

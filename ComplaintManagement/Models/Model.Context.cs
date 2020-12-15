@@ -29,14 +29,18 @@ namespace ComplaintManagement.Models
         public virtual DbSet<CategoryMasters_History> CategoryMasters_History { get; set; }
         public virtual DbSet<CommitteeMaster> CommitteeMasters { get; set; }
         public virtual DbSet<CommitteeMasters_History> CommitteeMasters_History { get; set; }
+        public virtual DbSet<CommitteeRole> CommitteeRoles { get; set; }
         public virtual DbSet<CompetencyMaster> CompetencyMasters { get; set; }
         public virtual DbSet<CompetencyMasters_History> CompetencyMasters_History { get; set; }
         public virtual DbSet<DesignationMaster> DesignationMasters { get; set; }
         public virtual DbSet<DesignationMasters_History> DesignationMasters_History { get; set; }
+        public virtual DbSet<EmployeeComplaintHistory> EmployeeComplaintHistories { get; set; }
         public virtual DbSet<EmployeeComplaintMaster> EmployeeComplaintMasters { get; set; }
         public virtual DbSet<EmployeeComplaintMastersHistory> EmployeeComplaintMastersHistories { get; set; }
+        public virtual DbSet<EmployeeComplaintWorkFlow> EmployeeComplaintWorkFlows { get; set; }
         public virtual DbSet<EntityMaster> EntityMasters { get; set; }
         public virtual DbSet<EntityMasters_History> EntityMasters_History { get; set; }
+        public virtual DbSet<HR_Role> HR_Role { get; set; }
         public virtual DbSet<LocationMaster> LocationMasters { get; set; }
         public virtual DbSet<LocationMasters_History> LocationMasters_History { get; set; }
         public virtual DbSet<LOSMaster> LOSMasters { get; set; }
@@ -53,9 +57,5 @@ namespace ComplaintManagement.Models
         public virtual DbSet<SubSBUMasters_History> SubSBUMasters_History { get; set; }
         public virtual DbSet<UserMaster> UserMasters { get; set; }
         public virtual DbSet<UserMasters_History> UserMasters_History { get; set; }
-        public virtual DbSet<EmployeeComplaintHistory> EmployeeComplaintHistories { get; set; }
-        public virtual DbSet<EmployeeComplaintWorkFlow> EmployeeComplaintWorkFlows { get; set; }
-        public virtual DbSet<HR_Role> HR_Role { get; set; }
-        public virtual DbSet<CommitteeRole> CommitteeRoles { get; set; }
     }
 }

@@ -109,6 +109,31 @@ namespace ComplaintManagement.Repository
             }
         }
 
+        public void RemoveCommitteefile(string fileName,string ComplaintId)
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+               .Select(c => c.Value).SingleOrDefault();
+            int loginuserid = Convert.ToInt32(sid);
+            int complaintId = Convert.ToInt32(ComplaintId);
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var user = db.CommitteeRoles.Where(x => x.Attachment.Contains(fileName) && x.ComplaintId== complaintId && x.CommitteeUserId== loginuserid).FirstOrDefault();
+                if (user != null && !string.IsNullOrEmpty(user.Attachment))
+                {
+                    string[] Attachments = user.Attachment.Split(new string[] { "," },
+                                  StringSplitOptions.None);
+                    int index = Array.IndexOf(Attachments, Attachments.Where(x => x == fileName).FirstOrDefault());
+                    Attachments[index] = string.Empty;
+
+                    user.Attachment = String.Join(",", Attachments.Select(p => p));
+                    db.SaveChanges();
+                }
+                new Common().RemoveDoc(fileName);
+            }
+        }
+
         //public List<CategoryMasterVM> GetAll()
         //{
         //    List<CategoryMaster> category = new List<CategoryMaster>();
@@ -254,6 +279,7 @@ namespace ComplaintManagement.Repository
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                
                 throw new Exception(ex.Message.ToString());
             }
             return Dashboard;

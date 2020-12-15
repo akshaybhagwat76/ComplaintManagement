@@ -23,13 +23,25 @@ $(document).ready(function () {
         }
     }
 });
+function removeFile(id,ComplaintId) {
+
+    //if (id !== undefined) {
+    //    document.getElementById("file_" + id).remove();
+    //    //attachementfiles[index].file.IsDeleted = true;
+    //}
+    $('#deleteModal').data('id', id).modal('show');
+    $('#deleteModal').modal('show');
+    document.getElementById("delete-btn").addEventListener("click", deleteFile);
+}
 function deleteFile() {
     var fileName = $('#deleteModal').data('id');
+    var ComplaintId = $('#Id').val();
+    alert(ComplaintId);
     StartProcess();
     $.ajax({
         type: "POST",
-        url: "/Compliant/RemoveFile",
-        data: { fileName: fileName },
+        url: "/Compliant/RemoveCommitteefile",
+        data: { fileName: fileName, ComplaintId: ComplaintId },
         success: function (response) {
             StopProcess();
             if (response.status !== "Fail") {
@@ -235,16 +247,7 @@ removeAttachementFile = function (index) {
     }
 }
 
-function removeFile(id) {
 
-    if (id !== undefined) {
-        document.getElementById("file_" + id).remove();
-        //attachementfiles[index].file.IsDeleted = true;
-    }
-    //$('#deleteModal').data('id', id).modal('show');
-    //$('#deleteModal').modal('show');
-    //document.getElementById("delete-btn").addEventListener("click", deleteFile);
-}
 
 // Import Attachement 
 var inputAttachement = document.getElementById('attachementFile');

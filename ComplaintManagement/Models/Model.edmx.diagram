@@ -5,52 +5,54 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="c1d4e34d98e247d08f21874b74160844" Name="Diagram1" ZoomLevel="76">
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CategoryMaster" Width="1.5" PointX="7.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CategoryMasters_History" Width="1.5" PointX="7.75" PointY="4.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeMaster" Width="1.5" PointX="5.75" PointY="8.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeMasters_History" Width="1.5" PointX="7.75" PointY="8.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CompetencyMaster" Width="1.5" PointX="0.75" PointY="18.875" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CompetencyMasters_History" Width="1.5" PointX="9.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.DesignationMaster" Width="1.5" PointX="2.75" PointY="9.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.DesignationMasters_History" Width="1.5" PointX="9.75" PointY="4.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" Width="1.5" PointX="5.25" PointY="3" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintMastersHistory" Width="1.5" PointX="9.75" PointY="8.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EntityMaster" Width="1.5" PointX="11.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EntityMasters_History" Width="1.5" PointX="11.75" PointY="4.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LocationMaster" Width="1.5" PointX="0.75" PointY="11.875" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LocationMasters_History" Width="1.5" PointX="11.75" PointY="8.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMaster" Width="1.5" PointX="0.75" PointY="3.25" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMasters_History" Width="1.5" PointX="4.75" PointY="12.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMaster" Width="1.5" PointX="0.75" PointY="15.375" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMasters_History" Width="1.5" PointX="6.75" PointY="12.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RoleMaster" Width="1.5" PointX="11.75" PointY="12.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RoleMasters_History" Width="1.5" PointX="13.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SBUMaster" Width="1.5" PointX="0.75" PointY="8.375" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SBUMasters_History" Width="1.5" PointX="13.75" PointY="5.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubCategoryMaster" Width="1.5" PointX="8.75" PointY="13.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubCategoryMasters_History" Width="1.5" PointX="13.75" PointY="9.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubSBUMaster" Width="1.5" PointX="0.75" PointY="22.375" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubSBUMasters_History" Width="1.5" PointX="13.75" PointY="13.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.UserMaster" Width="1.5" PointX="3" PointY="1.25" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.UserMasters_History" Width="1.5" PointX="15.75" PointY="0.75" />
+        <<<<<<< HEAD
+        
+        
+        
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CategoryMaster" Width="1.5" PointX="10.799157399125004" PointY="27.129556549307683" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CategoryMasters_History" Width="1.5" PointX="2.683080259097312" PointY="30.079622774421992" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeMaster" Width="1.5" PointX="11.961686577630083" PointY="28.594818486177743" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeMasters_History" Width="1.5" PointX="9.6810611307998471" PointY="31.996400624511949" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeRole" Width="1.5" PointX="6.0214201631124222" PointY="2.1761252294183362" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CompetencyMaster" Width="1.5" PointX="9.7514534768422383" PointY="8.46654113031297" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CompetencyMasters_History" Width="1.5" PointX="6.2988524522161367" PointY="2.4330201905374511" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.DesignationMaster" Width="1.5" PointX="9.6300673697283816" PointY="4.9986631297500166" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.DesignationMasters_History" Width="1.5" PointX="1.8731522382577661" PointY="6.052832591371998" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintHistory" Width="1.5" PointX="6.7259099607942208" PointY="4.7549972556321869" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" Width="1.5" PointX="10.149168155225537" PointY="12.674428483785329" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintMastersHistory" Width="1.5" PointX="11.791241979129261" PointY="8.33702628702718" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" Width="1.5" PointX="5.7518900529257442" PointY="3.6954170482677489" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EntityMaster" Width="1.5" PointX="11.527961594764125" PointY="19.962732816097667" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EntityMasters_History" Width="1.5" PointX="9.7521567520462717" PointY="25.151242714911348" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.HR_Role" Width="1.5" PointX="1.8882263926268679" PointY="20.487924674753064" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LocationMaster" Width="1.5" PointX="2.0946250586279787" PointY="7.1372248563623168" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LocationMasters_History" Width="1.5" PointX="0.80188394747762193" PointY="22.135776634391295" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMaster" Width="1.5" PointX="7.8902305252338891" PointY="2.5270615380849044" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMasters_History" Width="1.5" PointX="11.638753719459638" PointY="4.1891115327314994" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMaster" Width="1.5" PointX="4.2664604374517037" PointY="14.532102636309389" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMasters_History" Width="1.5" PointX="2.6458813728046984" PointY="11.254147341127576" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RoleMaster" Width="1.5" PointX="9.28502331920202" PointY="8.8102217804688134" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RoleMasters_History" Width="1.5" PointX="8.7353445686098858" PointY="21.748167897457336" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SBUMaster" Width="1.5" PointX="0.17810073503204654" PointY="2.8715592338105473" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SBUMasters_History" Width="1.5" PointX="8.237182783073365" PointY="16.009837709371855" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubCategoryMaster" Width="1.5" PointX="4.8292837668346635" PointY="23.950121205276865" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubCategoryMasters_History" Width="1.5" PointX="0.363539653068194" PointY="16.123324580548015" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubSBUMaster" Width="1.5" PointX="10.382341726861121" PointY="30.817854403898984" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SubSBUMasters_History" Width="1.5" PointX="5.5279684874825037" PointY="28.202413825412474" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.UserMaster" Width="1.5" PointX="11.195095337552528" PointY="5.8534301993685913" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.UserMasters_History" Width="1.5" PointX="2.246493482145711" PointY="22.905877720055113" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_CompetencyMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintMasters_UserMasters" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_LocationMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_RegionMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintHistory" Width="1.5" PointX="7.5" PointY="17.625" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" Width="1.5" PointX="7.5" PointY="22.25" />
-        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.HR_Role" Width="1.5" PointX="16.375" PointY="8.75" />
-<<<<<<< HEAD
-        
-        
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeRole" Width="1.5" PointX="6.43935771400079" PointY="14.040704286676228" />
 =======
 &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
       &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
       </Diagram>
     </edmx:Diagrams>

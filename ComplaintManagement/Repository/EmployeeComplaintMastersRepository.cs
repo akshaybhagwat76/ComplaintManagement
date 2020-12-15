@@ -181,16 +181,14 @@ namespace ComplaintManagement.Repository
                                 db.CommitteeRoles.Add(commitRole);
                                 db.SaveChanges();
 
-                                //var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.ComplaintId);
-                                //if (ComplaintMaster != null)
-                                //{
-                                //    ComplaintMaster.ComplaintStatus = "CommitteeSubmitted";
-                                //    ComplaintMaster.UpdatedDate = DateTime.UtcNow;
-                                //    ComplaintMaster.UpdatedBy = Convert.ToInt32(sid);
-                                //    ComplaintMaster.Remark = EmployeeComplaintVM.RemarkCommittee;
-                                //    db.Entry(ComplaintMaster).State = EntityState.Modified;
-                                //    db.SaveChanges();
-                                //}
+                                var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.ComplaintId);
+                                if (ComplaintMaster != null)
+                                {
+                                    
+                                    ComplaintMaster.LastPerformedBy = sid;
+                                    db.Entry(ComplaintMaster).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
 
                                 //var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId);
                                 //if (WorkFlow != null)
@@ -202,7 +200,7 @@ namespace ComplaintManagement.Repository
                                 //    db.SaveChanges();
                                 //}
 
-                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, "CommitteeSubmitted", db);
+                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, Messages.InProgress, db);
                                 dbContextTransaction.Commit();
                             }
                             else
@@ -213,9 +211,42 @@ namespace ComplaintManagement.Repository
                                 commitRole.InvolvedUsersId = UserInvolved;
                                 commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
                                 commitRole.Remark = EmployeeComplaintVM.RemarkCommittee;
-                                commitRole.Attachment = EmployeeComplaintVM.AttachmentsCommittee;
+
+                                //if (!string.IsNullOrEmpty(commitRole.Attachment))
+                                //{
+                                    if (!string.IsNullOrEmpty(EmployeeComplaintVM.AttachmentsCommittee))
+                                    {
+                                        List<string> newAttachments = EmployeeComplaintVM.AttachmentsCommittee.Split(',').ToList();
+                                        List<string> oldAttachments = commitRole.Attachment.Split(',').ToList();
+                                        List<string> updatedAttachements = new List<string>();
+                                        foreach (string fileName in oldAttachments.Concat(newAttachments).ToList())
+                                        {
+                                            if (!string.IsNullOrEmpty(fileName) && fileName.Length > 5)
+                                            {
+                                                updatedAttachements.Add(fileName);
+                                            }
+                                        }
+                                        commitRole.Attachment = string.Join(",", updatedAttachements);
+                                    }
+                                    else
+                                    {
+                                        commitRole.Attachment = commitRole.Attachment;
+                                    }
+                                //}
+
+                                //commitRole.Attachment = EmployeeComplaintVM.AttachmentsCommittee;
                                 db.Entry(commitRole).State = EntityState.Modified;
                                 db.SaveChanges();
+
+                                var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.ComplaintId);
+                                if (ComplaintMaster != null)
+                                {
+
+                                    ComplaintMaster.LastPerformedBy = sid;
+                                    db.Entry(ComplaintMaster).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+
                                 dbContextTransaction.Commit();
                             }
 
@@ -311,7 +342,7 @@ namespace ComplaintManagement.Repository
                                 ComplaintMaster.ComplaintStatus = Messages.SUBMITTED;
                                 ComplaintMaster.UpdatedDate = DateTime.UtcNow;
                                 ComplaintMaster.UpdatedBy = Convert.ToInt32(sid);
-                                //ComplaintMaster.Remark = EmployeeComplaintVM.RemarkCommittee;
+                                ComplaintMaster.LastPerformedBy = sid;
                                 db.Entry(ComplaintMaster).State = EntityState.Modified;
                                 db.SaveChanges();
                             }
@@ -394,6 +425,38 @@ namespace ComplaintManagement.Repository
                                 catObj.CategoryName = new CategoryMastersRepository().Get(item.CategoryId) != null ? new CategoryMastersRepository().Get(item.CategoryId).CategoryName : Messages.NotAvailable;
                                 catObj.SubCategoryName = new SubCategoryMastersRepository().Get(item.SubCategoryId) != null ? new SubCategoryMastersRepository().Get(item.SubCategoryId).SubCategoryName : Messages.NotAvailable;
                                 catObj.EmployeeName = usersList.FirstOrDefault(x => x.Id == catObj.UserId) != null ? usersList.FirstOrDefault(x => x.Id == catObj.UserId).EmployeeName : Messages.NotAvailable;
+
+                                var CommitteeMemberData = (from u in db.CommitteeMasters
+                                                           where u.IsActive
+                                                           select u).FirstOrDefault();
+                                string PendingWith = string.Empty;
+                                if (item.LastPerformedBy !=null && item.LastPerformedBy != "")
+                                {
+                                    string[] lastPerformBy = item.LastPerformedBy.Split(',');
+                                    foreach (var Ids in lastPerformBy)
+                                    {
+                                        string UserName = string.Empty;
+                                        string UserRole = string.Empty;
+                                        int Id = Convert.ToInt32(Ids);
+                                        var isCommitteeUserAssigned = CommitteeMemberData.UserId.Split(',').Where(i => i.ToString() == Id.ToString()).Count() > 0;
+                                        if (isCommitteeUserAssigned)
+                                        {
+                                            UserRole = Messages.COMMITTEE;
+                                        }
+                                        else
+                                        {
+                                            UserRole = new UserMastersRepository().Get(Convert.ToInt32(Ids)).Type;
+                                        }
+                                        UserName = new UserMastersRepository().Get(Convert.ToInt32(Ids)).EmployeeName;// + ", ";
+                                        PendingWith += UserName + "(" + UserRole + ")" + ", ";
+                                    }
+                                }
+                                else
+                                {
+                                    PendingWith = Messages.NotAvailable;
+                                }
+
+                                catObj.LastPerformedBy = PendingWith;
                                 EmployeeCompliant_oneList.Add(catObj);
                             }
                         }
@@ -634,6 +697,7 @@ namespace ComplaintManagement.Repository
 
                             employeeComplaint.IsSubmitted = true;
                             employeeComplaint.ComplaintStatus = Messages.SUBMITTED;
+                            employeeComplaint.LastPerformedBy = assignedUsersroleId;
 
                             new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Messages.InProgress, db);
                             db.SaveChanges();

@@ -170,6 +170,7 @@
           <Property Name="ComplaintStatus" Type="nvarchar" MaxLength="28" Nullable="false" />
           <Property Name="DueDate" Type="datetime" Nullable="false" />
           <Property Name="IsSubmitted" Type="bit" Nullable="false" />
+          <Property Name="LastPerformedBy" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="EmployeeComplaintMastersHistory">
           <Key>
@@ -706,14 +707,18 @@
           <EntitySet Name="CategoryMasters_History" EntityType="DB_A6A061_complaintuserModel.CategoryMasters_History" />
           <EntitySet Name="CommitteeMasters" EntityType="DB_A6A061_complaintuserModel.CommitteeMaster" />
           <EntitySet Name="CommitteeMasters_History" EntityType="DB_A6A061_complaintuserModel.CommitteeMasters_History" />
+          <EntitySet Name="CommitteeRoles" EntityType="DB_A6A061_complaintuserModel.CommitteeRole" />
           <EntitySet Name="CompetencyMasters" EntityType="DB_A6A061_complaintuserModel.CompetencyMaster" />
           <EntitySet Name="CompetencyMasters_History" EntityType="DB_A6A061_complaintuserModel.CompetencyMasters_History" />
           <EntitySet Name="DesignationMasters" EntityType="DB_A6A061_complaintuserModel.DesignationMaster" />
           <EntitySet Name="DesignationMasters_History" EntityType="DB_A6A061_complaintuserModel.DesignationMasters_History" />
+          <EntitySet Name="EmployeeComplaintHistories" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintHistory" />
           <EntitySet Name="EmployeeComplaintMasters" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" />
           <EntitySet Name="EmployeeComplaintMastersHistories" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintMastersHistory" />
+          <EntitySet Name="EmployeeComplaintWorkFlows" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" />
           <EntitySet Name="EntityMasters" EntityType="DB_A6A061_complaintuserModel.EntityMaster" />
           <EntitySet Name="EntityMasters_History" EntityType="DB_A6A061_complaintuserModel.EntityMasters_History" />
+          <EntitySet Name="HR_Role" EntityType="DB_A6A061_complaintuserModel.HR_Role" />
           <EntitySet Name="LocationMasters" EntityType="DB_A6A061_complaintuserModel.LocationMaster" />
           <EntitySet Name="LocationMasters_History" EntityType="DB_A6A061_complaintuserModel.LocationMasters_History" />
           <EntitySet Name="LOSMasters" EntityType="DB_A6A061_complaintuserModel.LOSMaster" />
@@ -738,6 +743,10 @@
             <End Role="UserMaster" EntitySet="UserMasters" />
             <End Role="EmployeeComplaintMaster" EntitySet="EmployeeComplaintMasters" />
           </AssociationSet>
+          <AssociationSet Name="FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters">
+            <End Role="EmployeeComplaintMaster" EntitySet="EmployeeComplaintMasters" />
+            <End Role="EmployeeComplaintWorkFlow" EntitySet="EmployeeComplaintWorkFlows" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserMasters_LocationMasters" Association="DB_A6A061_complaintuserModel.FK_UserMasters_LocationMasters">
             <End Role="LocationMaster" EntitySet="LocationMasters" />
             <End Role="UserMaster" EntitySet="UserMasters" />
@@ -758,18 +767,6 @@
             <End Role="SubSBUMaster" EntitySet="SubSBUMasters" />
             <End Role="UserMaster" EntitySet="UserMasters" />
           </AssociationSet>
-          <EntitySet Name="EmployeeComplaintHistories" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintHistory" />
-          <AssociationSet Name="FK_EmployeeComplaintHistory_EmployeeComplaintMasters" Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters">
-            <End Role="EmployeeComplaintMaster" EntitySet="EmployeeComplaintMasters" />
-            <End Role="EmployeeComplaintHistory" EntitySet="EmployeeComplaintHistories" />
-          </AssociationSet>
-          <EntitySet Name="EmployeeComplaintWorkFlows" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" />
-          <AssociationSet Name="FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters">
-            <End Role="EmployeeComplaintMaster" EntitySet="EmployeeComplaintMasters" />
-            <End Role="EmployeeComplaintWorkFlow" EntitySet="EmployeeComplaintWorkFlows" />
-          </AssociationSet>
-          <EntitySet Name="HR_Role" EntityType="DB_A6A061_complaintuserModel.HR_Role" />
-          <EntitySet Name="CommitteeRoles" EntityType="DB_A6A061_complaintuserModel.CommitteeRole" />
         </EntityContainer>
         <EntityType Name="CategoryMaster">
           <Key>
@@ -829,6 +826,23 @@
           <Property Name="EntityState" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="CommitteeId" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="CommitteeRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Userid" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ComplaintId" Type="Int32" />
+          <Property Name="Remark" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CashTypeId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="InvolvedUsersId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CommitteeUserId" Type="Int32" />
+          <Property Name="Attachment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="CompetencyMaster">
           <Key>
             <PropertyRef Name="Id" />
@@ -886,6 +900,21 @@
           <Property Name="EntityState" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="DesignationId" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="EmployeeComplaintHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ActionType" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserType" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ComplaintId" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="EmployeeComplaintMaster">
           <Key>
             <PropertyRef Name="Id" />
@@ -903,10 +932,10 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="Status" Type="Boolean" Nullable="false" />
           <Property Name="ComplaintStatus" Type="String" Nullable="false" MaxLength="28" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="UserMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintMasters_UserMasters" FromRole="EmployeeComplaintMaster" ToRole="UserMaster" />
           <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="EmployeeComplaintHistories" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters" FromRole="EmployeeComplaintMaster" ToRole="EmployeeComplaintHistory" />
+          <Property Name="LastPerformedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintMasters_UserMasters" FromRole="EmployeeComplaintMaster" ToRole="UserMaster" />
           <NavigationProperty Name="EmployeeComplaintWorkFlows" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" FromRole="EmployeeComplaintMaster" ToRole="EmployeeComplaintWorkFlow" />
         </EntityType>
         <EntityType Name="EmployeeComplaintMastersHistory">
@@ -930,6 +959,30 @@
           <Property Name="EmployeeComplaintMasterId" Type="Int32" Nullable="false" />
           <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmployeeComplaintWorkFlow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ActionType" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserType" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="ComplaintId" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LOSId" Type="Int32" Nullable="false" />
+          <Property Name="SBUId" Type="Int32" Nullable="false" />
+          <Property Name="SubSBUId" Type="Int32" Nullable="false" />
+          <Property Name="CompentencyId" Type="Int32" Nullable="false" />
+          <Property Name="AssignedUserRoles" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CommitteeDueDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" FromRole="EmployeeComplaintWorkFlow" ToRole="EmployeeComplaintMaster" />
         </EntityType>
         <EntityType Name="EntityMaster">
           <Key>
@@ -958,6 +1011,23 @@
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <Property Name="EntityState" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="EntityId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HR_Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="ComplentId" Type="Int32" />
+          <Property Name="CaseType" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Attachement" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="HRUserId" Type="Int32" />
         </EntityType>
         <EntityType Name="LocationMaster">
           <Key>
@@ -1269,6 +1339,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters">
+          <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" Role="EmployeeComplaintMaster" Multiplicity="1" />
+          <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" Role="EmployeeComplaintWorkFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeeComplaintMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmployeeComplaintWorkFlow">
+              <PropertyRef Name="ComplaintId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserMasters_LocationMasters">
           <End Type="DB_A6A061_complaintuserModel.LocationMaster" Role="LocationMaster" Multiplicity="1" />
           <End Type="DB_A6A061_complaintuserModel.UserMaster" Role="UserMaster" Multiplicity="*" />
@@ -1329,104 +1411,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="EmployeeComplaintHistory">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="ModifiedBy" Type="Int32" />
-          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ActionType" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="UserType" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ComplaintId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintHistory_EmployeeComplaintMasters" FromRole="EmployeeComplaintHistory" ToRole="EmployeeComplaintMaster" />
-        </EntityType>
-        <Association Name="FK_EmployeeComplaintHistory_EmployeeComplaintMasters">
-          <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" Role="EmployeeComplaintMaster" Multiplicity="1" />
-          <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintHistory" Role="EmployeeComplaintHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="EmployeeComplaintMaster">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="EmployeeComplaintHistory">
-              <PropertyRef Name="ComplaintId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="EmployeeComplaintWorkFlow">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="ModifiedBy" Type="Int32" />
-          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ActionType" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="UserType" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="ComplaintId" Type="Int32" Nullable="false" />
-          <Property Name="RoleId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="LOSId" Type="Int32" Nullable="false" />
-          <Property Name="SBUId" Type="Int32" Nullable="false" />
-          <Property Name="SubSBUId" Type="Int32" Nullable="false" />
-          <Property Name="CompentencyId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" FromRole="EmployeeComplaintWorkFlow" ToRole="EmployeeComplaintMaster" />
-          <Property Name="AssignedUserRoles" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CommitteeDueDate" Type="DateTime" Precision="3" />
-        </EntityType>
-        <Association Name="FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters">
-          <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintMaster" Role="EmployeeComplaintMaster" Multiplicity="1" />
-          <End Type="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" Role="EmployeeComplaintWorkFlow" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="EmployeeComplaintMaster">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="EmployeeComplaintWorkFlow">
-              <PropertyRef Name="ComplaintId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="HR_Role">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="ComplentId" Type="Int32" />
-          <Property Name="CaseType" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Attachement" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="HRUserId" Type="Int32" />
-        </EntityType>
-        <EntityType Name="CommitteeRole">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Userid" Type="Int32" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ComplaintId" Type="Int32" />
-          <Property Name="Remark" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CashTypeId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="InvolvedUsersId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="CommitteeUserId" Type="Int32" />
-          <Property Name="Attachment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1495,6 +1479,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CommitteeRoles">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CommitteeRole">
+              <MappingFragment StoreEntitySet="CommitteeRole">
+                <ScalarProperty Name="Attachment" ColumnName="Attachment" />
+                <ScalarProperty Name="CommitteeUserId" ColumnName="CommitteeUserId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
+                <ScalarProperty Name="CashTypeId" ColumnName="CashTypeId" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="ComplaintId" ColumnName="ComplaintId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Userid" ColumnName="Userid" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="CompetencyMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CompetencyMaster">
               <MappingFragment StoreEntitySet="CompetencyMasters">
@@ -1555,9 +1557,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeComplaintHistories">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintHistory">
+              <MappingFragment StoreEntitySet="EmployeeComplaintHistory">
+                <ScalarProperty Name="ComplaintId" ColumnName="ComplaintId" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="EmployeeComplaintMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintMaster">
               <MappingFragment StoreEntitySet="EmployeeComplaintMasters">
+                <ScalarProperty Name="LastPerformedBy" ColumnName="LastPerformedBy" />
                 <ScalarProperty Name="IsSubmitted" ColumnName="IsSubmitted" />
                 <ScalarProperty Name="DueDate" ColumnName="DueDate" />
                 <ScalarProperty Name="ComplaintStatus" ColumnName="ComplaintStatus" />
@@ -1599,6 +1618,30 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeComplaintWorkFlows">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow">
+              <MappingFragment StoreEntitySet="EmployeeComplaintWorkFlow">
+                <ScalarProperty Name="CommitteeDueDate" ColumnName="CommitteeDueDate" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="AssignedUserRoles" ColumnName="AssignedUserRoles" />
+                <ScalarProperty Name="CompentencyId" ColumnName="CompentencyId" />
+                <ScalarProperty Name="SubSBUId" ColumnName="SubSBUId" />
+                <ScalarProperty Name="SBUId" ColumnName="SBUId" />
+                <ScalarProperty Name="LOSId" ColumnName="LOSId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="ComplaintId" ColumnName="ComplaintId" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="EntityMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EntityMaster">
               <MappingFragment StoreEntitySet="EntityMasters">
@@ -1625,6 +1668,24 @@
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="EntityName" ColumnName="EntityName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HR_Role">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.HR_Role">
+              <MappingFragment StoreEntitySet="HR_Role">
+                <ScalarProperty Name="HRUserId" ColumnName="HRUserId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Attachement" ColumnName="Attachement" />
+                <ScalarProperty Name="CaseType" ColumnName="CaseType" />
+                <ScalarProperty Name="ComplentId" ColumnName="ComplentId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1915,82 +1976,6 @@
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
                 <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="EmployeeComplaintHistories">
-            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintHistory">
-              <MappingFragment StoreEntitySet="EmployeeComplaintHistory">
-                <ScalarProperty Name="ComplaintId" ColumnName="ComplaintId" />
-                <ScalarProperty Name="UserType" ColumnName="UserType" />
-                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="EmployeeComplaintWorkFlows">
-            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow">
-              <MappingFragment StoreEntitySet="EmployeeComplaintWorkFlow">
-                <ScalarProperty Name="CommitteeDueDate" ColumnName="CommitteeDueDate" />
-                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
-                <ScalarProperty Name="AssignedUserRoles" ColumnName="AssignedUserRoles" />
-                <ScalarProperty Name="CompentencyId" ColumnName="CompentencyId" />
-                <ScalarProperty Name="SubSBUId" ColumnName="SubSBUId" />
-                <ScalarProperty Name="SBUId" ColumnName="SBUId" />
-                <ScalarProperty Name="LOSId" ColumnName="LOSId" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="ComplaintId" ColumnName="ComplaintId" />
-                <ScalarProperty Name="UserType" ColumnName="UserType" />
-                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="HR_Role">
-            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.HR_Role">
-              <MappingFragment StoreEntitySet="HR_Role">
-                <ScalarProperty Name="HRUserId" ColumnName="HRUserId" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
-                <ScalarProperty Name="Remark" ColumnName="Remark" />
-                <ScalarProperty Name="Attachement" ColumnName="Attachement" />
-                <ScalarProperty Name="CaseType" ColumnName="CaseType" />
-                <ScalarProperty Name="ComplentId" ColumnName="ComplentId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CommitteeRoles">
-            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.CommitteeRole">
-              <MappingFragment StoreEntitySet="CommitteeRole">
-                <ScalarProperty Name="Attachment" ColumnName="Attachment" />
-                <ScalarProperty Name="CommitteeUserId" ColumnName="CommitteeUserId" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
-                <ScalarProperty Name="CashTypeId" ColumnName="CashTypeId" />
-                <ScalarProperty Name="Remark" ColumnName="Remark" />
-                <ScalarProperty Name="ComplaintId" ColumnName="ComplaintId" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Userid" ColumnName="Userid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

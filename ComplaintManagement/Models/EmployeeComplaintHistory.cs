@@ -24,7 +24,5 @@ namespace ComplaintManagement.Models
         public string ActionType { get; set; }
         public string UserType { get; set; }
         public int ComplaintId { get; set; }
-    
-        public virtual EmployeeComplaintMaster EmployeeComplaintMaster { get; set; }
     }
 }

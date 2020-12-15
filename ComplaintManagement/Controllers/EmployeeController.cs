@@ -54,6 +54,7 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         public List<EmployeeCompliantMasterVM> GetAll(int currentPage, string range = "")
+        
         {
             int maxRows = 10; int lstCount = 0;
             if (currentPage == 0)

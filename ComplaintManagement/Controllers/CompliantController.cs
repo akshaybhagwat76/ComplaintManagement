@@ -416,7 +416,7 @@ namespace ComplaintManagement.Controllers
                     //HR Role data
                     int complaintId = Convert.ToInt32(id);
 
-                    var HrRole = db.HR_Role.FirstOrDefault(i => i.ComplentId == (complaintId));
+                    var HrRole = db.HR_Role.FirstOrDefault(i => i.ComplentId == (complaintId) && i.Status==Messages.COMMITTEE);
                     ViewBag.HrRole = HrRole;
                     var hrRoleData = new UserMastersRepository().Get(Convert.ToInt32(HrRole.HRUserId));
                     ViewBag.HrRoleData = hrRoleData;
@@ -650,6 +650,21 @@ namespace ComplaintManagement.Controllers
             try
             {
                 new CompliantMastersRepository().Removefile(fileName);
+                return new ReplyFormat().Success(Messages.DELETE_MESSAGE_FILE, fileName);
+            }
+            catch (Exception ex)
+            {
+
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+        public ActionResult RemoveCommitteefile(string fileName,string ComplaintId)
+        {
+            try
+            {
+                ComplaintId=CryptoEngineUtils.Decrypt(ComplaintId.Replace(" ", "+"), true);
+                new CompliantMastersRepository().RemoveCommitteefile(fileName, ComplaintId);
                 return new ReplyFormat().Success(Messages.DELETE_MESSAGE_FILE, fileName);
             }
             catch (Exception ex)
