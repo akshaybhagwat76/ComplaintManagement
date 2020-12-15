@@ -20,7 +20,7 @@ namespace ComplaintManagement.Repository
     {
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
 
-        public EmployeeCompliantMasterVM AddOrUpdate(EmployeeCompliantMasterVM EmployeeComplaintVM,string flag=null)
+        public EmployeeCompliantMasterVM AddOrUpdate(EmployeeCompliantMasterVM EmployeeComplaintVM, string flag = null)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace ComplaintManagement.Repository
                 {
                     return new EmployeeCompliantMasterVM();
                 }
-                
+
             }
             catch (DbEntityValidationException dve)
             {
@@ -315,7 +315,7 @@ namespace ComplaintManagement.Repository
                             {
                                 WorkFlow.ActionType = Messages.SUBMITTED;
                                 WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                WorkFlow.Remarks= EmployeeComplaintVM.RemarkCommittee;
+                                WorkFlow.Remarks = EmployeeComplaintVM.RemarkCommittee;
                                 db.Entry(WorkFlow).State = EntityState.Modified;
 
                                 db.SaveChanges();
@@ -658,7 +658,7 @@ namespace ComplaintManagement.Repository
                     data.IsSubmitted = false;
                     data.Remark = remarks;
                     data.ComplaintStatus = Messages.Withdrawn;
-                    
+
                 }
                 var dataWorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == id);
                 if (dataWorkFlow != null && !string.IsNullOrEmpty(remarks))
@@ -827,10 +827,10 @@ namespace ComplaintManagement.Repository
 
         //Aman work
 
-  
 
 
-public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM EmployeeComplaintVM, String Id, int Hrid, string UserInvolved, int Status)
+
+        public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM EmployeeComplaintVM, String Id, int Hrid, string UserInvolved, int Status)
         {
             try
             {
@@ -971,9 +971,6 @@ public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM Emplo
                                     db.SaveChanges();
 
                                 }
-
-
-                                dbContextTransaction.Commit();
                             }
 
                             else
@@ -1004,7 +1001,7 @@ public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM Emplo
                                     db.Entry(HRRole).State = EntityState.Modified;
                                     db.SaveChanges();
 
-                                  
+
 
                                     var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
                                     if (WorkFlow != null)
@@ -1016,7 +1013,7 @@ public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM Emplo
                                         db.SaveChanges();
                                     }
 
-                               
+
 
                                 }
                                 else if (Status == 2)
@@ -1097,10 +1094,7 @@ public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM Emplo
 
                             }
 
-
-
-                          
-
+                            dbContextTransaction.Commit();
 
                         }
 

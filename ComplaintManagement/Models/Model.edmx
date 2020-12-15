@@ -535,18 +535,6 @@
           <Property Name="EntityState" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="UserMasterId" Type="int" Nullable="false" />
         </EntityType>
-        <Association Name="FK_EmployeeComplaintHistory_EmployeeComplaintMasters">
-          <End Role="EmployeeComplaintMasters" Type="Self.EmployeeComplaintMasters" Multiplicity="1" />
-          <End Role="EmployeeComplaintHistory" Type="Self.EmployeeComplaintHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="EmployeeComplaintMasters">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="EmployeeComplaintHistory">
-              <PropertyRef Name="ComplaintId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_EmployeeComplaintMasters_UserMasters">
           <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="1" />
           <End Role="EmployeeComplaintMasters" Type="Self.EmployeeComplaintMasters" Multiplicity="*" />
@@ -676,10 +664,6 @@
           <EntitySet Name="SubSBUMasters_History" EntityType="Self.SubSBUMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMasters" EntityType="Self.UserMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMasters_History" EntityType="Self.UserMasters_History" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_EmployeeComplaintHistory_EmployeeComplaintMasters" Association="Self.FK_EmployeeComplaintHistory_EmployeeComplaintMasters">
-            <End Role="EmployeeComplaintMasters" EntitySet="EmployeeComplaintMasters" />
-            <End Role="EmployeeComplaintHistory" EntitySet="EmployeeComplaintHistory" />
-          </AssociationSet>
           <AssociationSet Name="FK_EmployeeComplaintMasters_UserMasters" Association="Self.FK_EmployeeComplaintMasters_UserMasters">
             <End Role="UserMasters" EntitySet="UserMasters" />
             <End Role="EmployeeComplaintMasters" EntitySet="EmployeeComplaintMasters" />
