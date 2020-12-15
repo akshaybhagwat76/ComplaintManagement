@@ -368,6 +368,10 @@ namespace ComplaintManagement.Controllers
         }
         public ActionResult Compliant_three(string id, bool isView)
         {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+               .Select(c => c.Value).SingleOrDefault();
             EmployeeCompliantMasterVM EmployeeCompliant_oneVM = new EmployeeCompliantMasterVM();
             try
             {
@@ -427,12 +431,14 @@ namespace ComplaintManagement.Controllers
                     ViewBag.HrRoleInvolvedUsers = GetCommaSeparatedUser(HrRole.InvolvedUsersId);
                     ViewBag.HrRoleCaseType = HrRole.CaseType;
 
-                    var CommitteeRoleData= db.CommitteeRoles.FirstOrDefault(i => i.ComplaintId == (complaintId));
+                    int loginUserId = Convert.ToInt32(sid);
+                    var CommitteeRoleData= db.CommitteeRoles.FirstOrDefault(i => i.ComplaintId == (complaintId) && i.CommitteeUserId == loginUserId);
                     if(CommitteeRoleData != null)
                     {
                         userMasterVM.AttachmentsCommittee = CommitteeRoleData.Attachment;
                         userMasterVM.RemarkCommittee = CommitteeRoleData.Remark;
                         userMasterVM.CashTypeId = CommitteeRoleData.CashTypeId;
+                        //string[] involveuser= (CommitteeRoleData.InvolvedUsersId).Split(',').ToArray();
                         userMasterVM.InvolvedUsersId = CommitteeRoleData.InvolvedUsersId;
                     }
 

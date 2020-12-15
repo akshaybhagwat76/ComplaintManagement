@@ -154,24 +154,24 @@
 
                                 if (DueComplaints > 0)
                                 {
-                                                        <a onclick="getDueComplaints()" id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
-                                                            <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
-                                                            <strong>Due Complaints</strong>
-                                                        </a>
+                                    <a onclick="getDueComplaints()" id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
+                                        <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
+                                        <strong>Due Complaints</strong>
+                                    </a>
                                 }
                                 else
                                 {
-                        <a id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
-                            <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
-                            <strong>Due Complaints</strong>
-                        </a>
+                                    <a id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
+                                        <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
+                                        <strong>Due Complaints</strong>
+                                    </a>
                                 }
                             }
 
                         </div>
                         <div class="col-md-4 text-center">
                             @{
-                                if (DueComplaints > 0)
+                                if (OverDueComplaints > 0)
                                 {
                                     <a onclick="getOverDueComplaints()" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
                                 }
@@ -197,28 +197,28 @@
                 </div>
             </div>
             @*<div class="card mb-4 rounded-0 border-0">
-                <div class="card-body py-2">
-                    <div class="ow justify-content-between">
-                        <div class="col-md-10">
-                            <ul class="nav">
-                                <li class="nav-item mr-3">
-                                    <input type="text" class="form-control" placeholder="From Date" />
-                                </li>
-                                <li class="nav-item mr-3">
-                                    <input type="text" class="form-control" placeholder="To Date" />
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-2">
-                            <ul class="nav justify-content-end">
-                                <li class="nav-item">
-                                    <button type="submit" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-search"></i></button>
-                                </li>
-                            </ul>
+                    <div class="card-body py-2">
+                        <div class="ow justify-content-between">
+                            <div class="col-md-10">
+                                <ul class="nav">
+                                    <li class="nav-item mr-3">
+                                        <input type="text" class="form-control" placeholder="From Date" />
+                                    </li>
+                                    <li class="nav-item mr-3">
+                                        <input type="text" class="form-control" placeholder="To Date" />
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-2">
+                                <ul class="nav justify-content-end">
+                                    <li class="nav-item">
+                                        <button type="submit" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-search"></i></button>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>*@
+                </div>*@
             <!-- Tab Bar -->
             <div class="user-list">
                 <div class="row">
@@ -293,55 +293,55 @@
     </div>*@
 
 @*<div class="modal" id="overdueComplaints">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-black font-weight-bold">Overdue Complaints</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table f-14">
-                        <thead>
-                            <tr>
-                                <td>LOS</td>
-                                <td>Category</td>
-                                <td>Sub-Category</td>
-                                <td>Created By</td>
-                                <td>Created On</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                <td class="text-black"><strong>test22222</strong></td>
-                                <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                <td class="text-black"><strong>test22222</strong></td>
-                                <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                <td class="text-black"><strong>test22222</strong></td>
-                                <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                                <td class="text-black"><strong>29/11/2020</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-black font-weight-bold">Overdue Complaints</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table f-14">
+                            <thead>
+                                <tr>
+                                    <td>LOS</td>
+                                    <td>Category</td>
+                                    <td>Sub-Category</td>
+                                    <td>Created By</td>
+                                    <td>Created On</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-black"><strong>LOS-27Test1</strong></td>
+                                    <td class="text-black"><strong>test22222</strong></td>
+                                    <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
+                                    <td class="text-black"><strong>29/11/2020</strong></td>
+                                    <td class="text-black"><strong>29/11/2020</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black"><strong>LOS-27Test1</strong></td>
+                                    <td class="text-black"><strong>test22222</strong></td>
+                                    <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
+                                    <td class="text-black"><strong>29/11/2020</strong></td>
+                                    <td class="text-black"><strong>29/11/2020</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black"><strong>LOS-27Test1</strong></td>
+                                    <td class="text-black"><strong>test22222</strong></td>
+                                    <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
+                                    <td class="text-black"><strong>29/11/2020</strong></td>
+                                    <td class="text-black"><strong>29/11/2020</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>*@
+    </div>*@
 
 @Html.Partial("_ComplaintAwaiting")
 @Html.Partial("_ComplaintDue")

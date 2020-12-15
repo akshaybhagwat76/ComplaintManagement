@@ -1,7 +1,6 @@
 ﻿var attachementfiles = [];
 
 function removeFile(id) {
-    alert();
     $('#deleteModal').data('id', id).modal('show');
     $('#deleteModal').modal('show');
     document.getElementById("delete-btn").addEventListener("click", deleteFile);
@@ -227,7 +226,7 @@ addAttachement = function () {
     if (attachementfiles && attachementfiles.length > 0) {
         var lastFile = attachementfiles[attachementfiles.length - 1];
         var index = attachementfiles.findIndex(x => x.file.name === lastFile.file.name);
-        var attachement = '<div id="file_' + lastFile.file.name + '" class="col-md-12">' + lastFile.file.name + ' &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeAttachementFile(' + index + ')" title="remove"></span></div>';
+        var attachement = '<div id="file_' + lastFile.file.name + '" class="col-md-12" style="margin-top:5px;height:28px;">' + lastFile.file.name + ' &nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeAttachementFile(' + index + ')" title="remove"></span></div>';
         $("#form-attachement").append(attachement);
     }
 }

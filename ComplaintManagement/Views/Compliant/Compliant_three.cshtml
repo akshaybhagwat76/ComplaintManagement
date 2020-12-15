@@ -423,7 +423,7 @@
                                             {
                                                 if (item.Length > 3)
                                                 {
-                                                    <div id="file_@item" class="col-md-6 ml-2">
+                                                    <div id="file_@item" class="col-md-6 ml-2" style="margin-top:5px;height:28px;">
                                                         @*<br /> <br />*@
                                                         <a href="/Files/DownloadFile?filePath=/Documents/@item" class="btn border-0 p-0">  @item </a>&nbsp;&nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@item')" title="remove"></span>
                                                     </div>
@@ -433,9 +433,9 @@
 
                                         else
                                         {
-                                            <div id="file_@Model.AttachmentsCommittee" class="col-md-6 ml-2">
+                                            <div id="file_@Model.AttachmentsCommittee" class="col-md-6 ml-2" style="margin-top:5px;height:28px;">
 
-                                                <a href="/Files/DownloadFile?filePath=/Documents/@Model.AttachmentsCommittee" class="btn border-0 p-0">  @Model.AttachmentsCommittee </a> &nbsp; &nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@Model.Attachments')" title="remove"></span>
+                                                <a href="/Files/DownloadFile?filePath=/Documents/@Model.AttachmentsCommittee" class="btn border-0 p-0">  @Model.AttachmentsCommittee </a> &nbsp; &nbsp;<span class="fa fa-times-circle fa-lg closeBtn" onclick="removeFile('@Model.AttachmentsCommittee')" title="remove"></span>
                                             </div>
                                             @*<br /> <br />*@
                                         }

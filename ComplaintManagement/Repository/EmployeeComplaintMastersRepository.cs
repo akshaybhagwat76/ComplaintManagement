@@ -158,7 +158,7 @@ namespace ComplaintManagement.Repository
                         try
                         {
                             //CommitteeRole commitRole = new CommitteeRole();
-                            var commitRole = db.CommitteeRoles.FirstOrDefault(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId);
+                            var commitRole = db.CommitteeRoles.Where(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId && p.CommitteeUserId==Convert.ToInt32(sid)).FirstOrDefault();
 
                             if (commitRole == null)
                             {
@@ -269,7 +269,7 @@ namespace ComplaintManagement.Repository
                         try
                         {
                             //CommitteeRole commitRole = new CommitteeRole();
-                            var commitRole = db.CommitteeRoles.FirstOrDefault(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId);
+                            var commitRole = db.CommitteeRoles.FirstOrDefault(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId && p.CommitteeUserId==Convert.ToInt32(sid));
 
                             if (commitRole == null)
                             {

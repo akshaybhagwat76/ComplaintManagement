@@ -381,3 +381,8 @@ table#paginator {
 div.dataTables_wrapper div.dataTables_paginate ul.pagination{
     justify-content:flex-end;
 }
+table.dataTable thead .sorting::after, table.dataTable thead .sorting_asc::after, 
+table.dataTable thead .sorting_desc::after, table.dataTable thead .sorting_asc_disabled::after, 
+table.dataTable thead .sorting_desc_disabled::after{
+    opacity:0 !important;
+}
