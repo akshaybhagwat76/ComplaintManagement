@@ -1,19 +1,15 @@
 ﻿var attachementfiles = [];
 
-function removeFile(id) {
-    $('#deleteModal').data('id', id).modal('show');
-    $('#deleteModal').modal('show');
-    document.getElementById("delete-btn").addEventListener("click", deleteFile);
-}
+
 $(document).ready(function () {
     $('.multipleddl').fSelect();
 
-    var InvolvedUsersId = $('#InvolvedUsersId').val();
-    var selectedOptions = InvolvedUsersId.split(",");
-    for (var i in selectedOptions) {
-        var optionVal = selectedOptions[i];
-        $("#InvolvedUsersId").find("option[value=" + optionVal + "]").prop("selected", "selected");
-    }
+    //var InvolvedUsersId = $('#InvolvedUsersId').val();
+    //var selectedOptions = InvolvedUsersId.split(",");
+    //for (var i in selectedOptions) {
+    //    var optionVal = selectedOptions[i];
+    //    $("#InvolvedUsersId").find("option[value=" + optionVal + "]").prop("selected", "selected");
+    //}
     if ($("#pageState").val() != null && $("#pageState").val() != "") {
         let page_state = JSON.parse($("#pageState").val().toLowerCase());
         if (page_state) {
@@ -187,10 +183,10 @@ function submitBackToBUHCForm() {
         for (var i = 0; i < attachementfiles.length; i++) {
             if (attachementfiles[i].file.IsDeleted == false) {
                 formData.append(attachementfiles[i].file.name, attachementfiles[i].file);
-                formData.append("UserInvolved", $(".multipleddl").val());
+                
             }
         }
-
+        formData.append("UserInvolved", $(".multipleddl").val());
         data = JSON.stringify(data);
         formData.append("EmpCompliantParams", data);
 
@@ -237,6 +233,17 @@ removeAttachementFile = function (index) {
         document.getElementById("file_" + getFile.file.name).remove();
         attachementfiles[index].file.IsDeleted = true;
     }
+}
+
+function removeFile(id) {
+
+    if (id !== undefined) {
+        document.getElementById("file_" + id).remove();
+        //attachementfiles[index].file.IsDeleted = true;
+    }
+    //$('#deleteModal').data('id', id).modal('show');
+    //$('#deleteModal').modal('show');
+    //document.getElementById("delete-btn").addEventListener("click", deleteFile);
 }
 
 // Import Attachement 
