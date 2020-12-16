@@ -144,6 +144,9 @@
         public const string ModifiedDate = "Modified Date";
         public const string ModifiedBy = "Modified By";
         public const string CreatedBy = "Created By";
+        public const string Remark = "Remark";
+        public const string PendingWith = "Pending With";
+        public const string ComplaintList = "ComplaintList";
 
         public const string Category = "Category";
         public const string CategoryHistory = "Category History";

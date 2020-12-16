@@ -3,6 +3,7 @@ using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
 using Ionic.Zip;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,7 +55,7 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         public List<EmployeeCompliantMasterVM> GetAll(int currentPage, string range = "")
-        
+
         {
             int maxRows = 10; int lstCount = 0;
             if (currentPage == 0)
@@ -184,7 +185,7 @@ namespace ComplaintManagement.Controllers
 
                     foreach (string file in filesArray)
                     {
-                        if (file != null && !string.IsNullOrEmpty(file) && file.Length>5)
+                        if (file != null && !string.IsNullOrEmpty(file) && file.Length > 5)
                         {
                             if (docfileArray.FirstOrDefault(x => x.Contains(file)) != null)
                             {
@@ -195,7 +196,7 @@ namespace ComplaintManagement.Controllers
                                 {
                                     zip.AddFile(indexed, "Files");
                                 }
-                                else { return RedirectToAction("Index"); }  
+                                else { return RedirectToAction("Index"); }
                             }
 
                         }
@@ -233,6 +234,90 @@ namespace ComplaintManagement.Controllers
                 ErrorSignal.FromCurrentContext().Raise(ex);
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
+        }
+
+        public ActionResult ExportData()
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage();
+
+
+                var ws = package.Workbook.Worksheets.Add(Messages.Category);
+                //Headers
+                ws.Cells["A1"].Value = Messages.EmployeeName;
+                ws.Cells["B1"].Value = Messages.Category;
+                ws.Cells["C1"].Value = Messages.SubCategory;
+                ws.Cells["D1"].Value = Messages.CreatedDate;
+                ws.Cells["E1"].Value = Messages.CreatedBy;
+                ws.Cells["F1"].Value = Messages.PendingWith;
+                ws.Cells["G1"].Value = Messages.Remark;
+                ws.Cells["H1"].Value = Messages.Status;
+
+
+                var rowNumber = 1;
+                ws.Cells[rowNumber, 1].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 1].Value = Messages.EmployeeName;
+
+                ws.Cells[rowNumber, 2].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 2].Value = Messages.Category;
+
+                ws.Cells[rowNumber, 3].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 3].Value = Messages.SubCategory;
+
+                ws.Cells[rowNumber, 4].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 4].Value = Messages.CreatedDate;
+
+                ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 5].Value = Messages.CreatedBy;
+
+                ws.Cells[rowNumber, 6].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 6].Value = Messages.PendingWith;
+
+                ws.Cells[rowNumber, 7].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 7].Value = Messages.Remark;
+
+                ws.Cells[rowNumber, 8].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 8].Value = Messages.Status;
+                foreach (var log in GetAll(1))
+                {
+                    rowNumber++;
+                    ws.Cells[rowNumber, 1].Value = log.EmployeeName;
+                    ws.Cells[rowNumber, 2].Value = log.CategoryName;
+                    ws.Cells[rowNumber, 3].Value = log.SubCategoryName;
+                    ws.Cells[rowNumber, 4].Value = log.CreatedDate.ToString("dd/MM/yyyy");
+                    ws.Cells[rowNumber, 5].Value = log.CreatedByName;
+                    ws.Cells[rowNumber, 6].Value = log.LastPerformedBy;
+                    ws.Cells[rowNumber, 7].Value = log.Remark;
+
+                    var Status = string.Empty;
+                    if (log.ComplaintStatus == Messages.SUBMITTED || log.ComplaintStatus == Messages.COMMITTEE)
+                    {
+                        Status = Messages.InProgress;
+                    }
+                    else { Status = log.ComplaintStatus; }
+
+                    ws.Cells[rowNumber, 8].Value = Status;
+
+                }
+
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = Messages.ComplaintList + Messages.XLSX;
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+                return File(stream, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
         }
     }
 }
