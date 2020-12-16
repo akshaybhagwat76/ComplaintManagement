@@ -5,19 +5,14 @@
     string saltedId = CryptoEngineUtils.Encrypt(Convert.ToString(Model.Id), true);
     string Id = Convert.ToString(Model.Id);
 }
-<div id="content-wrapper" class="d-flex flex-column">
-    <div class="preloader"></div>
+
     @Html.Hidden("pageState", (object)ViewBag.ViewState)
 
     @Html.Hidden("UserId", Model.CompentencyId)
     @Html.Hidden("Id", Model.Id)
     @Html.Hidden("ComplaintStatus", Model.ComplaintStatus)
     @Html.Hidden("DueDate", Model.DateOfJoining)
-    <!-- Main Content -->
-    <div id="content">
-        <!-- Topbar -->
-        @{Html.RenderPartial("_Compliant");}
-        <!-- End of Topbar -->
+   
         <!-- Begin Page Content -->
         <div class="container-fluid">
             <div class="preloader"></div>
@@ -228,10 +223,7 @@
                 </div>
             </div>
         </div>
-        <!-- /.container-fluid -->
-    </div>
-    <!-- End of Main Content -->
-</div>
+        
 @Scripts.Render("~/Assets/EditEmployeeCompliant_OneMasters")
 @Html.Partial("_CommonDeleteModal")
 @Scripts.Render("~/Assets/Common")

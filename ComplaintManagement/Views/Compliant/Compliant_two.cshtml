@@ -16,12 +16,7 @@
 @Html.Hidden("ComplaintStatus", Model.ComplaintStatus)
 @Html.Hidden("DueDate", Model.DateOfJoining)
 <link href="~/Content/fSelect.css" rel="stylesheet" type="text/css" />
-<div id="content-wrapper" class="d-flex flex-column">
-    <!-- Main Content -->
-    <div id="content">
-        <!-- Topbar -->
-        @{Html.RenderPartial("_Compliant");}
-        <!-- End of Topbar -->
+
         <!-- Begin Page Content -->
         <div class="container-fluid">
             <div class="page-title mb-3">
@@ -579,9 +574,7 @@
             </div>
         </div>
         <!-- /.container-fluid -->
-    </div>
-    <!-- End of Main Content -->
-</div>
+   
 
 
 
