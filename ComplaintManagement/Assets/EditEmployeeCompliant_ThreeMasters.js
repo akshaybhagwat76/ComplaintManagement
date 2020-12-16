@@ -36,7 +36,6 @@ function removeFile(id,ComplaintId) {
 function deleteFile() {
     var fileName = $('#deleteModal').data('id');
     var ComplaintId = $('#Id').val();
-    alert(ComplaintId);
     StartProcess();
     $.ajax({
         type: "POST",
@@ -199,6 +198,7 @@ function submitBackToBUHCForm() {
             }
         }
         formData.append("UserInvolved", $(".multipleddl").val());
+        formData.append("HrRoleId", $("#HrRoleId").val());
         data = JSON.stringify(data);
         formData.append("EmpCompliantParams", data);
 

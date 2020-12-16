@@ -98,7 +98,7 @@ function submitForm(flag) {
         data = JSON.stringify(data);
         formData.append("EmpCompliantParams", data);
         formData.append("flag", flag);
-        
+
         StartProcess();
         $.ajax({
             type: "POST",
@@ -166,7 +166,7 @@ function addAttachementUploadedFile() {
         reader.readAsDataURL(file);
     }
 }
-function ComplaintSubmit(saltedId,Id) {
+function ComplaintSubmit(saltedId, Id) {
     if (Id == 0) {
         submitForm('B');
     }
@@ -384,73 +384,104 @@ function PushComplaintHr() {
         for (var i = 0; i < attachementfiles1.length; i++) {
             if (attachementfiles1[i].file.IsDeleted == false) {
                 formData.append(attachementfiles1[i].file.name, attachementfiles1[i].file);
-
-                formData.append("EmpCompliantParams", data);
-                formData.append("Id", Id);
-                formData.append("UserInvolved", UserInvolved);
-                formData.append("Status", 2);
-
-
-                StartProcess();
-                $.ajax({
-                    type: "POST",
-                    url: "/Compliant/AddOrEmployeeCompliantHR",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        if (response.status == "Fail") {
-                            StopProcess();
-                            $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
-                        }
-                        else {
-                            window.location.href = '/Compliant/ComplaintTwo_Index';
-                        }
-                    },
-                    error: function (error) {
-                        funToastr(false, error.statusText);
-                    }
-                });
             }
         }
+        formData.append("EmpCompliantParams", data);
+        formData.append("Id", Id);
+        formData.append("UserInvolved", UserInvolved);
+        formData.append("Status", 2);
+
+        StartProcess();
+        $.ajax({
+            type: "POST",
+            url: "/Compliant/AddOrEmployeeCompliantHR",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.status == "Fail") {
+                    StopProcess();
+                    $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+                }
+                else {
+                    window.location.href = '/Compliant/ComplaintTwo_Index';
+                }
+            },
+            error: function (error) {
+                funToastr(false, error.statusText);
+            }
+        });
     }
+
 }
+
 function CloseComplaintHr() {
     var Id = $("#Id").val();
     var UserId = $("#UserId").val();
+    var Remark = $("#Ramarked").val();
     var formData = new FormData();
 
     formData.append("Id", Id);
     formData.append("UserId", UserId);
-            
+    formData.append("Remark", Remark);
 
 
-            StartProcess();
-            $.ajax({
-                type: "POST",
-                url: "/Compliant/ComplaintTwo_Close",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    if (response.status == "Fail") {
-                        StopProcess();
-                        $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
-                    }
-                    else {
-                        window.location.href = '/Compliant/ComplaintTwo_Index';
-                    }
-                },
-                error: function (error) {
-                    funToastr(false, error.statusText);
-                }
-            });
+
+    StartProcess();
+    $.ajax({
+        type: "POST",
+        url: "/Compliant/ComplaintTwo_Close",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.status == "Fail") {
+                StopProcess();
+                $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+            }
+            else {
+                window.location.href = '/Compliant/ComplaintTwo_Index';
+            }
+        },
+        error: function (error) {
+            funToastr(false, error.statusText);
         }
-    
+    });
+}
+
 
 
 
 function SubmitGOBack() {
     let url = `/Compliant/ComplaintTwo_Index`
     location.href = url;
+}
+function removeFile1(id) {
+    $('#deleteModal').data('id', id).modal('show');
+    $('#deleteModal').modal('show');
+    document.getElementById("delete-btn").addEventListener("click", deleteFile1);
+}
+function deleteFile1() {
+    var fileName = $('#deleteModal').data('id');
+    var ComplaintId = $('#ComplaintId').val();
+    StartProcess();
+    $.ajax({
+        type: "POST",
+        url: "/Compliant/RemoveHRfile",
+        data: { fileName: fileName, ComplaintId: ComplaintId },
+        success: function (response) {
+            StopProcess();
+            if (response.status !== "Fail") {
+                funToastr(true, response.msg);
+                document.getElementById("file_" + response.data).remove();
+                $('#deleteModal').modal('hide');
+            }
+            else {
+                funToastr(false, response.error);
+            }
+        },
+        error: function (error) {
+            toastr.error(error)
+        }
+    });
 }

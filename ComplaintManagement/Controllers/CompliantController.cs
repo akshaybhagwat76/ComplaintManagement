@@ -62,6 +62,9 @@ namespace ComplaintManagement.Controllers
             EmployeeCompliantMasterVM EmployeeCompliant_oneVM = new EmployeeCompliantMasterVM();
             try
             {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                               .Select(c => c.Value).SingleOrDefault();
                 if (!string.IsNullOrEmpty(id))
                 {
                     id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
@@ -81,6 +84,7 @@ namespace ComplaintManagement.Controllers
                         userMasterVM.CompentencyId = EmployeeCompliant_oneVM.UserId;
                         userMasterVM.DateOfJoining = EmployeeCompliant_oneVM.DueDate;
                         userMasterVM.Attachments = EmployeeCompliant_oneVM.Attachments;
+                        userMasterVM.ComplaintId = ids;
                     }
                     ViewBag.Entity = userMasterVM.Company > 0 ? new EntityMasterRepository().Get(userMasterVM.Company) != null ? new EntityMasterRepository().Get(userMasterVM.Company).EntityName : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.SBU = userMasterVM.SBUId > 0 ? new SBUMasterRepository().Get(userMasterVM.SBUId) != null ? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU : Messages.NotAvailable : Messages.NotAvailable;
@@ -117,15 +121,37 @@ namespace ComplaintManagement.Controllers
                         ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == ids).ToList();
                         ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
 
-                        var HrRole = db.HR_Role.FirstOrDefault(i => i.ComplentId == (ids));
+                        int loginuserId = Convert.ToInt32(sid);
+
+                        var HrRole = db.HR_Role.FirstOrDefault(i => i.ComplentId == (ids) && i.HRUserId == loginuserId);
                         if (HrRole != null)
                         {
                             userMasterVM.Ramarked = HrRole.Remark;
-                            userMasterVM.Attachments = HrRole.Attachement;
+                            userMasterVM.Attachments1 = HrRole.Attachement;
                             userMasterVM.CaseType = HrRole.CaseType;
-                            //userMasterVM.InvolvedUsersId = HrRole.CaseType;
-                        }
+                            userMasterVM.InvolvedUsersId = HrRole.InvolvedUsersId;
 
+                            if (HrRole.CommitteeUSerId != null)
+                            {
+                                var CommitteeData= db.CommitteeRoles.FirstOrDefault(i => i.Id == HrRole.CommitteeUSerId);
+                                var CommitteeUserData = new UserMastersRepository().Get(Convert.ToInt32(CommitteeData.CommitteeUserId));
+                                ViewBag.CommitteeUserData = CommitteeUserData;
+                                ViewBag.CommitteeData = CommitteeData;
+                                ViewBag.CommitteeEntity = userMasterVM.Company > 0 ? new EntityMasterRepository().Get(CommitteeUserData.Company) != null ? new EntityMasterRepository().Get(CommitteeUserData.Company).EntityName : Messages.NotAvailable : Messages.NotAvailable;
+                                ViewBag.CommitteeSBU = userMasterVM.SBUId > 0 ? new SBUMasterRepository().Get(CommitteeUserData.SBUId) != null ? new SBUMasterRepository().Get(CommitteeUserData.SBUId).SBU : Messages.NotAvailable : Messages.NotAvailable;
+                                ViewBag.CommitteeSubSBU = userMasterVM.SubSBUId > 0 ? new SubSBUMasterRepository().Get(CommitteeUserData.SubSBUId) != null ? new SubSBUMasterRepository().Get(CommitteeUserData.SubSBUId).SubSBU : Messages.NotAvailable : Messages.NotAvailable;
+                                ViewBag.CommitteeLOS = userMasterVM.LOSId > 0 ? new LOSMasterRepository().Get(CommitteeUserData.LOSId) != null ? new LOSMasterRepository().Get(CommitteeUserData.LOSId).LOSName : Messages.NotAvailable : Messages.NotAvailable;
+                                ViewBag.CommitteeLocation = userMasterVM.LocationId > 0 ? new LocationMastersRepository().Get(CommitteeUserData.LocationId) != null ? new LocationMastersRepository().Get(CommitteeUserData.LocationId).LocationName : Messages.NotAvailable : Messages.NotAvailable;
+                                ViewBag.CommitteeRegion = userMasterVM.RegionId > 0 ? new RegionMasterRepository().Get(CommitteeUserData.RegionId) != null ? new RegionMasterRepository().Get(CommitteeUserData.RegionId).Region : Messages.NotAvailable : Messages.NotAvailable;
+                                ViewBag.CommitteeManagementLevel = userMasterVM.BusinessTitle > 0 ? new DesignationMasterRepository().Get(CommitteeUserData.BusinessTitle) != null ? new DesignationMasterRepository().Get(CommitteeUserData.BusinessTitle).Designation : Messages.NotAvailable : Messages.NotAvailable;
+                                ViewBag.CommitteeCompetency = CommitteeUserData.CompentencyId > 0 ? new CompetencyMastersRepository().Get(CommitteeUserData.CompentencyId) != null ? new CompetencyMastersRepository().Get(CommitteeUserData.CompentencyId).CompetencyName : Messages.NotAvailable : Messages.NotAvailable;
+                                ViewBag.CommitteeInvolvedUsers = GetCommaSeparatedUser(CommitteeData.InvolvedUsersId);
+                                ViewBag.CommitteeCaseType = CommitteeData.CashTypeId;
+
+
+                            }
+                        }
+                        
 
 
                         return View("Compliant_two", userMasterVM);
@@ -326,6 +352,7 @@ namespace ComplaintManagement.Controllers
             return View("Index");
         }
         public ActionResult Compliant_two()
+        
         {
 
             ViewBag.NavbarTitle = "BHU Approval";
@@ -543,7 +570,7 @@ namespace ComplaintManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult BackToBUHCEmployeeCommitteeCompliant(string EmpCompliantParams, string UserInvolved)
+        public ActionResult BackToBUHCEmployeeCommitteeCompliant(string EmpCompliantParams, string UserInvolved,string HrRoleId)
         {
             List<string> filesName = new List<string>();
             try
@@ -594,7 +621,7 @@ namespace ComplaintManagement.Controllers
                     }
                     var EmployeeComplaintDto = JsonConvert.DeserializeObject<UserMasterVM>(EmpCompliantParams);
                     EmployeeComplaintDto.AttachmentsCommittee = (string.Join(",", filesName.Select(x => x.ToString()).ToArray()));
-                    var User = new EmployeeComplaintMastersRepository().AddOrUpdateBackToBUHCCommittee(EmployeeComplaintDto, UserInvolved);
+                    var User = new EmployeeComplaintMastersRepository().AddOrUpdateBackToBUHCCommittee(EmployeeComplaintDto, UserInvolved, HrRoleId);
                     return new ReplyFormat().Success(Messages.SUCCESS, User);
                 }
                 else
@@ -665,6 +692,21 @@ namespace ComplaintManagement.Controllers
             {
                 ComplaintId=CryptoEngineUtils.Decrypt(ComplaintId.Replace(" ", "+"), true);
                 new CompliantMastersRepository().RemoveCommitteefile(fileName, ComplaintId);
+                return new ReplyFormat().Success(Messages.DELETE_MESSAGE_FILE, fileName);
+            }
+            catch (Exception ex)
+            {
+
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+        public ActionResult RemoveHRfile(string fileName, string ComplaintId)
+        {
+            try
+            {
+                //ComplaintId = CryptoEngineUtils.Decrypt(ComplaintId.Replace(" ", "+"), true);
+                new CompliantMastersRepository().RemoveHRfile(fileName, ComplaintId);
                 return new ReplyFormat().Success(Messages.DELETE_MESSAGE_FILE, fileName);
             }
             catch (Exception ex)
@@ -891,33 +933,34 @@ namespace ComplaintManagement.Controllers
         }
 
         //14/12/2020
-       public ActionResult ComplaintTwo_Close(string Id,string UserId)
+       public ActionResult ComplaintTwo_Close(string Id,string UserId,string Remark)
         {
             try
             {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                               .Select(c => c.Value).SingleOrDefault();
+
                 string id = CryptoEngineUtils.Decrypt(Id.Replace(" ", "+"), true);
                 int ids = Convert.ToInt32(id);
                 var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
                 if (WorkFlow != null)
                 {
-                    WorkFlow.ActionType = Messages.Opened;
+                    WorkFlow.ActionType = Messages.COMPLETED;
                     WorkFlow.UpdatedDate = DateTime.UtcNow;
-                    WorkFlow.IsActive = false;
-                    //WorkFlow.Remarks = EmployeeComplaint.Remark;
                     db.Entry(WorkFlow).State = EntityState.Modified;
                     db.SaveChanges();
-
                 }
-
                 var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
                 if (ComplaintMaster != null)
                 {
-                    ComplaintMaster.ComplaintStatus = Messages.COMMITTEE;
+                    ComplaintMaster.ComplaintStatus = Messages.COMPLETED;
                     ComplaintMaster.UpdatedDate = DateTime.UtcNow;
-                    ComplaintMaster.IsActive = false;
+                    ComplaintMaster.LastPerformedBy = null;
                     db.Entry(ComplaintMaster).State = EntityState.Modified;
                     db.SaveChanges();
                 }
+                new EmployeeComplaintHistoryRepository().AddComplaintHistory(Remark, ids, Messages.COMPLETED, db);
             }
             catch(Exception ex)
             {

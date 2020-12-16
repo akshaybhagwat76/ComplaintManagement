@@ -19,6 +19,7 @@
 
     @Html.Hidden("UserId", Model.CompentencyId)
     @Html.Hidden("Id", Model.ComplaintId)
+    @Html.Hidden("HrRoleId", (object)ViewBag.HrRole.Id)
     @Html.Hidden("ComplaintStatus", Model.ComplaintStatus)
     @Html.Hidden("DueDate", Model.DateOfJoining)
     <!-- Main Content -->
@@ -219,7 +220,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label>Time Type</label>
-                                    <p class="text-black font-weight-bold m-0">+GMT</p>
+                                    <p class="text-black font-weight-bold m-0">+ViewBag.HrRoleData.TimeType</p>
                                 </div>
                                 <div class="col-sm-4">
                                     <label>Management Level</label>

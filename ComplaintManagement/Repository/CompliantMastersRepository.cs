@@ -134,6 +134,31 @@ namespace ComplaintManagement.Repository
             }
         }
 
+        public void RemoveHRfile(string fileName, string ComplaintId)
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+               .Select(c => c.Value).SingleOrDefault();
+            int loginuserid = Convert.ToInt32(sid);
+            int complaintId = Convert.ToInt32(ComplaintId);
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var user = db.HR_Role.Where(x => x.Attachement.Contains(fileName) && x.ComplentId == complaintId && x.HRUserId == loginuserid).FirstOrDefault();
+                if (user != null && !string.IsNullOrEmpty(user.Attachement))
+                {
+                    string[] Attachments = user.Attachement.Split(new string[] { "," },
+                                  StringSplitOptions.None);
+                    int index = Array.IndexOf(Attachments, Attachments.Where(x => x == fileName).FirstOrDefault());
+                    Attachments[index] = string.Empty;
+
+                    user.Attachement = String.Join(",", Attachments.Select(p => p));
+                    db.SaveChanges();
+                }
+                new Common().RemoveDoc(fileName);
+            }
+        }
+
         //public List<CategoryMasterVM> GetAll()
         //{
         //    List<CategoryMaster> category = new List<CategoryMaster>();

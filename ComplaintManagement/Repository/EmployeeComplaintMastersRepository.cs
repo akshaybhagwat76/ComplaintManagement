@@ -181,14 +181,14 @@ namespace ComplaintManagement.Repository
                                 db.CommitteeRoles.Add(commitRole);
                                 db.SaveChanges();
 
-                                var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.ComplaintId);
-                                if (ComplaintMaster != null)
-                                {
+                                //var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.ComplaintId);
+                                //if (ComplaintMaster != null)
+                                //{
                                     
-                                    ComplaintMaster.LastPerformedBy = sid;
-                                    db.Entry(ComplaintMaster).State = EntityState.Modified;
-                                    db.SaveChanges();
-                                }
+                                //    ComplaintMaster.LastPerformedBy = sid;
+                                //    db.Entry(ComplaintMaster).State = EntityState.Modified;
+                                //    db.SaveChanges();
+                                //}
 
                                 //var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == EmployeeComplaintVM.ComplaintId);
                                 //if (WorkFlow != null)
@@ -200,8 +200,8 @@ namespace ComplaintManagement.Repository
                                 //    db.SaveChanges();
                                 //}
 
-                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, Messages.InProgress, db);
-                                dbContextTransaction.Commit();
+                                
+                               
                             }
                             else
                             {
@@ -235,21 +235,22 @@ namespace ComplaintManagement.Repository
                                 //}
 
                                 //commitRole.Attachment = EmployeeComplaintVM.AttachmentsCommittee;
+
                                 db.Entry(commitRole).State = EntityState.Modified;
                                 db.SaveChanges();
-
-                                var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.ComplaintId);
-                                if (ComplaintMaster != null)
-                                {
-
-                                    ComplaintMaster.LastPerformedBy = sid;
-                                    db.Entry(ComplaintMaster).State = EntityState.Modified;
-                                    db.SaveChanges();
-                                }
-
-                                dbContextTransaction.Commit();
                             }
+                           
 
+                            var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.ComplaintId);
+                            if (ComplaintMaster != null)
+                            {
+
+                                ComplaintMaster.LastPerformedBy = sid;
+                                db.Entry(ComplaintMaster).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, "Save", db);
+                            dbContextTransaction.Commit();
                         }
                         catch (Exception ex)
                         {
@@ -288,7 +289,7 @@ namespace ComplaintManagement.Repository
             }
         }
 
-        public UserMasterVM AddOrUpdateBackToBUHCCommittee(UserMasterVM EmployeeComplaintVM, string UserInvolved)
+        public UserMasterVM AddOrUpdateBackToBUHCCommittee(UserMasterVM EmployeeComplaintVM, string UserInvolved,string HrRoleId)
         {
             try
             {
@@ -352,13 +353,19 @@ namespace ComplaintManagement.Repository
                             {
                                 WorkFlow.ActionType = Messages.SUBMITTED;
                                 WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                //WorkFlow.Remarks = EmployeeComplaintVM.RemarkCommittee;
                                 db.Entry(WorkFlow).State = EntityState.Modified;
-
+                                db.SaveChanges();
+                            }
+                            int hrRoleId = Convert.ToInt32(HrRoleId);
+                            var HrRole = db.HR_Role.FirstOrDefault(p => p.Id == hrRoleId);
+                            if (HrRole != null)
+                            {
+                                HrRole.CommitteeUSerId = commitRole.Id;
+                                db.Entry(HrRole).State = EntityState.Modified;
                                 db.SaveChanges();
                             }
 
-                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, Messages.InProgress, db);
+                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, "Back To BUHC", db);
                             dbContextTransaction.Commit();
 
                         }
@@ -699,7 +706,7 @@ namespace ComplaintManagement.Repository
                             employeeComplaint.ComplaintStatus = Messages.SUBMITTED;
                             employeeComplaint.LastPerformedBy = assignedUsersroleId;
 
-                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Messages.InProgress, db);
+                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(Complaintdata.Remark, Complaintdata.Id, Messages.SUBMITTED, db);
                             db.SaveChanges();
                             if (employeeComplaintWorkFlowDto != null && employeeComplaintWorkFlowDto.ComplaintId > 0)
                             {
@@ -728,6 +735,7 @@ namespace ComplaintManagement.Repository
                     data.IsSubmitted = false;
                     data.Remark = remarks;
                     data.ComplaintStatus = Messages.Withdrawn;
+                    data.LastPerformedBy = null;
 
                 }
                 var dataWorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == id);
@@ -910,6 +918,8 @@ namespace ComplaintManagement.Repository
                 var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
                    .Select(c => c.Value).SingleOrDefault();
 
+                var LoinUserId = Convert.ToInt32(sid);
+
                 string remark = EmployeeComplaintVM.Remark;
                 if (!string.IsNullOrEmpty(sid))
                 {
@@ -918,19 +928,12 @@ namespace ComplaintManagement.Repository
                         this.db.Database.CommandTimeout = 180;
                         try
                         {
-                            var EmployeeComplaint = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
-
-
-
-                            var HRRole = db.HR_Role.FirstOrDefault(p => p.ComplentId == ids);
-
-                            if (HRRole == null)
+                            if(Status==1)
                             {
-                                HRRole = new HR_Role();
-
-                                if (Status == 1)
+                                var HRRoleData = db.HR_Role.FirstOrDefault(p => p.ComplentId == ids && p.HRUserId == LoinUserId);
+                                if (HRRoleData == null)
                                 {
-
+                                    var HRRole = new HR_Role();
                                     HRRole.IsActive = true;
                                     HRRole.CreatedDate = DateTime.UtcNow;
                                     HRRole.ComplentId = ids;
@@ -943,32 +946,64 @@ namespace ComplaintManagement.Repository
                                     HRRole.Status = "Save";
                                     db.HR_Role.Add(HRRole);
                                     db.SaveChanges();
+                                }
+                                else
+                                {
+                                    HRRoleData.IsActive = true;
+                                    HRRoleData.Remark = remark;
+                                    HRRoleData.CaseType = EmployeeComplaintVM.CaseType;
+                                    HRRoleData.InvolvedUsersId = UserInvolved;
+                                    //HRRoleData.Attachement = EmployeeComplaintVM.Attachments1;
 
-                                    var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
-                                    if (WorkFlow != null)
+                                    if (!string.IsNullOrEmpty(EmployeeComplaintVM.Attachments1))
                                     {
-                                        WorkFlow.ActionType = Messages.SUBMITTED;
-                                        WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        WorkFlow.Remarks = remark;
-                                        db.Entry(WorkFlow).State = EntityState.Modified;
-                                        db.SaveChanges();
+                                        List<string> newAttachments = EmployeeComplaintVM.Attachments1.Split(',').ToList();
+                                        List<string> oldAttachments = HRRoleData.Attachement.Split(',').ToList();
+                                        List<string> updatedAttachements = new List<string>();
+                                        foreach (string fileName in oldAttachments.Concat(newAttachments).ToList())
+                                        {
+                                            if (!string.IsNullOrEmpty(fileName) && fileName.Length > 5)
+                                            {
+                                                updatedAttachements.Add(fileName);
+                                            }
+                                        }
+                                        HRRoleData.Attachement = string.Join(",", updatedAttachements);
+                                    }
+                                    else
+                                    {
+                                        HRRoleData.Attachement = HRRoleData.Attachement;
                                     }
 
-                                    EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
-                                    hrs.CreatedBy = Convert.ToInt32(sid);
-                                    hrs.CreatedDate = DateTime.UtcNow;
-                                    hrs.IsActive = true;
-                                    hrs.Remarks = remark;
-                                    hrs.ActionType = "Save";
-                                    hrs.UserType = Messages.NormalUser;
-                                    hrs.ComplaintId = ids;
-                                    db.EmployeeComplaintHistories.Add(hrs);
+                                    db.Entry(HRRoleData).State = EntityState.Modified;
                                     db.SaveChanges();
-
                                 }
-                                else if (Status == 2)
-                                {
 
+                                var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
+                                if (WorkFlow != null)
+                                {
+                                    WorkFlow.ActionType = Messages.SUBMITTED;
+                                    WorkFlow.UpdatedDate = DateTime.UtcNow;
+                                    WorkFlow.Remarks = remark;
+                                    db.Entry(WorkFlow).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+                                var ComplaintMasters = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
+                                if (ComplaintMasters != null)
+                                {
+                                    ComplaintMasters.LastPerformedBy = sid;
+                                    db.Entry(WorkFlow).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+
+                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(remark, ids, "Save", db);
+
+                            }
+                            else if(Status==2)
+                            {
+                                var HRRoleData = db.HR_Role.FirstOrDefault(p => p.ComplentId == ids && p.HRUserId == LoinUserId);
+                                if (HRRoleData == null)
+                                {
+                                    var HRRole = new HR_Role();
                                     HRRole.IsActive = true;
                                     HRRole.CreatedDate = DateTime.UtcNow;
                                     HRRole.ComplentId = ids;
@@ -981,189 +1016,60 @@ namespace ComplaintManagement.Repository
                                     HRRole.Status = Messages.COMMITTEE;
                                     db.HR_Role.Add(HRRole);
                                     db.SaveChanges();
-
-                                    var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
-                                    if (WorkFlow != null)
-                                    {
-                                        WorkFlow.ActionType = Messages.COMMITTEE;
-                                        WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        WorkFlow.Remarks = remark;
-                                        db.Entry(WorkFlow).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-
-                                    var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
-                                    if (ComplaintMaster != null)
-                                    {
-                                        ComplaintMaster.ComplaintStatus = Messages.COMMITTEE;
-                                        ComplaintMaster.UpdatedDate = DateTime.UtcNow;
-                                        ComplaintMaster.UpdatedBy = Convert.ToInt32(sid);
-                                        db.Entry(ComplaintMaster).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-
-
-                                    EmployeeComplaintHistory hrst = new EmployeeComplaintHistory();
-                                    hrst.CreatedBy = Convert.ToInt32(sid);
-                                    hrst.CreatedDate = DateTime.UtcNow;
-                                    hrst.IsActive = true;
-                                    hrst.Remarks = remark;
-                                    hrst.ActionType = Messages.COMMITTEE;
-                                    hrst.UserType = Messages.NormalUser;
-                                    hrst.ComplaintId = ids;
-                                    db.EmployeeComplaintHistories.Add(hrst);
-                                    db.SaveChanges();
-
                                 }
-
-                                else if (Status == 3)
+                                else
                                 {
+                                    HRRoleData.IsActive = true;
+                                    HRRoleData.Remark = remark;
+                                    HRRoleData.CaseType = EmployeeComplaintVM.CaseType;
+                                    HRRoleData.InvolvedUsersId = UserInvolved;
+                                    //HRRoleData.Attachement = EmployeeComplaintVM.Attachments1;
+                                    HRRoleData.Status = Messages.COMMITTEE;
 
-                                    var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
-                                    if (WorkFlow != null)
+                                    if (!string.IsNullOrEmpty(EmployeeComplaintVM.Attachments1))
                                     {
-                                        WorkFlow.ActionType = Messages.Opened;
-                                        WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        WorkFlow.Remarks = remark;
-                                        db.Entry(WorkFlow).State = EntityState.Modified;
-                                        db.SaveChanges();
+                                        List<string> newAttachments = EmployeeComplaintVM.Attachments1.Split(',').ToList();
+                                        List<string> oldAttachments = HRRoleData.Attachement.Split(',').ToList();
+                                        List<string> updatedAttachements = new List<string>();
+                                        foreach (string fileName in oldAttachments.Concat(newAttachments).ToList())
+                                        {
+                                            if (!string.IsNullOrEmpty(fileName) && fileName.Length > 5)
+                                            {
+                                                updatedAttachements.Add(fileName);
+                                            }
+                                        }
+                                        HRRoleData.Attachement = string.Join(",", updatedAttachements);
+                                    }
+                                    else
+                                    {
+                                        HRRoleData.Attachement = HRRoleData.Attachement;
                                     }
 
-                                    EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
-                                    hrs.CreatedBy = Convert.ToInt32(sid);
-                                    hrs.CreatedDate = DateTime.UtcNow;
-                                    hrs.IsActive = true;
-                                    hrs.Remarks = remark;
-                                    hrs.ActionType = Messages.Opened;
-                                    hrs.UserType = Messages.NormalUser;
-                                    hrs.ComplaintId = ids;
-                                    db.EmployeeComplaintHistories.Add(hrs);
+                                    db.Entry(HRRoleData).State = EntityState.Modified;
                                     db.SaveChanges();
-
                                 }
+                                var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
+                                if (WorkFlow != null)
+                                {
+                                    WorkFlow.ActionType = Messages.COMMITTEE;
+                                    WorkFlow.UpdatedDate = DateTime.UtcNow;
+                                    WorkFlow.Remarks = remark;
+                                    db.Entry(WorkFlow).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+
+                                var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
+                                if (ComplaintMaster != null)
+                                {
+                                    ComplaintMaster.ComplaintStatus = Messages.COMMITTEE;
+                                    ComplaintMaster.UpdatedDate = DateTime.UtcNow;
+                                    ComplaintMaster.UpdatedBy = Convert.ToInt32(sid);
+                                    ComplaintMaster.LastPerformedBy = sid;
+                                    db.Entry(ComplaintMaster).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(remark, ids, "Push To Committee", db);
                             }
-
-                            else
-                            {
-                                if (Status == 1)
-                                {
-                                    EmployeeComplaintHistory hrs1 = new EmployeeComplaintHistory();
-                                    hrs1.CreatedBy = Convert.ToInt32(sid);
-                                    hrs1.CreatedDate = DateTime.UtcNow;
-                                    hrs1.IsActive = true;
-                                    hrs1.Remarks = remark;
-                                    hrs1.ActionType = "Save";
-                                    hrs1.UserType = Messages.NormalUser;
-                                    hrs1.ComplaintId = ids;
-                                    db.EmployeeComplaintHistories.Add(hrs1);
-                                    db.SaveChanges();
-
-                                    HRRole.IsActive = true;
-                                    HRRole.CreatedDate = DateTime.UtcNow;
-                                    HRRole.ComplentId = ids;
-                                    HRRole.UserId = EmployeeComplaintVM.UserId;
-                                    HRRole.Remark = remark;
-                                    HRRole.CaseType = EmployeeComplaintVM.CaseType;
-                                    HRRole.HRUserId = Hrid;
-                                    HRRole.InvolvedUsersId = UserInvolved;
-                                    HRRole.Attachement = EmployeeComplaintVM.Attachments1;
-                                    HRRole.Status = "Save";
-                                    db.Entry(HRRole).State = EntityState.Modified;
-                                    db.SaveChanges();
-
-
-
-                                    var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
-                                    if (WorkFlow != null)
-                                    {
-                                        WorkFlow.ActionType = Messages.SUBMITTED;
-                                        WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        WorkFlow.Remarks = remark;
-                                        db.Entry(WorkFlow).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-
-
-
-                                }
-                                else if (Status == 2)
-                                {
-
-                                    HRRole.IsActive = true;
-                                    HRRole.CreatedDate = DateTime.UtcNow;
-                                    HRRole.ComplentId = ids;
-                                    HRRole.UserId = EmployeeComplaintVM.UserId;
-                                    HRRole.Remark = remark;
-                                    HRRole.CaseType = EmployeeComplaintVM.CaseType;
-                                    HRRole.HRUserId = Hrid;
-                                    HRRole.InvolvedUsersId = UserInvolved;
-                                    HRRole.Attachement = EmployeeComplaintVM.Attachments1;
-                                    HRRole.Status = Messages.COMMITTEE;
-                                    db.Entry(HRRole).State = EntityState.Modified;
-                                    db.SaveChanges();
-
-                                    var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
-                                    if (WorkFlow != null)
-                                    {
-                                        WorkFlow.ActionType = Messages.COMMITTEE;
-                                        WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        WorkFlow.Remarks = remark;
-                                        db.Entry(WorkFlow).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-
-                                    var ComplaintMaster = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == ids);
-                                    if (ComplaintMaster != null)
-                                    {
-                                        ComplaintMaster.ComplaintStatus = Messages.COMMITTEE;
-                                        ComplaintMaster.UpdatedDate = DateTime.UtcNow;
-                                        ComplaintMaster.UpdatedBy = Convert.ToInt32(sid);
-                                        db.Entry(ComplaintMaster).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-
-
-                                    EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
-                                    hrs.CreatedBy = Convert.ToInt32(sid);
-                                    hrs.CreatedDate = DateTime.UtcNow;
-                                    hrs.IsActive = true;
-                                    hrs.Remarks = remark;
-                                    hrs.ActionType = Messages.COMMITTEE;
-                                    hrs.UserType = Messages.NormalUser;
-                                    hrs.ComplaintId = ids;
-                                    db.EmployeeComplaintHistories.Add(hrs);
-                                    db.SaveChanges();
-
-                                }
-
-                                else if (Status == 3)
-                                {
-
-                                    var WorkFlow = db.EmployeeComplaintWorkFlows.FirstOrDefault(p => p.ComplaintId == ids);
-                                    if (WorkFlow != null)
-                                    {
-                                        WorkFlow.ActionType = Messages.Opened;
-                                        WorkFlow.UpdatedDate = DateTime.UtcNow;
-                                        //WorkFlow.Remarks = EmployeeComplaint.Remark;
-                                        db.Entry(WorkFlow).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-
-                                    EmployeeComplaintHistory hrs = new EmployeeComplaintHistory();
-                                    hrs.CreatedBy = Convert.ToInt32(sid);
-                                    hrs.CreatedDate = DateTime.UtcNow;
-                                    hrs.IsActive = true;
-                                    hrs.Remarks = remark;
-                                    hrs.ActionType = Messages.Opened;
-                                    hrs.UserType = Messages.NormalUser;
-                                    hrs.ComplaintId = ids;
-                                    db.EmployeeComplaintHistories.Add(hrs);
-                                    db.SaveChanges();
-
-                                }
-
-                            }
-
                             dbContextTransaction.Commit();
 
                         }

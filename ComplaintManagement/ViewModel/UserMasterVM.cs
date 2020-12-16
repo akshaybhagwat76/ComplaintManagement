@@ -81,6 +81,8 @@ namespace ComplaintManagement.ViewModel
         [DisplayName("Attachments")]
         public string AttachmentsCommittee { get; set; }
         public int ComplaintId { get; set; }
+        [DisplayName("Attachments")]
+        public string Attachments1 { get; set; }
 
     }
 }

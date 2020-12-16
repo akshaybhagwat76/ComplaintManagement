@@ -130,7 +130,7 @@
         public const string REVISION = "revision";
         public const string REFUNDED = "refunded";
         public const string CANCELLED = "cancelled";
-        public const string COMPLETED = "completed";
+        public const string COMPLETED = "Completed";
         public const string XLSX = ".xlsx";
         public const string InProgress = "In-Progress";
 
