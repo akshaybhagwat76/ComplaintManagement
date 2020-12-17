@@ -57,5 +57,6 @@ namespace ComplaintManagement.Models
         public virtual DbSet<UserMaster> UserMasters { get; set; }
         public virtual DbSet<UserMasters_History> UserMasters_History { get; set; }
         public virtual DbSet<HR_Role> HR_Role { get; set; }
+        public virtual DbSet<NotificationAlert> NotificationAlerts { get; set; }
     }
 }

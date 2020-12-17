@@ -306,6 +306,7 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="ModifiedBy" Type="int" Nullable="false" />
+          <Property Name="InvolvedUsersId" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="LOSMasters_History">
           <Key>
@@ -324,6 +325,17 @@
           <Property Name="ModifiedBy" Type="int" Nullable="false" />
           <Property Name="EntityState" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="LOSId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NotificationAlert">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="AssignToUserId" Type="int" Nullable="false" />
+          <Property Name="NotificationContent" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="RegionMasters">
           <Key>
@@ -654,6 +666,7 @@
           <EntitySet Name="LocationMasters_History" EntityType="Self.LocationMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LOSMasters" EntityType="Self.LOSMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LOSMasters_History" EntityType="Self.LOSMasters_History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NotificationAlert" EntityType="Self.NotificationAlert" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegionMasters" EntityType="Self.RegionMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegionMasters_History" EntityType="Self.RegionMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RoleMasters" EntityType="Self.RoleMasters" Schema="dbo" store:Type="Tables" />
@@ -768,6 +781,7 @@
             <End Role="UserMaster" EntitySet="UserMasters" />
           </AssociationSet>
           <EntitySet Name="HR_Role" EntityType="DB_A6A061_complaintuserModel.HR_Role" />
+          <EntitySet Name="NotificationAlerts" EntityType="DB_A6A061_complaintuserModel.NotificationAlert" />
         </EntityContainer>
         <EntityType Name="CategoryMaster">
           <Key>
@@ -1058,6 +1072,7 @@
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" FromRole="LOSMaster" ToRole="UserMaster" />
+          <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="LOSMasters_History">
           <Key>
@@ -1413,6 +1428,17 @@
           <Property Name="HRUserId" Type="Int32" />
           <Property Name="CommitteeUSerId" Type="Int32" />
         </EntityType>
+        <EntityType Name="NotificationAlert">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="AssignToUserId" Type="Int32" Nullable="false" />
+          <Property Name="NotificationContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1707,6 +1733,7 @@
           <EntitySetMapping Name="LOSMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.LOSMaster">
               <MappingFragment StoreEntitySet="LOSMasters">
+                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
@@ -1979,6 +2006,18 @@
                 <ScalarProperty Name="CaseType" ColumnName="CaseType" />
                 <ScalarProperty Name="ComplentId" ColumnName="ComplentId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NotificationAlerts">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.NotificationAlert">
+              <MappingFragment StoreEntitySet="NotificationAlert">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="NotificationContent" ColumnName="NotificationContent" />
+                <ScalarProperty Name="AssignToUserId" ColumnName="AssignToUserId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
