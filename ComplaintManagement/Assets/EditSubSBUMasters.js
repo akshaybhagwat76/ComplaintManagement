@@ -29,6 +29,7 @@ function submitForm() {
         var data = {
             Id: $("#Id").val().trim(),
             SubSBU: $("#SubSBU").val().trim(),
+            InvolvedUsersId: $(".test").val().toString(),
             Status: $("#Status").val() == "true" ? true : false
         }
         StartProcess();
