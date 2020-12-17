@@ -130,7 +130,7 @@ namespace ComplaintManagement.Controllers
                 List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x=>x.Status).ToList();
                 List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
                 List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
-
+                List<UserMasterVM> lstuser = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
 
                 #region Other joining logics
                 if (lst != null && lst.Count > 0)
@@ -192,6 +192,31 @@ namespace ComplaintManagement.Controllers
                                 row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault().CompetencyName;
                             }
                         }
+                        if (!string.IsNullOrEmpty(los.InvolvedUsersId))
+                        {
+                            if (los.InvolvedUsersId.Contains(","))
+                            {
+                                string[] array = los.InvolvedUsersId.Split(',');
+                                List<string> UserLst = new List<string>();
+                                foreach (string UserLstItem in array)
+                                {
+                 
+                                    {
+                                        UserLst.Add(lstuser.Where(x => x.Id == Convert.ToInt32(UserLstItem)).FirstOrDefault().EmployeeName);
+                                    }
+                                }
+                                row.InvolvedUser = string.Join(",", UserLst);
+                            }
+                            else
+                            {
+                                row.InvolvedUser = lstuser.Where(x => x.Id == Convert.ToInt32(los.InvolvedUsersId)).FirstOrDefault() != null ? lstuser.Where(x => x.Id == Convert.ToInt32(los.InvolvedUsersId)).FirstOrDefault().EmployeeName : string.Empty;
+                            }
+                        }
+                        else
+                        {
+                            row.InvolvedUser = "No data Added";
+                        }
+
                         row.Id = los.Id;
                         row.LOSName = los.LOSName;
                         row.UpdatedByName = los.UpdatedByName;
@@ -225,6 +250,7 @@ namespace ComplaintManagement.Controllers
                 List<SBUMasterVM> lstSBUMaster = new SBUMasterRepository().GetAll().Where(x => x.Status).ToList();
                 List<SubSBUMasterVM> lstSubSBUMaster = new SubSBUMasterRepository().GetAll().Where(x => x.Status).ToList();
                 List<CompetencyMasterVM> lstCompetency = new CompetencyMastersRepository().GetAll().Where(x => x.Status).ToList();
+                List<UserMasterVM> lstuser = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
 
 
 
@@ -295,6 +321,34 @@ namespace ComplaintManagement.Controllers
                                 row.CompetencyName = lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault()!=null? lstCompetency.Where(x => x.Id == Convert.ToInt32(los.CompetencyId)).FirstOrDefault().CompetencyName:string.Empty;
                             }
                         }
+
+
+                        if (!string.IsNullOrEmpty(los.InvolvedUsersId))
+                        {
+                            if (los.InvolvedUsersId.Contains(","))
+                            {
+                                string[] array = los.InvolvedUsersId.Split(',');
+                                List<string> UserLst = new List<string>();
+                                foreach (string UserLstItem in array)
+                                {
+                                    if (lstuser.Where(x => x.Id == Convert.ToInt32(UserLstItem)).FirstOrDefault() != null)
+                                    {
+                                        UserLst.Add(lstuser.Where(x => x.Id == Convert.ToInt32(UserLstItem)).FirstOrDefault().EmployeeName);
+                                    }
+                                }
+                                row.InvolvedUser = string.Join(",", UserLst);
+                            }
+                            else
+                            {
+                                row.InvolvedUser = lstuser.Where(x => x.Id == Convert.ToInt32(los.InvolvedUsersId)).FirstOrDefault() != null ? lstuser.Where(x => x.Id == Convert.ToInt32(los.InvolvedUsersId)).FirstOrDefault().EmployeeName : string.Empty;
+                            }
+                        }
+                        else
+                        {
+                            row.InvolvedUser = "No data Added";
+                        }
+
+
                         row.Id = los.Id;
                         row.LOSName = los.LOSName;
                         row.UpdatedByName = los.UpdatedByName;
@@ -594,6 +648,7 @@ namespace ComplaintManagement.Controllers
                 ViewBag.lstSBU = new SBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
                 ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
+                ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
 
             }
             catch (Exception ex)
@@ -618,7 +673,7 @@ namespace ComplaintManagement.Controllers
                     ViewBag.lstSBU = new SBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
                     ViewBag.lstSubSBU = new SubSBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
                     ViewBag.lstCompetency = new CompetencyMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CompetencyName, Value = d.Id.ToString() }).ToList();
-
+                    ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
                     LOSMasterVM LOSVM = new LOSMasterRepository().Get(Convert.ToInt32(id));
                     ViewBag.ViewState = isView;
                     ViewBag.PageType = !isView ? "Edit" : "View";
@@ -696,11 +751,12 @@ namespace ComplaintManagement.Controllers
                 ws.Cells["B1"].Value = Messages.SBU;
                 ws.Cells["C1"].Value = Messages.SubSBU;
                 ws.Cells["D1"].Value = Messages.Competency;
-                ws.Cells["E1"].Value = Messages.CreatedDate;
-                ws.Cells["F1"].Value = Messages.CreatedBy;
-                ws.Cells["G1"].Value = Messages.ModifiedDate;
-                ws.Cells["H1"].Value = Messages.ModifiedBy;
-                ws.Cells["I1"].Value = Messages.Status;
+                ws.Cells["E1"].Value = Messages.InvolvedUser;
+                ws.Cells["F1"].Value = Messages.CreatedDate;
+                ws.Cells["G1"].Value = Messages.CreatedBy;
+                ws.Cells["H1"].Value = Messages.ModifiedDate;
+                ws.Cells["I1"].Value = Messages.ModifiedBy;
+                ws.Cells["J1"].Value = Messages.Status;
 
 
                 var rowNumber = 1;
@@ -717,19 +773,22 @@ namespace ComplaintManagement.Controllers
                 ws.Cells[rowNumber, 4].Value = Messages.Competency;
 
                 ws.Cells[rowNumber, 5].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 5].Value = Messages.CreatedDate;
+                ws.Cells[rowNumber, 5].Value = Messages.InvolvedUser;
 
                 ws.Cells[rowNumber, 6].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 6].Value = Messages.CreatedBy;
+                ws.Cells[rowNumber, 6].Value = Messages.CreatedDate;
 
                 ws.Cells[rowNumber, 7].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 7].Value = Messages.ModifiedDate;
+                ws.Cells[rowNumber, 7].Value = Messages.CreatedBy;
 
                 ws.Cells[rowNumber, 8].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 8].Value = Messages.ModifiedBy;
-                                    
+                ws.Cells[rowNumber, 8].Value = Messages.ModifiedDate;
+
                 ws.Cells[rowNumber, 9].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 9].Value = Messages.Status;
+                ws.Cells[rowNumber, 9].Value = Messages.ModifiedBy;
+                                    
+                ws.Cells[rowNumber, 10].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 10].Value = Messages.Status;
                 foreach (var log in  GetAll(0))
                 {
                     rowNumber++;
@@ -738,11 +797,12 @@ namespace ComplaintManagement.Controllers
                     ws.Cells[rowNumber, 2].Value = log.SBU;
                     ws.Cells[rowNumber, 3].Value = log.SubSBU;
                     ws.Cells[rowNumber, 4].Value = log.CompetencyName;
-                    ws.Cells[rowNumber, 5].Value = log.CreatedDate != null? log.CreatedDate.ToString("dd/MM/yyyy"):Messages.NotAvailable;
-                    ws.Cells[rowNumber, 6].Value = log.CreatedByName;
-                    ws.Cells[rowNumber, 7].Value = log.UpdatedDate != null ? log.UpdatedDate.ToString("dd/MM/yyyy") : Messages.NotAvailable;
-                    ws.Cells[rowNumber, 8].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
-                    ws.Cells[rowNumber, 9].Value = log.Status ? Messages.Active : Messages.Inactive;
+                    ws.Cells[rowNumber, 5].Value = log.InvolvedUser;
+                    ws.Cells[rowNumber, 6].Value = log.CreatedDate != null? log.CreatedDate.ToString("dd/MM/yyyy"):Messages.NotAvailable;
+                    ws.Cells[rowNumber, 7].Value = log.CreatedByName;
+                    ws.Cells[rowNumber, 8].Value = log.UpdatedDate != null ? log.UpdatedDate.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 9].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 10].Value = log.Status ? Messages.Active : Messages.Inactive;
 
                 }
 

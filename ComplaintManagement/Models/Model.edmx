@@ -413,6 +413,7 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="ModifiedBy" Type="int" Nullable="false" />
+          <Property Name="InvolvedUsersId" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="SBUMasters_History">
           <Key>
@@ -469,6 +470,7 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="ModifiedBy" Type="int" Nullable="false" />
+          <Property Name="InvolvedUsersId" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="SubSBUMasters_History">
           <Key>
@@ -1170,6 +1172,7 @@
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" FromRole="SBUMaster" ToRole="UserMaster" />
+          <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SBUMasters_History">
           <Key>
@@ -1227,6 +1230,7 @@
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" FromRole="SubSBUMaster" ToRole="UserMaster" />
+          <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SubSBUMasters_History">
           <Key>
@@ -1838,6 +1842,7 @@
           <EntitySetMapping Name="SBUMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.SBUMaster">
               <MappingFragment StoreEntitySet="SBUMasters">
+                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
@@ -1898,6 +1903,7 @@
           <EntitySetMapping Name="SubSBUMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.SubSBUMaster">
               <MappingFragment StoreEntitySet="SubSBUMasters">
+                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />

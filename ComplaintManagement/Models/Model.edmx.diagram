@@ -49,7 +49,11 @@
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.HR_Role" Width="1.5" PointX="10.927820568405007" PointY="5.5159512634929042" />
+<<<<<<< HEAD
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.NotificationAlert" Width="1.5" PointX="1.0803278652393855" PointY="9.6597150162140437" />
+=======
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.NotificationAlert" Width="1.5" PointX="3.1853893991491713" PointY="8.6717918257563333" />
+>>>>>>> ad4621c7b195345b47b7e1ae7944dff966a511dc
 =======
 &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
       &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87

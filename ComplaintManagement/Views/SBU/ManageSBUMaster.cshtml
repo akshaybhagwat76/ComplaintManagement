@@ -21,6 +21,10 @@
     }
     ViewBag.Title = "Manage SBU";
 }
+@{
+    var involveuserid = Model.InvolvedUsersId;
+}
+<link href="~/Content/fSelect.css" rel="stylesheet" type="text/css" />
 <!-- Content Wrapper -->
 @Html.Hidden("pageState", (object)ViewBag.ViewState)
 <div id="content-wrapper" class="d-flex flex-column">
@@ -154,6 +158,32 @@
                                         @Html.LabelFor(model => model.SBU, new { @class = "requiredLabel" })
                                         @Html.EditorFor(model => model.SBU, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "SBU", @onfocusout = "checkDuplicate()" } })
                                     </div>
+
+
+                                    <div class="col-sm-9 mb-3">
+                                        <div class="col-md-8 multipleddldiv">
+                                            <label>Involved Users</label>
+                                            @{
+                                                List<SelectListItem> listUser = new List<SelectListItem>();
+                                                listUser = new List<SelectListItem>();
+                                                listUser.Add(new SelectListItem
+                                                {
+                                                    Text = "",
+                                                    Value = ""
+                                                });
+                                                listUser.AddRange(ViewBag.lstUser);
+                                            }
+                                            <br />@Html.DropDownList("InvolvedUsersId", (List<SelectListItem>)listUser, new { @class = "form-control test required", multiple = "multiple" })
+
+
+                                        </div>
+                                        <hr />
+                                    </div>
+
+
+
+
+
                                     <div class="col-sm-9 mb-3">
 
                                         @Html.LabelFor(model => model.Status, new { @class = "requiredLabel" })
@@ -216,4 +246,22 @@
         </div>
     </div>
 </div>
+<script src="~/Scripts/fSelect.js"></script>
+<script>
+    $(function () {
+
+        $('.test').fSelect();
+
+         console.log(@involveuserid);
+            var involveid = "@involveuserid";
+            var selectedOptions = involveid.split(',');
+
+            for(var i in selectedOptions) {
+                var optionVal = selectedOptions[i];
+                //alert($(".multipleddl").find("option[value=" + optionVal + "]").html());
+                $(".multipleddldiv").find("div[data-value=" + optionVal + "]").addClass("selected");
+                $(".test").find("option[value=" + optionVal + "]").attr("selected","selected");
+            }
+    });
+</script>
 @Scripts.Render("~/Assets/EditSBUMasters")

@@ -26,5 +26,6 @@ namespace ComplaintManagement.ViewModel
         public string CreatedByName { get; set; }
         public string UpdatedByName { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
+        public string InvolvedUsersId { get; set; }
     }
 }

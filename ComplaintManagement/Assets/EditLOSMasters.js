@@ -56,6 +56,7 @@ function submitForm() {
             SBUId: $("#sbuIds").val().toString(),
             SubSBUId: $("#SubsbuIds").val().toString(),
             CompetencyId: $("#CompentencyIds").val().toString(),
+            InvolvedUsersId: $(".test").val().toString(),
             Status: $("#Status").val() == "true" ? true : false
         }
         StartProcess();

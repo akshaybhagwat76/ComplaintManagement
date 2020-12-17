@@ -105,6 +105,7 @@ namespace ComplaintManagement.Repository
 
             List<SBUMaster> SBU = new List<SBUMaster>();
             List<SBUMasterVM> SBUList = new List<SBUMasterVM>();
+            List<UserMasterVM> lstuser = new UserMastersRepository().GetAll().Where(x => x.Status).ToList();
             try
             {
                 List<UserMasterVM> usersList = new UserMastersRepository().GetAll();
@@ -119,10 +120,42 @@ namespace ComplaintManagement.Repository
 
                             catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
                             catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
-                            SBUList.Add(catObj);
+
+                            
+
+                                    if (!string.IsNullOrEmpty(item.InvolvedUsersId))
+                                    {
+                                        if (item.InvolvedUsersId.Contains(","))
+                                        {
+                                            string[] array = item.InvolvedUsersId.Split(',');
+                                            List<string> UserLst = new List<string>();
+                                            foreach (string UserLstItem in array)
+                                            {
+                                                if (lstuser.Where(x => x.Id == Convert.ToInt32(UserLstItem)).FirstOrDefault() != null)
+                                                {
+                                                    UserLst.Add(lstuser.Where(x => x.Id == Convert.ToInt32(UserLstItem)).FirstOrDefault().EmployeeName);
+                                                }
+                                            }
+                                            catObj.InvolvedUser = string.Join(",", UserLst);
+                                        }
+                                        else
+                                        {
+                                            catObj.InvolvedUser = lstuser.Where(x => x.Id == Convert.ToInt32(item.InvolvedUsersId)).FirstOrDefault() != null ? lstuser.Where(x => x.Id == Convert.ToInt32(item.InvolvedUsersId)).FirstOrDefault().EmployeeName : string.Empty;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        catObj.InvolvedUser = "No data Added";
+                                    }
+                                
+
+
+                                    SBUList.Add(catObj);
                         }
                     }
                 }
+                
+
             }
             catch (Exception ex)
             {

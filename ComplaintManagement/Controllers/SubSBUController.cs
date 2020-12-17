@@ -232,6 +232,8 @@ namespace ComplaintManagement.Controllers
         {
             SubSBUMasterVM SubSBUMasterVM = new SubSBUMasterVM();
             ViewBag.PageType = "Create";
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+
             return View("ManageSubSBUMaster", SubSBUMasterVM);
             
         }
@@ -246,6 +248,8 @@ namespace ComplaintManagement.Controllers
                     SubSBUMasterVM SubSBUVM = new SubSBUMasterRepository().Get(Convert.ToInt32(id));
                     ViewBag.ViewState = isView;
                     ViewBag.PageType = !isView ? "Edit" : "View";
+                    ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+
                     return View("ManageSubSBUMaster", SubSBUVM);
                 }
             }
@@ -317,6 +321,7 @@ namespace ComplaintManagement.Controllers
                 var ws = package.Workbook.Worksheets.Add(Messages.SubSBU);
                 //Headers
                 ws.Cells["A1"].Value = Messages.SubSBU;
+                ws.Cells["B1"].Value = Messages.InvolvedUser;
                 ws.Cells["B1"].Value = Messages.CreatedDate;
                 ws.Cells["C1"].Value = Messages.CreatedBy;
                 ws.Cells["D1"].Value = Messages.ModifiedDate;
@@ -327,31 +332,34 @@ namespace ComplaintManagement.Controllers
                 var rowNumber = 1;
                 ws.Cells[rowNumber, 1].Style.Font.Bold = true;
                 ws.Cells[rowNumber, 1].Value = Messages.SubSBU;
-
                 ws.Cells[rowNumber, 2].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 2].Value = Messages.CreatedDate;
+                ws.Cells[rowNumber, 2].Value = Messages.InvolvedUser;
 
                 ws.Cells[rowNumber, 3].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 3].Value = Messages.CreatedBy;
+                ws.Cells[rowNumber, 3].Value = Messages.CreatedDate;
 
                 ws.Cells[rowNumber, 4].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 4].Value = Messages.ModifiedDate;
+                ws.Cells[rowNumber, 4].Value = Messages.CreatedBy;
 
                 ws.Cells[rowNumber, 5].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 5].Value = Messages.ModifiedBy;
+                ws.Cells[rowNumber, 5].Value = Messages.ModifiedDate;
 
                 ws.Cells[rowNumber, 6].Style.Font.Bold = true;
-                ws.Cells[rowNumber, 6].Value = Messages.Status;
+                ws.Cells[rowNumber, 6].Value = Messages.ModifiedBy;
+
+                ws.Cells[rowNumber, 7].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 7].Value = Messages.Status;
                 foreach (var log in new SubSBUMasterRepository().GetAll())
                 {
                     rowNumber++;
 
                     ws.Cells[rowNumber, 1].Value = log.SubSBU;
-                    ws.Cells[rowNumber, 2].Value = log.CreatedDate.ToString("dd/MM/yyyy");
-                    ws.Cells[rowNumber, 3].Value = log.CreatedByName;
-                    ws.Cells[rowNumber, 4].Value = log.UpdatedDate.HasValue ? log.UpdatedDate.Value.ToString("dd/MM/yyyy") : Messages.NotAvailable;
-                    ws.Cells[rowNumber, 5].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
-                    ws.Cells[rowNumber, 6].Value = log.Status ? Messages.Active : Messages.Inactive;
+                    ws.Cells[rowNumber, 2].Value = log.InvolvedUser.ToString();
+                    ws.Cells[rowNumber, 3].Value = log.CreatedDate.ToString("dd/MM/yyyy");
+                    ws.Cells[rowNumber, 4].Value = log.CreatedByName;
+                    ws.Cells[rowNumber, 5].Value = log.UpdatedDate.HasValue ? log.UpdatedDate.Value.ToString("dd/MM/yyyy") : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 6].Value = !string.IsNullOrEmpty(log.UpdatedByName) ? log.UpdatedByName : Messages.NotAvailable;
+                    ws.Cells[rowNumber, 7].Value = log.Status ? Messages.Active : Messages.Inactive;
 
                 }
 

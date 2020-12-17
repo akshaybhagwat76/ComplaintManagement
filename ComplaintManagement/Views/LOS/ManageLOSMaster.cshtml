@@ -5,6 +5,7 @@
     int userId = 0;
     var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
 
+
     if (claimsIdentity != null)
     {
         var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Name);
@@ -21,7 +22,11 @@
     }
     ViewBag.Title = "Manage LOS";
 }
+@{ 
+    var involveuserid = Model.InvolvedUsersId;
+}
 @Styles.Render("~/Content/plugins/select2/select2Styles")
+<link href="~/Content/fSelect.css" rel="stylesheet" type="text/css" />
 <!-- Content Wrapper -->
 @Html.Hidden("pageState", (object)ViewBag.ViewState)
 <div id="content-wrapper" class="d-flex flex-column">
@@ -224,6 +229,30 @@
                                     </div>
 
 
+                                    <div class="col-sm-9 mb-3">
+                                        <div class="col-md-8 multipleddldiv">
+                                            <label>Involved Users</label>
+                                            @{
+                                                List<SelectListItem> listUser = new List<SelectListItem>();
+                                                listUser = new List<SelectListItem>();
+                                                listUser.Add(new SelectListItem
+                                                {
+                                                    Text = "",
+                                                    Value = ""
+                                                });
+                                                listUser.AddRange(ViewBag.lstUser);
+                                            }
+                                            <br />@Html.DropDownList("InvolvedUsersId", (List<SelectListItem>)listUser, new { @class = "form-control test required", multiple = "multiple" })
+
+
+                                        </div>
+                                        <hr />
+                                    </div>
+
+
+
+
+
                                     <div class="col-sm-9 mb-3 mb-sm-0">
                                         @Html.LabelFor(model => model.Status, new { @class = "requiredLabel" })
                                         @{
@@ -285,4 +314,22 @@
         </div>
     </div>
 </div>
+<script src="~/Scripts/fSelect.js"></script>
+<script>
+    $(function () {
+
+        $('.test').fSelect();
+
+         console.log(@involveuserid);
+            var involveid = "@involveuserid";
+            var selectedOptions = involveid.split(',');
+
+            for(var i in selectedOptions) {
+                var optionVal = selectedOptions[i];
+                //alert($(".multipleddl").find("option[value=" + optionVal + "]").html());
+                $(".multipleddldiv").find("div[data-value=" + optionVal + "]").addClass("selected");
+                $(".test").find("option[value=" + optionVal + "]").attr("selected","selected");
+            }
+    });
+</script>
 @Scripts.Render("~/Assets/EditLOSMasters")

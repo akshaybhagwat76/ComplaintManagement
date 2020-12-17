@@ -159,6 +159,7 @@
 
         public const string LOS = "LOS";
         public const string LOSHistory = "LOS History";
+        public const string InvolvedUser = "InvolvedUser";
 
         public const string SBU = "SBU";
         public const string SBUHistory = "SBU History";
@@ -174,6 +175,8 @@
 
         public const string Competency = "Competency";
         public const string CompetencyHistory = "Competency History";
+
+       
 
         public const string Entity = "Entity";
         public const string EntityHistory = "Entity History";
