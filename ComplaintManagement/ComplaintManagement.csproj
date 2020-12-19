@@ -336,6 +336,7 @@
     <Compile Include="Repository\CompetencyMastersRepository.cs" />
     <Compile Include="Repository\CompliantMastersRepository.cs" />
     <Compile Include="Repository\DesignationMasterRepository.cs" />
+    <Compile Include="Repository\NotificationAlertRepository.cs" />
     <Compile Include="Repository\EmployeeComplaintHistoryRepository.cs" />
     <Compile Include="Repository\EmployeeComplaintMastersRepository.cs" />
     <Compile Include="Repository\EmployeeWorkFlowRepository.cs" />

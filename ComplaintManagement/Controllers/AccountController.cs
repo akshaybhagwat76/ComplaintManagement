@@ -103,5 +103,6 @@ namespace ComplaintManagement.Controllers
             Session.Abandon();
             return RedirectToAction("Index");
         }
+        
     }
 }

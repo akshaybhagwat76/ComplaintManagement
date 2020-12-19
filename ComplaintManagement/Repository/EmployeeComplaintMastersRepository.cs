@@ -366,6 +366,25 @@ namespace ComplaintManagement.Repository
                             }
 
                             new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, "Back To BUHC", db);
+
+                            //Notification Saving Work
+                            var LOSName = string.Empty; var CategoryName = string.Empty; var SubCategoryName = string.Empty;
+                            string NotificationContent = string.Empty;
+                            CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.CategoryId)).CategoryName;
+                            SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
+                            var userData = new UserMastersRepository().Get(Convert.ToInt32(sid));
+                            LOSName = new LOSMasterRepository().Get(WorkFlow.LOSId).LOSName;
+                            NotificationContent = "Complaint [" + LOSName + "-" + CategoryName + "-" + SubCategoryName + "] has been send back  by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
+
+                            var CommitteeMemberData = (from u in db.CommitteeMasters
+                                                       where u.IsActive
+                                                       select u).FirstOrDefault();
+                            List<string> assignToUserId = WorkFlow.AssignedUserRoles.Split(',').ToList();
+                            foreach (var item in assignToUserId)
+                            {
+                                new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(item));
+                            }
+
                             dbContextTransaction.Commit();
 
                         }
@@ -405,6 +424,7 @@ namespace ComplaintManagement.Repository
                 throw new Exception(ex.Message.ToString());
             }
         }
+
         public List<EmployeeCompliantMasterVM> GetAll()
         {
             List<EmployeeComplaintMaster> EmployeeComplaint = new List<EmployeeComplaintMaster>();
@@ -607,11 +627,13 @@ namespace ComplaintManagement.Repository
                     EmployeeComplaintWorkFlowVM employeeComplaintWorkFlowDto = new EmployeeComplaintWorkFlowVM();
                     if (Complaintdata != null)
                     {
+                        
                         if (Complaintdata.CreatedBy > 0)
                         {
                             List<RoleMasterVM> roleMasterLineItem = new List<RoleMasterVM>();
                             var userData = new UserMastersRepository().Get(Complaintdata.CreatedBy); string rolesId = string.Empty;
                             string assignedUsersroleId = string.Empty;
+                            var LOSName = string.Empty; var CategoryName = string.Empty; var SubCategoryName = string.Empty;
                             if (userData != null && userData.LOSId > 0 && userData.CompentencyId > 0 && userData.SBUId > 0 && userData.SubSBUId > 0)
                             {
                                 int losId = userData.LOSId; int competencyId = userData.CompentencyId; int SBUId = userData.SBUId; int subSBUId = userData.SubSBUId;
@@ -698,6 +720,7 @@ namespace ComplaintManagement.Repository
                                     employeeComplaintWorkFlowDto.AssignedUserRoles = assignedUsersroleId; employeeComplaintWorkFlowDto.DueDate = Complaintdata.DueDate;
                                     employeeComplaintWorkFlowDto.LOSId = losId; employeeComplaintWorkFlowDto.SBUId = SBUId; employeeComplaintWorkFlowDto.SubSBUId = subSBUId; employeeComplaintWorkFlowDto.CompentencyId = competencyId;
                                 }
+                                LOSName = losId > 0 ? new LOSMasterRepository().Get(losId) != null ? new LOSMasterRepository().Get(losId).LOSName : Messages.NotAvailable : Messages.NotAvailable;
                             }
 
                             var employeeComplaint = db.EmployeeComplaintMasters.Find(Complaintdata.Id);
@@ -712,6 +735,19 @@ namespace ComplaintManagement.Repository
                             {
                                 new EmployeeWorkFlowRepository().AddOrUpdate(employeeComplaintWorkFlowDto, db);
                             }
+
+                            //Notification Send 
+                            string NotificationContent = string.Empty;
+                            CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(employeeComplaint.CategoryId)).CategoryName;
+                            SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(employeeComplaint.SubCategoryId)).SubCategoryName;
+
+                            NotificationContent = "Complaint [" + LOSName + "-" + CategoryName + "-" + SubCategoryName + "] has been assigned to you by " + userData.EmployeeName + " on " + userData.CreatedDate.ToString("dd/MM/yyyy") + " for your approval.";
+                            foreach (var item in roleMasterLineItem)
+                            {
+                                new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, item.UserId);
+                            }
+                            
+
                             dbContextTransaction.Commit();
                         }
                     }
@@ -919,7 +955,7 @@ namespace ComplaintManagement.Repository
                    .Select(c => c.Value).SingleOrDefault();
 
                 var LoinUserId = Convert.ToInt32(sid);
-
+                var LOSName = string.Empty; var CategoryName = string.Empty; var SubCategoryName = string.Empty;
                 string remark = EmployeeComplaintVM.Remark;
                 if (!string.IsNullOrEmpty(sid))
                 {
@@ -1068,7 +1104,25 @@ namespace ComplaintManagement.Repository
                                     db.Entry(ComplaintMaster).State = EntityState.Modified;
                                     db.SaveChanges();
                                 }
+
                                 new EmployeeComplaintHistoryRepository().AddComplaintHistory(remark, ids, "Push To Committee", db);
+
+                                //Notification Saving Work
+                                string NotificationContent = string.Empty;
+                                CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.CategoryId)).CategoryName;
+                                SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
+                                var userData= new UserMastersRepository().Get(Convert.ToInt32(sid));
+                                LOSName = new LOSMasterRepository().Get(WorkFlow.LOSId).LOSName;
+                                NotificationContent = "Complaint [" + LOSName + "-" + CategoryName + "-" + SubCategoryName + "] has been assigned to you by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
+
+                                var CommitteeMemberData = (from u in db.CommitteeMasters
+                                                           where u.IsActive
+                                                           select u).FirstOrDefault();
+                                List<string> assignToUserId = CommitteeMemberData.UserId.Split(',').ToList();
+                                foreach (var item in assignToUserId)
+                                {
+                                    new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(item));
+                                }
                             }
                             dbContextTransaction.Commit();
 
