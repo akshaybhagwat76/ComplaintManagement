@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Notification List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.heading = "Notification";
+}
+<style>
+    #notificationTable_wrapper {
+        display: block !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_length label {
+        display: block;
+    }
+</style>
+<div class="container-fluid">
+    <div class="page-title mb-3">
+        <h2 class="text-black">Notification List</h2>
+    </div>
+    <div class="notification-list">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table f-14 m-0" id="notificationTable" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <td>Date</td>
+                                        <td>Notification Title</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.NotificationAlert != null)
+                                    {
+                                        foreach (var item in ViewBag.NotificationAlert)
+                                        {
+                                            <tr>
+                                                <td class="text-black">@item.CreatedDate.ToString("MMMM dd yyyy")</td>
+                                                <td class="text-black"><strong>@item.NotificationContent</strong></td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+   // $(document).ready(function () {
+        //var table = $('#notificationTable').DataTable({
+        //});
+   // });
+
+</script>
