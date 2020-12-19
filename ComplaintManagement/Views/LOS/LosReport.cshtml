@@ -1,0 +1,277 @@
+﻿
+@{
+    ViewBag.Title = "LosReport";
+}
+
+@Styles.Render("~/Content/plugins/select2/select2Styles")
+<link href="~/Content/fSelect.css" rel="stylesheet" type="text/css" />
+<div class="container-fluid">
+    <div class="preloader"></div>
+    <div class="page-title">
+        <h2 class="text-black">LOS Master</h2>
+    </div>
+    <div class="card mb-4 rounded-0 border-0">
+        <div class="card-body">
+            <div class="row justify-content-between">
+                <div class="col-md-8">
+                    <ul class="nav">
+                        <li class="nav-item mr-3">
+                            <input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
+                        </li>
+                        <li class="nav-item mr-3">
+                            <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
+                        </li>
+                        <li class="nav-item mr-3">
+                            <select class="form-control losval">
+                                <option value="">Select Los</option>
+                                @if (ViewBag.los != null)
+                                {
+
+                                    foreach (var item in ViewBag.los)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                }
+                            </select>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" onclick="filterLosReportGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                        </li>
+                        <li class="nav-item">
+                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="exportLosReport()"><i class="fas fa-file-excel"></i></button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <ul class="nav">
+                        <li class="nav-item mr-4">
+                            <a href="javascript:void(0)" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" id="btnLink"><i class="fas fa-mail-bulk"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            @*<button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>*@
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Tab Bar -->
+    <div class="user-list">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12">
+                <div class="card mb-4 rounded-0 border-0">
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table f-14" id="myTable">
+                                <thead>
+                                    <tr>
+                                        <td class="text-center">ComplaintNo</td>
+                                        <td class="text-center">LOS</td>
+                                        <td class="text-center">Created By</td>
+                                        <td class="text-center">Category</td>
+                                        <td class="text-center">Sub Category</td>
+                                        <td class="text-center">Region</td>
+                                        <td class="text-center">Office</td>
+                                        <td class="text-center">SBU</td>
+                                        <td class="text-center">Sub SBU</td>
+                                        <td class="text-center">Case Stage</td>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.LossReporting != null)
+                                    {
+                                        foreach (var item in ViewBag.LossReporting)
+                                        {
+                                    <tr>
+                                        <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                                        <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                                        <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                        <td class="text-black text-center"><strong>@item.Category</strong></td>
+                                        <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
+                                        <td class="text-black text-center"><strong>@item.RegionName</strong></td>
+
+                                        <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                                        <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                        <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
+                                        <td class="text-black text-center"><strong>@item.CaseType</strong></td>
+                                        <!--<td class="text-black text-center">
+        <strong>-->
+                                        @*@if (item.CreatedDate != null)
+        {
+            var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+            @Html.Raw(DateTime
+        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+        }*@
+                                        <!--</strong>
+    </td>
+
+    <td class="text-black text-center">
+        <strong>-->
+                                        @*@if (item.UpdatedDate != null)
+        {1
+            var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+            @Html.Raw(DateTime
+        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+        }
+        else
+        {
+            @Html.Raw(Messages.NotAvailable.ToString())
+        }*@
+                                        <!--</strong>
+    </td>
+    <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+
+
+    <td class="text-black text-center">
+        <strong>-->
+                                        @*@if (item.Status == true)
+        {@Html.Raw("Active") }
+        else
+        { @Html.Raw("Inactive")}*@
+                                        <!--</strong>
+    </td>
+    <td class="text-center text-nowrap">-->
+                                        @*<a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+        <a href="javascript:void(0)" onclick="deleteLOS('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+        <a href="/LOS/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>*@
+                                        <!--</td>-->
+                                    </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <br />
+                        <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
+                            <tr>
+                                @for (int i = 1; i <= ViewBag.PageCount; i++)
+                                {
+                                    <td>
+                                        <div class="pagination">
+                                            @if (i != ViewBag.CurrentPageIndex)
+                                            {
+                                                <a href="javascript:PagerClick(@i);">@i</a>
+                                            }
+                                            else
+                                            {
+                                                <span>@i</span>
+                                            }
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        </table>
+                        <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalPopUp" role="dialog" style="width:100%">
+    <div class="modal-dialog err-pop">
+        <div class="modal-content" style="width:700px;height:300px">
+            <div class="modal-header" style="background-color:#ff6a00">
+                <span style="text-align:center">Send Email</span>
+                <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <div>
+                    <table style="margin-top:10px;width:100%" cellpadding="10" cellspacing="10">
+                        <tr>
+                            <td>
+                                <label>Involved Users</label>
+                            </td>
+                            <td>
+                                @{
+                                    List<SelectListItem> listUser = new List<SelectListItem>();
+                                    listUser = new List<SelectListItem>();
+                                    listUser.Add(new SelectListItem
+                                    {
+                                        Text = "",
+                                        Value = ""
+                                    });
+                                    listUser.AddRange(ViewBag.lstUser);
+                                }
+                                @Html.DropDownList("InvolvedUserId", (List<SelectListItem>)listUser, new { @class = "form-control test required", multiple = "multiple" })
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Comment
+                            </td>
+                            <td>
+                                @Html.TextArea("Comment", new { @class = "form-control comment", @style = "Border-radius:2%" })
+                            </td>
+                        </tr>
+
+                    </table>
+
+
+
+                </div>
+                <hr />
+                <button type="button" class="btn btn-primary" id="sendemail">Send Mail</button>
+            </div>
+            
+
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Assets/LOSMasters")
+<script src="~/Scripts/fSelect.js"></script>
+<script>
+    $(function () {
+
+        $('.test').fSelect();
+
+
+    });
+</script><script>
+    $("#btnLink").click(function () {
+        $('#ModalPopUp').modal('show');
+    });
+    $("#sendemail").click(function () {
+ 
+        var UserInvolved = $(".test").val();
+        var comment = $(".comment").val();
+        var formData = new FormData();
+
+        formData.append("UserInvolved", UserInvolved);
+        formData.append("Comment", comment);
+        
+        $.ajax({
+            type: "POST",
+            url: "/LOS/UserMail",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.status != "Fail") {
+
+                    $('#ModalPopUp').modal('hide');
+                    alert("Email Sent");
+
+                }
+                else {
+
+                    alert("Email Not Sent");
+                }
+
+            },
+            error: function (error) {
+                funToastr(false, error.statusText);
+            }
+        });
+    });
+</script>
+

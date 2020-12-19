@@ -102,6 +102,8 @@
         public const string Company = "Company";
         public const string Manager = "Manager";
 
+        public const string CaseStage = "CaseStage";
+
         public const string NotAvailable = "N/A";
         public const string ABOUT_ORDER_NO = "ABOUT YOUR ORDER {0}";
         public const string ORDER_NEW_NOTIFICATION_USER = "Sub-Order Id-{0}";

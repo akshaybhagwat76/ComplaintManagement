@@ -80,6 +80,9 @@
     <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.1.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
+    <Reference Include="Mvc.Mailer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcMailer.4.5\lib\45\Mvc.Mailer.dll</HintPath>
+    </Reference>
     <Reference Include="OfficeOpenXml.Core.ExcelPackage, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OfficeOpenXml.Core.ExcelPackage.1.0.0\lib\net46\OfficeOpenXml.Core.ExcelPackage.dll</HintPath>
     </Reference>
@@ -87,6 +90,9 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
@@ -209,6 +215,7 @@
     <Compile Include="Helpers\MailSend.cs" />
     <Compile Include="Helpers\Messages.cs" />
     <Compile Include="Helpers\ReplyFormat.cs" />
+    <Compile Include="Helpers\UserMailer.cs" />
     <Compile Include="Helpers\ViewExtensions.cs" />
     <Compile Include="Models\CategoryMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
@@ -2405,6 +2412,9 @@
     <Content Include="Views\Shared\_ComplaintOverDueContent.cshtml" />
     <Content Include="Views\Compliant\ComplaintThree_Index.cshtml" />
     <Content Include="Views\Compliant\ComplaintTwo_Index.cshtml" />
+    <Content Include="Views\LOS\LosReport.cshtml" />
+    <Content Include="Views\Shared\_LosReportMail.cshtml" />
+    <Content Include="Views\UserMailer\UserMailed.cshtml" />
     <Content Include="Views\Compliant\NotificationList.cshtml" />
   </ItemGroup>
   <ItemGroup>
