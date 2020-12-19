@@ -1002,7 +1002,6 @@
           <Property Name="CommitteeDueDate" Type="DateTime" Precision="3" />
           <Property Name="ComplaintNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" FromRole="EmployeeComplaintWorkFlow" ToRole="EmployeeComplaintMaster" />
-          <Property Name="ComplaintNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="EntityMaster">
           <Key>
