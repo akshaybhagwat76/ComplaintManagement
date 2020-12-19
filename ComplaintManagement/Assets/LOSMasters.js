@@ -163,3 +163,37 @@ $("#btnUpload").on("click", function () {
         }
     });
 })
+
+
+
+//17/12/2020
+function filterLosReportGrid() {
+    var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+    var losid = $(".losval option:selected").val();
+    if (fromDate == "" || toDate == "" || losid == "") {
+        funToastr(false, "Please select from and to date and a LOSName"); return;
+    }
+    else {
+       
+        if ($("#hfCurrentPageIndex").val() == "") {
+            $("#hfCurrentPageIndex").val("1");
+        }
+        location.href = '/LOS/GetLOSReport?range=' + fromDate + ',' + toDate + '&losid=' + losid + '&currentPage=' + $("#hfCurrentPageIndex").val();
+    }
+}
+    //18/12/2020
+    function exportLosReport() {
+        var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+        var losid = $(".losval option:selected").val();
+        if (fromDate == "" || toDate == "" || losid == "") {
+            funToastr(false, "Please select from and to date and a LOSName"); return;
+        }
+        else {
+          
+            if ($("#hfCurrentPageIndex").val() == "") {
+                $("#hfCurrentPageIndex").val("1");
+            }
+            location.href = '/LOS/ExportLDataLOsReport?range=' + fromDate + ',' + toDate + '&losid=' + losid + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        }
+    
+}

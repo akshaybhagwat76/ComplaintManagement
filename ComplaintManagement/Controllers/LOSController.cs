@@ -1,4 +1,5 @@
 ﻿using ComplaintManagement.Helpers;
+using ComplaintManagement.Models;
 using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
@@ -814,14 +815,18 @@ namespace ComplaintManagement.Controllers
                 string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
                 stream.Position = 0;
-                return File(stream, contentType, fileName);
+                if(fileName!=null)
+                {
+                    return File(stream, contentType, fileName);
+                }
+
             }
             catch (Exception ex)
             {
                 ErrorSignal.FromCurrentContext().Raise(ex);
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
-
+            return View("LosReport"); 
         }
 
         public ActionResult ExportDataHistory(int id)
@@ -910,5 +915,181 @@ namespace ComplaintManagement.Controllers
             }
 
         }
+
+        //17/12/2020(Los Report)
+        public ActionResult LosReport()
+        {
+            ViewBag.los = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.WorkEmail.ToString() }).ToList();
+            
+            var DataTableDetail = new HomeController().getDataTableDetail("LOS", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+        }
+        [HttpGet]
+        public ActionResult GetLOSReport(string range,int losid, int currentPage)
+        {
+            ViewBag.los = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
+
+    
+                var LosReport = new LOSMasterRepository().GetAllReport(range,losid);
+                ViewBag.LossReporting = LosReport;
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.WorkEmail.ToString() }).ToList();
+
+            //ViewBag.lstLOS = JsonConvert.SerializeObject(GetAllReportLos(currentPage,losid ,range));
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+
+            var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View("LosReport");
+        }
+        //12/18/2020
+        public ActionResult ExportLDataLOsReport(string range, int losid, int currentPage)
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage();
+
+
+                var ws = package.Workbook.Worksheets.Add(Messages.LOS);
+                //Headers
+                ws.Cells["A1"].Value = Messages.LOS;
+                ws.Cells["B1"].Value = Messages.SBU;
+                ws.Cells["C1"].Value = Messages.SubSBU;
+                ws.Cells["D1"].Value = Messages.CreatedBy;
+                ws.Cells["E1"].Value = Messages.Category;
+                ws.Cells["F1"].Value = Messages.SubCategory;
+                ws.Cells["G1"].Value = Messages.Region;
+                ws.Cells["H1"].Value = Messages.Company;
+                ws.Cells["I1"].Value = Messages.CaseStage;
+             
+
+
+                var rowNumber = 1;
+                ws.Cells[rowNumber, 1].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 1].Value = Messages.LOS;
+
+                ws.Cells[rowNumber, 2].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 2].Value = Messages.SBU;
+
+                ws.Cells[rowNumber, 3].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 3].Value = Messages.SubSBU;
+
+                ws.Cells[rowNumber, 4].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 4].Value = Messages.CreatedBy;
+
+                ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 5].Value = Messages.Category;
+
+                ws.Cells[rowNumber, 6].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 6].Value = Messages.SubCategory;
+
+                ws.Cells[rowNumber, 7].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 7].Value = Messages.Region;
+
+                ws.Cells[rowNumber, 8].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 8].Value = Messages.Company;
+
+                ws.Cells[rowNumber, 9].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 9].Value = Messages.CaseStage;
+
+              
+                var LosReport = new LOSMasterRepository().GetAllReport(range, losid);
+                foreach (var log in LosReport)
+                {
+                    rowNumber++;
+
+                    ws.Cells[rowNumber, 1].Value = log.LOSName;
+                    ws.Cells[rowNumber, 2].Value = log.SBU;
+                    ws.Cells[rowNumber, 3].Value = log.SubSbU;
+                    ws.Cells[rowNumber, 4].Value = log.CreatedByName;
+                    ws.Cells[rowNumber, 5].Value = log.Category;
+                    ws.Cells[rowNumber, 7].Value = log.SubCategory;
+                    ws.Cells[rowNumber, 8].Value = log.RegionName;
+                    ws.Cells[rowNumber, 9].Value = log.CompanyName;
+                    ws.Cells[rowNumber, 10].Value = log.CaseType;
+
+                }
+
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = Messages.LOS + Messages.XLSX;
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+               return File(stream, contentType, fileName);
+             
+            
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+            
+        
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public JsonResult UserMail(string UserInvolved,string comment)
+        {
+            string response = "";
+            try
+            {
+
+                if (!ReferenceEquals(UserInvolved, null))
+                {
+                    string[] UserEmailList = UserInvolved.Split(',');
+
+
+                    foreach (string useremail in UserEmailList)
+                    {
+                        var token = Guid.NewGuid().ToString("n");
+
+                     response=  new UserMailer().UserMailed(token, comment, useremail, Request.Browser.Browser, GetIp());
+                    }
+                    return new ReplyFormat().Success(Messages.SUCCESS);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.FAIL);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+           
+        }
+        public string GetIp()
+        {
+            var visitorsIpAddr = string.Empty;
+            try
+            {
+                if (Request.ServerVariables["HTTP_X_FORWARDED_FOR"] != null)
+                {
+                    visitorsIpAddr = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+                }
+                else if (!string.IsNullOrEmpty(Request.UserHostAddress))
+                {
+                    visitorsIpAddr = Request.UserHostAddress;
+                }
+            }
+            catch (Exception e)
+            {
+                
+            }
+            return visitorsIpAddr;
+        }
+
+
     }
 }

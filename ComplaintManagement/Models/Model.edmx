@@ -216,6 +216,7 @@
           <Property Name="AssignedUserRoles" Type="nvarchar(max)" Nullable="false" />
           <Property Name="DueDate" Type="datetime" Nullable="false" />
           <Property Name="CommitteeDueDate" Type="datetime" />
+          <Property Name="ComplaintNo" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="EntityMasters">
           <Key>
@@ -1000,6 +1001,7 @@
           <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CommitteeDueDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" FromRole="EmployeeComplaintWorkFlow" ToRole="EmployeeComplaintMaster" />
+          <Property Name="ComplaintNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="EntityMaster">
           <Key>
@@ -1653,6 +1655,7 @@
           <EntitySetMapping Name="EmployeeComplaintWorkFlows">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow">
               <MappingFragment StoreEntitySet="EmployeeComplaintWorkFlow">
+                <ScalarProperty Name="ComplaintNo" ColumnName="ComplaintNo" />
                 <ScalarProperty Name="CommitteeDueDate" ColumnName="CommitteeDueDate" />
                 <ScalarProperty Name="DueDate" ColumnName="DueDate" />
                 <ScalarProperty Name="AssignedUserRoles" ColumnName="AssignedUserRoles" />

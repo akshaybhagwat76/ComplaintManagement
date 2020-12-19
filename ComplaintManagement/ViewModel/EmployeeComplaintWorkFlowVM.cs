@@ -27,5 +27,11 @@ namespace ComplaintManagement.ViewModel
         public System.DateTime DueDate { get; set; }
         public Nullable<System.DateTime> CommitteeDueDate { get; set; }
         //public string LastPerformedBy { get; set; }
+        public string SBU { get; set; }
+        public string SubSbU { get; set; }
+        public string CompanyName { get; set; }
+        public string RegionName { get; set; }
+        public string CaseType { get; set; }
+        public string ComplaintNo { get; set; }
     }
 }

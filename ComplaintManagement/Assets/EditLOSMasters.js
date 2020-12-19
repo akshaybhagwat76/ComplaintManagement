@@ -204,6 +204,10 @@ function checkDuplicate() {
 
     }
 }
+function SearchLosReport() {
+    var LOSName = $("#LOSName").val();
+    var Id = $("#Id").val();
+}
 
 
 
