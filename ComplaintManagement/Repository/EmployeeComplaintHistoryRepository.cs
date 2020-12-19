@@ -125,6 +125,7 @@ namespace ComplaintManagement.Repository
                                     employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
                                     employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
                                     employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
+                                    employeeComplaintWorkFlowDto.ComplaintNo = employeeComplaintWorkFlowDto.ComplaintNo;
                                     EmployeeCompliantMasterVM employeeCompliantMasterDto = EmployeeComplaintList.Where(x => x.Id == employeeComplaintWorkFlowDto.ComplaintId).FirstOrDefault();
                                     if (employeeCompliantMasterDto != null && employeeCompliantMasterDto.CategoryId > 0 && employeeCompliantMasterDto.SubCategoryId > 0)
                                     {
@@ -187,6 +188,7 @@ namespace ComplaintManagement.Repository
                                         employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
                                         employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
                                         employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
+                                        employeeComplaintWorkFlowDto.ComplaintNo = employeeComplaintWorkFlowDto.ComplaintNo;
                                         EmployeeCompliantMasterVM employeeCompliantMasterDto = EmployeeComplaintList.Where(x => x.Id == employeeComplaintWorkFlowDto.ComplaintId).FirstOrDefault();
                                         if (employeeCompliantMasterDto != null && employeeCompliantMasterDto.CategoryId > 0 && employeeCompliantMasterDto.SubCategoryId > 0)
                                         {
@@ -214,6 +216,7 @@ namespace ComplaintManagement.Repository
                                             employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
                                             employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
                                             employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
+                                            employeeComplaintWorkFlowDto.ComplaintNo = employeeComplaintWorkFlowDto.ComplaintNo;
                                             EmployeeCompliantMasterVM employeeCompliantMasterDto = EmployeeComplaintList.Where(x => x.Id == employeeComplaintWorkFlowDto.ComplaintId).FirstOrDefault();
                                             if (employeeCompliantMasterDto != null && employeeCompliantMasterDto.CategoryId > 0 && employeeCompliantMasterDto.SubCategoryId > 0)
                                             {
@@ -277,6 +280,7 @@ namespace ComplaintManagement.Repository
                                         employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
                                         employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
                                         employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
+                                        employeeComplaintWorkFlowDto.ComplaintNo = employeeComplaintWorkFlowDto.ComplaintNo;
                                         EmployeeCompliantMasterVM employeeCompliantMasterDto = EmployeeComplaintList.Where(x => x.Id == employeeComplaintWorkFlowDto.ComplaintId).FirstOrDefault();
                                         if (employeeCompliantMasterDto != null && employeeCompliantMasterDto.CategoryId > 0 && employeeCompliantMasterDto.SubCategoryId > 0)
                                         {
@@ -337,6 +341,7 @@ namespace ComplaintManagement.Repository
                                     employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
                                     employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
                                     employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
+                                    employeeComplaintWorkFlowDto.ComplaintNo = employeeComplaintWorkFlowDto.ComplaintNo;
                                     EmployeeCompliantMasterVM employeeCompliantMasterDto = EmployeeComplaintList.Where(x => x.Id == employeeComplaintWorkFlowDto.ComplaintId).FirstOrDefault();
                                     if (employeeCompliantMasterDto != null && employeeCompliantMasterDto.CategoryId > 0 && employeeCompliantMasterDto.SubCategoryId > 0)
                                     {
@@ -402,6 +407,7 @@ namespace ComplaintManagement.Repository
                                         employeeComplaintWorkFlowDto.CreatedByName = usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == employeeComplaintWorkFlowDto.CreatedBy).EmployeeName : string.Empty;
                                         employeeComplaintWorkFlowDto.CreatedDate = employeeComplaintWorkFlowDto.CreatedDate;
                                         employeeComplaintWorkFlowDto.LOSName = new LOSMasterRepository().Get(employeeComplaintWorkFlowDto.LOSId).LOSName;
+                                        employeeComplaintWorkFlowDto.ComplaintNo = employeeComplaintWorkFlowDto.ComplaintNo;
                                         EmployeeCompliantMasterVM employeeCompliantMasterDto = EmployeeComplaintList.Where(x => x.Id == employeeComplaintWorkFlowDto.ComplaintId).FirstOrDefault();
                                         if (employeeCompliantMasterDto != null && employeeCompliantMasterDto.CategoryId > 0 && employeeCompliantMasterDto.SubCategoryId > 0)
                                         {

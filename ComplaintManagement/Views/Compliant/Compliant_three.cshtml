@@ -2,6 +2,7 @@
 @model ComplaintManagement.ViewModel.UserMasterVM
 @{
     ViewBag.Title = "HR Complaint";
+    ViewBag.heading = "Complaint";
     string saltedId = CryptoEngineUtils.Encrypt(Convert.ToString(Model.Id), true);
     var hrRoleDateOfJoin = ViewBag.HrRoleData.DateOfJoining;
     var involveuserid = Model.InvolvedUsersId;
@@ -159,7 +160,7 @@
                                 @if (!string.IsNullOrEmpty(@Model.Attachments) && @Model.Attachments.Length > 5)
                                 {
                                     <strong>
-                                        <a href="/Employee/DownloadAttachments?files=@Model.Attachments">
+                                        <a href="/Compliant/DownloadAttachments?files=@Model.Attachments&Id=@Model.ComplaintId&redirectTo=2">
                                             <i class="fas fa-download fa-fw"></i>
                                         </a>
                                     </strong>
@@ -302,7 +303,7 @@
                                 @if (!string.IsNullOrEmpty(@ViewBag.HrRole.Attachement) && @ViewBag.HrRole.Attachement.Length > 5)
                                 {
                                     <strong>
-                                        <a href="/Employee/DownloadAttachments?files=@ViewBag.HrRole.Attachement">
+                                        <a href="/Compliant/DownloadAttachments?files=@ViewBag.HrRole.Attachement&Id=@Model.ComplaintId&redirectTo=2">
                                             <i class="fas fa-download fa-fw"></i>
                                         </a>
                                     </strong>

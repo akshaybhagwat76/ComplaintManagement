@@ -18,6 +18,7 @@
                         <td>Sub-Category</td>
                         <td>Created By</td>
                         <td>Created On</td>
+                        <td>Case No</td>
                     </tr>
                 </thead>
             }
@@ -29,14 +30,15 @@
                 {
                     foreach (var item in ViewBag.lstComplaintDue)
                     {
-                        <tr>
-                            <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
-                            <td class="text-black"><strong>@item.UserType</strong></td>
-                            <td class="text-black"><strong>@item.Category</strong></td>
-                            <td class="text-black"><strong>@item.SubCategory</strong></td>
-                            <td class="text-black"><strong>@item.CreatedByName</strong></td>
-                            <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
-                        </tr>
+            <tr>
+                <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
+                <td class="text-black"><strong>@item.UserType</strong></td>
+                <td class="text-black"><strong>@item.Category</strong></td>
+                <td class="text-black"><strong>@item.SubCategory</strong></td>
+                <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                <td class="text-black"><strong>@item.ComplaintNo</strong></td>
+            </tr>
                     }
                 }
                 else

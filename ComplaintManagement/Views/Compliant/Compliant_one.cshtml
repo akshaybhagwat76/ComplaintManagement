@@ -2,6 +2,7 @@
 @model ComplaintManagement.ViewModel.UserMasterVM
 @{
     ViewBag.Title = "Manage Employee Compliant";
+    ViewBag.heading = "Complaint";
     string saltedId = CryptoEngineUtils.Encrypt(Convert.ToString(Model.Id), true);
     string Id = Convert.ToString(Model.Id);
 }

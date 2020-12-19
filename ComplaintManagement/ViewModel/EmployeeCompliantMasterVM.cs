@@ -36,6 +36,7 @@ namespace ComplaintManagement.ViewModel
         public int HRUserId { get; set; }
         public string CaseType { get; set; }
         public string LastPerformedBy { get; set; }
+        public string ComplaintNo { get; set; }
     }
 
 }

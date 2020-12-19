@@ -261,41 +261,9 @@
                                     Alerts Center
                                 </h6>
                                 <div id="notificationList">
-                                    @*<a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">December 12, 2019</div>
-                                            <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                        </div>
-                                    </a>*@
-                                    @*<a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-success">
-                                                <i class="fas fa-donate text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">December 7, 2019</div>
-                                            $290.29 has been deposited into your account!
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-warning">
-                                                <i class="fas fa-exclamation-triangle text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">December 2, 2019</div>
-                                            Spending Alert: We've noticed unusually high spending for your account.
-                                        </div>
-                                    </a>*@
+                                  
                                 </div>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                <a class="dropdown-item text-center small text-gray-500" href="/Compliant/NotificationList">Show All Alerts</a>
                             </div>
                         </li>
                         <div class="topbar-divider d-none d-sm-block"></div>
@@ -366,8 +334,11 @@
     <!-- Custom scripts for all pages-->
     <script>
         $(document).ready(function () {
-            NotificationAlertCount();
-            NotificationAlertList();
+            setInterval(function () {
+                NotificationAlertCount();
+                NotificationAlertList();
+            }, 60000);
+           
         });
         function NotificationAlertCount() {
             $.ajax({
@@ -400,21 +371,23 @@
                 data: {},
                 success: function (response) {
                     console.log(response);
-                    console.log(response.data.count());
+                    console.log(response.data.length);
                     if (response.status == "Success") {
                         var html = "";
-                        if (response.data.count > 0) {
-                            html += '<a class="dropdown-item d-flex align-items-center" href="#">';
-                            html += '<div class="mr-3">';
-                            html += '<div class="icon-circle bg-primary">';
-                            html += '<i class="fas fa-file-alt text-white"></i>';
-                            html += '</div>';
-                            html += '</div>';
-                            html += '<div>';
-                            html += '<div class="small text-gray-500">'+response.data.CreatedDate+'</div>';
-                            html += '<span class="font-weight-bold">'+response.data.NotificationContent+'</span>';
-                            html += '</div>';
-                            html += '</a>';
+                        if (response.data.length > 0) {
+                            for (var i = 0; i < response.data.length; i++) {
+                                    html += '<a class="dropdown-item d-flex align-items-center" href="#">';
+                                    html += '<div class="mr-3">';
+                                    html += '<div class="icon-circle bg-primary">';
+                                    html += '<i class="fas fa-file-alt text-white"></i>';
+                                    html += '</div>';
+                                    html += '</div>';
+                                    html += '<div>';
+                                    html += '<div class="small text-gray-500">' + response.data[i].CreatedDate + '</div>';
+                                    html += '<span class="font-weight-bold">' + response.data[i].NotificationContent + '</span>';
+                                    html += '</div>';
+                                    html += '</a>';
+                            }
                         }
                         $('#notificationList').append(html);
                     }
@@ -427,7 +400,25 @@
                 }
             });
         }
-
+        $('#alertsDropdown').on('click', function () {
+             $.ajax({
+                type: "POST",
+                url: "/Compliant/NotificationAlertRead",
+                data: {},
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == "Success") {
+                        NotificationAlertCount();
+                    }
+                    
+                },
+                error: function (error) {
+                    toastr.error(error)
+                }
+            });
+        })
+         var table = $('#notificationTable').DataTable({
+        });
     </script>
 </body>
 </html>

@@ -16,7 +16,7 @@ namespace ComplaintManagement.Repository
     public class EmployeeWorkFlowRepository
     {
 
-        public EmployeeComplaintWorkFlowVM AddOrUpdate(EmployeeComplaintWorkFlowVM WorkFlowVM,DB_A6A061_complaintuserEntities db)
+        public EmployeeComplaintWorkFlowVM AddOrUpdate(EmployeeComplaintWorkFlowVM WorkFlowVM, DB_A6A061_complaintuserEntities db)
         {
             try
             {
@@ -108,9 +108,29 @@ namespace ComplaintManagement.Repository
                 {
                     if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                     throw new Exception(ex.Message.ToString());
-                } 
+                }
             }
             return WorkFlowList;
+        }
+        public EmployeeComplaintWorkFlow Get(int Id)
+        {
+            EmployeeComplaintWorkFlow WorkFlows = new EmployeeComplaintWorkFlow();
+
+            using (DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities())
+            {
+                try
+                {
+                    WorkFlows = db.EmployeeComplaintWorkFlows.FirstOrDefault(i => i.ComplaintId == Id && i.IsActive);
+                }
+                catch (Exception ex)
+                {
+                    if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                    throw new Exception(ex.Message.ToString());
+                }
+            }
+            return WorkFlows;
+
+
         }
 
     }

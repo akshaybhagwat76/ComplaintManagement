@@ -84,17 +84,17 @@ function submitForm() {
         }
     });
 
-    var str = $('#RemarkCommittee').val();
-    if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
-        retval = false;
-        $('#RemarkCommittee').addClass("adderror");
-        funToastr(false, "Remarks cannot contain special characters.");
-    }
-    else {
-        if (retval) {
-            $('#RemarkCommittee').removeClass("adderror");
-        }
-    }
+    //var str = $('#RemarkCommittee').val();
+    //if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
+    //    retval = false;
+    //    $('#RemarkCommittee').addClass("adderror");
+    //    funToastr(false, "Remarks cannot contain special characters.");
+    //}
+    //else {
+    //    if (retval) {
+    //        $('#RemarkCommittee').removeClass("adderror");
+    //    }
+    //}
 
     if (retval) {
         var data = {
@@ -165,17 +165,17 @@ function submitBackToBUHCForm() {
         }
     });
 
-    var str = $('#RemarkCommittee').val();
-    if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
-        retval = false;
-        $('#RemarkCommittee').addClass("adderror");
-        funToastr(false, "Remarks cannot contain special characters.");
-    }
-    else {
-        if (retval) {
-            $('#RemarkCommittee').removeClass("adderror");
-        }
-    }
+    //var str = $('#RemarkCommittee').val();
+    //if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
+    //    retval = false;
+    //    $('#RemarkCommittee').addClass("adderror");
+    //    funToastr(false, "Remarks cannot contain special characters.");
+    //}
+    //else {
+    //    if (retval) {
+    //        $('#RemarkCommittee').removeClass("adderror");
+    //    }
+    //}
 
     if (retval) {
         var data = {

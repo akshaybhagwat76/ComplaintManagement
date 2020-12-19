@@ -216,6 +216,7 @@
           <Property Name="AssignedUserRoles" Type="nvarchar(max)" Nullable="false" />
           <Property Name="DueDate" Type="datetime" Nullable="false" />
           <Property Name="CommitteeDueDate" Type="datetime" />
+          <Property Name="ComplaintNo" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="EntityMasters">
           <Key>
@@ -734,10 +735,12 @@
           <EntitySet Name="EmployeeComplaintWorkFlows" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" />
           <EntitySet Name="EntityMasters" EntityType="DB_A6A061_complaintuserModel.EntityMaster" />
           <EntitySet Name="EntityMasters_History" EntityType="DB_A6A061_complaintuserModel.EntityMasters_History" />
+          <EntitySet Name="HR_Role" EntityType="DB_A6A061_complaintuserModel.HR_Role" />
           <EntitySet Name="LocationMasters" EntityType="DB_A6A061_complaintuserModel.LocationMaster" />
           <EntitySet Name="LocationMasters_History" EntityType="DB_A6A061_complaintuserModel.LocationMasters_History" />
           <EntitySet Name="LOSMasters" EntityType="DB_A6A061_complaintuserModel.LOSMaster" />
           <EntitySet Name="LOSMasters_History" EntityType="DB_A6A061_complaintuserModel.LOSMasters_History" />
+          <EntitySet Name="NotificationAlerts" EntityType="DB_A6A061_complaintuserModel.NotificationAlert" />
           <EntitySet Name="RegionMasters" EntityType="DB_A6A061_complaintuserModel.RegionMaster" />
           <EntitySet Name="RegionMasters_History" EntityType="DB_A6A061_complaintuserModel.RegionMasters_History" />
           <EntitySet Name="RoleMasters" EntityType="DB_A6A061_complaintuserModel.RoleMaster" />
@@ -782,8 +785,6 @@
             <End Role="SubSBUMaster" EntitySet="SubSBUMasters" />
             <End Role="UserMaster" EntitySet="UserMasters" />
           </AssociationSet>
-          <EntitySet Name="HR_Role" EntityType="DB_A6A061_complaintuserModel.HR_Role" />
-          <EntitySet Name="NotificationAlerts" EntityType="DB_A6A061_complaintuserModel.NotificationAlert" />
         </EntityContainer>
         <EntityType Name="CategoryMaster">
           <Key>
@@ -999,6 +1000,7 @@
           <Property Name="AssignedUserRoles" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CommitteeDueDate" Type="DateTime" Precision="3" />
+          <Property Name="ComplaintNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="EmployeeComplaintMaster" Relationship="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" FromRole="EmployeeComplaintWorkFlow" ToRole="EmployeeComplaintMaster" />
         </EntityType>
         <EntityType Name="EntityMaster">
@@ -1028,6 +1030,24 @@
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <Property Name="EntityState" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="EntityId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HR_Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="ComplentId" Type="Int32" />
+          <Property Name="CaseType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Attachement" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="HRUserId" Type="Int32" />
+          <Property Name="CommitteeUSerId" Type="Int32" />
         </EntityType>
         <EntityType Name="LocationMaster">
           <Key>
@@ -1073,8 +1093,8 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" FromRole="LOSMaster" ToRole="UserMaster" />
           <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_LOSMasters" FromRole="LOSMaster" ToRole="UserMaster" />
         </EntityType>
         <EntityType Name="LOSMasters_History">
           <Key>
@@ -1093,6 +1113,17 @@
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <Property Name="EntityState" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="LOSId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NotificationAlert">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="AssignToUserId" Type="Int32" Nullable="false" />
+          <Property Name="NotificationContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="RegionMaster">
           <Key>
@@ -1171,8 +1202,8 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" FromRole="SBUMaster" ToRole="UserMaster" />
           <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" FromRole="SBUMaster" ToRole="UserMaster" />
         </EntityType>
         <EntityType Name="SBUMasters_History">
           <Key>
@@ -1229,8 +1260,8 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" FromRole="SubSBUMaster" ToRole="UserMaster" />
           <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserMasters" Relationship="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" FromRole="SubSBUMaster" ToRole="UserMaster" />
         </EntityType>
         <EntityType Name="SubSBUMasters_History">
           <Key>
@@ -1414,35 +1445,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="HR_Role">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="ComplentId" Type="Int32" />
-          <Property Name="CaseType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Attachement" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="HRUserId" Type="Int32" />
-          <Property Name="CommitteeUSerId" Type="Int32" />
-        </EntityType>
-        <EntityType Name="NotificationAlert">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Status" Type="Boolean" Nullable="false" />
-          <Property Name="AssignToUserId" Type="Int32" Nullable="false" />
-          <Property Name="NotificationContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1653,6 +1655,7 @@
           <EntitySetMapping Name="EmployeeComplaintWorkFlows">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow">
               <MappingFragment StoreEntitySet="EmployeeComplaintWorkFlow">
+                <ScalarProperty Name="ComplaintNo" ColumnName="ComplaintNo" />
                 <ScalarProperty Name="CommitteeDueDate" ColumnName="CommitteeDueDate" />
                 <ScalarProperty Name="DueDate" ColumnName="DueDate" />
                 <ScalarProperty Name="AssignedUserRoles" ColumnName="AssignedUserRoles" />
@@ -1700,6 +1703,25 @@
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="EntityName" ColumnName="EntityName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HR_Role">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.HR_Role">
+              <MappingFragment StoreEntitySet="HR_Role">
+                <ScalarProperty Name="CommitteeUSerId" ColumnName="CommitteeUSerId" />
+                <ScalarProperty Name="HRUserId" ColumnName="HRUserId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Attachement" ColumnName="Attachement" />
+                <ScalarProperty Name="CaseType" ColumnName="CaseType" />
+                <ScalarProperty Name="ComplentId" ColumnName="ComplentId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1767,6 +1789,18 @@
                 <ScalarProperty Name="SubSBUId" ColumnName="SubSBUId" />
                 <ScalarProperty Name="SBUId" ColumnName="SBUId" />
                 <ScalarProperty Name="LOSName" ColumnName="LOSName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NotificationAlerts">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.NotificationAlert">
+              <MappingFragment StoreEntitySet="NotificationAlert">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="NotificationContent" ColumnName="NotificationContent" />
+                <ScalarProperty Name="AssignToUserId" ColumnName="AssignToUserId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1993,37 +2027,6 @@
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
                 <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="HR_Role">
-            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.HR_Role">
-              <MappingFragment StoreEntitySet="HR_Role">
-                <ScalarProperty Name="CommitteeUSerId" ColumnName="CommitteeUSerId" />
-                <ScalarProperty Name="HRUserId" ColumnName="HRUserId" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
-                <ScalarProperty Name="Remark" ColumnName="Remark" />
-                <ScalarProperty Name="Attachement" ColumnName="Attachement" />
-                <ScalarProperty Name="CaseType" ColumnName="CaseType" />
-                <ScalarProperty Name="ComplentId" ColumnName="ComplentId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="NotificationAlerts">
-            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.NotificationAlert">
-              <MappingFragment StoreEntitySet="NotificationAlert">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="NotificationContent" ColumnName="NotificationContent" />
-                <ScalarProperty Name="AssignToUserId" ColumnName="AssignToUserId" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

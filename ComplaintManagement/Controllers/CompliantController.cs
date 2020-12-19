@@ -3,6 +3,7 @@ using ComplaintManagement.Models;
 using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using Ionic.Zip;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -420,6 +421,7 @@ namespace ComplaintManagement.Controllers
                         userMasterVM.CompentencyId = EmployeeCompliant_oneVM.UserId;
                         userMasterVM.DateOfJoining = EmployeeCompliant_oneVM.DueDate;
                         userMasterVM.Attachments = EmployeeCompliant_oneVM.Attachments;
+                        userMasterVM.ComplaintId = EmployeeCompliant_oneVM.Id;
                     }
                     ViewBag.Entity = userMasterVM.Company > 0 ? new EntityMasterRepository().Get(userMasterVM.Company) != null ? new EntityMasterRepository().Get(userMasterVM.Company).EntityName : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.SBU = userMasterVM.SBUId > 0 ? new SBUMasterRepository().Get(userMasterVM.SBUId) != null ? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU : Messages.NotAvailable : Messages.NotAvailable;
@@ -963,7 +965,7 @@ namespace ComplaintManagement.Controllers
                 new EmployeeComplaintHistoryRepository().AddComplaintHistory(Remark, ids, Messages.COMPLETED, db);
                 //Notification Work
                 var LOSName = string.Empty; var CategoryName = string.Empty; var SubCategoryName = string.Empty;
-                string NotificationContent = string.Empty;
+                string NotificationContent = string.Empty; List<string> mailTo = new List<string>();
                 CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.CategoryId)).CategoryName;
                 SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                 var userData = new UserMastersRepository().Get(Convert.ToInt32(sid));
@@ -971,6 +973,8 @@ namespace ComplaintManagement.Controllers
                 NotificationContent = "Complaint [" + LOSName + "-" + CategoryName + "-" + SubCategoryName + "] has been closed on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for " + LOSName + "by" + userData.EmployeeName + ".";
 
                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(ComplaintMaster.CreatedBy));
+                mailTo.Add(userData.WorkEmail);
+                MailSend.SendEmail(mailTo, "Complaint", NotificationContent);
             }
             catch (Exception ex)
             {
@@ -989,7 +993,7 @@ namespace ComplaintManagement.Controllers
                                .Select(c => c.Value).SingleOrDefault();
                 List<NotificationAlert> NotificationAlert = new NotificationAlertRepository().Get(Convert.ToInt32(sid));
 
-                var count = NotificationAlert.Count();
+                var count = NotificationAlert.Where(x => x.Status == true).Count();
                 return new ReplyFormat().Success(Messages.SUCCESS, count);
             }
             catch (Exception ex)
@@ -1006,9 +1010,7 @@ namespace ComplaintManagement.Controllers
                 var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
                 var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
                                .Select(c => c.Value).SingleOrDefault();
-                List<NotificationAlert> NotificationAlert = new NotificationAlertRepository().Get(Convert.ToInt32(sid));
-
-                var count = NotificationAlert.Count();
+                var NotificationAlert = new NotificationAlertRepository().Get(Convert.ToInt32(sid)).Select(x => new { NotificationContent = x.NotificationContent, CreatedDate = x.CreatedDate.ToString("MMMM dd yyyy") }).OrderByDescending(x => x.CreatedDate).Take(5).ToList();
                 return new ReplyFormat().Success(Messages.SUCCESS, NotificationAlert);
             }
             catch (Exception ex)
@@ -1018,5 +1020,105 @@ namespace ComplaintManagement.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult NotificationAlertRead()
+        {
+            try
+            {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                               .Select(c => c.Value).SingleOrDefault();
+                new NotificationAlertRepository().UpdateNotificatioAlert();
+                return new ReplyFormat().Success(Messages.SUCCESS);
+            }
+            catch (Exception ex)
+            {
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+
+        }
+
+        public ActionResult NotificationList()
+        {
+            try
+            {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                               .Select(c => c.Value).SingleOrDefault();
+                ViewBag.NotificationAlert = new NotificationAlertRepository().Get(Convert.ToInt32(sid)).OrderByDescending(x => x.CreatedDate).ToList();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+
+        }
+
+        [HttpGet]
+        public ActionResult DownloadAttachments(string files, string Id, string redirectTo)
+        {
+            if (!string.IsNullOrEmpty(files))
+            {
+                using (ZipFile zip = new ZipFile())
+                {
+
+                    zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                    zip.AddDirectoryByName("Files");
+                    string[] docfileArray = Directory.GetFiles(Server.MapPath("~/Documents/"));
+                    string[] filesArray = files.Split(new string[] { "," }, StringSplitOptions.None);
+
+                    foreach (string file in filesArray)
+                    {
+                        if (file != null && !string.IsNullOrEmpty(file) && file.Length > 5)
+                        {
+                            if (docfileArray.FirstOrDefault(x => x.Contains(file)) != null)
+                            {
+                                string indexed = docfileArray.FirstOrDefault(x => x.Contains(file));
+
+
+                                if (System.IO.File.Exists(indexed))
+                                {
+                                    zip.AddFile(indexed, "Files");
+                                }
+                                else
+                                {
+                                    if (redirectTo == "1")
+                                    {
+                                        return RedirectToAction("Edit", new { id = CryptoEngineUtils.Encrypt(Convert.ToString(Id), true), isView = false, isRedirect = 2 });
+                                    }
+                                    else
+                                    {
+                                        return RedirectToAction("Compliant_three", new { id = CryptoEngineUtils.Encrypt(Convert.ToString(Id), true), isView = false });
+                                    }
+
+                                }
+
+                            }
+                        }
+
+                        var order_id = "attachments";
+                        string zipName = string.Format("" + order_id + "_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+                        if (zip.Entries.Count > 1)
+                        {
+                            using (MemoryStream memoryStram = new MemoryStream())
+                            {
+                                zip.Save(memoryStram);
+                                return File(memoryStram.ToArray(), "application/zip", zipName);
+                            }
+                        }
+                    }
+                }
+
+            }
+            if (redirectTo == "1")
+            {
+                return RedirectToAction("Edit", new { id = CryptoEngineUtils.Encrypt(Convert.ToString(Id), true), isView = false, isRedirect = 2 });
+            }
+            else
+            {
+                return RedirectToAction("Compliant_three", new { id = CryptoEngineUtils.Encrypt(Convert.ToString(Id), true), isView = false });
+            }
+        }
     }
 }

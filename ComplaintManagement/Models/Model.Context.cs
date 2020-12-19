@@ -40,10 +40,12 @@ namespace ComplaintManagement.Models
         public virtual DbSet<EmployeeComplaintWorkFlow> EmployeeComplaintWorkFlows { get; set; }
         public virtual DbSet<EntityMaster> EntityMasters { get; set; }
         public virtual DbSet<EntityMasters_History> EntityMasters_History { get; set; }
+        public virtual DbSet<HR_Role> HR_Role { get; set; }
         public virtual DbSet<LocationMaster> LocationMasters { get; set; }
         public virtual DbSet<LocationMasters_History> LocationMasters_History { get; set; }
         public virtual DbSet<LOSMaster> LOSMasters { get; set; }
         public virtual DbSet<LOSMasters_History> LOSMasters_History { get; set; }
+        public virtual DbSet<NotificationAlert> NotificationAlerts { get; set; }
         public virtual DbSet<RegionMaster> RegionMasters { get; set; }
         public virtual DbSet<RegionMasters_History> RegionMasters_History { get; set; }
         public virtual DbSet<RoleMaster> RoleMasters { get; set; }
@@ -56,7 +58,5 @@ namespace ComplaintManagement.Models
         public virtual DbSet<SubSBUMasters_History> SubSBUMasters_History { get; set; }
         public virtual DbSet<UserMaster> UserMasters { get; set; }
         public virtual DbSet<UserMasters_History> UserMasters_History { get; set; }
-        public virtual DbSet<HR_Role> HR_Role { get; set; }
-        public virtual DbSet<NotificationAlert> NotificationAlerts { get; set; }
     }
 }

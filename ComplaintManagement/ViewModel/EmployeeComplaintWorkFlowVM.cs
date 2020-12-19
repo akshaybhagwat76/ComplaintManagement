@@ -26,6 +26,6 @@ namespace ComplaintManagement.ViewModel
         public string UpdatedByName { get; set; }
         public System.DateTime DueDate { get; set; }
         public Nullable<System.DateTime> CommitteeDueDate { get; set; }
-        //public string LastPerformedBy { get; set; }
+        public string ComplaintNo { get; set; }
     }
 }

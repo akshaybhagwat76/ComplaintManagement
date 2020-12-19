@@ -65,17 +65,17 @@ function submitForm(flag) {
         }
     });
 
-    var str = $('#Remark').val();
-    if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
-        retval = false;
-        $('#Remark').addClass("adderror");
-        funToastr(false, "Remarks cannot contain special characters.");
-    }
-    else {
-        if (retval) {
-            $('#Remark').removeClass("adderror");
-        }
-    }
+    //var str = $('#Remark').val();
+    //if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
+    //    retval = false;
+    //    $('#Remark').addClass("adderror");
+    //    funToastr(false, "Remarks cannot contain special characters.");
+    //}
+    //else {
+    //    if (retval) {
+    //        $('#Remark').removeClass("adderror");
+    //    }
+    //}
 
     if (retval) {
         var data = {

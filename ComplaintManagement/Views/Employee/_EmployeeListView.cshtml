@@ -3,6 +3,7 @@
     @foreach (var item in ViewBag.lstEmployeeComplaint)
     {
     <tr>
+
         <td class="text-black text-center"><strong>@item.EmployeeName</strong></td>
         <td class="text-black text-center"><strong>@item.CategoryName</strong></td>
         <td class="text-black text-center"><strong>@item.SubCategoryName</strong></td>
@@ -36,6 +37,7 @@
 
             </strong>
         </td>
+        <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
         <td class="text-black text-center">
             @if (!string.IsNullOrEmpty(item.Attachments) && item.Attachments.Length > 5)
             {

@@ -39,6 +39,7 @@ namespace ComplaintManagement.Repository
                             var EmployeeComplaint = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == EmployeeComplaintVM.Id);
                             if (EmployeeComplaint == null)
                             {
+                                
                                 EmployeeComplaintVM.IsActive = true;
                                 EmployeeComplaintVM.CreatedDate = DateTime.UtcNow;
                                 EmployeeComplaintVM.CreatedBy = Convert.ToInt32(sid);
@@ -365,11 +366,11 @@ namespace ComplaintManagement.Repository
                                 db.SaveChanges();
                             }
 
-                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, "Back To BUHC", db);
+                            //new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, "Back To BUHC", db);
 
                             //Notification Saving Work
                             var LOSName = string.Empty; var CategoryName = string.Empty; var SubCategoryName = string.Empty;
-                            string NotificationContent = string.Empty;
+                            string NotificationContent = string.Empty; List<string> mailTo = new List<string>();
                             CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.CategoryId)).CategoryName;
                             SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                             var userData = new UserMastersRepository().Get(Convert.ToInt32(sid));
@@ -383,7 +384,9 @@ namespace ComplaintManagement.Repository
                             foreach (var item in assignToUserId)
                             {
                                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(item));
+                                mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item)).WorkEmail);
                             }
+                            MailSend.SendEmail(mailTo, "Complaint", NotificationContent);
 
                             dbContextTransaction.Commit();
 
@@ -484,6 +487,11 @@ namespace ComplaintManagement.Repository
                                 }
 
                                 catObj.LastPerformedBy = PendingWith;
+                                var ComplaintNo= new EmployeeWorkFlowRepository().Get(item.Id);
+                                if (ComplaintNo != null)
+                                    catObj.ComplaintNo = ComplaintNo.ComplaintNo;
+                                else
+                                    catObj.ComplaintNo = "";
                                 EmployeeCompliant_oneList.Add(catObj);
                             }
                         }
@@ -709,8 +717,11 @@ namespace ComplaintManagement.Repository
                                     //roleMasterLineItem.ForEach(x => rolesId = string.Join(",", x.Id));
                                     // roleMasterLineItem.ForEach(x => assignedUsersroleId = string.Join(",", x.UserId));
 
+                                    int count = db.EmployeeComplaintMasters.ToList().Count();
+                                    count = count + 1;
                                     assignedUsersroleId = string.Join(",", roleMasterLineItem.Select(x => x.UserId).ToList());
                                     rolesId = string.Join(",", roleMasterLineItem.Select(x => x.Id).ToList());
+                                    LOSName = losId > 0 ? new LOSMasterRepository().Get(losId) != null ? new LOSMasterRepository().Get(losId).LOSName : Messages.NotAvailable : Messages.NotAvailable;
 
                                     employeeComplaintWorkFlowDto.ActionType = Messages.SUBMITTED;
                                     employeeComplaintWorkFlowDto.ComplaintId = Complaintdata.Id;
@@ -719,8 +730,9 @@ namespace ComplaintManagement.Repository
                                     employeeComplaintWorkFlowDto.RoleId = rolesId;
                                     employeeComplaintWorkFlowDto.AssignedUserRoles = assignedUsersroleId; employeeComplaintWorkFlowDto.DueDate = Complaintdata.DueDate;
                                     employeeComplaintWorkFlowDto.LOSId = losId; employeeComplaintWorkFlowDto.SBUId = SBUId; employeeComplaintWorkFlowDto.SubSBUId = subSBUId; employeeComplaintWorkFlowDto.CompentencyId = competencyId;
+                                    employeeComplaintWorkFlowDto.ComplaintNo = "Case_"+count.ToString()+ "_"+LOSName+"_"+DateTime.UtcNow.ToString("dd")+"_"+ DateTime.UtcNow.ToString("MM")+"_"+DateTime.UtcNow.ToString("yyyy");
                                 }
-                                LOSName = losId > 0 ? new LOSMasterRepository().Get(losId) != null ? new LOSMasterRepository().Get(losId).LOSName : Messages.NotAvailable : Messages.NotAvailable;
+                                
                             }
 
                             var employeeComplaint = db.EmployeeComplaintMasters.Find(Complaintdata.Id);
@@ -738,6 +750,7 @@ namespace ComplaintManagement.Repository
 
                             //Notification Send 
                             string NotificationContent = string.Empty;
+                            List<string> mailTo = new List<string>();
                             CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(employeeComplaint.CategoryId)).CategoryName;
                             SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(employeeComplaint.SubCategoryId)).SubCategoryName;
 
@@ -745,9 +758,10 @@ namespace ComplaintManagement.Repository
                             foreach (var item in roleMasterLineItem)
                             {
                                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, item.UserId);
-                            }
+                                mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item.UserId)).WorkEmail);
                             
-
+                            }
+                            MailSend.SendEmail(mailTo, "Complaint", NotificationContent);
                             dbContextTransaction.Commit();
                         }
                     }
@@ -1105,10 +1119,11 @@ namespace ComplaintManagement.Repository
                                     db.SaveChanges();
                                 }
 
-                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(remark, ids, "Push To Committee", db);
+                                //new EmployeeComplaintHistoryRepository().AddComplaintHistory(remark, ids, "Push To Committee", db);
 
                                 //Notification Saving Work
                                 string NotificationContent = string.Empty;
+                                List<string> mailTo = new List<string>();
                                 CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.CategoryId)).CategoryName;
                                 SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                                 var userData= new UserMastersRepository().Get(Convert.ToInt32(sid));
@@ -1122,7 +1137,9 @@ namespace ComplaintManagement.Repository
                                 foreach (var item in assignToUserId)
                                 {
                                     new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(item));
+                                    mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item)).WorkEmail);
                                 }
+                                MailSend.SendEmail(mailTo, "Complaint", NotificationContent);
                             }
                             dbContextTransaction.Commit();
 

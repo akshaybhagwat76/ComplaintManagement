@@ -58,14 +58,14 @@ withdrawComplaintForSubmission = function () {
         $('#Remark').addClass("adderror");
         funToastr(false, "Remarks cannot be blank."); return;
     }
-    if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
-        retval = false;
-        $('#Remark').addClass("adderror");
-        funToastr(false, "Remarks cannot contain special characters.");
-    }
-    else {
-        $('#Remark').removeClass("adderror");
-    }
+    //if (/^[a-zA-Z0-9- ]*$/.test(str) == false) {
+    //    retval = false;
+    //    $('#Remark').addClass("adderror");
+    //    funToastr(false, "Remarks cannot contain special characters.");
+    //}
+    //else {
+    //    $('#Remark').removeClass("adderror");
+    //}
 
     var data = {
         Id: id,

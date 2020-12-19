@@ -32,6 +32,7 @@ namespace ComplaintManagement.Models
         public string AssignedUserRoles { get; set; }
         public System.DateTime DueDate { get; set; }
         public Nullable<System.DateTime> CommitteeDueDate { get; set; }
+        public string ComplaintNo { get; set; }
     
         public virtual EmployeeComplaintMaster EmployeeComplaintMaster { get; set; }
     }

@@ -206,6 +206,7 @@
     <Compile Include="Helpers\Common.cs" />
     <Compile Include="Helpers\CryptoEngineUtils.cs" />
     <Compile Include="Helpers\Infrastructure.cs" />
+    <Compile Include="Helpers\MailSend.cs" />
     <Compile Include="Helpers\Messages.cs" />
     <Compile Include="Helpers\ReplyFormat.cs" />
     <Compile Include="Helpers\ViewExtensions.cs" />
@@ -2404,6 +2405,7 @@
     <Content Include="Views\Shared\_ComplaintOverDueContent.cshtml" />
     <Content Include="Views\Compliant\ComplaintThree_Index.cshtml" />
     <Content Include="Views\Compliant\ComplaintTwo_Index.cshtml" />
+    <Content Include="Views\Compliant\NotificationList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
