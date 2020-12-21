@@ -787,6 +787,25 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+        [HttpGet]
+        public ActionResult GetHistoryByComplaintId(string ComplaintId)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(ComplaintId))
+                {
+                    ComplaintId = CryptoEngineUtils.Decrypt(ComplaintId.Replace(" ", "+"), true);
+                    ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(ComplaintId) && (x.ActionType.ToLower() != Messages.PushToCommittee.ToLower() && x.ActionType.ToLower() != Messages.BackToBUHC.ToLower())).ToList();
+                    return PartialView("_ComplaintHistoryContent");
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
 
         [HttpGet]
         public ActionResult GetAwaitingComplaints()

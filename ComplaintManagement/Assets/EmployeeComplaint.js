@@ -203,7 +203,7 @@ function PagerClick(index) {
 
 function getHistory(id) {
     if (id !== "") {
-        var url = "/Compliant/GetHistoryByComplaint?ComplaintId=" + id;
+        var url = "/Compliant/GetHistoryByComplaintId?ComplaintId=" + id;
         $("#historyContent").load(url, function () {
             $("#historyModal").modal("show");
         })
