@@ -199,5 +199,8 @@
 
         public const string EntityState = "Entity State";
 
+        public const string PushToCommittee = "Push To Committee";
+        public const string BackToBUHC = "Back To BUHC";
+
     }
 }

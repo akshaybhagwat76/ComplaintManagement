@@ -343,10 +343,10 @@
     <!-- Custom scripts for all pages-->
     <script>
         $(document).ready(function () {
-            setInterval(function () {
+           // setInterval(function () {
                 NotificationAlertCount();
                 NotificationAlertList();
-            }, 60000);
+            //}, 60000);
            
         });
         function NotificationAlertCount() {
@@ -380,9 +380,10 @@
                 data: {},
                 success: function (response) {
                     console.log(response);
-                    console.log(response.data.length);
+                    console.log(response.data);
                     if (response.status == "Success") {
                         var html = "";
+                        $('#notificationList').html("");
                         if (response.data.length > 0) {
                             for (var i = 0; i < response.data.length; i++) {
                                     html += '<a class="dropdown-item d-flex align-items-center" href="#">';

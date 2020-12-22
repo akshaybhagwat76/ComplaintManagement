@@ -366,7 +366,7 @@ namespace ComplaintManagement.Repository
                                 db.SaveChanges();
                             }
 
-                            //new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, "Back To BUHC", db);
+                            new EmployeeComplaintHistoryRepository().AddComplaintHistory(EmployeeComplaintVM.RemarkCommittee, EmployeeComplaintVM.ComplaintId, Messages.BackToBUHC, db);
 
                             //Notification Saving Work
                             var LOSName = string.Empty; var CategoryName = string.Empty; var SubCategoryName = string.Empty;
@@ -1119,7 +1119,7 @@ namespace ComplaintManagement.Repository
                                     db.SaveChanges();
                                 }
 
-                                //new EmployeeComplaintHistoryRepository().AddComplaintHistory(remark, ids, "Push To Committee", db);
+                                new EmployeeComplaintHistoryRepository().AddComplaintHistory(remark, ids, Messages.PushToCommittee, db);
 
                                 //Notification Saving Work
                                 string NotificationContent = string.Empty;
