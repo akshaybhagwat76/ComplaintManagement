@@ -375,7 +375,7 @@ namespace ComplaintManagement.Repository
                             SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                             var userData = new UserMastersRepository().Get(Convert.ToInt32(sid));
                             LOSName = new LOSMasterRepository().Get(WorkFlow.LOSId).LOSName;
-                            NotificationContent = "Complaint [" + LOSName + "-" + CategoryName + "-" + SubCategoryName + "] has been send back  by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
+                            NotificationContent = "Complaint (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been send back  by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
 
                             var CommitteeMemberData = (from u in db.CommitteeMasters
                                                        where u.IsActive
@@ -754,7 +754,7 @@ namespace ComplaintManagement.Repository
                             CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(employeeComplaint.CategoryId)).CategoryName;
                             SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(employeeComplaint.SubCategoryId)).SubCategoryName;
 
-                            NotificationContent = "Complaint [" + LOSName + "-" + CategoryName + "-" + SubCategoryName + "] has been assigned to you by " + userData.EmployeeName + " on " + userData.CreatedDate.ToString("dd/MM/yyyy") + " for your approval.";
+                            NotificationContent = "Complaint (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been assigned to you by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
                             foreach (var item in roleMasterLineItem)
                             {
                                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, item.UserId);
@@ -1128,7 +1128,7 @@ namespace ComplaintManagement.Repository
                                 SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                                 var userData= new UserMastersRepository().Get(Convert.ToInt32(sid));
                                 LOSName = new LOSMasterRepository().Get(WorkFlow.LOSId).LOSName;
-                                NotificationContent = "Complaint [" + LOSName + "-" + CategoryName + "-" + SubCategoryName + "] has been assigned to you by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
+                                NotificationContent = "Complaint (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been assigned to you by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
 
                                 var CommitteeMemberData = (from u in db.CommitteeMasters
                                                            where u.IsActive

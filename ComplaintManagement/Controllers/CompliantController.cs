@@ -989,7 +989,7 @@ namespace ComplaintManagement.Controllers
                 SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                 var userData = new UserMastersRepository().Get(Convert.ToInt32(sid));
                 LOSName = new LOSMasterRepository().Get(WorkFlow.LOSId).LOSName;
-                NotificationContent = "Complaint [" + LOSName + "-" + CategoryName + "-" + SubCategoryName + "] has been closed on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for " + LOSName + "by" + userData.EmployeeName + ".";
+                NotificationContent = "Complaint (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been closed on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for " + LOSName + "by" + userData.EmployeeName + ".";
 
                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(ComplaintMaster.CreatedBy));
                 mailTo.Add(userData.WorkEmail);
@@ -1029,7 +1029,7 @@ namespace ComplaintManagement.Controllers
                 var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
                 var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
                                .Select(c => c.Value).SingleOrDefault();
-                var NotificationAlert = new NotificationAlertRepository().Get(Convert.ToInt32(sid)).Select(x => new { NotificationContent = x.NotificationContent, CreatedDate = x.CreatedDate.ToString("MMMM dd yyyy") }).OrderByDescending(x => x.CreatedDate).Take(5).ToList();
+                var NotificationAlert = new NotificationAlertRepository().Get(Convert.ToInt32(sid)).Select(x => new { NotificationContent = x.NotificationContent, CreatedDate = x.CreatedDate.ToString("MMMM dd yyyy"), OrderByDate = x.CreatedDate }).OrderByDescending(x => Convert.ToDateTime(x.OrderByDate)).Take(5).ToList();
                 return new ReplyFormat().Success(Messages.SUCCESS, NotificationAlert);
             }
             catch (Exception ex)
