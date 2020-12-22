@@ -129,5 +129,14 @@ namespace ComplaintManagement.Helpers
             }
             return false;
         }
+        public enum Types
+        {
+            CaseStage = 1,
+            categoryOfComplaint = 2,
+            CaseType = 3,
+            LOS = 4,
+            SBU = 5,
+            SubSBU = 6,
+        }
     }
 }

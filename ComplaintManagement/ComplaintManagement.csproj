@@ -2416,6 +2416,7 @@
     <Content Include="Views\Shared\_LosReportMail.cshtml" />
     <Content Include="Views\UserMailer\UserMailed.cshtml" />
     <Content Include="Views\Compliant\NotificationList.cshtml" />
+    <Content Include="Views\LOS\LosReport2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -16,5 +16,6 @@ namespace ComplaintManagement.ViewModel
         public System.DateTime UpdatedDate { get; set; }
         public int IsActive { get; set; }
         public int HRUserId { get; set; }
+
     }
 }

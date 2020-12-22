@@ -33,5 +33,6 @@ namespace ComplaintManagement.ViewModel
         public string RegionName { get; set; }
         public string CaseType { get; set; }
         public string ComplaintNo { get; set; }
+        public string CaseStage { get; set; }
     }
 }
