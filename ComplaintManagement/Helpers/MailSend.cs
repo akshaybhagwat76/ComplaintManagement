@@ -19,7 +19,7 @@ namespace ComplaintManagement.Helpers
 
                 var msg = new MailMessage
                 {
-                    //From = new MailAddress(from),
+                    //From = new MailAdd0ress(from),
                     Subject = subject,
                     Body = body,
                     IsBodyHtml = isBodyHtml
@@ -55,7 +55,7 @@ namespace ComplaintManagement.Helpers
                 //})
                 //{
 
-                //}
+                
             }
             catch (Exception ex)
             {

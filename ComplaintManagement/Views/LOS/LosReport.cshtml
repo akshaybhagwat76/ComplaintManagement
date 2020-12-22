@@ -84,63 +84,63 @@
                                     {
                                         foreach (var item in ViewBag.LossReporting)
                                         {
-                                    <tr>
-                                        <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
-                                        <td class="text-black text-center"><strong>@item.LOSName</strong></td>
-                                        <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
-                                        <td class="text-black text-center"><strong>@item.Category</strong></td>
-                                        <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
-                                        <td class="text-black text-center"><strong>@item.RegionName</strong></td>
+                                            <tr>
+                                                <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                                                <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                                                <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                <td class="text-black text-center"><strong>@item.Category</strong></td>
+                                                <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
+                                                <td class="text-black text-center"><strong>@item.RegionName</strong></td>
 
-                                        <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
-                                        <td class="text-black text-center"><strong>@item.SBU</strong></td>
-                                        <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
-                                        <td class="text-black text-center"><strong>@item.CaseType</strong></td>
-                                        <!--<td class="text-black text-center">
-        <strong>-->
-                                        @*@if (item.CreatedDate != null)
-        {
-            var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-            @Html.Raw(DateTime
-        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-        }*@
-                                        <!--</strong>
-    </td>
+                                                <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                                                <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
+                                                <td class="text-black text-center"><strong>@item.CaseType</strong></td>
+                                                <!--<td class="text-black text-center">
+                                                <strong>-->
+                                                @*@if (item.CreatedDate != null)
+                                                    {
+                                                        var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+                                                        @Html.Raw(DateTime
+                                                    .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+                                                    .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                                    }*@
+                                                <!--</strong>
+                                                </td>
 
-    <td class="text-black text-center">
-        <strong>-->
-                                        @*@if (item.UpdatedDate != null)
-        {1
-            var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-            @Html.Raw(DateTime
-        .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-        .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-        }
-        else
-        {
-            @Html.Raw(Messages.NotAvailable.ToString())
-        }*@
-                                        <!--</strong>
-    </td>
-    <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+                                                <td class="text-black text-center">
+                                                    <strong>-->
+                                                @*@if (item.UpdatedDate != null)
+                                                    {1
+                                                        var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
+                                                        @Html.Raw(DateTime
+                                                    .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
+                                                    .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.Raw(Messages.NotAvailable.ToString())
+                                                    }*@
+                                                <!--</strong>
+                                                </td>
+                                                <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
 
 
-    <td class="text-black text-center">
-        <strong>-->
-                                        @*@if (item.Status == true)
-        {@Html.Raw("Active") }
-        else
-        { @Html.Raw("Inactive")}*@
-                                        <!--</strong>
-    </td>
-    <td class="text-center text-nowrap">-->
-                                        @*<a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-        <a href="javascript:void(0)" onclick="deleteLOS('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-        <a href="/LOS/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>*@
-                                        <!--</td>-->
-                                    </tr>
+                                                <td class="text-black text-center">
+                                                    <strong>-->
+                                                @*@if (item.Status == true)
+                                                    {@Html.Raw("Active") }
+                                                    else
+                                                    { @Html.Raw("Inactive")}*@
+                                                <!--</strong>
+                                                </td>
+                                                <td class="text-center text-nowrap">-->
+                                                @*<a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                    <a href="javascript:void(0)" onclick="deleteLOS('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                    <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                                    <a href="/LOS/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>*@
+                                                <!--</td>-->
+                                            </tr>
                                         }
                                     }
                                 </tbody>
@@ -221,13 +221,13 @@
                 <hr />
                 <button type="button" class="btn btn-primary" id="sendemail">Send Mail</button>
             </div>
-            
 
-            </div>
+
         </div>
     </div>
+    @Scripts.Render("~/Assets/LOSMasters")
+</div>
 
-@Scripts.Render("~/Assets/LOSMasters")
 <script src="~/Scripts/fSelect.js"></script>
 <script>
     $(function () {
@@ -251,7 +251,7 @@
         formData.append("Comment", comment);
 
         $.ajax({
-            url: "/LOS/UserMail",
+            url: "/LOS/SendMail",
             type: 'POST',
             cache: false,
             contentType: false,
@@ -261,12 +261,12 @@
                 if (response.status != "Fail") {
 
                     $('#ModalPopUp').modal('hide');
-                    alert("Email Sent");
+                   
 
                 }
                 else {
 
-                    alert("Email Not Sent");
+                   $('#ModalPopUp').modal('show');
                 }
 
             },

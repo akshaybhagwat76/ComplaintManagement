@@ -1,6 +1,6 @@
 ﻿@using ComplaintManagement.Helpers
 <div class="table-responsive">
-    <table class="table f-14 border" id="awaitingTable" style="width:100%">
+    <table class="table f-14 border" data-order='[[0, "desc"]]' id="awaitingTable" style="width:100%">
         @if (ViewBag.lstComplaintAwaiting != null)
         {
             if (ViewBag.lstComplaintAwaiting.Count > 0)

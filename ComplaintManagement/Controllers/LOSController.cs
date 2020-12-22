@@ -1038,29 +1038,40 @@ namespace ComplaintManagement.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult UserMail(LOSMasterVM los)
+        public ActionResult SendMail(LOSMasterVM los)
         {
             string response = "";
             try
             {
+                string NotificationContent = string.Empty;
+                List<string> mailTo = new List<string>();
+                NotificationContent = los.Comment;
 
-                if (!ReferenceEquals(los, null))
+                string[] UserEmailList = los.UserInvolved.Split(',');
+                foreach (var item in UserEmailList)
                 {
-                    string[] UserEmailList =los.UserInvolved.Split(',');
-
-
-                    foreach (string useremail in UserEmailList)
-                    {
-                        var token = Guid.NewGuid().ToString("n");
-
-                     response=  new UserMailer().UserMailed(token,los.Comment, useremail, Request.Browser.Browser, GetIp());
-                    }
-                    return new ReplyFormat().Success(Messages.SUCCESS);
+                    
+                    mailTo.Add(item);
                 }
-                else
-                {
-                    return new ReplyFormat().Error(Messages.FAIL);
-                }
+                MailSend.SendEmail(mailTo, "Complaint", NotificationContent);
+                //if (!ReferenceEquals(los, null))
+                //{
+                //    string[] UserEmailList =los.UserInvolved.Split(',');
+
+
+                //    foreach (string useremail in UserEmailList)
+                //    {
+                //        var token = Guid.NewGuid().ToString("n");
+
+                //     response=  new UserMailer().UserMailed(token,los.Comment, useremail, Request.Browser.Browser, GetIp());
+                //    }
+                //    return new ReplyFormat().Success(Messages.SUCCESS);
+                //}
+                //else
+                //{
+                //    return new ReplyFormat().Error(Messages.FAIL);
+                //}
+                return new ReplyFormat().Success(Messages.SUCCESS);
             }
 
             catch (Exception ex)

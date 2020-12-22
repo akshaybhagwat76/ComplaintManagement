@@ -434,12 +434,12 @@
                 if (response.status != "Fail") {
 
                     $('#ModalPopUp').modal('hide');
-                    alert("Email Sent");
+                    
 
                 }
                 else {
 
-                    alert("Email Not Sent");
+                    $('#ModalPopUp').modal('show');
                 }
 
             },

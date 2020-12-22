@@ -1,4 +1,4 @@
-﻿import { type } from "jquery";
+﻿//import { type } from "jquery";
 
 function deleteLOS(id) {
     $('#deleteModal').data('id', id).modal('show');
