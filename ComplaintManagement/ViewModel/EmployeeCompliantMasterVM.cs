@@ -37,6 +37,16 @@ namespace ComplaintManagement.ViewModel
         public string CaseType { get; set; }
         public string LastPerformedBy { get; set; }
         public string ComplaintNo { get; set; }
+        public int ComplaintId { get; set; }
+        public string LOSName { get; set; }
+        public string SBU { get; set; }
+        public string SubSbU { get; set; }
+        public string RegionName { get; set; }
+        public string CompanyName { get; set; }
+        public string Category { get; set; }
+        public string SubCategory { get; set; }
+        public string ActionType { get; set; }
+        public string CaseStage { get; set; }
     }
 
 }

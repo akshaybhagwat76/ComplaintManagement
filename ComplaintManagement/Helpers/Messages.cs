@@ -163,6 +163,8 @@
         public const string LOSHistory = "LOS History";
         public const string InvolvedUser = "InvolvedUser";
 
+        public const string ComplaintNo = "ComplaintNo";
+        public const string CaseType = "CaseType";
         public const string SBU = "SBU";
         public const string SBUHistory = "SBU History";
 

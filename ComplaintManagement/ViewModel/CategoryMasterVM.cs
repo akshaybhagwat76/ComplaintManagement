@@ -22,5 +22,6 @@ namespace ComplaintManagement.ViewModel
         public string CreatedByName { get; set; }
         public string UpdatedByName { get; set; }
         public bool IsActive { get; set; }
+        public string CaseType { get; set; }
     }
 }

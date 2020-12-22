@@ -226,7 +226,7 @@
             </div>
         </div>
     </div>
-</div>
+
 @Scripts.Render("~/Assets/LOSMasters")
 <script src="~/Scripts/fSelect.js"></script>
 <script>
@@ -236,25 +236,27 @@
 
 
     });
-</script><script>
+</script>
+<script>
     $("#btnLink").click(function () {
         $('#ModalPopUp').modal('show');
     });
     $("#sendemail").click(function () {
- 
+
         var UserInvolved = $(".test").val();
         var comment = $(".comment").val();
         var formData = new FormData();
 
         formData.append("UserInvolved", UserInvolved);
         formData.append("Comment", comment);
-        
+
         $.ajax({
-            type: "POST",
             url: "/LOS/UserMail",
-            data: formData,
+            type: 'POST',
+            cache: false,
             contentType: false,
             processData: false,
+            data: formData,
             success: function (response) {
                 if (response.status != "Fail") {
 

@@ -1038,22 +1038,22 @@ namespace ComplaintManagement.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult UserMail(string UserInvolved,string comment)
+        public JsonResult UserMail(LOSMasterVM los)
         {
             string response = "";
             try
             {
 
-                if (!ReferenceEquals(UserInvolved, null))
+                if (!ReferenceEquals(los, null))
                 {
-                    string[] UserEmailList = UserInvolved.Split(',');
+                    string[] UserEmailList =los.UserInvolved.Split(',');
 
 
                     foreach (string useremail in UserEmailList)
                     {
                         var token = Guid.NewGuid().ToString("n");
 
-                     response=  new UserMailer().UserMailed(token, comment, useremail, Request.Browser.Browser, GetIp());
+                     response=  new UserMailer().UserMailed(token,los.Comment, useremail, Request.Browser.Browser, GetIp());
                     }
                     return new ReplyFormat().Success(Messages.SUCCESS);
                 }
@@ -1089,7 +1089,401 @@ namespace ComplaintManagement.Controllers
             }
             return visitorsIpAddr;
         }
+        public ActionResult LosReport2()
+        {
+            ViewBag.los = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.WorkEmail.ToString() }).ToList();
+            
+            var DataTableDetail = new HomeController().getDataTableDetail("LOS", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            ViewModel.LOSMasterVM Ls = new LOSMasterVM();
+            return View(Ls);
+        }
+        public ActionResult GetTypeValue(string Type)
+        {
+           
+            if(Type== "CaseStage")
+            {
+                var types = new List<SelectListItem>
+                {
+             new SelectListItem{ Text="Actionable", Value = "Actionable" },
+             new SelectListItem{ Text="Non-Actionable", Value = "NonActionable" },
+              };
+                return Json(types);
+            }
+            else if(Type== "CaseType")
+            {
+                var types = new List<SelectListItem>
+                {
+             new SelectListItem{ Text="In Progress", Value = "InProgess" },
+             new SelectListItem{ Text="Closed", Value = "Closed" },
+          };
+                return Json(types);
+            }
+            else if(Type=="LOS")
+            {
+                var types = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
+                return Json(types);
+            }
+            else if(Type=="SBU")
+            {
+                var types = new SBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
+                return Json(types);
+            }
+            else if(Type== "SubSBU")
+            {
+             var types= new SubSBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
+                return Json(types);  
+            }
+            else if(Type== "categoryOfComplaint")
+            {
+                var types = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
+                return Json(types);
+            }
+            else
+            {
+                return Json("");
+            }
+        
+        }
+        public ActionResult GetXOLReport(int currentPage, string range,string types,string typevalues)
+        {
+            
+            ViewModel.LOSMasterVM Ls = new ViewModel.LOSMasterVM();
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
 
+
+
+            if (types == "LOS")
+            {
+
+                var LosReport = new LOSMasterRepository().GetAllReport(range,Convert.ToInt32(typevalues));
+                ViewBag.LossReporting = LosReport.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList(); 
+
+                lstCount = LosReport.Count;
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+                //var types = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
+                Ls.CaseType = "LOS";
+                int typeval = Convert.ToInt32(typevalues);
+               var typevalued = new LOSMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.LOSName, Value = d.Id.ToString() }).ToList();
+
+                ViewBag.typevalues =typevalued;
+            
+            }
+            else if (types == "SBU")
+            {
+                var SBUReport = new SBUMasterRepository().GetAllReport(range,Convert.ToInt32(typevalues));
+                ViewBag.LossReporting = SBUReport.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+
+                lstCount = SBUReport.Count;
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                Ls.CaseType ="SBU" ;
+                int typeval = Convert.ToInt32(typevalues);
+                var typevalued = new SBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SBU, Value = d.Id.ToString() }).ToList();
+
+                ViewBag.typevalues = typevalued;
+
+            }
+            else if (types == "SubSBU")
+            {
+                var SubSBUReport = new SubSBUMasterRepository().GetAllReport(range,Convert.ToInt32(typevalues));
+                ViewBag.LossReporting = SubSBUReport.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+
+                lstCount = SubSBUReport.Count;
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+                Ls.CaseType = "SubSBU";
+                int typeval = Convert.ToInt32(typevalues);
+                var typevalued = new SubSBUMasterRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubSBU, Value = d.Id.ToString() }).ToList();
+
+                ViewBag.typevalues = typevalued;
+            }
+            else if (types == "categoryOfComplaint")
+            {
+                var CategoryReport = new CategoryMastersRepository().GetAllReport(range,Convert.ToInt32(typevalues));
+                ViewBag.LossReporting = CategoryReport.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+
+                lstCount = CategoryReport.Count;
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+
+
+                Ls.CaseType = types;
+                int typeval = Convert.ToInt32(typevalues);
+                var typevalued = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
+
+                ViewBag.typevalues = typevalued;
+            }
+            else if (types == "CaseType")
+            {
+                var Casetypes = new LOSMasterRepository().GetAllCaseStageReport(range, typevalues);
+                ViewBag.LossReporting = Casetypes.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+
+                lstCount = Casetypes.Count;
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+
+                Ls.CaseType = "CaseType";
+                var typed = new List<SelectListItem>
+                {
+             new SelectListItem{ Text="In Progress", Value = "InProgess" },
+             new SelectListItem{ Text="Closed", Value = "Closed" },
+              };
+                ViewBag.typevalues = typed;
+
+            }
+            else if (types == "CaseStage")
+            {
+                var Casetypes = new LOSMasterRepository().GetAllTypeStageReport(range, typevalues);
+                ViewBag.LossReporting = Casetypes.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+
+                lstCount = Casetypes.Count;
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+
+
+                Ls.CaseType = "CaseStage";
+                var typed = new List<SelectListItem>
+                {
+                new SelectListItem{ Text="Actionable", Value = "Actionable" },
+                new SelectListItem{ Text="Non-Actionable", Value = "NonActionable" },
+              };
+                ViewBag.typevalues = typed;
+
+            }
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.WorkEmail.ToString() }).ToList();
+
+                       
+            //ViewBag.lstLOS = JsonConvert.SerializeObject(GetAllReportLos(currentPage,losid ,range));
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+
+            var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+            return View("LosReport2",Ls);
+        }
+        public ActionResult ExportLDataLOSReport2(string range, string types, string typevalues)
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage package = new ExcelPackage();
+
+
+                var ws = package.Workbook.Worksheets.Add(Messages.LOS);
+                //Headers
+                ws.Cells["A1"].Value = Messages.ComplaintNo;
+                ws.Cells["B1"].Value = Messages.LOS;
+                ws.Cells["C1"].Value = Messages.SBU;
+                ws.Cells["D1"].Value = Messages.SubSBU;
+                ws.Cells["E1"].Value = Messages.CreatedBy;
+                ws.Cells["F1"].Value = Messages.Category;
+                ws.Cells["G1"].Value = Messages.SubCategory;
+                ws.Cells["H1"].Value = Messages.Region;
+                ws.Cells["I1"].Value = Messages.Company;
+                ws.Cells["J1"].Value = Messages.CaseType;
+                ws.Cells["K1"].Value = Messages.CaseStage;
+
+
+                var rowNumber = 1;
+                ws.Cells[rowNumber, 1].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 1].Value = Messages.ComplaintNo;
+                ws.Cells[rowNumber, 2].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 2].Value = Messages.LOS;
+
+                ws.Cells[rowNumber, 3].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 3].Value = Messages.SBU;
+
+                ws.Cells[rowNumber, 4].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 4].Value = Messages.SubSBU;
+
+                ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 5].Value = Messages.CreatedBy;
+
+                ws.Cells[rowNumber, 6].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 6].Value = Messages.Category;
+
+                ws.Cells[rowNumber, 7].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 7].Value = Messages.SubCategory;
+
+                ws.Cells[rowNumber, 8].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 8].Value = Messages.Region;
+
+                ws.Cells[rowNumber, 9].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 9].Value = Messages.Company;
+
+                ws.Cells[rowNumber, 10].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 10].Value = Messages.CaseStage;
+
+                ws.Cells[rowNumber, 11].Style.Font.Bold = true;
+                ws.Cells[rowNumber, 11].Value = Messages.CaseType;
+
+
+                if (types == "LOS")
+                {
+                    var LosReport = new LOSMasterRepository().GetAllReport(range, Convert.ToInt32(typevalues));
+                    foreach (var log in LosReport)
+                    {
+                        rowNumber++;
+                        ws.Cells[rowNumber, 1].Value = log.ComplaintNo;
+                        ws.Cells[rowNumber, 1].Value = log.LOSName;
+                        ws.Cells[rowNumber, 2].Value = log.SBU;
+                        ws.Cells[rowNumber, 3].Value = log.SubSbU;
+                        ws.Cells[rowNumber, 4].Value = log.CreatedByName;
+                        ws.Cells[rowNumber, 5].Value = log.Category;
+                        ws.Cells[rowNumber, 7].Value = log.SubCategory;
+                        ws.Cells[rowNumber, 8].Value = log.RegionName;
+                        ws.Cells[rowNumber, 9].Value = log.CompanyName;
+                        ws.Cells[rowNumber, 10].Value = log.CaseType;
+                        ws.Cells[rowNumber, 11].Value = log.ActionType;
+                    }
+
+                }
+                else if (types == "SBU")
+                {
+                    var SBUReport = new SBUMasterRepository().GetAllReport(range, Convert.ToInt32(typevalues));
+                    foreach (var log in SBUReport)
+                    {
+                        rowNumber++;
+                        ws.Cells[rowNumber, 1].Value = log.ComplaintNo;
+                        ws.Cells[rowNumber, 1].Value = log.LOSName;
+                        ws.Cells[rowNumber, 2].Value = log.SBU;
+                        ws.Cells[rowNumber, 3].Value = log.SubSbU;
+                        ws.Cells[rowNumber, 4].Value = log.CreatedByName;
+                        ws.Cells[rowNumber, 5].Value = log.Category;
+                        ws.Cells[rowNumber, 7].Value = log.SubCategory;
+                        ws.Cells[rowNumber, 8].Value = log.RegionName;
+                        ws.Cells[rowNumber, 9].Value = log.CompanyName;
+                        ws.Cells[rowNumber, 10].Value = log.CaseType;
+                        ws.Cells[rowNumber, 11].Value = log.ActionType;
+                    }
+
+
+                }
+                else if (types == "SubSBU")
+                {
+                    var SubSBUReport = new SubSBUMasterRepository().GetAllReport(range, Convert.ToInt32(typevalues));
+                    foreach (var log in SubSBUReport)
+                    {
+                        rowNumber++;
+                        ws.Cells[rowNumber, 1].Value = log.ComplaintNo;
+                        ws.Cells[rowNumber, 1].Value = log.LOSName;
+                        ws.Cells[rowNumber, 2].Value = log.SBU;
+                        ws.Cells[rowNumber, 3].Value = log.SubSbU;
+                        ws.Cells[rowNumber, 4].Value = log.CreatedByName;
+                        ws.Cells[rowNumber, 5].Value = log.Category;
+                        ws.Cells[rowNumber, 7].Value = log.SubCategory;
+                        ws.Cells[rowNumber, 8].Value = log.RegionName;
+                        ws.Cells[rowNumber, 9].Value = log.CompanyName;
+                        ws.Cells[rowNumber, 10].Value = log.CaseType;
+                        ws.Cells[rowNumber, 11].Value = log.ActionType;
+                    }
+                }
+                else if (types == "categoryOfComplaint")
+                {
+                    var CategoryReport = new CategoryMastersRepository().GetAllReport(range, Convert.ToInt32(typevalues));
+                    foreach (var log in CategoryReport)
+                    {
+                        rowNumber++;
+                        ws.Cells[rowNumber, 1].Value = log.ComplaintNo;
+                        ws.Cells[rowNumber, 1].Value = log.LOSName;
+                        ws.Cells[rowNumber, 2].Value = log.SBU;
+                        ws.Cells[rowNumber, 3].Value = log.SubSbU;
+                        ws.Cells[rowNumber, 4].Value = log.CreatedByName;
+                        ws.Cells[rowNumber, 5].Value = log.Category;
+                        ws.Cells[rowNumber, 7].Value = log.SubCategory;
+                        ws.Cells[rowNumber, 8].Value = log.RegionName;
+                        ws.Cells[rowNumber, 9].Value = log.CompanyName;
+                        ws.Cells[rowNumber, 10].Value = log.CaseType;
+                        ws.Cells[rowNumber, 11].Value = log.ActionType;
+                    }
+                }
+                else if (types == "CaseType")
+                {
+                    var Casetypes = new LOSMasterRepository().GetAllCaseStageReport(range, typevalues);
+
+                    foreach (var log in Casetypes)
+                    {
+                        rowNumber++;
+                        ws.Cells[rowNumber, 1].Value = log.ComplaintNo;
+                        ws.Cells[rowNumber, 1].Value = log.LOSName;
+                        ws.Cells[rowNumber, 2].Value = log.SBU;
+                        ws.Cells[rowNumber, 3].Value = log.SubSbU;
+                        ws.Cells[rowNumber, 4].Value = log.CreatedByName;
+                        ws.Cells[rowNumber, 5].Value = log.Category;
+                        ws.Cells[rowNumber, 7].Value = log.SubCategory;
+                        ws.Cells[rowNumber, 8].Value = log.RegionName;
+                        ws.Cells[rowNumber, 9].Value = log.CompanyName;
+                        ws.Cells[rowNumber, 10].Value = log.CaseType;
+                        ws.Cells[rowNumber, 11].Value = log.ActionType;
+                    }
+
+                }
+                else if (types == "CaseStage")
+                {
+                    var Casetypes = new LOSMasterRepository().GetAllTypeStageReport(range, typevalues);
+                    foreach (var log in Casetypes)
+                    {
+                        rowNumber++;
+                        ws.Cells[rowNumber, 1].Value = log.ComplaintNo;
+                        ws.Cells[rowNumber, 1].Value = log.LOSName;
+                        ws.Cells[rowNumber, 2].Value = log.SBU;
+                        ws.Cells[rowNumber, 3].Value = log.SubSbU;
+                        ws.Cells[rowNumber, 4].Value = log.CreatedByName;
+                        ws.Cells[rowNumber, 5].Value = log.Category;
+                        ws.Cells[rowNumber, 7].Value = log.SubCategory;
+                        ws.Cells[rowNumber, 8].Value = log.RegionName;
+                        ws.Cells[rowNumber, 9].Value = log.CompanyName;
+                        ws.Cells[rowNumber, 10].Value = log.CaseType;
+                        ws.Cells[rowNumber, 11].Value = log.ActionType;
+                    }
+
+                }
+                
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                string fileName = Messages.LOS + Messages.XLSX;
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                stream.Position = 0;
+                return File(stream, contentType, fileName);
+
+
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
+
+        }
 
     }
 }

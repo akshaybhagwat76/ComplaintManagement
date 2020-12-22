@@ -1,0 +1,476 @@
+﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.LOSMasterVM
+@{
+    ViewBag.Title = "LosReport2";
+}
+
+@Styles.Render("~/Content/plugins/select2/select2Styles")
+<link href="~/Content/fSelect.css" rel="stylesheet" type="text/css" />
+<div class="container-fluid">
+    <div class="preloader"></div>
+    <div class="page-title">
+        <h2 class="text-black">LOS Master</h2>
+    </div>
+    <div class="card mb-4 rounded-0 border-0">
+        <div class="card-body">
+            <div class="row justify-content-between">
+                <div class="col-md-10">
+                    <ul class="nav">
+                        <li class="nav-item mr-3">
+                            <input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
+                        </li>
+                        <li class="nav-item mr-3">
+                            <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
+                        </li>
+                        <li class="nav-item mr-3">
+
+                            @{
+                                List<SelectListItem> listItems = new List<SelectListItem>();
+                                listItems = new List<SelectListItem>();
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Select Types",
+                                    Value = ""
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Case Stage",
+                                    Value = "CaseStage"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Category of Complaint",
+                                    Value = "categoryOfComplaint"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Case Type",
+                                    Value = "CaseType"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "LOS Wise",
+                                    Value = "LOS"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "SBU Wise",
+                                    Value = "SBU"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Sub SBU Wise",
+                                    Value = "SubSBU"
+                                });
+
+                            }
+                            <div>
+                                @Html.DropDownListFor(model => model.CaseType, (List<SelectListItem>)listItems, new { @class = "form-control required" })
+                            </div>
+
+                        </li>
+                        <li class="nav-item mr-auto">
+                            @{
+                                List<SelectListItem> typevalues = new List<SelectListItem>();
+                                typevalues = new List<SelectListItem>();
+                                typevalues.Add(new SelectListItem
+                                {
+                                    Text = "",
+                                    Value = ""
+                                });
+
+                                if (ViewBag.typevalues != null)
+                                {
+
+                                    typevalues.AddRange(ViewBag.typevalues);
+
+                                }
+                            }
+                            <div>
+
+                                @Html.DropDownListFor(model => model.typevalues, (List<SelectListItem>)typevalues, new { @class = "form-control required" })
+
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" onclick="filterXOLReportGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                        </li>
+                        <li class="nav-item mr-8">
+                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="exportXolReport()"><i class="fas fa-file-excel"></i></button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <ul class="nav">
+                        <li class="nav-item mr-4">
+                            <a href="javascript:void(0)" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" id="btnLink"><i class="fas fa-mail-bulk"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            @*<button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>*@
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Tab Bar -->
+    <div class="user-list">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12">
+                <div class="card mb-4 rounded-0 border-0">
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table f-14" id="myTable">
+                                <thead>
+                                    <tr>
+
+                                        @if (Model.CaseType == "CaseType")
+                                        {
+                                            <td class="text-center">ComplaintNo</td>
+                                            <td class="text-center">LOS</td>
+                                            <td class="text-center">Created By</td>
+                                            <td class="text-center">Region</td>
+                                            <td class="text-center">Office</td>
+                                            <td class="text-center">SBU</td>
+                                            <td class="text-center">Sub SBU</td>
+                                            <td class="text-center">Case Stage</td>
+                                            <td class="text-center">Case Type</td>
+                                        }
+                                        else if (Model.CaseType == "CaseStage")
+                                        {
+                                            <td class="text-center">ComplaintNo</td>
+                                            <td class="text-center">LOS</td>
+                                            <td class="text-center">Created By</td>
+                                            <td class="text-center">Category</td>
+                                            <td class="text-center">Sub Category</td>
+                                            <td class="text-center">Office</td>
+                                            <td class="text-center">SBU</td>
+                                            <td class="text-center">Sub SBU</td>
+                                            <td class="text-center">Case Stage</td>
+                                            <td class="text-center">Case Type</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center">ComplaintNo</td>
+                                            <td class="text-center">LOS</td>
+                                            <td class="text-center">Created By</td>
+                                            <td class="text-center">Category</td>
+                                            <td class="text-center">Sub Category</td>
+                                            <td class="text-center">Region</td>
+                                            <td class="text-center">Office</td>
+                                            <td class="text-center">SBU</td>
+                                            <td class="text-center">Sub SBU</td>
+                                            <td class="text-center">Case Stage</td>
+                                            <td class="text-center">Case Type</td>
+
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.LossReporting != null)
+                                    {
+                                        foreach (var item in ViewBag.LossReporting)
+                                        {
+                                            <tr>
+
+                                                @if (Model.CaseType == "CaseType")
+                                                {
+                                                    <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.RegionName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.ActionType</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CaseType</strong></td>
+
+                                                }
+                                                else if (Model.CaseType == "CaseStage")
+                                                {
+                                                    <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.Category</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
+
+
+                                                    <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.ActionType</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CaseType</strong></td>
+
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.Category</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.RegionName</strong></td>
+
+                                                    <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.ActionType</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.CaseType</strong></td>
+                                                }
+
+
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <br />
+                        <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
+                            <tr>
+                                @for (int i = 1; i <= ViewBag.PageCount; i++)
+                                {
+                                    <td>
+                                        <div class="pagination">
+                                            @if (i != ViewBag.CurrentPageIndex)
+                                            {
+                                                <a href="javascript:PagerClick(@i);">@i</a>
+                                            }
+                                            else
+                                            {
+                                                <span>@i</span>
+                                            }
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        </table>
+                        <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalPopUp" role="dialog" style="width:100%">
+    <div class="modal-dialog err-pop">
+        <div class="modal-content" style="width:700px;height:300px">
+            <div class="modal-header" style="background-color:#ff6a00">
+                <span style="text-align:center">Send Email</span>
+                <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <div>
+                    <table style="margin-top:10px;width:100%" cellpadding="10" cellspacing="10">
+                        <tr>
+                            <td>
+                                <label>Involved Users</label>
+                            </td>
+                            <td>
+                                @{
+                                    List<SelectListItem> listUser = new List<SelectListItem>();
+                                    listUser = new List<SelectListItem>();
+                                    listUser.Add(new SelectListItem
+                                    {
+                                        Text = "",
+                                        Value = ""
+                                    });
+                                    listUser.AddRange(ViewBag.lstUser);
+                                }
+                                @Html.DropDownList("InvolvedUserId", (List<SelectListItem>)listUser, new { @class = "form-control test required", multiple = "multiple" })
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Comment
+                            </td>
+                            <td>
+                                @Html.TextArea("Comment", new { @class = "form-control comment", @style = "Border-radius:2%" })
+                            </td>
+                        </tr>
+
+                    </table>
+
+
+
+                </div>
+                <hr />
+                <button type="button" class="btn btn-primary" id="sendemail">Send Mail</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Assets/Common")
+@Scripts.Render("~/Assets/LOSMasters")
+
+<script src="~/Scripts/fSelect.js"></script>
+<script>
+    $(function () {
+
+        $('.test').fSelect();
+
+    });
+</script>
+
+<script>
+    $("#btnLink").click(function () {
+        $('#ModalPopUp').modal('show');
+    });
+    $("#sendemail").click(function () {
+
+        var UserInvolved = $(".test").val();
+        var comment = $(".comment").val();
+        var formData = new FormData();
+
+        formData.append("UserInvolved", UserInvolved);
+        formData.append("Comment", comment);
+
+        $.ajax({
+            type: "POST",
+            url: "/LOS/UserMail",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.status != "Fail") {
+
+                    $('#ModalPopUp').modal('hide');
+                    alert("Email Sent");
+
+                }
+                else {
+
+                    alert("Email Not Sent");
+                }
+
+            },
+            error: function (error) {
+                funToastr(false, error.statusText);
+            }
+        });
+    });
+
+    $("#CaseType").change(function () {
+        var type = $(this).val();
+        $.ajax({
+            url: '/Los/GetTypeValue',
+            type: "POST",
+            dataType: "JSON",
+            data: { Type: type },
+            success: function (types) {
+                $("#typevalues").html("");
+                $("#typevalues").val("");
+                // clear before appending new list
+                $.each(types, function (i, type) {
+                    $("#typevalues").append(
+                        $('<option></option>').val(type.Value).html(type.Text));
+                });
+            }
+        });
+    });
+</script>
+<script>
+    function filterXOLReportGrid() {
+        var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+        var losid = $(".losval option:selected").val();
+        var types = $("#CaseType").val();
+        var typevalues = $("#typevalues").val();
+        if (fromDate == "" || toDate == "" || types == "" || typevalues == "") {
+            funToastr(false, "Please select from and to date and a types and a values"); return;
+        }
+        else {
+
+            if ($("#hfCurrentPageIndex").val() == "") {
+                $("#hfCurrentPageIndex").val("1");
+            }
+            location.href = '/LOS/GetXOLReport?currentPage= ' + $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        }
+    }
+    function exportXolReport() {
+        var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+        var losid = $(".losval option:selected").val();
+        var types = $("#CaseType").val();
+        var typevalues = $("#typevalues").val();
+        if (fromDate == "" || toDate == "" && types == "" && typevalues == "") {
+            funToastr(false, "Please select from and to date and a types and a values"); return;
+        }
+        else {
+
+            if ($("#hfCurrentPageIndex").val() == "") {
+                $("#hfCurrentPageIndex").val("1");
+            }
+            location.href = '/LOS/ExportLDataLOSReport2?range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        }
+    }
+
+</script>
+<script>
+    $("#btnLink").click(function () {
+        $('#ModalPopUp').modal('show');
+    });
+    $("#sendemail").click(function () {
+
+        var UserInvolved = $(".test").val();
+        var comment = $(".comment").val();
+        var formData = new FormData();
+
+        formData.append("UserInvolved", UserInvolved);
+        formData.append("Comment", comment);
+
+        $.ajax({
+            url: "/LOS/UserMail",
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                if (response.status != "Fail") {
+
+                    $('#ModalPopUp').modal('hide');
+                    alert("Email Sent");
+
+                }
+                else {
+
+                    alert("Email Not Sent");
+                }
+
+            },
+            error: function (error) {
+                funToastr(false, error.statusText);
+            }
+        });
+    });
+</script>
+<script>
+    var pageLength=@ViewBag.PageIndex;
+    var page = @ViewBag.Page;
+</script>
+<script>
+    function PagerClick(index) {
+        $("#hfCurrentPageIndex").val(index);
+        var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : ""; var toDate = $("#toDate").val() == undefined ? "" : $("#toDate").val();
+        var types = $("#CaseType").val();
+        var typevalues = $("#typevalues").val();
+
+        var range = "";
+        if (fromDate !== "" && toDate !== "") {
+            range = fromDate + ',' + toDate;
+        }
+        if ($("#history").val() == undefined) {
+            location.href = '/LOS/GetXOLReport?currentPage= '+ $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues;
+
+        }
+        else {
+            location.href = '/LOS/GetXOLReport?currentPage = '+ $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues;
+        }
+    }
+
+</script>

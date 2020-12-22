@@ -1,4 +1,5 @@
-﻿
+﻿import { type } from "jquery";
+
 function deleteLOS(id) {
     $('#deleteModal').data('id', id).modal('show');
     $('#deleteModal').modal('show');
@@ -197,3 +198,22 @@ function filterLosReportGrid() {
         }
     
 }
+//19/12/2020
+function filterXOLReportGrid() {
+    var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+    var losid = $(".losval option:selected").val();
+    var types = $("#types").val();
+    var typevalues = $("#typevalues").val();
+    if (fromDate == "" || toDate == "" || types == "" || typevalues=="") {
+        funToastr(false, "Please select from and to date and a types and a values"); return;
+    }
+    else {
+
+        if ($("#hfCurrentPageIndex").val() == "") {
+            $("#hfCurrentPageIndex").val("1");
+        }
+        location.href = '/LOS/GetXOLReport?range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues +  '&currentPage=' + $("#hfCurrentPageIndex").val();
+    }
+}
+
+
