@@ -14,7 +14,7 @@
     <div class="card mb-4 rounded-0 border-0">
         <div class="card-body">
             <div class="row justify-content-between">
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <ul class="nav">
                         <li class="nav-item mr-3">
                             <input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
@@ -30,25 +30,26 @@
 
                             </div>
                         </li>
-                        <li class="nav-item">
+                        
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <ul class="nav">
+                        <li class="nav-item mr-2">
                             <button type="button" onclick="filterLosReportGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item mr-2">
                             &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="exportLosReport()"><i class="fas fa-file-excel"></i></button>
                         </li>
-                    </ul>
-                </div>
-                <div class="col-md-2">
-                    <ul class="nav">
-                        <li class="nav-item mr-4">
+                        <li class="nav-item">
                             <a href="javascript:void(0)" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" id="btnLink"><i class="fas fa-mail-bulk"></i></a>
                         </li>
-                        <li class="nav-item">
-                            @*<button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>*@
-                        </li>
+                        @*<li class="nav-item">
+                            <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
+                        </li>*@
                     </ul>
                 </div>
-                `
+                
             </div>
         </div>
     </div>

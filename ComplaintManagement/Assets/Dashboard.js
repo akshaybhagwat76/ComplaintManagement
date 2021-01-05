@@ -231,10 +231,12 @@ $(document).on('click', '#btn_dataSearch', function () {
 
 
 function DashboardPiGraphData() {
+    StartProcess();
     let dateFrom = ($('#txt_dateFrom').val());
     let dateTo = ($('#txt_dateTo').val());
     $.get('/home/DashboardPiChart', { dateFrom: dateFrom, dateTo: dateTo }, function (result) {
         console.log(result);
+        StopProcess();
         //console.log(result.categoryPiCharts[1].Label);
         if (result != null && result != "undefined" && result != "") {
             //Case Type Pi chart
