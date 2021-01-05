@@ -212,6 +212,7 @@
     <Compile Include="Helpers\Common.cs" />
     <Compile Include="Helpers\CryptoEngineUtils.cs" />
     <Compile Include="Helpers\Infrastructure.cs" />
+    <Compile Include="Helpers\MailScheduler.cs" />
     <Compile Include="Helpers\MailSend.cs" />
     <Compile Include="Helpers\Messages.cs" />
     <Compile Include="Helpers\ReplyFormat.cs" />
@@ -440,6 +441,7 @@
     <Content Include="Content\plugins\dataTables\responsive.min.css" />
     <Content Include="Content\plugins\datepicker\datepicker3.css" />
     <Content Include="Content\plugins\select2\select2.min.css" />
+    <Content Include="Content\style.css" />
     <Content Include="Content\toastr\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -530,6 +532,8 @@
     <Content Include="Scripts\vendor\chart.js\Chart.bundle.min.js" />
     <Content Include="Scripts\vendor\chart.js\Chart.js" />
     <Content Include="Scripts\vendor\chart.js\Chart.min.js" />
+    <Content Include="Scripts\vendor\chart.js\chartjs-plugin-datalabels.js" />
+    <Content Include="Scripts\vendor\chart.js\chartjs-plugin-datalabels.min.js" />
     <Content Include="Scripts\vendor\datatables\dataTables.bootstrap4.js" />
     <Content Include="Scripts\vendor\datatables\dataTables.bootstrap4.min.js" />
     <Content Include="Scripts\vendor\datatables\datatables.min.js" />
@@ -2417,6 +2421,7 @@
     <Content Include="Views\UserMailer\UserMailed.cshtml" />
     <Content Include="Views\Compliant\NotificationList.cshtml" />
     <Content Include="Views\LOS\LosReport2.cshtml" />
+    <Content Include="Views\LOS\_XLOS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

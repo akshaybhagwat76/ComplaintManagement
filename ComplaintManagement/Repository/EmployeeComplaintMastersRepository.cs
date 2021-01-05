@@ -370,12 +370,14 @@ namespace ComplaintManagement.Repository
 
                             //Notification Saving Work
                             var LOSName = string.Empty; var CategoryName = string.Empty; var SubCategoryName = string.Empty;
-                            string NotificationContent = string.Empty; List<string> mailTo = new List<string>();
+                            string NotificationContent = string.Empty;
+                            List<string> mailTo = new List<string>();
+                            List<string> mailBody = new List<string>();
                             CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.CategoryId)).CategoryName;
                             SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                             var userData = new UserMastersRepository().Get(Convert.ToInt32(sid));
                             LOSName = new LOSMasterRepository().Get(WorkFlow.LOSId).LOSName;
-                            NotificationContent = "Complaint (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been send back  by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
+                            NotificationContent = WorkFlow.ComplaintNo+" (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been send back  by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
 
                             var CommitteeMemberData = (from u in db.CommitteeMasters
                                                        where u.IsActive
@@ -385,8 +387,9 @@ namespace ComplaintManagement.Repository
                             {
                                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(item));
                                 mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item)).WorkEmail);
+                                mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
                             }
-                            MailSend.SendEmail(mailTo, "Complaint", NotificationContent);
+                            //MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Send back by committee", mailBody);
 
                             dbContextTransaction.Commit();
 
@@ -751,17 +754,18 @@ namespace ComplaintManagement.Repository
                             //Notification Send 
                             string NotificationContent = string.Empty;
                             List<string> mailTo = new List<string>();
+                            List<string> mailBody = new List<string>();
                             CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(employeeComplaint.CategoryId)).CategoryName;
                             SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(employeeComplaint.SubCategoryId)).SubCategoryName;
 
-                            NotificationContent = "Complaint (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been assigned to you by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
+                            NotificationContent = employeeComplaintWorkFlowDto.ComplaintNo+" (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been assigned to you by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
                             foreach (var item in roleMasterLineItem)
                             {
                                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, item.UserId);
                                 mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item.UserId)).WorkEmail);
-                            
+                                mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item.UserId)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
                             }
-                            MailSend.SendEmail(mailTo, "Complaint", NotificationContent);
+                            //MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody);
                             dbContextTransaction.Commit();
                         }
                     }
@@ -1124,11 +1128,12 @@ namespace ComplaintManagement.Repository
                                 //Notification Saving Work
                                 string NotificationContent = string.Empty;
                                 List<string> mailTo = new List<string>();
+                                List<string> mailBody = new List<string>();
                                 CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.CategoryId)).CategoryName;
                                 SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                                 var userData= new UserMastersRepository().Get(Convert.ToInt32(sid));
                                 LOSName = new LOSMasterRepository().Get(WorkFlow.LOSId).LOSName;
-                                NotificationContent = "Complaint (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been assigned to you by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
+                                NotificationContent = WorkFlow.ComplaintNo+" (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been assigned to you by " + userData.EmployeeName + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for your approval.";
 
                                 var CommitteeMemberData = (from u in db.CommitteeMasters
                                                            where u.IsActive
@@ -1138,8 +1143,13 @@ namespace ComplaintManagement.Repository
                                 {
                                     new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(item));
                                     mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item)).WorkEmail);
+                                    mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
                                 }
-                                MailSend.SendEmail(mailTo, "Complaint", NotificationContent);
+
+                                //string htmlBody= @"<html><body><p>Dear Ms. Susan,</p></br><p>"+ NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>";
+
+
+                                //MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody);
                             }
                             dbContextTransaction.Commit();
 

@@ -1,0 +1,67 @@
+﻿<div class="card-body">
+    <div class="table-responsive">
+        <table class="table f-14" id="myTable">
+            <thead>
+                <tr>
+                    <td class="text-center">ComplaintNo</td>
+                    <td class="text-center">LOS</td>
+                    <td class="text-center">Created By</td>
+                    <td class="text-center">Category</td>
+                    <td class="text-center">Sub Category</td>
+                    <td class="text-center">Region</td>
+                    <td class="text-center">Office</td>
+                    <td class="text-center">SBU</td>
+                    <td class="text-center">Sub SBU</td>
+                    <td class="text-center">Case Stage</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.LossReporting != null)
+                {
+                    foreach (var item in ViewBag.LossReporting)
+                    {
+                        <tr>
+                            <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                            <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                            <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                            <td class="text-black text-center"><strong>@item.Category</strong></td>
+                            <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
+                            <td class="text-black text-center"><strong>@item.RegionName</strong></td>
+
+                            <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                            <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                            <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
+                            <td class="text-black text-center"><strong>@item.ActionType</strong></td>
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
+        <tr>
+            @for (int i = 1; i <= ViewBag.PageCount; i++)
+            {
+                <td>
+                    <div class="pagination">
+                        @if (i != ViewBag.CurrentPageIndex)
+                        {
+                            <a href="javascript:PagerClick(@i);">@i</a>
+                        }
+                        else
+                        {
+                            <span>@i</span>
+                        }
+                    </div>
+                </td>
+            }
+        </tr>
+    </table>
+    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+
+
+</div>
+
+

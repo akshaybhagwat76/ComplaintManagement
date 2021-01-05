@@ -9,20 +9,20 @@
 <div class="container-fluid">
     <div class="preloader"></div>
     <div class="page-title">
-        <h2 class="text-black">LOS Master</h2>
+        <h2 class="text-black">Complaint Report</h2>
     </div>
     <div class="card mb-4 rounded-0 border-0">
         <div class="card-body">
             <div class="row justify-content-between">
                 <div class="col-md-10">
                     <ul class="nav">
-                        <li class="nav-item mr-3">
+                        <li class="nav-item mr-2">
                             <input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
                         </li>
-                        <li class="nav-item mr-3">
+                        <li class="nav-item mr-2">
                             <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
                         </li>
-                        <li class="nav-item mr-3">
+                        <li class="nav-item mr-2">
 
                             @{
                                 List<SelectListItem> listItems = new List<SelectListItem>();
@@ -34,7 +34,7 @@
                                 });
                                 listItems.Add(new SelectListItem
                                 {
-                                    Text = "Case Stage",
+                                    Text = "Case Type",
                                     Value = "CaseStage"
                                 });
                                 listItems.Add(new SelectListItem
@@ -44,7 +44,7 @@
                                 });
                                 listItems.Add(new SelectListItem
                                 {
-                                    Text = "Case Type",
+                                    Text = "Case Stage",
                                     Value = "CaseType"
                                 });
                                 listItems.Add(new SelectListItem
@@ -64,12 +64,12 @@
                                 });
 
                             }
-                            <div>
+                           
                                 @Html.DropDownListFor(model => model.CaseType, (List<SelectListItem>)listItems, new { @class = "form-control required" })
-                            </div>
+                          
 
                         </li>
-                        <li class="nav-item mr-auto">
+                        <li class="nav-item mr-3">
                             @{
                                 List<SelectListItem> typevalues = new List<SelectListItem>();
                                 typevalues = new List<SelectListItem>();
@@ -92,22 +92,21 @@
 
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <button type="button" onclick="filterXOLReportGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
-                        </li>
-                        <li class="nav-item mr-8">
-                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="exportXolReport()"><i class="fas fa-file-excel"></i></button>
-                        </li>
+                     
                     </ul>
                 </div>
                 <div class="col-md-2">
                     <ul class="nav">
-                        <li class="nav-item mr-4">
-                            <a href="javascript:void(0)" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" id="btnLink"><i class="fas fa-mail-bulk"></i></a>
+                        <li class="nav-item">
+                            <button type="button" onclick="filterXOLReportGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
                         </li>
                         <li class="nav-item">
-                            @*<button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>*@
+                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="exportXolReport()"><i class="fas fa-file-excel"></i></button>
                         </li>
+                        <li class="nav-item" style="padding-left:4%">
+                            <a href="javascript:void(0)" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" id="btnLink"><i class="fas fa-mail-bulk"></i></a>
+                        </li>
+                       
                     </ul>
                 </div>
             </div>
@@ -128,41 +127,42 @@
                                         @if (Model.CaseType == "CaseType")
                                         {
                                             <td class="text-center">ComplaintNo</td>
-                                            <td class="text-center">LOS</td>
                                             <td class="text-center">Created By</td>
                                             <td class="text-center">Region</td>
                                             <td class="text-center">Office</td>
+                                            <td class="text-center">LOS</td>
                                             <td class="text-center">SBU</td>
                                             <td class="text-center">Sub SBU</td>
                                             <td class="text-center">Case Stage</td>
-                                            <td class="text-center">Case Type</td>
+
                                         }
                                         else if (Model.CaseType == "CaseStage")
                                         {
                                             <td class="text-center">ComplaintNo</td>
-                                            <td class="text-center">LOS</td>
                                             <td class="text-center">Created By</td>
                                             <td class="text-center">Category</td>
                                             <td class="text-center">Sub Category</td>
                                             <td class="text-center">Office</td>
+                                            <td class="text-center">LOS</td>
                                             <td class="text-center">SBU</td>
                                             <td class="text-center">Sub SBU</td>
                                             <td class="text-center">Case Stage</td>
                                             <td class="text-center">Case Type</td>
                                         }
+
                                         else
                                         {
                                             <td class="text-center">ComplaintNo</td>
-                                            <td class="text-center">LOS</td>
                                             <td class="text-center">Created By</td>
                                             <td class="text-center">Category</td>
                                             <td class="text-center">Sub Category</td>
                                             <td class="text-center">Region</td>
                                             <td class="text-center">Office</td>
+                                            <td class="text-center">LOS</td>
                                             <td class="text-center">SBU</td>
                                             <td class="text-center">Sub SBU</td>
                                             <td class="text-center">Case Stage</td>
-                                            <td class="text-center">Case Type</td>
+
 
                                         }
                                     </tr>
@@ -177,46 +177,45 @@
                                                 @if (Model.CaseType == "CaseType")
                                                 {
                                                     <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.RegionName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.SBU</strong></td>
                                                     <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
                                                     <td class="text-black text-center"><strong>@item.ActionType</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.CaseType</strong></td>
 
                                                 }
                                                 else if (Model.CaseType == "CaseStage")
                                                 {
                                                     <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+
                                                     <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.Category</strong></td>
                                                     <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
 
 
                                                     <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.SBU</strong></td>
                                                     <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
                                                     <td class="text-black text-center"><strong>@item.ActionType</strong></td>
                                                     <td class="text-black text-center"><strong>@item.CaseType</strong></td>
 
                                                 }
+
                                                 else
                                                 {
                                                     <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.Category</strong></td>
                                                     <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
                                                     <td class="text-black text-center"><strong>@item.RegionName</strong></td>
-
                                                     <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.LOSName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.SBU</strong></td>
                                                     <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
                                                     <td class="text-black text-center"><strong>@item.ActionType</strong></td>
-                                                    <td class="text-black text-center"><strong>@item.CaseType</strong></td>
                                                 }
 
 
@@ -323,38 +322,67 @@
         $('#ModalPopUp').modal('show');
     });
     $("#sendemail").click(function () {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var range = fromDate + ',' + toDate;
+        var types = $("#CaseType").val();
+        var typevalues = $("#typevalues").val();
 
-        var UserInvolved = $(".test").val();
         var comment = $(".comment").val();
-        var formData = new FormData();
+        var userID = [];
+        $(".test").each(function () {
+            userID.push($('.test').val());
+        });
+        alert(userID);
+        if (fromDate == "" || toDate == "" || types == "" || typevalues == "") {
+            funToastr(false, "Please select from and to date,Type and a LOSName"); return;
+        }
+        else {
 
-        formData.append("UserInvolved", UserInvolved);
-        formData.append("Comment", comment);
+            $.get('/LOS/ComplaintUserMail', $.param({
+                userID: userID, comment: comment, range: range, types: types, typevalues: typevalues
 
-        $.ajax({
-            type: "POST",
-            url: "/LOS/UserMail",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                if (response.status != "Fail") {
+            }, true), function (data) {
+                if (data.status != "Fail") {
 
                     $('#ModalPopUp').modal('hide');
-                    alert("Email Sent");
+                    alert("mail has been sent");
 
                 }
                 else {
 
-                    alert("Email Not Sent");
+                    $('#ModalPopUp').modal('show');
+                    alert("mail not sent");
                 }
+            });
+        }
 
-            },
-            error: function (error) {
-                funToastr(false, error.statusText);
-            }
-        });
+        //$.ajax({
+        //    url: "/LOS/UserMail",
+        //    type: 'POST',
+        //    cache: false,
+        //    contentType: false,
+        //    processData: false,
+        //    data: formData,
+        //    success: function (response) {
+        //        if (response.status != "Fail") {
+
+        //            $('#ModalPopUp').modal('hide');
+
+
+        //        }
+        //        else {
+
+        //            $('#ModalPopUp').modal('show');
+        //        }
+
+        //    },
+        //    error: function (error) {
+        //        funToastr(false, error.statusText);
+        //    }
+        //});
     });
+
 
     $("#CaseType").change(function () {
         var type = $(this).val();
@@ -369,6 +397,7 @@
                 // clear before appending new list
                 $.each(types, function (i, type) {
                     $("#typevalues").append(
+
                         $('<option></option>').val(type.Value).html(type.Text));
                 });
             }
@@ -434,12 +463,12 @@
                 if (response.status != "Fail") {
 
                     $('#ModalPopUp').modal('hide');
-                    
+                    alert("Email Sent");
 
                 }
                 else {
 
-                    $('#ModalPopUp').modal('show');
+                    alert("Email Not Sent");
                 }
 
             },
@@ -465,11 +494,11 @@
             range = fromDate + ',' + toDate;
         }
         if ($("#history").val() == undefined) {
-            location.href = '/LOS/GetXOLReport?currentPage= '+ $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues;
+            location.href = '/LOS/GetXOLReport?currentPage= ' + $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues;
 
         }
         else {
-            location.href = '/LOS/GetXOLReport?currentPage = '+ $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues;
+            location.href = '/LOS/GetXOLReport?currentPage = ' + $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues;
         }
     }
 

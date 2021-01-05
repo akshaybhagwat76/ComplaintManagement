@@ -1,4 +1,5 @@
-﻿
+﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.LOSMasterVM
 @{
     ViewBag.Title = "LosReport";
 }
@@ -8,7 +9,7 @@
 <div class="container-fluid">
     <div class="preloader"></div>
     <div class="page-title">
-        <h2 class="text-black">LOS Master</h2>
+        <h2 class="text-black">XLOS Report</h2>
     </div>
     <div class="card mb-4 rounded-0 border-0">
         <div class="card-body">
@@ -22,17 +23,12 @@
                             <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
                         </li>
                         <li class="nav-item mr-3">
-                            <select class="form-control losval">
-                                <option value="">Select Los</option>
-                                @if (ViewBag.los != null)
-                                {
 
-                                    foreach (var item in ViewBag.los)
-                                    {
-                                        <option value="@item.Value">@item.Text</option>
-                                    }
-                                }
-                            </select>
+                            <div>
+
+                                @Html.DropDownList("typevalues", (IEnumerable<SelectListItem>)ViewBag.typevalues, new { @class = "form-control required" })
+
+                            </div>
                         </li>
                         <li class="nav-item">
                             <button type="button" onclick="filterLosReportGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
@@ -52,126 +48,33 @@
                         </li>
                     </ul>
                 </div>
+                `
             </div>
         </div>
     </div>
-    <!-- Tab Bar -->
+
     <div class="user-list">
         <div class="row">
             <div class="col-xl-12 col-lg-12">
-                <div class="card mb-4 rounded-0 border-0">
+                <div class="card mb-4 rounded-0 border-0" id="divLostReport">
                     <!-- Card Body -->
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table f-14" id="myTable">
-                                <thead>
-                                    <tr>
-                                        <td class="text-center">ComplaintNo</td>
-                                        <td class="text-center">LOS</td>
-                                        <td class="text-center">Created By</td>
-                                        <td class="text-center">Category</td>
-                                        <td class="text-center">Sub Category</td>
-                                        <td class="text-center">Region</td>
-                                        <td class="text-center">Office</td>
-                                        <td class="text-center">SBU</td>
-                                        <td class="text-center">Sub SBU</td>
-                                        <td class="text-center">Case Stage</td>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (ViewBag.LossReporting != null)
-                                    {
-                                        foreach (var item in ViewBag.LossReporting)
-                                        {
-                                            <tr>
-                                                <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
-                                                <td class="text-black text-center"><strong>@item.LOSName</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
-                                                <td class="text-black text-center"><strong>@item.Category</strong></td>
-                                                <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
-                                                <td class="text-black text-center"><strong>@item.RegionName</strong></td>
-
-                                                <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
-                                                <td class="text-black text-center"><strong>@item.SBU</strong></td>
-                                                <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
-                                                <td class="text-black text-center"><strong>@item.CaseType</strong></td>
-                                                <!--<td class="text-black text-center">
-                                                <strong>-->
-                                                @*@if (item.CreatedDate != null)
-                                                    {
-                                                        var date = String.Format("{0}", item.CreatedDate.Substring(0, item.CreatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-                                                        @Html.Raw(DateTime
-                                                    .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-                                                    .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-                                                    }*@
-                                                <!--</strong>
-                                                </td>
-
-                                                <td class="text-black text-center">
-                                                    <strong>-->
-                                                @*@if (item.UpdatedDate != null)
-                                                    {1
-                                                        var date = String.Format("{0}", item.UpdatedDate.Substring(0, item.UpdatedDate.IndexOf("T")).Replace("-", "/")).ToString();
-                                                        @Html.Raw(DateTime
-                                                    .ParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture)
-                                                    .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.Raw(Messages.NotAvailable.ToString())
-                                                    }*@
-                                                <!--</strong>
-                                                </td>
-                                                <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+                    @Html.Partial("_XLOS");
 
 
-                                                <td class="text-black text-center">
-                                                    <strong>-->
-                                                @*@if (item.Status == true)
-                                                    {@Html.Raw("Active") }
-                                                    else
-                                                    { @Html.Raw("Inactive")}*@
-                                                <!--</strong>
-                                                </td>
-                                                <td class="text-center text-nowrap">-->
-                                                @*<a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="deleteLOS('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                    <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                    <a href="/LOS/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>*@
-                                                <!--</td>-->
-                                            </tr>
-                                        }
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <br />
-                        <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
-                            <tr>
-                                @for (int i = 1; i <= ViewBag.PageCount; i++)
-                                {
-                                    <td>
-                                        <div class="pagination">
-                                            @if (i != ViewBag.CurrentPageIndex)
-                                            {
-                                                <a href="javascript:PagerClick(@i);">@i</a>
-                                            }
-                                            else
-                                            {
-                                                <span>@i</span>
-                                            }
-                                        </div>
-                                    </td>
-                                }
-                            </tr>
-                        </table>
-                        <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+    <!-- Tab Bar -->
+
 </div>
 
 <div class="modal fade" id="ModalPopUp" role="dialog" style="width:100%">
@@ -225,8 +128,8 @@
 
         </div>
     </div>
-    @Scripts.Render("~/Assets/LOSMasters")
 </div>
+
 
 <script src="~/Scripts/fSelect.js"></script>
 <script>
@@ -237,43 +140,120 @@
 
     });
 </script>
+@Scripts.Render("~/Assets/EditLOSMasters")
 <script>
     $("#btnLink").click(function () {
         $('#ModalPopUp').modal('show');
     });
-    $("#sendemail").click(function () {
+   
+    function filterLosReportGrid() {
 
-        var UserInvolved = $(".test").val();
-        var comment = $(".comment").val();
-        var formData = new FormData();
+        //var data = {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var losid = $("#typevalues option:selected").val();
 
-        formData.append("UserInvolved", UserInvolved);
-        formData.append("Comment", comment);
+        //if ($("#hfCurrentPageIndex").val() == "") {
+        //    $("#hfCurrentPageIndex").val("1");
+        //}
+        // var currentPage = $("#hfCurrentPageIndex").val();
 
-        $.ajax({
-            url: "/LOS/SendMail",
-            type: 'POST',
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: formData,
-            success: function (response) {
-                if (response.status != "Fail") {
+        //}
+        StartProcess();
+        if (fromDate == "" || toDate == "") {
+            StopProcess();
+            funToastr(false, "Please select from and to date."); return;
+        }
 
-                    $('#ModalPopUp').modal('hide');
-                   
-
-                }
-                else {
-
-                   $('#ModalPopUp').modal('show');
-                }
-
-            },
-            error: function (error) {
-                funToastr(false, error.statusText);
+        $.get('/LOS/GetLOSReport', { currentPage: 1, fromDate: fromDate, toDate: toDate, losid: losid }, function (data) {
+            if (data.status == "Fail") {
+                StopProcess();
+                funToastr(false, data.error);
             }
+            else {
+                StopProcess();
+                $("#divLostReport").empty();
+                $("#divLostReport").html(data.data.Url);
+                //$("#paginator").find('tbody').html(data.data.currentPage);
+            }
+            // alert(ViewBag.PageCounts);
         });
-    });
-</script>
 
+    }
+    //18/12/2020
+    function exportLosReport() {
+        var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+        var losid = $("#typevalues option:selected").val();
+        if (fromDate == "" || toDate == "" || losid == "") {
+            funToastr(false, "Please select from and to date and a LOSName"); return;
+        }
+        else {
+
+            if ($("#hfCurrentPageIndex").val() == "") {
+                $("#hfCurrentPageIndex").val("1");
+            }
+            location.href = '/LOS/ExportLDataLOsReport?range=' + fromDate + ',' + toDate + '&losid=' + losid + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        }
+
+    }
+    //19/12/2020
+    function filterXOLReportGrid() {
+        var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+        var losid = $("typevalues option:selected").val();
+        var types = $("#types").val();
+        if (fromDate == "" || toDate == "" || types == "" || typevalues == "") {
+            funToastr(false, "Please select from and to date and a types and a values"); return;
+        }
+        else {
+
+            if ($("#hfCurrentPageIndex").val() == "") {
+                $("#hfCurrentPageIndex").val("1");
+            }
+            location.href = '/LOS/GetXOLReport?range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        }
+    }
+</script>
+@*<script>
+        function PagerClick(index) {
+            $("#hfCurrentPageIndex").val(index);
+            var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : "";
+            var toDate = $("#toDate").val() == "undelect from and to date and a types and a values"); return;
+        }
+            else {
+
+            if ($("#hfCurrentPageIndex").val() == "") {
+                $("#hfCurrentPageIndex").val("1");
+            }
+            location.href = '/LOS/GetXOLReport?range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        }
+
+    </script>*@
+<script>
+    function PagerClick(index) {
+        var currentPage = $("#hfCurrentPageIndex").val(index);
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var losid = $("#typevalues option:selected").val();
+
+        StartProcess();
+        if (fromDate == "" || toDate == "") {
+            StopProcess();
+            funToastr(false, "Please select from and to date."); return;
+        }
+
+        $.get('/LOS/GetLOSReport', { currentPage: index, fromDate: fromDate, toDate: toDate, losid: losid }, function (data) {
+            if (data.status == "Fail") {
+                StopProcess();
+                funToastr(false, data.error);
+            }
+            else {
+                StopProcess();
+                $("#divLostReport").empty();
+                $("#divLostReport").html(data.data.Url);
+                //$("#paginator").find('tbody').html(data.data.currentPage);
+            }
+            // alert(ViewBag.PageCounts);
+        });
+    }
+
+</script>

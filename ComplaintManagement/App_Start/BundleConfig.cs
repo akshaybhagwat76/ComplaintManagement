@@ -95,7 +95,14 @@ namespace ComplaintManagement
 
             // Chart 
             bundles.Add(new ScriptBundle("~/plugins/Chart").Include(
-                      "~/Scripts/vendor/chart.js/Chart.min.js"));
+                      "~/Scripts/vendor/chart.js/Chart.min.js",
+                    "~/Scripts/vendor/chart.js/chartjs-plugin-datalabels.min.js"
+                      ));
+
+            // Chart
+            bundles.Add(new StyleBundle("~/plugins/CSS/Chart").Include(
+                      "~/Content/style.css"
+                      ));
 
             // dataPicker styles
             bundles.Add(new StyleBundle("~/plugins/dataPickerStyles").Include(
@@ -103,7 +110,7 @@ namespace ComplaintManagement
 
             // dataPicker 
             bundles.Add(new ScriptBundle("~/plugins/datePicker").Include(
-                      "~/Scripts/plugins/datepicker/bootstrap-datepicker.js"));
+                      "~/Scripts/vendor/datepicker/bootstrap-datepicker.js"));
 
             // select2 
             bundles.Add(new ScriptBundle("~/plugins/select2").Include(

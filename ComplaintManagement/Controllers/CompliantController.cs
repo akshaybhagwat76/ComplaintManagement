@@ -984,16 +984,19 @@ namespace ComplaintManagement.Controllers
                 new EmployeeComplaintHistoryRepository().AddComplaintHistory(Remark, ids, Messages.COMPLETED, db);
                 //Notification Work
                 var LOSName = string.Empty; var CategoryName = string.Empty; var SubCategoryName = string.Empty;
-                string NotificationContent = string.Empty; List<string> mailTo = new List<string>();
+                string NotificationContent = string.Empty; 
+                List<string> mailTo = new List<string>();
+                List<string> mailBody = new List<string>();
                 CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.CategoryId)).CategoryName;
                 SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                 var userData = new UserMastersRepository().Get(Convert.ToInt32(sid));
                 LOSName = new LOSMasterRepository().Get(WorkFlow.LOSId).LOSName;
-                NotificationContent = "Complaint (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been closed on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for " + LOSName + "by" + userData.EmployeeName + ".";
+                NotificationContent = WorkFlow.ComplaintNo+" (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been closed on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for " + LOSName + "by" + userData.EmployeeName + ".";
 
                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(ComplaintMaster.CreatedBy));
                 mailTo.Add(userData.WorkEmail);
-                MailSend.SendEmail(mailTo, "Complaint", NotificationContent);
+                mailBody.Add(@"<html><body><p>Dear " + userData.EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
+                //MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Completion", mailBody);
             }
             catch (Exception ex)
             {

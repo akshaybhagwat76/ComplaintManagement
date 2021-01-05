@@ -21,7 +21,7 @@
     @*@Styles.Render("~/Scripts/vendor/jquery-ui/jqueryuiStyles")*@
     @Styles.Render("~/plugins/toastrStyles")
     @Styles.Render("~/Content/plugins/dataTables/dataTablesStyles")
-
+<link href="~/Scripts/vendor/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
     <!-- Section for main scripts render -->
     @*@Scripts.Render("~/bundles/jquery")*@
     @*@Scripts.Render("~/sb-admin2/jquery")*@
@@ -107,7 +107,7 @@
                             {
                                 <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint Listing</a>
                             }
-                            else
+                            else if (userRole == Messages.NormalUser)
                             {
                                 <a class="collapse-item" href="/Employee/Index">Complaint Listing</a>
                             }
@@ -191,13 +191,18 @@
                 </a>
                 <div id="collapseThree" class="collapse" aria-labelledby="collapseThree" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="/LOS/LosReport">
-                            <span>XLOS Report</span>
-                        </a>
-                        <a class="collapse-item" href="/LOS/LosReport2">
-                            <span>Complaint Report</span>
-                        </a>
-                    </div>
+                        @{
+                            if (userRole == Messages.LeadUser || userRole == Messages.AdminUser)
+                            {
+                                <a class="collapse-item" href="/LOS/LosReport">
+                                    <span>XLOS Report</span>
+                                </a>
+                                <a class="collapse-item" href="/LOS/LosReport2">
+                                    <span>Complaint Report</span>
+                                </a>
+                            }
+                         }
+                        </div>
                    
                 </div>
             </li>

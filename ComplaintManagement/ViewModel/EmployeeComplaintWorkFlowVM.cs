@@ -34,5 +34,7 @@ namespace ComplaintManagement.ViewModel
         public string CaseType { get; set; }
         public string ComplaintNo { get; set; }
         public string CaseStage { get; set; }
+        public string LastPerformedBy { get; set; }
+        public string EmployeeName { get; set; }
     }
 }

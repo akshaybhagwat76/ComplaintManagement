@@ -461,9 +461,9 @@ namespace ComplaintManagement.Repository
         //    }
         //    return LOSListDto;
         //}
-        public List<EmployeeComplaintWorkFlowVM> GetAllReport(string range,int losid)
+        public List<EmployeeComplaintWorkFlowVM> GetAllReport(string range, int losid)
         {
-            
+
 
             List<EmployeeComplaintWorkFlowVM> WorkFlowList = new List<EmployeeComplaintWorkFlowVM>();
             List<EmployeeComplaintWorkFlow> WorkFlows = new List<EmployeeComplaintWorkFlow>();
@@ -476,8 +476,8 @@ namespace ComplaintManagement.Repository
                 {
                     try
                     {
-                     
-                        WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.LOSId==losid && i.CreatedDate>=fromDate && i.CreatedDate<=toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+
+                        WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.LOSId == losid && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
                         if (WorkFlows != null && WorkFlows.Count > 0) /*&& usersList != null && usersList.Count > 0)*/
                         {
                             foreach (EmployeeComplaintWorkFlow item in WorkFlows)
@@ -490,25 +490,25 @@ namespace ComplaintManagement.Repository
                                     catObj.LOSName = db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId) != null ? db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId).LOSName : Messages.NotAvailable;
                                     catObj.SBU = db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId) != null ? db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId).SBU : Messages.NotAvailable;
                                     catObj.SubSbU = db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId) != null ? db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId).SubSBU : Messages.NotAvailable;
-                                    var ActionType=db.EmployeeComplaintWorkFlows.FirstOrDefault(x=>x.Id==item.Id) != null ? db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == item.Id).ActionType : Messages.NotAvailable;
+                                    var ActionType = db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == item.Id) != null ? db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == item.Id).ActionType : Messages.NotAvailable;
                                     if (ActionType == "Submitted" || ActionType == "Committee")
                                     {
-                                        catObj.ActionType ="In-Progress";
+                                        catObj.ActionType = "In-Progress";
                                     }
-                                    else if(ActionType=="Completed")
+                                    else if (ActionType == "Completed")
                                     {
                                         catObj.ActionType = "Closed";
                                     }
-                                    else if(ActionType=="Withdrawn")
+                                    else if (ActionType == "Withdrawn")
                                     {
                                         catObj.ActionType = "Withdrawn";
                                     }
-                                    else if(ActionType=="Opened")
+                                    else if (ActionType == "Opened")
                                     {
                                         catObj.ActionType = "Opened";
                                     }
 
-                                    if (item.ComplaintNo!=null)
+                                    if (item.ComplaintNo != null)
                                     {
                                         catObj.ComplaintNo = item.ComplaintNo;
                                     }
@@ -516,15 +516,15 @@ namespace ComplaintManagement.Repository
                                     {
                                         catObj.ComplaintNo = "Not Available";
                                     }
-                                   
+
                                     if (item.ComplaintId != 0)
                                     {
                                         int reginoid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).RegionId;
 
                                         int companyid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).Company;
-                                        int categoryid =db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).CategoryId;
+                                        int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).CategoryId;
                                         int subcategoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).SubCategoryId;
-                                        catObj.CaseType= db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId) != null ? db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId).CaseType : Messages.NotAvailable;
+                                        catObj.CaseType = db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId) != null ? db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId).CaseType : Messages.NotAvailable;
                                         if (categoryid != 0)
                                         {
                                             catObj.CompanyName = db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName != null ? db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName : Messages.NotAvailable;
@@ -534,7 +534,7 @@ namespace ComplaintManagement.Repository
 
                                         }
                                     }
-                                
+
 
                                     WorkFlowList.Add(catObj);
 
@@ -553,10 +553,135 @@ namespace ComplaintManagement.Repository
             return WorkFlowList;
         }
 
+
+        //4/1/2021
+        public List<EmployeeComplaintWorkFlowVM> GetAllLosReport(string range)
+        {
+
+
+            List<EmployeeComplaintWorkFlowVM> WorkFlowList = new List<EmployeeComplaintWorkFlowVM>();
+            List<EmployeeComplaintWorkFlow> WorkFlows = new List<EmployeeComplaintWorkFlow>();
+            List<ViewModel.LOSMasterVM> Losmaster = new List<ViewModel.LOSMasterVM>();
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                using (DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities())
+                {
+                    try
+                    {
+                        Losmaster = GetAll();
+                        if(Losmaster.Count>0)
+                        {
+                            foreach(var item in Losmaster)
+                            {
+                                WorkFlows.AddRange(db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.LOSId == item.Id && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList());
+                            }
+                        }
+
+                      
+                        if (WorkFlows != null && WorkFlows.Count > 0) /*&& usersList != null && usersList.Count > 0)*/
+                        {
+                            foreach (EmployeeComplaintWorkFlow item in WorkFlows)
+                            {
+                                EmployeeComplaintWorkFlowVM catObj = Mapper.Map<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>(item);
+                                if (catObj != null)
+                                {
+                                    catObj.CreatedByName = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                                    catObj.UpdatedByName = db.UserMasters.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? db.UserMasters.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                                    catObj.LOSName = db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId) != null ? db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId).LOSName : Messages.NotAvailable;
+                                    catObj.SBU = db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId) != null ? db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId).SBU : Messages.NotAvailable;
+                                    catObj.SubSbU = db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId) != null ? db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId).SubSBU : Messages.NotAvailable;
+                                    var ActionType = db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == item.Id) != null ? db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == item.Id).ActionType : Messages.NotAvailable;
+                                    if (ActionType == "Submitted" || ActionType == "Committee")
+                                    {
+                                        catObj.ActionType = "In-Progress";
+                                    }
+                                    else if (ActionType == "Completed")
+                                    {
+                                        catObj.ActionType = "Closed";
+                                    }
+                                    else if (ActionType == "Withdrawn")
+                                    {
+                                        catObj.ActionType = "Withdrawn";
+                                    }
+                                    else if (ActionType == "Opened")
+                                    {
+                                        catObj.ActionType = "Opened";
+                                    }
+
+                                    if (item.ComplaintNo != null)
+                                    {
+                                        catObj.ComplaintNo = item.ComplaintNo;
+                                    }
+                                    else
+                                    {
+                                        catObj.ComplaintNo = "Not Available";
+                                    }
+
+                                    if (item.ComplaintId != 0)
+                                    {
+                                        int reginoid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).RegionId;
+
+                                        int companyid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).Company;
+                                        int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).CategoryId;
+                                        int subcategoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).SubCategoryId;
+                                        catObj.CaseType = db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId) != null ? db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId).CaseType : Messages.NotAvailable;
+                                        if (categoryid != 0)
+                                        {
+                                            catObj.CompanyName = db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName != null ? db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName : Messages.NotAvailable;
+                                            catObj.RegionName = db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region != null ? db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region : Messages.NotAvailable;
+                                            catObj.Category = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid) != null ? db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).CategoryName : Messages.NotAvailable;
+                                            catObj.SubCategory = db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid) != null ? db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid).SubCategoryName : Messages.NotAvailable;
+
+                                        }
+                                    }
+
+
+                                    WorkFlowList.Add(catObj);
+
+
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                        throw new Exception(ex.Message.ToString());
+                    }
+                }
+            }
+            return WorkFlowList;
+        }
+
+
         public List<EmployeeComplaintWorkFlowVM> GetAllCaseStageReport(string range, string casestype)
         {
             List<EmployeeComplaintWorkFlowVM> WorkFlowList = new List<EmployeeComplaintWorkFlowVM>();
             List<EmployeeComplaintWorkFlow> WorkFlows = new List<EmployeeComplaintWorkFlow>();
+            List<EmployeeComplaintWorkFlow> WorkFlows1 = new List<EmployeeComplaintWorkFlow>();
+            List<LOSMasterVM> LOSLists = new List<LOSMasterVM>();
+            List<SBUMasterVM> SBULists = new List<SBUMasterVM>();
+            List<SubSBUMasterVM> SubSBULists = new List<SubSBUMasterVM>();
+            var WorkFlowdata = new List<EmployeeComplaintWorkFlow>();
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+               .Select(c => c.Value).SingleOrDefault();
+
+
+            if (!string.IsNullOrEmpty(sid))
+            {
+                LOSLists = GetAllLOSdata();
+                SBUMasterRepository sbr = new SBUMasterRepository();
+                SBULists = sbr.GetAllSBU();
+                SubSBUMasterRepository subsbr = new SubSBUMasterRepository();
+                SubSBULists = subsbr.GetAllSubSBU();
+            }
+
+
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');
@@ -568,16 +693,105 @@ namespace ComplaintManagement.Repository
                     {
                         if (casestype == "InProgess")
                         {
-                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.ActionType == "Submitted" || i.ActionType == "Committee" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+
+                            if (LOSLists != null || SBULists != null || SubSBULists != null)
+                            {
+                                if (LOSLists != null)
+                                {
+                                    foreach (LOSMasterVM item in LOSLists)
+                                    {
+                                        var Losid = db.EmployeeComplaintWorkFlows.Where(s => s.LOSId == item.LOSId).ToList();
+                                        if (Losid.Count > 0)
+                                        {
+                                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.LOSId == item.Id && (i.ActionType == "Submitted" || i.ActionType == "Committee") && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                                            WorkFlows1.AddRange(WorkFlows);
+                                        }
+
+                                    }
+                                }
+                                if (SBULists != null)
+                                {
+                                    foreach (SBUMasterVM item in SBULists)
+                                    {
+
+
+                                        var SBUId = db.EmployeeComplaintWorkFlows.Where(s => s.SBUId == item.Id).ToList();
+                                        if (SBUId.Count > 0)
+                                        {
+                                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.SBUId == item.Id && (i.ActionType == "Submitted" || i.ActionType == "Committee") && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).Distinct().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+
+                                            WorkFlows1.AddRange(WorkFlows);
+
+                                        }
+                                    }
+                                }
+                                if (SubSBULists != null)
+                                {
+                                    foreach (SubSBUMasterVM item in SubSBULists)
+                                    {
+
+                                        WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.SubSBUId == item.Id && (i.ActionType == "Submitted" || i.ActionType == "Committee") && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).Distinct().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                                        WorkFlows1.AddRange(WorkFlows);
+                                    }
+                                }
+                            }
                         }
-                        else if(casestype=="Closed")
+
+
+                        else if (casestype == "Closed")
                         {
-                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.ActionType == "Completed" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+
+                            if (LOSLists != null || SBULists != null || SubSBULists != null)
+                            {
+                                if (LOSLists != null)
+                                {
+                                    foreach (LOSMasterVM item in LOSLists)
+                                    {
+                                        var Losid = db.EmployeeComplaintWorkFlows.Where(s => s.LOSId == item.LOSId).ToList();
+                                        if (Losid.Count > 0)
+                                        {
+                                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.LOSId == item.Id && (i.ActionType == "Completed") && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                                            WorkFlows1.AddRange(WorkFlows);
+                                        }
+
+                                    }
+                                }
+                                if (SBULists != null)
+                                {
+                                    foreach (SBUMasterVM item in SBULists)
+                                    {
+
+
+                                        var SBUId = db.EmployeeComplaintWorkFlows.Where(s => s.SBUId == item.Id).ToList();
+                                        if (SBUId.Count > 0)
+                                        {
+                                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.SBUId == item.Id && (i.ActionType == "Completed") && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).Distinct().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+
+                                            WorkFlows1.AddRange(WorkFlows);
+
+                                        }
+                                    }
+                                }
+                                if (SubSBULists != null)
+                                {
+                                    foreach (SubSBUMasterVM item in SubSBULists)
+                                    {
+
+                                        WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.SubSBUId == item.Id && (i.ActionType == "S") && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).Distinct().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                                        WorkFlows1.AddRange(WorkFlows);
+                                    }
+                                }
+                            }
+
+                            //WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.ActionType == "Completed" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
 
                         }
-                        if (WorkFlows != null && WorkFlows.Count > 0) /*&& usersList != null && usersList.Count > 0)*/
-                              {
-                            foreach (EmployeeComplaintWorkFlow item in WorkFlows)
+
+
+
+                        if (WorkFlows1 != null && WorkFlows1.Count > 0) /*&& usersList != null && usersList.Count > 0)*/
+                        {
+                            foreach (EmployeeComplaintWorkFlow item in WorkFlows1.Distinct())
                             {
                                 EmployeeComplaintWorkFlowVM catObj = Mapper.Map<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>(item);
                                 if (catObj != null)
@@ -638,14 +852,485 @@ namespace ComplaintManagement.Repository
             }
             return WorkFlowList;
         }
-        
+
         //2:55
         public List<EmployeeComplaintWorkFlowVM> GetAllTypeStageReport(string range, string casestage)
         {
             List<EmployeeComplaintWorkFlowVM> WorkFlowList = new List<EmployeeComplaintWorkFlowVM>();
             List<EmployeeComplaintWorkFlow> WorkFlows = new List<EmployeeComplaintWorkFlow>();
+            List<EmployeeComplaintWorkFlow> WorkFlows1 = new List<EmployeeComplaintWorkFlow>();
             List<HrRoleUserMasterVM> WorkFlowListed1 = new List<HrRoleUserMasterVM>();
             List<HR_Role> WorkFlow1 = new List<HR_Role>();
+            List<LOSMasterVM> LOSLists = new List<LOSMasterVM>();
+            List<SBUMasterVM> SBULists = new List<SBUMasterVM>();
+            List<SubSBUMasterVM> SubSBULists = new List<SubSBUMasterVM>();
+            var WorkFlowdata = new List<EmployeeComplaintWorkFlow>();
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+               .Select(c => c.Value).SingleOrDefault();
+
+
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                using (DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities())
+                {
+                    LOSLists = GetAllLOSdata();
+                    SBUMasterRepository sbr = new SBUMasterRepository();
+                    SBULists = sbr.GetAllSBU();
+                    SubSBUMasterRepository subsbr = new SubSBUMasterRepository();
+                    SubSBULists = subsbr.GetAllSubSBU();
+
+                    try
+                    {
+                        if (casestage == "Actionable")
+                        {
+                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive && i.CaseType == "Actionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+
+                            if (LOSLists != null || SBULists != null || SubSBULists != null)
+                            {
+                                if (LOSLists != null)
+                                {
+                                    foreach (LOSMasterVM item in LOSLists)
+                                    {
+                                        var Losid = db.EmployeeComplaintWorkFlows.Where(s => s.LOSId == item.LOSId).ToList();
+                                        if (Losid.Count > 0)
+                                        {
+
+                                            foreach (HR_Role items in WorkFlow1)
+                                            {
+                                                //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                                                WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.LOSId == item.Id && x.ComplaintId == items.ComplentId && x.CreatedBy == items.UserId && x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                                                WorkFlows1.AddRange(WorkFlows);
+                                            }
+
+                                        }
+                                    }
+                                }
+                                if (SBULists != null)
+                                {
+                                    foreach (SBUMasterVM item in SBULists)
+                                    {
+
+
+                                        var SBUId = db.EmployeeComplaintWorkFlows.Where(s => s.SBUId == item.Id).ToList();
+                                        if (SBUId.Count > 0)
+                                        {
+                                            foreach (HR_Role items in WorkFlow1)
+                                            {
+                                                //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                                                WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.LOSId == item.Id && x.ComplaintId == items.ComplentId && x.CreatedBy == items.UserId && x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                                                WorkFlows1.AddRange(WorkFlows);
+                                            }
+
+                                        }
+                                    }
+                                }
+                                if (SubSBULists != null)
+                                {
+                                    foreach (SubSBUMasterVM item in SubSBULists)
+                                    {
+                                        foreach (HR_Role items in WorkFlow1)
+                                        {
+                                            //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.LOSId == item.Id && x.ComplaintId == items.ComplentId && x.CreatedBy == items.UserId && x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                                            WorkFlows1.AddRange(WorkFlows);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (casestage == "NonActionable")
+                        {
+                            //WorkFlow1 = db.HR_Role.Where(i => i.IsActive && i.CaseType == "NonActionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive && i.CaseType == "NonActionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+
+                            if (LOSLists != null || SBULists != null || SubSBULists != null)
+                            {
+                                if (LOSLists != null)
+                                {
+                                    foreach (LOSMasterVM item in LOSLists)
+                                    {
+                                        var Losid = db.EmployeeComplaintWorkFlows.Where(s => s.LOSId == item.LOSId).ToList();
+                                        if (Losid.Count > 0)
+                                        {
+
+                                            foreach (HR_Role items in WorkFlow1)
+                                            {
+                                                //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                                                WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.LOSId == item.Id && x.ComplaintId == items.ComplentId && x.CreatedBy == items.UserId && x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                                                WorkFlows1.AddRange(WorkFlows);
+                                            }
+
+                                        }
+                                    }
+                                }
+                                if (SBULists != null)
+                                {
+                                    foreach (SBUMasterVM item in SBULists)
+                                    {
+
+
+                                        var SBUId = db.EmployeeComplaintWorkFlows.Where(s => s.SBUId == item.Id).ToList();
+                                        if (SBUId.Count > 0)
+                                        {
+                                            foreach (HR_Role items in WorkFlow1)
+                                            {
+                                                //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                                                WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.LOSId == item.Id && x.ComplaintId == items.ComplentId && x.CreatedBy == items.UserId && x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                                                WorkFlows1.AddRange(WorkFlows);
+                                            }
+
+                                        }
+                                    }
+                                }
+                                if (SubSBULists != null)
+                                {
+                                    foreach (SubSBUMasterVM item in SubSBULists)
+                                    {
+                                        foreach (HR_Role items in WorkFlow1)
+                                        {
+                                            //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.LOSId == item.Id && x.ComplaintId == items.ComplentId && x.CreatedBy == items.UserId && x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                                            WorkFlows1.AddRange(WorkFlows);
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        if (WorkFlows1 != null && WorkFlows1.Count > 0) /*&& usersList != null && usersList.Count > 0)*/
+                        {
+                            //foreach (HR_Role item in WorkFlow1)
+                            //{
+                            //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                            //WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.ComplaintId == item.ComplentId && x.CreatedBy==item.UserId ).ToList();
+
+                            foreach (EmployeeComplaintWorkFlow items in WorkFlows1.Distinct())
+                            {
+
+                                EmployeeComplaintWorkFlowVM catObj = Mapper.Map<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>(items);
+                                if (WorkFlows1 != null)
+                                {
+                                    catObj.CreatedByName = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                                    catObj.LOSName = db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId) != null ? db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId).LOSName : Messages.NotAvailable;
+                                    catObj.SBU = db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId) != null ? db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId).SBU : Messages.NotAvailable;
+                                    catObj.SubSbU = db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId) != null ? db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId).SubSBU : Messages.NotAvailable;
+                                    var ActionType = db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == items.Id) != null ? db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == items.Id).ActionType : Messages.NotAvailable;
+                                    if (ActionType == "Submitted" || ActionType == "Committee")
+                                    {
+                                        catObj.ActionType = "In-Progress";
+                                    }
+                                    else if (ActionType == "Completed")
+                                    {
+                                        catObj.ActionType = "Closed";
+                                    }
+                                    else if (ActionType == "Withdrawn")
+                                    {
+                                        catObj.ActionType = "Withdrawn";
+                                    }
+                                    else if (ActionType == "Opened")
+                                    {
+                                        catObj.ActionType = "Opened";
+                                    }
+
+                                    if (items.ComplaintNo != null)
+                                    {
+                                        catObj.ComplaintNo = items.ComplaintNo;
+                                    }
+                                    else
+                                    {
+                                        catObj.ComplaintNo = "Not Available";
+                                    }
+
+                                    if (items.ComplaintId != 0)
+                                    {
+                                        int reginoid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).RegionId;
+
+                                        int companyid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).Company;
+                                        int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).CategoryId;
+                                        int subcategoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).SubCategoryId;
+
+                                        if (casestage == "Actionable")
+                                        {
+                                            catObj.CaseType = "Actionable";
+                                        }
+                                        else if (casestage == "NonActionable")
+                                        {
+                                            catObj.CaseType = "NonActionable";
+                                        }
+                                        if (categoryid != 0)
+                                        {
+                                            catObj.CompanyName = db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName != null ? db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName : Messages.NotAvailable;
+                                            catObj.RegionName = db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region != null ? db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region : Messages.NotAvailable;
+                                            catObj.Category = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid) != null ? db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).CategoryName : Messages.NotAvailable;
+                                            catObj.SubCategory = db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid) != null ? db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid).SubCategoryName : Messages.NotAvailable;
+
+                                        }
+                                    }
+
+                                }
+                                WorkFlowList.Add(catObj);
+
+                            }
+
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                        throw new Exception(ex.Message.ToString());
+                    }
+                }
+            }
+
+            return WorkFlowList;
+        }
+
+        //added on 12/24/2020
+        public List<LOSMasterVM> GetAllLOSdata()
+        {
+            List<LOSMaster> LOS = new List<LOSMaster>();
+            List<LOSMasterVM> LOSList = new List<LOSMasterVM>();
+            List<LOSMasterVM> LOSLists = new List<LOSMasterVM>();
+            try
+            {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+
+
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    LOSLists = GetAll();
+
+                    foreach (LOSMasterVM item in LOSLists)
+                    {
+                        LOSMasterVM catObj = item;
+
+                        if (item.InvolvedUsersId != null)
+                        {
+                            var involveduser = item.InvolvedUsersId.Split(',');
+                            foreach (var items in involveduser)
+                            {
+                                if (sid == items)
+                                {
+                                    catObj.LOSName = item.LOSName;
+                                    catObj.LOSId = item.Id;
+                                    LOSList.Add(catObj);
+                                }
+
+
+
+                            }
+                        }
+
+                    }
+                }
+            }
+            
+
+
+
+
+
+
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return LOSList;
+        }
+        public List<CategoryMasterVM> GetAllCategoryReport()
+        {
+            List<CategoryMaster> category = new List<CategoryMaster>();
+            List<CategoryMasterVM> categoryList = new List<CategoryMasterVM>();
+            List<CategoryMasterVM> categoryLists = new List<CategoryMasterVM>();
+            List<LOSMasterVM> LOSLists = new List<LOSMasterVM>();
+            List<SBUMasterVM> SBULists = new List<SBUMasterVM>();
+            List<SubSBUMasterVM> SubSBULists = new List<SubSBUMasterVM>();
+            List<EmployeeComplaintWorkFlow> emp = new List<EmployeeComplaintWorkFlow>();
+            List<EmployeeComplaintMaster> emps = new List<EmployeeComplaintMaster>();
+            try
+            {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+
+
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    LOSLists = GetAllLOSdata();
+                    SBUMasterRepository sbr = new SBUMasterRepository();
+                    SBULists = sbr.GetAllSBU();
+                    SubSBUMasterRepository subsbr = new SubSBUMasterRepository();
+                    SubSBULists = subsbr.GetAllSubSBU();
+
+                    if (LOSLists != null || SBULists != null || SubSBULists != null)
+                    {
+                        if (LOSLists != null)
+                        {
+                            foreach (LOSMasterVM item in LOSLists)
+                            {
+
+                                emp = db.EmployeeComplaintWorkFlows.Where(x => x.LOSId == item.Id).ToList();
+                                if (emp != null)
+                                {
+                                    foreach (EmployeeComplaintWorkFlow items in emp)
+                                    {
+                                        if (items != null)
+                                        {
+
+                                            int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == items.ComplaintId).CategoryId;
+
+                                            CategoryMasterVM catObj = new CategoryMasterVM();
+                                            if (categoryid != 0)
+                                            {
+                                                catObj.CategoryName = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).CategoryName;
+                                                catObj.Id = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).Id;
+                                            }
+
+                                            categoryList.Add(catObj);
+
+                                        }
+
+
+                                    }
+                                }
+
+
+
+
+
+
+                            }
+                        }
+
+                        if (SBULists != null)
+                        {
+                            foreach (SBUMasterVM item in SBULists)
+                            {
+
+                                emp = db.EmployeeComplaintWorkFlows.Where(x => x.SBUId == item.Id).ToList();
+                                if (emp != null)
+                                {
+                                    foreach (EmployeeComplaintWorkFlow items in emp)
+                                    {
+                                        if (items != null)
+                                        {
+
+                                            int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == items.ComplaintId).CategoryId;
+
+                                            CategoryMasterVM catObj = new CategoryMasterVM();
+                                            if (categoryid != 0)
+                                            {
+                                                catObj.CategoryName = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).CategoryName;
+                                                catObj.Id = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).Id;
+                                            }
+
+                                            categoryList.Add(catObj);
+
+                                        }
+
+
+                                    }
+                                }
+
+
+
+
+
+
+                            }
+                        }
+
+                        if (SubSBULists != null)
+                        {
+                            foreach (SubSBUMasterVM item in SubSBULists)
+                            {
+
+                                emp = db.EmployeeComplaintWorkFlows.Where(x => x.SubSBUId == item.Id).ToList();
+                                if (emp != null)
+                                {
+                                    foreach (EmployeeComplaintWorkFlow items in emp)
+                                    {
+                                        if (items != null)
+                                        {
+
+                                            int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == items.ComplaintId).CategoryId;
+
+                                            CategoryMasterVM catObj = new CategoryMasterVM();
+                                            if (categoryid != 0)
+                                            {
+                                                catObj.CategoryName = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).CategoryName;
+                                                catObj.Id = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).Id;
+                                            }
+
+                                            categoryList.Add(catObj);
+
+                                        }
+
+
+                                    }
+                                }
+
+
+
+
+
+
+                            }
+                        }
+
+
+                    }
+
+
+
+                }
+
+
+
+            }
+
+
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            categoryList = categoryList.Distinct().ToList();
+
+            return categoryList;
+        }
+
+           public List<EmployeeComplaintWorkFlowVM> GetAllReportLos(string range, string values)
+        {
+
+
+            List<EmployeeComplaintWorkFlowVM> WorkFlowList = new List<EmployeeComplaintWorkFlowVM>();
+            List<EmployeeComplaintWorkFlow> WorkFlows = new List<EmployeeComplaintWorkFlow>();
+            List<LOSMasterVM> LOSLists = new List<LOSMasterVM>();
             if (!string.IsNullOrEmpty(range))
             {
                 string[] dates = range.Split(',');
@@ -655,80 +1340,403 @@ namespace ComplaintManagement.Repository
                 {
                     try
                     {
-                        if (casestage == "Actionable")
-                        {
-                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive && i.CaseType == "Actionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
 
-                        }
-                        else if(casestage== "NonActionable")
-                        {
-                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive && i.CaseType == "NonActionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                     LOSLists= GetAllLOSdata();
 
+                        foreach (var item in LOSLists)
+                        {
+                                WorkFlows.AddRange(db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.LOSId == item.Id && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList());
+                            
                         }
-                        if (WorkFlow1 != null && WorkFlow1.Count > 0) /*&& usersList != null && usersList.Count > 0)*/
-                          {
-                            foreach (HR_Role item in WorkFlow1)
+                       
+                        if (WorkFlows != null && WorkFlows.Count > 0) /*&& usersList != null && usersList.Count > 0)*/
+                        {
+                            foreach (EmployeeComplaintWorkFlow item in WorkFlows)
                             {
-                               //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
-
-                                WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.ComplaintId == item.ComplentId && x.CreatedBy==item.UserId ).ToList();
-
-                                foreach(EmployeeComplaintWorkFlow items in WorkFlows)
+                                EmployeeComplaintWorkFlowVM catObj = Mapper.Map<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>(item);
+                                if (catObj != null)
                                 {
-
-                                    EmployeeComplaintWorkFlowVM catObj = Mapper.Map<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>(items);
-                                    if (WorkFlows != null)
+                                    catObj.CreatedByName = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                                    catObj.UpdatedByName = db.UserMasters.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? db.UserMasters.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                                    catObj.LOSName = db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId) != null ? db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId).LOSName : Messages.NotAvailable;
+                                    catObj.SBU = db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId) != null ? db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId).SBU : Messages.NotAvailable;
+                                    catObj.SubSbU = db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId) != null ? db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId).SubSBU : Messages.NotAvailable;
+                                    var ActionType = db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == item.Id) != null ? db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == item.Id).ActionType : Messages.NotAvailable;
+                                    if (ActionType == "Submitted" || ActionType == "Committee")
                                     {
-                                        catObj.CreatedByName = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
-                                        catObj.LOSName = db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId) != null ? db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId).LOSName : Messages.NotAvailable;
-                                        catObj.SBU = db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId) != null ? db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId).SBU : Messages.NotAvailable;
-                                        catObj.SubSbU = db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId) != null ? db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId).SubSBU : Messages.NotAvailable;
-                                        var ActionType = db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == items.Id) != null ? db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == items.Id).ActionType : Messages.NotAvailable;
-                                        if (ActionType == "Submitted" || ActionType == "Committee")
-                                        {
-                                            catObj.ActionType = "In-Progress";
-                                        }
-                                        else if (ActionType == "Completed")
-                                        {
-                                            catObj.ActionType = "Closed";
-                                        }
-                                        else if (ActionType == "Withdrawn")
-                                        {
-                                            catObj.ActionType = "Withdrawn";
-                                        }
-                                        else if (ActionType == "Opened")
-                                        {
-                                            catObj.ActionType = "Opened";
-                                        }
+                                        catObj.ActionType = "In-Progress";
+                                    }
+                                    else if (ActionType == "Completed")
+                                    {
+                                        catObj.ActionType = "Closed";
+                                    }
+                                    else if (ActionType == "Withdrawn")
+                                    {
+                                        catObj.ActionType = "Withdrawn";
+                                    }
+                                    else if (ActionType == "Opened")
+                                    {
+                                        catObj.ActionType = "Opened";
+                                    }
 
-                                        if (items.ComplaintNo != null)
-                                        {
-                                            catObj.ComplaintNo = items.ComplaintNo;
-                                        }
-                                        else
-                                        {
-                                            catObj.ComplaintNo = "Not Available";
-                                        }
+                                    if (item.ComplaintNo != null)
+                                    {
+                                        catObj.ComplaintNo = item.ComplaintNo;
+                                    }
+                                    else
+                                    {
+                                        catObj.ComplaintNo = "Not Available";
+                                    }
 
-                                        if (items.ComplaintId != 0)
-                                        {
-                                            int reginoid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).RegionId;
+                                    if (item.ComplaintId != 0)
+                                    {
+                                        int reginoid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).RegionId;
 
-                                            int companyid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).Company;
-                                            int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).CategoryId;
-                                            int subcategoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).SubCategoryId;
-                                            catObj.CaseType = db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId && x.Id==item.Id) != null ? db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId && x.Id==item.Id).CaseType : Messages.NotAvailable;
-                                            if (categoryid != 0)
+                                        int companyid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).Company;
+                                        int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).CategoryId;
+                                        int subcategoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).SubCategoryId;
+                                        catObj.CaseType = db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId) != null ? db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId).CaseType : Messages.NotAvailable;
+                                        if (categoryid != 0)
+                                        {
+                                            catObj.CompanyName = db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName != null ? db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName : Messages.NotAvailable;
+                                            catObj.RegionName = db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region != null ? db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region : Messages.NotAvailable;
+                                            catObj.Category = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid) != null ? db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).CategoryName : Messages.NotAvailable;
+                                            catObj.SubCategory = db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid) != null ? db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid).SubCategoryName : Messages.NotAvailable;
+
+                                        }
+                                    }
+
+
+                                    WorkFlowList.Add(catObj);
+
+
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                        throw new Exception(ex.Message.ToString());
+                    }
+                }
+            }
+            return WorkFlowList;
+        }
+        public List<EmployeeComplaintWorkFlowVM> GetAllTypeReport(string range, string casestage)
+        {
+            List<EmployeeComplaintWorkFlowVM> WorkFlowList = new List<EmployeeComplaintWorkFlowVM>();
+            List<EmployeeComplaintWorkFlow> WorkFlows = new List<EmployeeComplaintWorkFlow>();
+            List<EmployeeComplaintWorkFlow> WorkFlows1 = new List<EmployeeComplaintWorkFlow>();
+            List<HrRoleUserMasterVM> WorkFlowListed1 = new List<HrRoleUserMasterVM>();
+            List<HR_Role> WorkFlow1 = new List<HR_Role>();
+            List<LOSMasterVM> LOSLists = new List<LOSMasterVM>();
+            List<SBUMasterVM> SBULists = new List<SBUMasterVM>();
+            List<SubSBUMasterVM> SubSBULists = new List<SubSBUMasterVM>();
+            var WorkFlowdata = new List<EmployeeComplaintWorkFlow>();
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+               .Select(c => c.Value).SingleOrDefault();
+
+
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                using (DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities())
+                {
+                    LOSLists = GetAllLOSdata();
+                    SBUMasterRepository sbr = new SBUMasterRepository();
+                    SBULists = sbr.GetAllSBU();
+                    SubSBUMasterRepository subsbr = new SubSBUMasterRepository();
+                    SubSBULists = subsbr.GetAllSubSBU();
+
+                    try
+                    {
+                        
+                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive  && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+
+                            if (LOSLists != null || SBULists != null || SubSBULists != null)
+                            {
+                                if (LOSLists != null)
+                                {
+                                    foreach (LOSMasterVM item in LOSLists)
+                                    {
+                                        var Losid = db.EmployeeComplaintWorkFlows.Where(s => s.LOSId == item.LOSId).ToList();
+                                        if (Losid.Count > 0)
+                                        {
+
+                                            foreach (HR_Role items in WorkFlow1)
                                             {
-                                                catObj.CompanyName = db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName != null ? db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName : Messages.NotAvailable;
-                                                catObj.RegionName = db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region != null ? db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region : Messages.NotAvailable;
-                                                catObj.Category = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid) != null ? db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).CategoryName : Messages.NotAvailable;
-                                                catObj.SubCategory = db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid) != null ? db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid).SubCategoryName : Messages.NotAvailable;
+                                                //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
 
+                                                WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.LOSId == item.Id && x.ComplaintId == items.ComplentId && x.CreatedBy == items.UserId && x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                                                WorkFlows1.AddRange(WorkFlows);
                                             }
+
+                                        }
+                                    }
+                                }
+                                if (SBULists != null)
+                                {
+                                    foreach (SBUMasterVM item in SBULists)
+                                    {
+
+
+                                        var SBUId = db.EmployeeComplaintWorkFlows.Where(s => s.SBUId == item.Id).ToList();
+                                        if (SBUId.Count > 0)
+                                        {
+                                            foreach (HR_Role items in WorkFlow1)
+                                            {
+                                                //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                                                WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.LOSId == item.Id && x.ComplaintId == items.ComplentId && x.CreatedBy == items.UserId && x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                                                WorkFlows1.AddRange(WorkFlows);
+                                            }
+
+                                        }
+                                    }
+                                }
+                                if (SubSBULists != null)
+                                {
+                                    foreach (SubSBUMasterVM item in SubSBULists)
+                                    {
+                                        foreach (HR_Role items in WorkFlow1)
+                                        {
+                                            //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.LOSId == item.Id && x.ComplaintId == items.ComplentId && x.CreatedBy == items.UserId && x.CreatedDate >= fromDate && x.CreatedDate <= toDate).ToList();
+
+                                            WorkFlows1.AddRange(WorkFlows);
+                                        }
+                                    }
+                                }
+                            }
+                        
+                       
+                        if (WorkFlows1 != null && WorkFlows1.Count > 0) /*&& usersList != null && usersList.Count > 0)*/
+                        {
+                            //foreach (HR_Role item in WorkFlow1)
+                            //{
+                            //HrRoleUserMasterVM catObj = Mapper.Map<HR_Role, HrRoleUserMasterVM>(item);
+
+                            //WorkFlows = db.EmployeeComplaintWorkFlows.Where(x => x.ComplaintId == item.ComplentId && x.CreatedBy==item.UserId ).ToList();
+
+                            foreach (EmployeeComplaintWorkFlow items in WorkFlows1.Distinct())
+                            {
+
+                                EmployeeComplaintWorkFlowVM catObj = Mapper.Map<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>(items);
+                                if (WorkFlows1 != null)
+                                {
+                                    catObj.CreatedByName = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                                    catObj.LOSName = db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId) != null ? db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId).LOSName : Messages.NotAvailable;
+                                    catObj.SBU = db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId) != null ? db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId).SBU : Messages.NotAvailable;
+                                    catObj.SubSbU = db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId) != null ? db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId).SubSBU : Messages.NotAvailable;
+                                    var ActionType = db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == items.Id) != null ? db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == items.Id).ActionType : Messages.NotAvailable;
+                                    if (ActionType == "Submitted" || ActionType == "Committee")
+                                    {
+                                        catObj.ActionType = "In-Progress";
+                                    }
+                                    else if (ActionType == "Completed")
+                                    {
+                                        catObj.ActionType = "Closed";
+                                    }
+                                    else if (ActionType == "Withdrawn")
+                                    {
+                                        catObj.ActionType = "Withdrawn";
+                                    }
+                                    else if (ActionType == "Opened")
+                                    {
+                                        catObj.ActionType = "Opened";
+                                    }
+
+                                    if (items.ComplaintNo != null)
+                                    {
+                                        catObj.ComplaintNo = items.ComplaintNo;
+                                    }
+                                    else
+                                    {
+                                        catObj.ComplaintNo = "Not Available";
+                                    }
+
+                                    if (items.ComplaintId != 0)
+                                    {
+                                        int reginoid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).RegionId;
+
+                                        int companyid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).Company;
+                                        int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).CategoryId;
+                                        int subcategoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).SubCategoryId;
+
+                                        if (casestage == "Actionable")
+                                        {
+                                            catObj.CaseType = "Actionable";
+                                        }
+                                        else if (casestage == "NonActionable")
+                                        {
+                                            catObj.CaseType = "NonActionable";
+                                        }
+                                        if (categoryid != 0)
+                                        {
+                                            catObj.CompanyName = db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName != null ? db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName : Messages.NotAvailable;
+                                            catObj.RegionName = db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region != null ? db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region : Messages.NotAvailable;
+                                            catObj.Category = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid) != null ? db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).CategoryName : Messages.NotAvailable;
+                                            catObj.SubCategory = db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid) != null ? db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid).SubCategoryName : Messages.NotAvailable;
+                                            catObj.CaseType = db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId) != null ? db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId).CaseType : Messages.NotAvailable;
+
+                                        }
+                                    }
+
+                                }
+                                WorkFlowList.Add(catObj);
+
+                            }
+
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                        throw new Exception(ex.Message.ToString());
+                    }
+                }
+            }
+
+            return WorkFlowList;
+        }
+        public List<EmployeeComplaintWorkFlowVM> GetAllStageReport(string range, string casestype)
+        {
+            List<EmployeeComplaintWorkFlowVM> WorkFlowList = new List<EmployeeComplaintWorkFlowVM>();
+            List<EmployeeComplaintWorkFlow> WorkFlows = new List<EmployeeComplaintWorkFlow>();
+            List<EmployeeComplaintWorkFlow> WorkFlows1 = new List<EmployeeComplaintWorkFlow>();
+            List<LOSMasterVM> LOSLists = new List<LOSMasterVM>();
+            List<SBUMasterVM> SBULists = new List<SBUMasterVM>();
+            List<SubSBUMasterVM> SubSBULists = new List<SubSBUMasterVM>();
+            var WorkFlowdata = new List<EmployeeComplaintWorkFlow>();
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+               .Select(c => c.Value).SingleOrDefault();
+
+
+            if (!string.IsNullOrEmpty(sid))
+            {
+                LOSLists = GetAllLOSdata();
+                SBUMasterRepository sbr = new SBUMasterRepository();
+                SBULists = sbr.GetAllSBU();
+                SubSBUMasterRepository subsbr = new SubSBUMasterRepository();
+                SubSBULists = subsbr.GetAllSubSBU();
+            }
+
+
+            if (!string.IsNullOrEmpty(range))
+            {
+                string[] dates = range.Split(',');
+                DateTime fromDate = Convert.ToDateTime(dates[0]);
+                DateTime toDate = Convert.ToDateTime(dates[1]);
+                using (DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities())
+                {
+                    try
+                    {
+                       
+                            if (LOSLists != null || SBULists != null || SubSBULists != null)
+                            {
+                                if (LOSLists != null)
+                                {
+                                    foreach (LOSMasterVM item in LOSLists)
+                                    {
+                                        var Losid = db.EmployeeComplaintWorkFlows.Where(s => s.LOSId == item.LOSId).ToList();
+                                        if (Losid.Count > 0)
+                                        {
+                                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.LOSId == item.Id && (i.ActionType == "Submitted" || i.ActionType == "Committee" || i.ActionType == "Completed") && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                                            WorkFlows1.AddRange(WorkFlows);
                                         }
 
                                     }
+                                }
+                                if (SBULists != null)
+                                {
+                                    foreach (SBUMasterVM item in SBULists)
+                                    {
+
+
+                                        var SBUId = db.EmployeeComplaintWorkFlows.Where(s => s.SBUId == item.Id).ToList();
+                                        if (SBUId.Count > 0)
+                                        {
+                                            WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.SBUId == item.Id && (i.ActionType == "Submitted" || i.ActionType == "Committee" || i.ActionType == "Completed") && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).Distinct().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+
+                                            WorkFlows1.AddRange(WorkFlows);
+
+                                        }
+                                    }
+                                }
+                                if (SubSBULists != null)
+                                {
+                                    foreach (SubSBUMasterVM item in SubSBULists)
+                                    {
+
+                                        WorkFlows = db.EmployeeComplaintWorkFlows.Where(i => i.IsActive && i.SubSBUId == item.Id && (i.ActionType == "Submitted" || i.ActionType == "Committee" || i.ActionType == "Completed") && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).Distinct().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                                        WorkFlows1.AddRange(WorkFlows);
+                                    }
+                                }
+                            }
+                        
+
+                     
+
+                        if (WorkFlows1 != null && WorkFlows1.Count > 0) /*&& usersList != null && usersList.Count > 0)*/
+                        {
+                            foreach (EmployeeComplaintWorkFlow item in WorkFlows1.Distinct())
+                            {
+                                EmployeeComplaintWorkFlowVM catObj = Mapper.Map<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>(item);
+                                if (catObj != null)
+                                {
+                                    catObj.CreatedByName = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
+                                    catObj.UpdatedByName = db.UserMasters.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? db.UserMasters.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                                    catObj.LOSName = db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId) != null ? db.LOSMasters.FirstOrDefault(x => x.Id == catObj.LOSId).LOSName : Messages.NotAvailable;
+                                    catObj.SBU = db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId) != null ? db.SBUMasters.FirstOrDefault(x => x.Id == catObj.SBUId).SBU : Messages.NotAvailable;
+                                    catObj.SubSbU = db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId) != null ? db.SubSBUMasters.FirstOrDefault(x => x.Id == catObj.SubSBUId).SubSBU : Messages.NotAvailable;
+                                    var ActionType = db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == item.Id) != null ? db.EmployeeComplaintWorkFlows.FirstOrDefault(x => x.Id == item.Id).ActionType : Messages.NotAvailable;
+
+                                    if (ActionType == "Submitted" || ActionType == "Committee")
+                                    {
+                                        catObj.ActionType = "In-Progress";
+                                    }
+                                    else if (ActionType == "Completed")
+                                    {
+                                        catObj.ActionType = "Closed";
+                                    }
+                                    else if (ActionType == "Withdrawn")
+                                    {
+                                        catObj.ActionType = "Withdrawn";
+                                    }
+                                    else if (ActionType == "Opened")
+                                    {
+                                        catObj.ActionType = "Opened";
+                                    }
+                                    if (item.ComplaintId != 0)
+                                    {
+                                        int reginoid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).RegionId;
+
+                                        int companyid = db.UserMasters.FirstOrDefault(x => x.Id == catObj.CreatedBy).Company;
+                                        int categoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).CategoryId;
+                                        int subcategoryid = db.EmployeeComplaintMasters.FirstOrDefault(x => x.Id == catObj.ComplaintId).SubCategoryId;
+                                        catObj.CaseType = db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId) != null ? db.HR_Role.FirstOrDefault(x => x.UserId == catObj.CreatedBy && x.ComplentId == catObj.ComplaintId).CaseType : Messages.NotAvailable;
+                                        if (categoryid != 0)
+                                        {
+                                            catObj.CompanyName = db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName != null ? db.EntityMasters.FirstOrDefault(x => x.Id == companyid).EntityName : Messages.NotAvailable;
+                                            catObj.RegionName = db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region != null ? db.RegionMasters.FirstOrDefault(x => x.Id == reginoid).Region : Messages.NotAvailable;
+                                            catObj.Category = db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid) != null ? db.CategoryMasters.FirstOrDefault(x => x.Id == categoryid).CategoryName : Messages.NotAvailable;
+                                            catObj.SubCategory = db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid) != null ? db.SubCategoryMasters.FirstOrDefault(x => x.Id == subcategoryid).SubCategoryName : Messages.NotAvailable;
+
+                                        }
+                                    }
+
+
                                     WorkFlowList.Add(catObj);
                                 }
                             }

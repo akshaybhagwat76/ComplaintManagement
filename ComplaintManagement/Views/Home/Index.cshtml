@@ -5,6 +5,7 @@
     int userId = 0; string userRole = string.Empty;
     var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
     ViewBag.Title = "Home Page";
+    ViewBag.heading = "Dashboard";
 
     if (claimsIdentity != null)
     {
@@ -25,136 +26,267 @@
     var OverDueComplaints = Model.OverDueComplaints;
     var AwaitingComplaints = Model.AwaitingComplaints;
 }
-    @Html.Hidden("Role", userRole)
-        <div class="container-fluid">
-            <div class="page-title mb-3">
-                <h2 class="text-black">Overview</h2>
+    @*<script src="~/Scripts/vendor/datepicker/bootstrap-datepicker.js"></script>*@
+@*<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"/>*@
+@Html.Hidden("Role", userRole)
+<div class="container-fluid">
+    <div class="page-title mb-3">
+        <h2 class="text-black">Overview</h2>
+    </div>
+    <div class="card mb-4 rounded-0 border-0">
+        <div class="card-body text-black">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    @*<h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>*@
+                    @{
+
+                        if (DueComplaints > 0)
+                        {
+                            <a onclick="getDueComplaints()" id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
+                                <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
+                                <strong>Due Complaints</strong>
+                            </a>
+                        }
+                        else
+                        {
+                            <a id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
+                                <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
+                                <strong>Due Complaints</strong>
+                            </a>
+                        }
+                    }
+
+                </div>
+                <div class="col-md-4 text-center">
+                    @{
+                        if (OverDueComplaints > 0)
+                        {
+                            <a onclick="getOverDueComplaints()" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
+                        }
+                        else
+                        {
+                            <a id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
+                        }
+                    }
+                </div>
+                <div class="col-md-4 text-center">
+                    @{
+                        if (AwaitingComplaints > 0)
+                        {
+                            <a id="awaitingComplaint" onclick="getAwaitingComplaint()" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
+                        }
+                        else
+                        {
+                            <a id="awaitingComplaint" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
+                        }
+                    }
+                </div>
             </div>
-            <div class="card mb-4 rounded-0 border-0">
-                <div class="card-body text-black">
-                    <div class="row">
-                        <div class="col-md-4 text-center">
-                            @*<h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>*@
-                            @{
+        </div>
+    </div>
+    <div class="card mb-4 rounded-0 border-0 divHideShow" style="display:none;">
+        <div class="card-body py-2">
+            <div class="ow justify-content-between">
+                <div class="col-md-12">
+                    <ul class="nav">
+                        <li class="nav-item mr-3">
+                            <select name="ddlChart" id="ddlChart" class="form-control">
+                                <option value="default">Default</option>
+                                <option value="comparison">Comparison</option>
+                            </select>
+                        </li>
+                        <li class="nav-item mr-3">
+                            <input type="text" id="txt_dateFrom" class="form-control" placeholder="From Date"/>
+                        </li>
+                        <li class="nav-item mr-3">
+                            <input type="text" id="txt_dateTo" class="form-control" placeholder="To Date"/>
+                        </li>
+                        <li class="nav-item mr-3">
+                            <button type="submit" id="btn_dataSearch" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-search"></i></button>
+                        </li>
+                    </ul>
+                </div>
 
-                                if (DueComplaints > 0)
-                                {
-                                    <a onclick="getDueComplaints()" id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
-                                        <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
-                                        <strong>Due Complaints</strong>
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
-                                        <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
-                                        <strong>Due Complaints</strong>
-                                    </a>
-                                }
-                            }
-
-                        </div>
-                        <div class="col-md-4 text-center">
-                            @{
-                                if (OverDueComplaints > 0)
-                                {
-                                    <a onclick="getOverDueComplaints()" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
-                                }
-                                else
-                                {
-                                    <a id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
-                                }
-                            }
-                        </div>
-                        <div class="col-md-4 text-center">
-                            @{
-                                if (AwaitingComplaints > 0)
-                                {
-                                    <a id="awaitingComplaint" onclick="getAwaitingComplaint()" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
-                                }
-                                else
-                                {
-                                    <a id="awaitingComplaint" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
-                                }
-                            }
-                        </div>
+            </div>
+        </div>
+    </div>
+    <!-- Tab Bar -->
+    <div class="user-list divHideShow" id="divPieChart" style="display:none;">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6" id="divCaseTypeChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">Case Type</span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="caseTypeChart"></canvas>
                     </div>
                 </div>
             </div>
-            @*<div class="card mb-4 rounded-0 border-0">
-                    <div class="card-body py-2">
-                        <div class="ow justify-content-between">
-                            <div class="col-md-10">
-                                <ul class="nav">
-                                    <li class="nav-item mr-3">
-                                        <input type="text" class="form-control" placeholder="From Date" />
-                                    </li>
-                                    <li class="nav-item mr-3">
-                                        <input type="text" class="form-control" placeholder="To Date" />
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-md-2">
-                                <ul class="nav justify-content-end">
-                                    <li class="nav-item">
-                                        <button type="submit" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-search"></i></button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+            <div class="col-xl-6 col-lg-6" id="divCategoryChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">Category wise</span>
                     </div>
-                </div>*@
-            <!-- Tab Bar -->
-            <div class="user-list">
-                <div class="row">
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="card mb-4 rounded-0 border-0">
-                            <div class="card-header">
-                                <span class="text-success">Category wise</span>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <canvas id="categoryChart"></canvas>
-                            </div>
-                        </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="categoryChart"></canvas>
                     </div>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="card mb-4 rounded-0 border-0">
-                            <div class="card-header">
-                                <span class="text-success">Sub-Category wise</span>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <canvas id="subcategoryChart"></canvas>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divSubCategoryChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">Sub-Category wise</span>
                     </div>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="card mb-4 rounded-0 border-0">
-                            <div class="card-header">
-                                <span class="text-success">LOS wise</span>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <canvas id="losChart"></canvas>
-                            </div>
-                        </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="subCategoryChart"></canvas>
                     </div>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="card mb-4 rounded-0 border-0">
-                            <div class="card-header">
-                                <span class="text-success">Overall Status wise</span>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <canvas id="overallChart"></canvas>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divRegionChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">Region wise</span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="regionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divOfficeChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">Office wise</span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="officeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divLosChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">LOS wise</span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="losChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divSbuChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">SBU wise</span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="sbuChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divSubSBUChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">Sub-SBU wise</span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="subSBUChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divGenderOfComplainantChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">
+                            Gender of Complainant
+                        </span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="genderOfComplainantChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divGenderOfRespondentChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">
+                            Gender of Respondent
+                        </span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="genderOfRespondentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divDesignationOfComplainantChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">
+                            Designation of Complainant
+                        </span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="designationOfComplainantChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divDesignationOfRespondentChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">
+                            Designation of Respondent
+                        </span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="designationOfRespondentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6" id="divModeofComplaintChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">
+                            Mode of Complaint
+                        </span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="modeofComplaintChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-6 col-lg-6" id="divAgeingChart">
+                <div class="card mb-4 rounded-0 border-0">
+                    <div class="card-header">
+                        <span class="text-success">
+                            Ageing/Case Closure
+                        </span>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <canvas id="ageingChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+
 @Scripts.Render("~/plugins/Chart")
+
 @Scripts.Render("~/Assets/EmployeeComplaintDashboard")
 
 @*<div class="modal" id="dueComplaints">

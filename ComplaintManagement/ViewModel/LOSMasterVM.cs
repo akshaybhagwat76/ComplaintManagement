@@ -30,7 +30,12 @@ namespace ComplaintManagement.ViewModel
     public string CaseType { get; set; }
         public string typevalues { get; set; }
 
-        public string UserInvolved { get; set; }
-        public string Comment { get; set; }
+        public string UsersInvolved { get; set; }
+        public string Comments { get; set; }
+        public string fromDate { get; set; }
+public string toDate { get; set; }
+        public int losid { get; set; }
+
+
     }
 }

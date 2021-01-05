@@ -209,6 +209,44 @@ function SearchLosReport() {
     var Id = $("#Id").val();
 }
 
+//12/30/2020
+$("#sendemail").on('click',function () {
+    var fromDate = $("#fromDate").val();
+    var toDate = $("#toDate").val();
+    var range = fromDate + ',' + toDate;
+    var losid = $("#typevalues option:selected").val();
+
+
+    var comment = $(".comment").val();
+    var userID = [];
+    $(".test").each(function () {
+        userID.push($('.test').val());
+    });
+
+    if (fromDate == "" || toDate == "" || losid == "") {
+        funToastr(false, "Please select from and to date and a LOSName"); return;
+    }
+    else {
+
+        $.get('/LOS/UserMail', $.param({
+            userID: userID, comment: comment, range: range, losid: losid
+        }, true), function (data) {
+            if (data.status != "Fail") {
+
+                $('#ModalPopUp').modal('hide');
+                alert("mail has been sent");
+
+
+            }
+            else {
+
+                $('#ModalPopUp').modal('show');
+                alert("mail has not sent");
+            }
+        });
+    }
+});
+
 
 
 
