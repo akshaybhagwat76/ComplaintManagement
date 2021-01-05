@@ -254,8 +254,8 @@ function DashboardPiGraphData() {
                     myChart.destroy();
                 }
                 myChart = new Chart(ctx, {
-                    position: 'right',
-                    type: 'doughnut',
+                    //position: 'right',
+                    type: 'pie',
                     data: result,
                     data: {
                         labels: Labels,
@@ -263,14 +263,14 @@ function DashboardPiGraphData() {
                             backgroundColor: Colors,
                             data: Values,
                             datalabels: {
-                                anchor: 'start'
+                                anchor: 'end'
                             }
                         }]
                     },
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
                         },
                         tooltips: {
                             enabled: true
@@ -314,9 +314,8 @@ function DashboardPiGraphData() {
                     myChart1.destroy();
                 }
                 myChart1 = new Chart(ctx1, {
-                    position: 'right',
+                    //position: 'right',
                     type: 'pie',
-
                     data: {
                         labels: Labels,
                         datasets: [{
@@ -331,7 +330,7 @@ function DashboardPiGraphData() {
                     options: {
                         //responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
                            
                         },
                         tooltips: {
