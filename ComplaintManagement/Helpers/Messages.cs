@@ -136,6 +136,7 @@
         public const string COMPLETED = "Completed";
         public const string XLSX = ".xlsx";
         public const string InProgress = "In-Progress";
+        public const string Draft = "Draft";
 
         //Image paths
         public const string LOGOIMG = "logo";

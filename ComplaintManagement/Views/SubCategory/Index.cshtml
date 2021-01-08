@@ -71,6 +71,7 @@
                             <table class="table f-14" id="myTable">
                                 <thead>
                                     <tr>
+                                        <td class="text-center">Category</td>
                                         <td class="text-center">Sub Category</td>
                                         <td class="text-center">Created Date</td>
                                         <td class="text-center">Created By</td>
@@ -83,39 +84,40 @@
                                 <tbody>
                                     @foreach (var item in ViewBag.lstSubCategory)
                                     {
-                                        <tr>
-                                            <td class="text-black text-center"><strong>@item.SubCategoryName</strong></td>
-                                            <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
-                                            <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
-                                            <td class="text-black text-center">
-                                                <strong>
-                                                    @if (item.UpdatedDate != null)
-                                                    {
-                                                        @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.Raw(Messages.NotAvailable.ToString())
-                                                    }
-                                                </strong>
-                                            </td>
-                                            <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
-                                            <td class="text-black text-center">
-                                                <strong>
-                                                    @if (item.Status == true)
-                                                    {@Html.Raw("Active") }
+                                    <tr>
+                                        <td class="text-black text-center"><strong>@item.Category</strong></td>
+                                        <td class="text-black text-center"><strong>@item.SubCategoryName</strong></td>
+                                        <td class="text-black text-center"><strong>@item.CreatedDate.ToString("dd/MM/yyyy").Replace("-", "/")</strong></td>
+                                        <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                                        <td class="text-black text-center">
+                                            <strong>
+                                                @if (item.UpdatedDate != null)
+                                                {
+                                                    @Html.Raw(item.UpdatedDate.ToString("dd/MM/yyyy").Replace("-", "/"))
+                                                }
                                                 else
-                                                { @Html.Raw("Inactive")}
-                                                </strong>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="javascript:void(0)" onclick="deleteSubCategory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                <a href="/SubCategory/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
+                                                {
+                                                    @Html.Raw(Messages.NotAvailable.ToString())
+                                                }
+                                            </strong>
+                                        </td>
+                                        <td class="text-black text-center"><strong>@item.UpdatedByName</strong></td>
+                                        <td class="text-black text-center">
+                                            <strong>
+                                                @if (item.Status == true)
+                                                {@Html.Raw("Active") }
+                                            else
+                                            { @Html.Raw("Inactive")}
+                                            </strong>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                            <a href="javascript:void(0)" onclick="deleteSubCategory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                                            <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
+                                            <a href="/SubCategory/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
 
-                                            </td>
-                                        </tr>
+                                        </td>
+                                    </tr>
                                     }
                                 </tbody>
 

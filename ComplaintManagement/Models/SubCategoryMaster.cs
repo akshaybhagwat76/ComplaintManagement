@@ -22,5 +22,8 @@ namespace ComplaintManagement.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public int CreatedBy { get; set; }
         public int ModifiedBy { get; set; }
+        public Nullable<int> CategoryId { get; set; }
+    
+        public virtual CategoryMaster CategoryMaster { get; set; }
     }
 }

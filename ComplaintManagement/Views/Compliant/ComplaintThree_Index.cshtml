@@ -95,6 +95,8 @@
                                                         <td>Sub-Category</td>
                                                         <td>Created By</td>
                                                         <td>Created On</td>
+                                                        <td class="text-center">Pending With</td>
+                                                        <td class="text-center">Status</td>
                                                         <td class="text-center">Action</td>
                                                     </tr>
                                                 </thead>
@@ -107,17 +109,42 @@
                                                 {
                                                     foreach (var item in ViewBag.lstEmployeeComplaint)
                                                     {
-                                                        <tr>
-                                                            <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
-                                                            <td class="text-black"><strong>@item.Category</strong></td>
-                                                            <td class="text-black"><strong>@item.SubCategory</strong></td>
-                                                            <td class="text-black"><strong>@item.CreatedByName</strong></td>
-                                                            <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
-                                                            <td class="text-center text-nowrap">
-                                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                                <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-info text-danger"></i></a>
-                                                            </td>
-                                                        </tr>
+                                            <tr>
+                                                <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
+                                                <td class="text-black"><strong>@item.Category</strong></td>
+                                                <td class="text-black"><strong>@item.SubCategory</strong></td>
+                                                <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                                                <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                                                <td class="text-black text-center"><strong>@item.LastPerformedBy</strong></td>
+                                                <td class="text-black text-center">
+                                                    <strong>
+                                                        @if (item.ActionType == Messages.SUBMITTED || item.ActionType == Messages.COMMITTEE)
+                                                        {
+                                                            @Html.Raw(Messages.InProgress)
+                                                        }
+                                                        else if (item.ActionType == Messages.Opened)
+                                                        {
+                                                            @Html.Raw(Messages.Draft)
+                                                        }
+                                                        else
+                                                        {
+                                                            @item.ActionType
+                                                        }
+
+                                                    </strong>
+                                                </td>
+                                                <td class="text-center text-nowrap">
+                                                    @if (item.ActionType.ToLower() == Messages.COMMITTEE.ToLower())
+                                                    {
+                                                        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2  disabled-div"><i class="fas fa-edit text-danger"></i></a>
+                                                    }
+                                                    <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-info text-danger"></i></a>
+                                                </td>
+                                            </tr>
                                                     }
                                                 }
                                                 else

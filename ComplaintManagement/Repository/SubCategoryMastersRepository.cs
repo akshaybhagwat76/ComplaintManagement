@@ -124,6 +124,7 @@ namespace ComplaintManagement.Repository
 
                             catObj.CreatedByName = usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.CreatedBy).EmployeeName : string.Empty;
                             catObj.UpdatedByName = usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy) != null ? usersList.FirstOrDefault(x => x.Id == catObj.ModifiedBy).EmployeeName : Messages.NotAvailable;
+                            catObj.Category = item.CategoryMaster != null ? item.CategoryMaster.CategoryName : string.Empty;
                             SubcategoryList.Add(catObj);
                         }
                     }
@@ -198,6 +199,14 @@ namespace ComplaintManagement.Repository
         public bool IsExist(string SubCategoryName)
         {
             return db.SubCategoryMasters.Count(x => x.IsActive && x.SubCategoryName.ToUpper() == SubCategoryName.ToUpper()) > 0;
+        }
+        public bool IsCategoryExist(int CategoryId)
+        {
+            return db.SubCategoryMasters.Count(x => x.IsActive && x.CategoryId == CategoryId) > 0;
+        }
+        public bool IsCategoryExist(int CategoryId,int id)
+        {
+            return db.SubCategoryMasters.Count(x => x.IsActive && x.CategoryId == CategoryId && x.Id != id) > 0;
         }
 
         public bool IsExist(string SubCategoryName, int id)

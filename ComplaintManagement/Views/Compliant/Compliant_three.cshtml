@@ -362,13 +362,27 @@
                                         {
                                             foreach (var item in ViewBag.lstComplaintHistory)
                                             {
-                                                <tr>
-                                                    <td class="text-black"><strong>@item.CreatedByName</strong></td>
-                                                    <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
-                                                    <td class="text-black"><strong>@item.Remarks</strong></td>
-                                                    <td class="text-black"><strong>@item.UserType</strong></td>
-                                                    <td class="text-black"><strong>@item.ActionType</strong></td>
-                                                </tr>
+                                    <tr>
+                                        <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                                        <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                                        <td class="text-black"><strong>@item.Remarks</strong></td>
+                                        <td class="text-black"><strong>@item.UserType</strong></td>
+                                        @{
+                                            <td class="text-black">
+                                                <strong>
+                                                    @if (item.ActionType == Messages.Opened)
+                                                    {
+                                                        @Html.Raw(Messages.Draft.ToString())
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.ActionType
+                                                    }
+
+                                                </strong>
+                                            </td>
+                                        }
+                                    </tr>
                                             }
                                         }
                                         else

@@ -26,7 +26,7 @@
     var OverDueComplaints = Model.OverDueComplaints;
     var AwaitingComplaints = Model.AwaitingComplaints;
 }
-    @*<script src="~/Scripts/vendor/datepicker/bootstrap-datepicker.js"></script>*@
+@*<script src="~/Scripts/vendor/datepicker/bootstrap-datepicker.js"></script>*@
 @*<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"/>*@
 @Html.Hidden("Role", userRole)
 <div class="container-fluid">
@@ -96,10 +96,10 @@
                             </select>
                         </li>
                         <li class="nav-item mr-3">
-                            <input type="text" id="txt_dateFrom" class="form-control" placeholder="From Date"/>
+                            <input type="text" id="txt_dateFrom" class="form-control" placeholder="From Date" />
                         </li>
                         <li class="nav-item mr-3">
-                            <input type="text" id="txt_dateTo" class="form-control" placeholder="To Date"/>
+                            <input type="text" id="txt_dateTo" class="form-control" placeholder="To Date" />
                         </li>
                         <li class="nav-item mr-3">
                             <button type="submit" id="btn_dataSearch" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-search"></i></button>
@@ -266,7 +266,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-xl-6 col-lg-6" id="divAgeingChart">
                 <div class="card mb-4 rounded-0 border-0">
                     <div class="card-header">
@@ -359,3 +359,4 @@
 @Html.Partial("_ComplaintAwaiting")
 @Html.Partial("_ComplaintDue")
 @Html.Partial("_ComplaintOverDue")
+@Html.Partial("_DashboardChartTable")

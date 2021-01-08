@@ -43,6 +43,21 @@
                                 <input type="hidden" value="@Model.Id" id="Id" />
                                 <div class="form-group row">
                                     <div class="col-sm-9 mb-3">
+                                        @Html.LabelFor(model => model.CategoryId, new { @class = "requiredLabel" })
+                                        @{
+                                            List<SelectListItem> listCategory = new List<SelectListItem>();
+                                            listCategory = new List<SelectListItem>();
+                                            listCategory.Add(new SelectListItem
+                                            {
+                                                Text = "",
+                                                Value = ""
+                                            });
+                                            listCategory.AddRange(ViewBag.categoryList);
+                                        }
+
+                                        @Html.DropDownList("CategoryId", (List<SelectListItem>)listCategory, new { @class = "form-control required" })
+                                    </div>
+                                    <div class="col-sm-9 mb-3">
                                         @Html.LabelFor(model => model.SubCategoryName, new { @class = "requiredLabel" })
                                         @Html.EditorFor(model => model.SubCategoryName, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Sub Category Name", @onfocusout = "checkDuplicate()" } })
                                     </div>

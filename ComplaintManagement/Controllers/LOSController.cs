@@ -2230,20 +2230,20 @@ namespace ComplaintManagement.Controllers
 
 
 
+                    ws.Cells[rowNumber, 5].Style.Font.Bold = true;
+                    ws.Cells[rowNumber, 5].Value = Messages.Company;
+
                     ws.Cells[rowNumber, 6].Style.Font.Bold = true;
-                    ws.Cells[rowNumber, 6].Value = Messages.Company;
+                    ws.Cells[rowNumber, 6].Value = Messages.LOS;
 
                     ws.Cells[rowNumber, 7].Style.Font.Bold = true;
-                    ws.Cells[rowNumber, 7].Value = Messages.LOS;
+                    ws.Cells[rowNumber, 7].Value = Messages.SBU;
 
                     ws.Cells[rowNumber, 8].Style.Font.Bold = true;
-                    ws.Cells[rowNumber, 8].Value = Messages.SBU;
+                    ws.Cells[rowNumber, 8].Value = Messages.SubSBU;
 
                     ws.Cells[rowNumber, 9].Style.Font.Bold = true;
-                    ws.Cells[rowNumber, 9].Value = Messages.SubSBU;
-
-                    ws.Cells[rowNumber, 10].Style.Font.Bold = true;
-                    ws.Cells[rowNumber, 10].Value = Messages.CaseStage;
+                    ws.Cells[rowNumber, 9].Value = Messages.CaseStage;
 
                     ws.Cells[rowNumber, 10].Style.Font.Bold = true;
                     ws.Cells[rowNumber, 10].Value = Messages.CaseType;

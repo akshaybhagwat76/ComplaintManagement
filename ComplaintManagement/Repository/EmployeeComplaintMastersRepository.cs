@@ -480,8 +480,8 @@ namespace ComplaintManagement.Repository
                                         {
                                             UserRole = new UserMastersRepository().Get(Convert.ToInt32(Ids)).Type;
                                         }
-                                        UserName = new UserMastersRepository().Get(Convert.ToInt32(Ids)).EmployeeName;// + ", ";
-                                        PendingWith += UserName + "(" + UserRole + ")" + ", ";
+                                        //UserName = new UserMastersRepository().Get(Convert.ToInt32(Ids)).EmployeeName;// + ", ";
+                                        PendingWith = UserRole;//+= UserName + "(" + UserRole + ")" + ", ";
                                     }
                                 }
                                 else

@@ -79,12 +79,27 @@ namespace ComplaintManagement.ViewModel
     }
     public class ListPiAndBarChartVM
     {
+        public int Ids { get; set; }
         public int Value1 { get; set; }
         public int Value2 { get; set; }
         public string Label { get; set; }
         public int Year { get; set; }
+        public string Url { get; set; }
 
     }
-    
+
+    public class TableListPiAndBarChartVM
+    {
+        public int ComplaintId { get; set; }
+        public string LOSName { get; set; }
+        public string Category { get; set; }
+        public string SubCategory { get; set; }
+        public string CreatedBy { get; set; }
+        public string CreatedOn { get; set; }
+        public string CaseNo{get;set;}
+
+
+    }
+
 
 }

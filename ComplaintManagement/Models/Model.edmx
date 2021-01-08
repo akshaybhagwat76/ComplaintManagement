@@ -443,6 +443,7 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="ModifiedBy" Type="int" Nullable="false" />
+          <Property Name="CategoryId" Type="int" />
         </EntityType>
         <EntityType Name="SubCategoryMasters_History">
           <Key>
@@ -576,6 +577,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubCategoryMasters_CategoryMasters">
+          <End Role="CategoryMasters" Type="Self.CategoryMasters" Multiplicity="0..1" />
+          <End Role="SubCategoryMasters" Type="Self.SubCategoryMasters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CategoryMasters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubCategoryMasters">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserMasters_CompetencyMasters">
           <End Role="CompetencyMasters" Type="Self.CompetencyMasters" Multiplicity="1" />
           <End Role="UserMasters" Type="Self.UserMasters" Multiplicity="*" />
@@ -690,6 +703,10 @@
             <End Role="EmployeeComplaintMasters" EntitySet="EmployeeComplaintMasters" />
             <End Role="EmployeeComplaintWorkFlow" EntitySet="EmployeeComplaintWorkFlow" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubCategoryMasters_CategoryMasters" Association="Self.FK_SubCategoryMasters_CategoryMasters">
+            <End Role="CategoryMasters" EntitySet="CategoryMasters" />
+            <End Role="SubCategoryMasters" EntitySet="SubCategoryMasters" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserMasters_CompetencyMasters" Association="Self.FK_UserMasters_CompetencyMasters">
             <End Role="CompetencyMasters" EntitySet="CompetencyMasters" />
             <End Role="UserMasters" EntitySet="UserMasters" />
@@ -785,6 +802,10 @@
             <End Role="SubSBUMaster" EntitySet="SubSBUMasters" />
             <End Role="UserMaster" EntitySet="UserMasters" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubCategoryMasters_CategoryMasters" Association="DB_A6A061_complaintuserModel.FK_SubCategoryMasters_CategoryMasters">
+            <End Role="CategoryMaster" EntitySet="CategoryMasters" />
+            <End Role="SubCategoryMaster" EntitySet="SubCategoryMasters" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="CategoryMaster">
           <Key>
@@ -798,6 +819,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="SubCategoryMasters" Relationship="DB_A6A061_complaintuserModel.FK_SubCategoryMasters_CategoryMasters" FromRole="CategoryMaster" ToRole="SubCategoryMaster" />
         </EntityType>
         <EntityType Name="CategoryMasters_History">
           <Key>
@@ -1232,6 +1254,8 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
+          <Property Name="CategoryId" Type="Int32" />
+          <NavigationProperty Name="CategoryMaster" Relationship="DB_A6A061_complaintuserModel.FK_SubCategoryMasters_CategoryMasters" FromRole="SubCategoryMaster" ToRole="CategoryMaster" />
         </EntityType>
         <EntityType Name="SubCategoryMasters_History">
           <Key>
@@ -1442,6 +1466,18 @@
             </Principal>
             <Dependent Role="UserMaster">
               <PropertyRef Name="SubSBUId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubCategoryMasters_CategoryMasters">
+          <End Type="DB_A6A061_complaintuserModel.CategoryMaster" Role="CategoryMaster" Multiplicity="0..1" />
+          <End Type="DB_A6A061_complaintuserModel.SubCategoryMaster" Role="SubCategoryMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CategoryMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubCategoryMaster">
+              <PropertyRef Name="CategoryId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1907,6 +1943,7 @@
           <EntitySetMapping Name="SubCategoryMasters">
             <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.SubCategoryMaster">
               <MappingFragment StoreEntitySet="SubCategoryMasters">
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />

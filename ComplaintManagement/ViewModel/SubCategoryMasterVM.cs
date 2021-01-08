@@ -20,5 +20,8 @@ namespace ComplaintManagement.ViewModel
         public string CreatedByName { get; set; }
         public string UpdatedByName { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
+        [DisplayName("Category")]
+        public int CategoryId { get; set; }
+        public string Category { get; set; }
     }
 }

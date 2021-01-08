@@ -1,0 +1,53 @@
+﻿@using ComplaintManagement.Helpers
+
+<div class="table-responsive">
+    <table class="table f-14 border" data-order='[[0, "desc"]]' id="dashboardChart" style="width:100%">
+        @if (ViewBag.dashboardChartWiseData != null)
+        {
+            if (ViewBag.dashboardChartWiseData.Count > 0)
+            {
+                <thead>
+                    <tr>
+                        <td>LOS</td>
+                        <td>Category</td>
+                        <td>Sub-Category</td>
+                        <td>Created By</td>
+                        <td>Created On</td>
+                        <td>Case No</td>
+                    </tr>
+                </thead>
+            }
+        }
+        <tbody>
+            @if (ViewBag.dashboardChartWiseData != null)
+            {
+                if (ViewBag.dashboardChartWiseData.Count > 0)
+                {
+                    foreach (var item in ViewBag.dashboardChartWiseData)
+                    {
+            <tr>
+                <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
+                <td class="text-black"><strong>@item.Category</strong></td>
+                <td class="text-black"><strong>@item.SubCategory</strong></td>
+                <td class="text-black"><strong>@item.CreatedBy</strong></td>
+                <td class="text-black"><strong>@item.CreatedOn</strong></td>
+                <td class="text-black"><strong>@item.CaseNo</strong></td>
+            </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5"><label>No data found.</label></td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5"><label>No data found.</label></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

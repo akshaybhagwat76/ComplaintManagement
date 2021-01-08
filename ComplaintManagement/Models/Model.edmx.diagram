@@ -55,6 +55,7 @@
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_RegionMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" />
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_SubCategoryMasters_CategoryMasters" />
         
         
         

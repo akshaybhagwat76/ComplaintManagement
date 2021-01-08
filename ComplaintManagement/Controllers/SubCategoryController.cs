@@ -120,6 +120,34 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+        public JsonResult CheckIfCategoryExist(SubCategoryMasterVM data)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(data.CategoryId.ToString()))
+                {
+                    var Subcategory = false;
+                    if (data.Id == 0)
+                    {
+                        Subcategory = new SubCategoryMastersRepository().IsCategoryExist(data.CategoryId);
+                    }
+                    else
+                    {
+                        Subcategory = new SubCategoryMastersRepository().IsCategoryExist(data.CategoryId, data.Id);
+                    }
+                    return new ReplyFormat().Success(Messages.SUCCESS, Subcategory);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
         public List<SubCategoryMasterVM> GetAll(int currentPage, string range = "")
         {
             int maxRows = 10; int lstCount = 0;
@@ -265,6 +293,7 @@ namespace ComplaintManagement.Controllers
         public ActionResult Create()
         {
             SubCategoryMasterVM SubcategoryMasterVM = new SubCategoryMasterVM();
+            ViewBag.categoryList= new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
             ViewBag.PageType = "Create";
 
             return View("ManageSubCategoryMaster", SubcategoryMasterVM);
@@ -277,7 +306,7 @@ namespace ComplaintManagement.Controllers
                 if (!string.IsNullOrEmpty(id))
                 {
                     id = CryptoEngineUtils.Decrypt(id.Replace(" ", "+"), true);
-
+                    ViewBag.categoryList = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
                     SubCategoryMasterVM SubcategoryVM = new SubCategoryMastersRepository().Get(Convert.ToInt32(id));
                     ViewBag.ViewState = isView;
 

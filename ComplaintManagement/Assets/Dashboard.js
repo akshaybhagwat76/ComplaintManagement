@@ -219,16 +219,54 @@ $(document).on('change', '#ddlChart', function () {
 
 $(document).on('click', '#btn_dataSearch', function () {
     if ($('#ddlChart').val() == 'default') {
-        $('#divAgeingChart').css('display', 'block');
+        //$('#divAgeingChart').css('display', 'block');
         DashboardPiGraphData();
     }
     else {
-        $('#divAgeingChart').css('display', 'none');
+        //$('#divAgeingChart').css('display', 'none');
         //StartProcess();
         DashboardBarGraphData();
     }
 })
 
+function DashboardPiChartTableBind(dateFrom, dateTo, chart, label) {
+    //alert(dateFrom);
+    //alert(dateTo);
+    //alert(chart);
+    //alert(label);
+    StartProcess();
+    label = label.split(" ").join("");
+    var url = `/Home/DashboardPiChartTableBind?dateFrom=${dateFrom}&dateTo=${dateTo}&chart=${chart}&label=${label}`;
+    $("#chartWiseTableShow").load(url, function () {
+        var table = $('#dashboardChart').DataTable({
+        });
+        $(table.table().container()).removeClass('form-inline');
+        addClassFunction();
+        StopProcess();
+        $("#chartWiseDataBind").modal("show")
+    });
+}
+
+function DashboardBarChartTableBind(dateFrom, dateTo, chart, label,year) {
+    
+    
+    StartProcess();
+    label = label.split(" ").join("");
+    //alert(dateFrom);
+    //alert(dateTo);
+    //alert(chart);
+    //alert(label);
+    //alert(year);
+    var url = `/Home/DashboardBarChartTableBind?dateFrom=${dateFrom}&dateTo=${dateTo}&chart=${chart}&label=${label}&year=${year}`;
+    $("#chartWiseTableShow").load(url, function () {
+        var table = $('#dashboardChart').DataTable({
+        });
+        $(table.table().container()).removeClass('form-inline');
+        addClassFunction();
+        StopProcess();
+        $("#chartWiseDataBind").modal("show")
+    });
+}
 
 function DashboardPiGraphData() {
     StartProcess();
@@ -292,7 +330,14 @@ function DashboardPiGraphData() {
                                     weight: 'bold'
                                 },
                             }
-                        }
+                        },
+                        onClick: function (event) {
+                            var activePoints = myChart.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "CaseType", label);
+                        },
                     }
                 });
             }
@@ -355,7 +400,14 @@ function DashboardPiGraphData() {
 
                                 //formatter: Math.round
                             }
-                        }
+                        },
+                        onClick: function (event) {
+                            var activePoints = myChart1.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "Category", label);
+                        },
                     }
 
                 });
@@ -378,8 +430,7 @@ function DashboardPiGraphData() {
                     myChart2.destroy();
                 }
                 myChart2 = new Chart(ctx2, {
-                    position: 'right',
-                    type: 'doughnut',
+                    type: 'pie',
                     data: {
                         labels: Labels,
 
@@ -387,7 +438,7 @@ function DashboardPiGraphData() {
                             backgroundColor: Colors,
                             data: Values,
                             datalabels: {
-                                anchor: 'start'
+                                anchor: 'end'
                             }
                         }]
                     },
@@ -395,7 +446,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -418,7 +469,14 @@ function DashboardPiGraphData() {
                                     weight: 'bold'
                                 },
                             }
-                        }
+                        },
+                        onClick: function (event) {
+                            var activePoints = myChart2.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "SubCategory", label);
+                        },
                     }
                 });
             }
@@ -440,7 +498,6 @@ function DashboardPiGraphData() {
                     myChart3.destroy();
                 }
                 myChart3 = new Chart(ctx3, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
@@ -457,7 +514,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -481,6 +538,14 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart3.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "Region", label);
+                        },
                     }
                 });
             }
@@ -502,7 +567,6 @@ function DashboardPiGraphData() {
                     myChart4.destroy();
                 }
                 myChart4 = new Chart(ctx4, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
@@ -519,7 +583,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -543,6 +607,14 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart4.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "Office", label);
+                        },
                     }
                 });
             }
@@ -564,7 +636,6 @@ function DashboardPiGraphData() {
                     myChart5.destroy();
                 }
                 myChart5 = new Chart(ctx5, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
@@ -581,7 +652,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -605,6 +676,14 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart5.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "LOS", label);
+                        },
                     }
                 });
             }
@@ -626,7 +705,6 @@ function DashboardPiGraphData() {
                     myChart6.destroy();
                 }
                 myChart6 = new Chart(ctx6, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
@@ -643,7 +721,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -667,6 +745,14 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart6.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "SBU", label);
+                        },
                     }
                 });
             }
@@ -688,7 +774,6 @@ function DashboardPiGraphData() {
                     myChart7.destroy();
                 }
                 myChart7 = new Chart(ctx7, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
@@ -705,7 +790,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -729,6 +814,14 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart7.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "SubSBU", label);
+                        },
                     }
                 });
             }
@@ -750,7 +843,6 @@ function DashboardPiGraphData() {
                     myChart8.destroy();
                 }
                 myChart8 = new Chart(ctx8, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
@@ -767,7 +859,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -791,6 +883,14 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart8.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "GenderofComplainant", label);
+                        },
                     }
                 });
             }
@@ -812,7 +912,6 @@ function DashboardPiGraphData() {
                     myChart9.destroy();
                 }
                 myChart9 = new Chart(ctx9, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
@@ -829,7 +928,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -853,6 +952,14 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart9.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "GenderofRespondent", label);
+                        },
                     }
                 });
             }
@@ -874,7 +981,6 @@ function DashboardPiGraphData() {
                     myChart10.destroy();
                 }
                 myChart10 = new Chart(ctx10, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
@@ -891,7 +997,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -915,6 +1021,14 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart10.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "DesignationofComplainant", label);
+                        },
                     }
                 });
             }
@@ -936,7 +1050,6 @@ function DashboardPiGraphData() {
                     myChart11.destroy();
                 }
                 myChart11 = new Chart(ctx11, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
@@ -953,7 +1066,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -977,13 +1090,21 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart11.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "DesignationofRespondent", label);
+                        },
                     }
                 });
             }
             else {
                 $('#divDesignationOfRespondentChart').css('display', 'none');
             }
-            //Designation of Respondent Wise Pi Chart
+            //Mode of Complaint Wise Pi Chart
             if (result.modeofComplaint != null) {
                 var Labels = [];
                 var Values = [];
@@ -998,11 +1119,10 @@ function DashboardPiGraphData() {
                     myChart12.destroy();
                 }
                 myChart12 = new Chart(ctx12, {
-                    position: 'right',
                     type: 'pie',
                     data: {
                         labels: Labels,
-
+                       // id: Labels,
                         datasets: [{
                             backgroundColor: Colors,
                             data: Values,
@@ -1015,7 +1135,7 @@ function DashboardPiGraphData() {
                     options: {
                         responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -1039,13 +1159,23 @@ function DashboardPiGraphData() {
                                 },
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart12.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            //var id = chartData.id[idx];
+                            //alert(id);
+                            DashboardPiChartTableBind(dateFrom, dateTo, "ModeofComplaint", label);
+                        },
                     }
                 });
             }
             else {
                 $('#divModeofComplaintChart').css('display', 'none');
             }
-            //Category Wise Pi Chart
+            //Ageing/Case Closure Wise Pi Chart
             if (result.categoryPiCharts != null) {
                 var Labels = [];
                 var Values = [];
@@ -1060,7 +1190,6 @@ function DashboardPiGraphData() {
                     myChart13.destroy();
                 }
                 myChart13 = new Chart(ctx13, {
-                    position: 'right',
                     type: 'pie',
 
                     data: {
@@ -1077,7 +1206,7 @@ function DashboardPiGraphData() {
                     options: {
                         //responsive: true,
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
 
                         },
                         tooltips: {
@@ -1103,6 +1232,14 @@ function DashboardPiGraphData() {
                                 //formatter: Math.round
                             }
                         }
+                        ,
+                        onClick: function (event) {
+                            var activePoints = myChart13.getElementsAtEvent(event);
+                            var chartData = activePoints[0]['_chart'].config.data;
+                            var idx = activePoints[0]['_index'];
+                            var label = chartData.labels[idx];
+                            DashboardPiChartTableBind(dateFrom, dateTo, "Ageing", label);
+                        },
                     }
 
                 });
@@ -1117,7 +1254,7 @@ function DashboardPiGraphData() {
 }
 
 function DashboardBarGraphData() {
-    //StartProcess();
+    StartProcess();
     let dateFrom = ($('#txt_dateFrom').val());
     let dateTo = ($('#txt_dateTo').val());
     
@@ -1129,10 +1266,12 @@ function DashboardBarGraphData() {
 
     $.get('/home/DashboardBarChart', { dateFrom: dateFrom, dateTo: dateTo }, function (result) {
         console.log(result);
+        StopProcess();
         //console.log(result.categoryPiCharts[1].Label);
         if (result != null && result != "undefined" && result != "") {
             //Case Type Bar chart
             if (result.caseTypeofComplaint1 != null) {
+                var newArr;
                 var Labels = []; var Values1 = []; var Values2 = []; var Years = []; var Colors = [];
                 $.each(result.caseTypeofComplaint1, function (i) {
 
@@ -1147,7 +1286,6 @@ function DashboardBarGraphData() {
                     myChart.destroy();
                 }
                 myChart = new Chart(ctx, {
-                    position: 'right',
                     type: 'bar',
                     //data: result,
                     data: {
@@ -1157,46 +1295,58 @@ function DashboardBarGraphData() {
                             backgroundColor: "rgb(54, 162, 235)",
                             data: Values1,
                             datalabels: {
-                                anchor: 'end'
+                                anchor: 'center'
                             }
                         },
                         {
-                            label: "Non-Actionable",
+                            label: "NonActionable",
                             backgroundColor: "rgb(255, 133, 102)",
                             data: Values2,
                             datalabels: {
-                                anchor: 'end'
+                                anchor: 'center'
                             }
                         }]
                     },
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
                         },
                         tooltips: {
                             enabled: true
                         },
-                        animation: {
-                            animateScale: true,
-                            animateRotate: true
-                        },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
-                                //formatter: function (value, context) {
-                                //    return context.chart.data.labels[context.dataIndex];
-                                //}
+                                color:'#fff',
+
+                                //    function (context) {
+                                //    return context.dataset.backgroundColor;
+                                //},
+                                //font: {
+                                //    weight: 'bold'
+                                //},
                             }
                         },
                         
+                        onClick: 
+                            function (event, array) {
+                                var active = window.myChart.getElementAtEvent(event);
+                                var elementIndex = active[0]._datasetIndex;
+                                console.log("elementIndex: " + elementIndex);
+                                var chartData = array[elementIndex]['_chart'].data;
+                                var idx = array[elementIndex]['_index'];
+                                var year = chartData.labels[idx];
+                                var label = chartData.datasets[elementIndex].label;
+                                console.log(label);
+                                console.log(year);
+                                DashboardBarChartTableBind(dateFrom, dateTo, "CaseType", label, year);
+                        },
                     }
                 });
             }
@@ -1211,7 +1361,7 @@ function DashboardBarGraphData() {
                         Years.push(result.categoryPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.categoryPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.categoryPiBarCharts[i].Value2, result.categoryPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.categoryPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.categoryPiBarCharts[i].Value2, result.categoryPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx1 = document.getElementById("categoryChart").getContext('2d');
@@ -1219,7 +1369,6 @@ function DashboardBarGraphData() {
                     myChart1.destroy();
                 }
                 myChart1 = new Chart(ctx1, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1227,6 +1376,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             "position": "bottom"
 
@@ -1236,16 +1392,33 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
+                                //align: 'end',
+                                //anchor: 'end',
+                                color:'#fff',
+                                //    function (context) {
+                                //    return context.dataset.backgroundColor;
+                                //},
                                 font: {
                                     weight: 'bold'
                                 },
                             }
                         }
+                        ,
+
+                        onClick:
+                            function (event, array) {
+                                var active = window.myChart1.getElementAtEvent(event);
+                                var elementIndex = active[0]._datasetIndex;
+                                console.log("elementIndex: " + elementIndex);
+                                var chartData = array[elementIndex]['_chart'].data;
+                                var idx = array[elementIndex]['_index'];
+                                var year = chartData.labels[idx];
+                                var label = chartData.datasets[elementIndex].label;
+                                console.log(label);
+                                console.log(year);
+                                DashboardBarChartTableBind(dateFrom, dateTo, "Category", label, year);
+                            },
+                            
                     }
 
                 });
@@ -1261,7 +1434,7 @@ function DashboardBarGraphData() {
                         Years.push(result.subCategoryPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.subCategoryPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.subCategoryPiBarCharts[i].Value2, result.subCategoryPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.subCategoryPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.subCategoryPiBarCharts[i].Value2, result.subCategoryPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx2 = document.getElementById("subCategoryChart").getContext('2d');
@@ -1269,7 +1442,6 @@ function DashboardBarGraphData() {
                     myChart2.destroy();
                 }
                 myChart2 = new Chart(ctx2, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1277,7 +1449,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1287,16 +1465,24 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color:'#fff',
+                                
                             }
                         }
+                        ,
+
+                        onClick: function (event, array) {
+                            var active = window.myChart2.getElementAtEvent(event);
+                            var elementIndex = active[0]._datasetIndex;
+                            console.log("elementIndex: " + elementIndex);
+                            var chartData = array[elementIndex]['_chart'].data;
+                            var idx = array[elementIndex]['_index'];
+                            var year = chartData.labels[idx];
+                            var label = chartData.datasets[elementIndex].label;
+                            console.log(label);
+                            console.log(year);
+                            DashboardBarChartTableBind(dateFrom, dateTo, "SubCategory", label, year);
+                        },
                     }
                 });
             }
@@ -1311,7 +1497,7 @@ function DashboardBarGraphData() {
                         Years.push(result.regionPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.regionPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.regionPiBarCharts[i].Value2, result.regionPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.regionPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.regionPiBarCharts[i].Value2, result.regionPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx3 = document.getElementById("regionChart").getContext('2d');
@@ -1319,7 +1505,6 @@ function DashboardBarGraphData() {
                     myChart3.destroy();
                 }
                 myChart3 = new Chart(ctx3, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack,yearCurrent],
@@ -1327,7 +1512,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1337,16 +1528,24 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color: '#fff',
+                                
                             }
                         }
+                        ,
+
+                        onClick: function (event, array) {
+                            var active = window.myChart3.getElementAtEvent(event);
+                            var elementIndex = active[0]._datasetIndex;
+                            console.log("elementIndex: " + elementIndex);
+                            var chartData = array[elementIndex]['_chart'].data;
+                            var idx = array[elementIndex]['_index'];
+                            var year = chartData.labels[idx];
+                            var label = chartData.datasets[elementIndex].label;
+                            console.log(label);
+                            console.log(year);
+                            DashboardBarChartTableBind(dateFrom, dateTo, "Region", label, year);
+                        },
                     }
                 });
             }
@@ -1361,7 +1560,7 @@ function DashboardBarGraphData() {
                         Years.push(result.officePiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.officePiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.officePiBarCharts[i].Value2, result.officePiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.officePiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.officePiBarCharts[i].Value2, result.officePiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx4 = document.getElementById("officeChart").getContext('2d');
@@ -1369,7 +1568,6 @@ function DashboardBarGraphData() {
                     myChart4.destroy();
                 }
                 myChart4 = new Chart(ctx4, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1377,7 +1575,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1388,16 +1592,23 @@ function DashboardBarGraphData() {
                         
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color: '#fff',
                             }
                         }
+                        ,
+
+                        onClick: function (event, array) {
+                            var active = window.myChart4.getElementAtEvent(event);
+                            var elementIndex = active[0]._datasetIndex;
+                            console.log("elementIndex: " + elementIndex);
+                            var chartData = array[elementIndex]['_chart'].data;
+                            var idx = array[elementIndex]['_index'];
+                            var year = chartData.labels[idx];
+                            var label = chartData.datasets[elementIndex].label;
+                            console.log(label);
+                            console.log(year);
+                            DashboardBarChartTableBind(dateFrom, dateTo, "Office", label, year);
+                        },
                     }
                 });
             }
@@ -1405,7 +1616,6 @@ function DashboardBarGraphData() {
                 $('#officeChart').css('display', 'none');
             }
             //LOS Wise Pi Chart
-            console.log(result.losPiBarCharts);
             if (result.losPiBarCharts != null) {
                 var Years = []; var arrData = [];
                 $.each(result.losPiBarCharts, function (i) {
@@ -1413,7 +1623,7 @@ function DashboardBarGraphData() {
                         Years.push(result.losPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.losPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.losPiBarCharts[i].Value2, result.losPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.losPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.losPiBarCharts[i].Value2, result.losPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx5 = document.getElementById("losChart").getContext('2d');
@@ -1421,7 +1631,6 @@ function DashboardBarGraphData() {
                     myChart5.destroy();
                 }
                 myChart5 = new Chart(ctx5, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1429,7 +1638,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1439,16 +1654,26 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color: '#fff',
+                                
                             }
                         }
+                        ,
+
+                        onClick:
+                            function (event, array) {
+                                var active = window.myChart5.getElementAtEvent(event);
+                                var elementIndex = active[0]._datasetIndex;
+                                console.log("elementIndex: " + elementIndex);
+                                var chartData = array[elementIndex]['_chart'].data;
+                                var idx = array[elementIndex]['_index'];
+                                var year = chartData.labels[idx];
+                                var label = chartData.datasets[elementIndex].label;
+                                console.log(label);
+                                console.log(year);
+                                DashboardBarChartTableBind(dateFrom, dateTo, "LOS", label, year);
+                            },
+
                     }
                 });
             }
@@ -1463,7 +1688,7 @@ function DashboardBarGraphData() {
                         Years.push(result.sbuPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.sbuPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.sbuPiBarCharts[i].Value2, result.sbuPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.sbuPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.sbuPiBarCharts[i].Value2, result.sbuPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx6 = document.getElementById("sbuChart").getContext('2d');
@@ -1471,7 +1696,6 @@ function DashboardBarGraphData() {
                     myChart6.destroy();
                 }
                 myChart6 = new Chart(ctx6, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1479,7 +1703,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1489,16 +1719,24 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color: '#fff',
                             }
                         }
+                        ,
+
+                        onClick:
+                            function (event, array) {
+                                var active = window.myChart6.getElementAtEvent(event);
+                                var elementIndex = active[0]._datasetIndex;
+                                console.log("elementIndex: " + elementIndex);
+                                var chartData = array[elementIndex]['_chart'].data;
+                                var idx = array[elementIndex]['_index'];
+                                var year = chartData.labels[idx];
+                                var label = chartData.datasets[elementIndex].label;
+                                console.log(label);
+                                console.log(year);
+                                DashboardBarChartTableBind(dateFrom, dateTo, "SBU", label, year);
+                            },
                     }
                 });
             }
@@ -1513,7 +1751,7 @@ function DashboardBarGraphData() {
                         Years.push(result.subSBUPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.subSBUPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.subSBUPiBarCharts[i].Value2, result.subSBUPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.subSBUPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.subSBUPiBarCharts[i].Value2, result.subSBUPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx7 = document.getElementById("subSBUChart").getContext('2d');
@@ -1521,7 +1759,6 @@ function DashboardBarGraphData() {
                     myChart7.destroy();
                 }
                 myChart7 = new Chart(ctx7, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1529,7 +1766,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1539,16 +1782,24 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color: '#fff',
                             }
                         }
+                        ,
+
+                        onClick:
+                            function (event, array) {
+                                var active = window.myChart7.getElementAtEvent(event);
+                                var elementIndex = active[0]._datasetIndex;
+                                console.log("elementIndex: " + elementIndex);
+                                var chartData = array[elementIndex]['_chart'].data;
+                                var idx = array[elementIndex]['_index'];
+                                var year = chartData.labels[idx];
+                                var label = chartData.datasets[elementIndex].label;
+                                console.log(label);
+                                console.log(year);
+                                DashboardBarChartTableBind(dateFrom, dateTo, "SubSBU", label, year);
+                            },
                     }
                 });
             }
@@ -1563,7 +1814,7 @@ function DashboardBarGraphData() {
                         Years.push(result.genderofComplainantPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.genderofComplainantPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.genderofComplainantPiBarCharts[i].Value2, result.genderofComplainantPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.genderofComplainantPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.genderofComplainantPiBarCharts[i].Value2, result.genderofComplainantPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx8 = document.getElementById("genderOfComplainantChart").getContext('2d');
@@ -1571,7 +1822,6 @@ function DashboardBarGraphData() {
                     myChart8.destroy();
                 }
                 myChart8 = new Chart(ctx8, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1579,7 +1829,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1589,16 +1845,26 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color: '#fff',
                             }
                         }
+                        ,
+
+                        onClick:
+                            function (event, array) {
+                                var active = window.myChart8.getElementAtEvent(event);
+                                var elementIndex = active[0]._datasetIndex;
+                                console.log("elementIndex: " + elementIndex);
+                                var chartData = array[elementIndex]['_chart'].data;
+                                var idx = array[elementIndex]['_index'];
+                                var year = chartData.labels[idx];
+                                var label = chartData.datasets[elementIndex].label;
+                                console.log(label);
+                                console.log(year);
+                                DashboardBarChartTableBind(dateFrom, dateTo, "GenderofComplainant", label, year);
+                            },
+
+                            
                     }
                 });
             }
@@ -1613,7 +1879,7 @@ function DashboardBarGraphData() {
                         Years.push(result.genderofRespondentPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.genderofRespondentPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.genderofRespondentPiBarCharts[i].Value2, result.genderofRespondentPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.genderofRespondentPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.genderofRespondentPiBarCharts[i].Value2, result.genderofRespondentPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx9 = document.getElementById("genderOfRespondentChart").getContext('2d');
@@ -1621,7 +1887,6 @@ function DashboardBarGraphData() {
                     myChart9.destroy();
                 }
                 myChart9 = new Chart(ctx9, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1629,7 +1894,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1639,16 +1910,26 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
+                                color: '#fff',
                                 font: {
                                     weight: 'bold'
                                 },
                             }
                         }
+                        ,
+
+                        onClick: function (event, array) {
+                            var active = window.myChart9.getElementAtEvent(event);
+                            var elementIndex = active[0]._datasetIndex;
+                            console.log("elementIndex: " + elementIndex);
+                            var chartData = array[elementIndex]['_chart'].data;
+                            var idx = array[elementIndex]['_index'];
+                            var year = chartData.labels[idx];
+                            var label = chartData.datasets[elementIndex].label;
+                            console.log(label);
+                            console.log(year);
+                            DashboardBarChartTableBind(dateFrom, dateTo, "GenderofRespondent", label, year);
+                        },
                     }
                 });
             }
@@ -1663,7 +1944,7 @@ function DashboardBarGraphData() {
                         Years.push(result.designationofComplainantPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.designationofComplainantPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.designationofComplainantPiBarCharts[i].Value2, result.designationofComplainantPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.designationofComplainantPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.designationofComplainantPiBarCharts[i].Value2, result.designationofComplainantPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx10 = document.getElementById("designationOfComplainantChart").getContext('2d');
@@ -1671,7 +1952,6 @@ function DashboardBarGraphData() {
                     myChart10.destroy();
                 }
                 myChart10 = new Chart(ctx10, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1679,7 +1959,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1689,16 +1975,23 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color: '#fff'
                             }
                         }
+                        ,
+
+                        onClick: function (event, array) {
+                            var active = window.myChart10.getElementAtEvent(event);
+                            var elementIndex = active[0]._datasetIndex;
+                            console.log("elementIndex: " + elementIndex);
+                            var chartData = array[elementIndex]['_chart'].data;
+                            var idx = array[elementIndex]['_index'];
+                            var year = chartData.labels[idx];
+                            var label = chartData.datasets[elementIndex].label;
+                            console.log(label);
+                            console.log(year);
+                            DashboardBarChartTableBind(dateFrom, dateTo, "DesignationofComplainant", label, year);
+                        },
                     }
                 });
             }
@@ -1713,7 +2006,7 @@ function DashboardBarGraphData() {
                         Years.push(result.designationofRespondentPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.designationofRespondentPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.designationofRespondentPiBarCharts[i].Value2, result.designationofRespondentPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.designationofRespondentPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.designationofRespondentPiBarCharts[i].Value2, result.designationofRespondentPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx11 = document.getElementById("designationOfRespondentChart").getContext('2d');
@@ -1721,7 +2014,6 @@ function DashboardBarGraphData() {
                     myChart11.destroy();
                 }
                 myChart11 = new Chart(ctx11, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1729,7 +2021,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1739,16 +2037,23 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color: '#fff',
                             }
                         }
+                        ,
+
+                        onClick: function (event, array) {
+                            var active = window.myChart11.getElementAtEvent(event);
+                            var elementIndex = active[0]._datasetIndex;
+                            console.log("elementIndex: " + elementIndex);
+                            var chartData = array[elementIndex]['_chart'].data;
+                            var idx = array[elementIndex]['_index'];
+                            var year = chartData.labels[idx];
+                            var label = chartData.datasets[elementIndex].label;
+                            console.log(label);
+                            console.log(year);
+                            DashboardBarChartTableBind(dateFrom, dateTo, "DesignationofRespondent", label, year);
+                        },
                     }
                 });
             }
@@ -1763,7 +2068,7 @@ function DashboardBarGraphData() {
                         Years.push(result.modeofComplaintPiBarCharts[i].Year);
                     }
                     arrData.push({
-                        label: result.modeofComplaintPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.modeofComplaintPiBarCharts[i].Value2, result.modeofComplaintPiBarCharts[i].Value1], datalabels: { anchor: 'end' }
+                        label: result.modeofComplaintPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.modeofComplaintPiBarCharts[i].Value2, result.modeofComplaintPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
                     })
                 });
                 var ctx12 = document.getElementById("modeofComplaintChart").getContext('2d');
@@ -1771,7 +2076,6 @@ function DashboardBarGraphData() {
                     myChart12.destroy();
                 }
                 myChart12 = new Chart(ctx12, {
-                    position: 'right',
                     type: 'bar',
                     data: {
                         labels: [yearBack, yearCurrent],
@@ -1779,7 +2083,13 @@ function DashboardBarGraphData() {
                     },
                     // Configuration options go here
                     options: {
-                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
                         legend: {
                             position: 'bottom',
 
@@ -1789,21 +2099,90 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                align: 'end',
-                                anchor: 'end',
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                font: {
-                                    weight: 'bold'
-                                },
+                                color: '#fff'
                             }
                         }
+                        ,
+
+                        onClick: function (event, array) {
+                            var active = window.myChart12.getElementAtEvent(event);
+                            var elementIndex = active[0]._datasetIndex;
+                            console.log("elementIndex: " + elementIndex);
+                            var chartData = array[elementIndex]['_chart'].data;
+                            var idx = array[elementIndex]['_index'];
+                            var year = chartData.labels[idx];
+                            var label = chartData.datasets[elementIndex].label;
+                            console.log(label);
+                            console.log(year);
+                            DashboardBarChartTableBind(dateFrom, dateTo, "ModeofComplaint", label, year);
+                        },
                     }
                 });
             }
             else {
                 $('#divModeofComplaintChart').css('display', 'none');
+            }
+            //Ageing/Case Closure
+            if (result.ageingPiBarCharts != null) {
+                var Years = []; var arrData = [];
+                $.each(result.ageingPiBarCharts, function (i) {
+                    if (Years.indexOf(result.ageingPiBarCharts[i].Year) === -1) {
+                        Years.push(result.ageingPiBarCharts[i].Year);
+                    }
+                    arrData.push({
+                        label: result.ageingPiBarCharts[i].Label, backgroundColor: getRandomColorHex(), data: [result.ageingPiBarCharts[i].Value2, result.ageingPiBarCharts[i].Value1], datalabels: { anchor: 'center' }
+                    })
+                });
+                var ctx13 = document.getElementById("ageingChart").getContext('2d');
+                if (myChart13 != null) {
+                    myChart13.destroy();
+                }
+                myChart13 = new Chart(ctx13, {
+                    type: 'bar',
+                    data: {
+                        labels: [yearBack, yearCurrent],
+                        datasets: arrData
+                    },
+                    // Configuration options go here
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        legend: {
+                            position: 'bottom',
+
+                        },
+                        tooltips: {
+                            enabled: true
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: '#fff'
+                            }
+                        }
+                        ,
+
+                        onClick: function (event, array) {
+                            var active = window.myChart13.getElementAtEvent(event);
+                            var elementIndex = active[0]._datasetIndex;
+                            console.log("elementIndex: " + elementIndex);
+                            var chartData = array[elementIndex]['_chart'].data;
+                            var idx = array[elementIndex]['_index'];
+                            var year = chartData.labels[idx];
+                            var label = chartData.datasets[elementIndex].label;
+                            console.log(label);
+                            console.log(year);
+                            DashboardBarChartTableBind(dateFrom, dateTo, "Ageing", label, year);
+                        },
+                    }
+                });
+            }
+            else {
+                $('#divAgeingChart').css('display', 'none');
             }
         }
 

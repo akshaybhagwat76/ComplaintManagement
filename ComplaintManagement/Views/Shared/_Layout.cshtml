@@ -21,7 +21,7 @@
     @*@Styles.Render("~/Scripts/vendor/jquery-ui/jqueryuiStyles")*@
     @Styles.Render("~/plugins/toastrStyles")
     @Styles.Render("~/Content/plugins/dataTables/dataTablesStyles")
-<link href="~/Scripts/vendor/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Scripts/vendor/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
     <!-- Section for main scripts render -->
     @*@Scripts.Render("~/bundles/jquery")*@
     @*@Scripts.Render("~/sb-admin2/jquery")*@
@@ -83,45 +83,49 @@
             <!-- Divider -->
             <li><hr class="sidebar-divider"></li>
             <!-- Heading -->
-            <li>
-                <div class="sidebar-heading">
-                    Compliant
-                </div>
-            </li>
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Compliants</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
+            @{
+                if (userRole != Messages.LeadUser && userRole != Messages.AdminUser)
+                {
+                    <li>
+                        <div class="sidebar-heading">
+                            Compliant
+                        </div>
+                    </li>
+                    <!-- Nav Item - Pages Collapse Menu -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            <i class="fas fa-fw fa-cog"></i>
+                            <span>Compliants</span>
+                        </a>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
 
-                        @*<a class="collapse-item" href="/Compliant/Compliant_one">Compliant_one</a>*@
-                        @{
-                            if (userRole == Messages.HRUser)
-                            {
-                                <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
-                            }
-                            else if (userRole == Messages.Committee)
-                            {
-                                <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint Listing</a>
-                            }
-                            else if (userRole == Messages.NormalUser)
-                            {
-                                <a class="collapse-item" href="/Employee/Index">Complaint Listing</a>
-                            }
-                            @*else if (userRole != Messages.NormalUser)
-                                {
-                                    <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
-                                    <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint Listing</a>
-                                }*@
-                        }
+                                @*<a class="collapse-item" href="/Compliant/Compliant_one">Compliant_one</a>*@
+                                @{
+                                    if (userRole == Messages.HRUser)
+                                    {
+                                        <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
+                                    }
+                                    else if (userRole == Messages.Committee)
+                                    {
+                                        <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint List</a>
+                                    }
+                                    else if (userRole == Messages.NormalUser)
+                                    {
+                                        <a class="collapse-item" href="/Employee/Index">Complaint Listing</a>
+                                    }
+                                    @*else if (userRole != Messages.NormalUser)
+                                        {
+                                            <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
+                                            <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint Listing</a>
+                                        }*@
+                                }
 
 
-                    </div>
-                </div>
-            </li>
+                            </div>
+                        </div>
+                    </li>
+                } }
             <!-- Divider -->
             <li> <hr class="sidebar-divider"></li>
             <!-- Heading -->
@@ -179,33 +183,36 @@
                     </div>
                 </div>
             </li>
-            <li>
-                <div class="sidebar-heading">
-                    Reports
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Reports</span>
-                </a>
-                <div id="collapseThree" class="collapse" aria-labelledby="collapseThree" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        @{
-                            if (userRole == Messages.LeadUser || userRole == Messages.AdminUser)
-                            {
+            @{
+                if (userRole == Messages.LeadUser || userRole == Messages.AdminUser)
+                {
+                    <li>
+                        <div class="sidebar-heading">
+                            Reports
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                            <i class="fas fa-fw fa-table"></i>
+                            <span>Reports</span>
+                        </a>
+                        <div id="collapseThree" class="collapse" aria-labelledby="collapseThree" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+
                                 <a class="collapse-item" href="/LOS/LosReport">
                                     <span>XLOS Report</span>
                                 </a>
                                 <a class="collapse-item" href="/LOS/LosReport2">
                                     <span>Complaint Report</span>
                                 </a>
-                            }
-                         }
+
+                            </div>
+
                         </div>
-                   
-                </div>
-            </li>
+                    </li>
+                }
+            }
             <!-- Divider -->
             <li>
                 <hr class="sidebar-divider d-none d-md-block">
@@ -270,7 +277,7 @@
                                     Alerts Center
                                 </h6>
                                 <div id="notificationList">
-                                  
+
                                 </div>
                                 <a class="dropdown-item text-center small text-gray-500" href="/Compliant/NotificationList">Show All Alerts</a>
                             </div>
@@ -343,11 +350,11 @@
     <!-- Custom scripts for all pages-->
     <script>
         $(document).ready(function () {
-           // setInterval(function () {
-                NotificationAlertCount();
-                NotificationAlertList();
+            // setInterval(function () {
+            NotificationAlertCount();
+            NotificationAlertList();
             //}, 60000);
-           
+
         });
         function NotificationAlertCount() {
             $.ajax({
@@ -386,17 +393,17 @@
                         $('#notificationList').html("");
                         if (response.data.length > 0) {
                             for (var i = 0; i < response.data.length; i++) {
-                                    html += '<a class="dropdown-item d-flex align-items-center" href="#">';
-                                    html += '<div class="mr-3">';
-                                    html += '<div class="icon-circle bg-primary">';
-                                    html += '<i class="fas fa-file-alt text-white"></i>';
-                                    html += '</div>';
-                                    html += '</div>';
-                                    html += '<div>';
-                                    html += '<div class="small text-gray-500">' + response.data[i].CreatedDate + '</div>';
-                                    html += '<span class="font-weight-bold">' + response.data[i].NotificationContent + '</span>';
-                                    html += '</div>';
-                                    html += '</a>';
+                                html += '<a class="dropdown-item d-flex align-items-center" href="#">';
+                                html += '<div class="mr-3">';
+                                html += '<div class="icon-circle bg-primary">';
+                                html += '<i class="fas fa-file-alt text-white"></i>';
+                                html += '</div>';
+                                html += '</div>';
+                                html += '<div>';
+                                html += '<div class="small text-gray-500">' + response.data[i].CreatedDate + '</div>';
+                                html += '<span class="font-weight-bold">' + response.data[i].NotificationContent + '</span>';
+                                html += '</div>';
+                                html += '</a>';
                             }
                         }
                         $('#notificationList').append(html);
@@ -411,7 +418,7 @@
             });
         }
         $('#alertsDropdown').on('click', function () {
-             $.ajax({
+            $.ajax({
                 type: "POST",
                 url: "/Compliant/NotificationAlertRead",
                 data: {},
@@ -420,7 +427,7 @@
                     if (response.status == "Success") {
                         NotificationAlertCount();
                     }
-                    
+
                 },
                 error: function (error) {
                     toastr.error(error)

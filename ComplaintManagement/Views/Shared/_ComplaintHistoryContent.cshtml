@@ -1,4 +1,5 @@
-﻿<div class="table-responsive">
+﻿@using ComplaintManagement.Helpers
+<div class="table-responsive">
     <table class="table f-14 border" id="historyTable" style="width:100%">
         @if (ViewBag.lstComplaintHistory != null)
         {
@@ -15,19 +16,40 @@
                 </thead>
             }
         }
-    <tbody>
-        @if (ViewBag.lstComplaintHistory != null)
-        {
-            if (ViewBag.lstComplaintHistory.Count > 0)
+        <tbody>
+            @if (ViewBag.lstComplaintHistory != null)
             {
-                foreach (var item in ViewBag.lstComplaintHistory)
+                if (ViewBag.lstComplaintHistory.Count > 0)
+                {
+                    foreach (var item in ViewBag.lstComplaintHistory)
+                    {
+                        <tr>
+                            <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                            <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                            <td class="text-black"><strong>@item.Remarks</strong></td>
+                            <td class="text-black"><strong>@item.UserType</strong></td>
+                            @{
+                                <td class="text-black">
+                                    <strong>
+                                        @if (item.ActionType == Messages.Opened)
+                                        {
+                                            @Html.Raw(Messages.Draft.ToString())
+                                        }
+                                        else
+                                        {
+                                            @item.ActionType
+                                        }
+
+                                    </strong>
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td class="text-black"><strong>@item.CreatedByName</strong></td>
-                        <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
-                        <td class="text-black"><strong>@item.Remarks</strong></td>
-                        <td class="text-black"><strong>@item.UserType</strong></td>
-                        <td class="text-black"><strong>@item.ActionType</strong></td>
+                        <td colspan="5"><label>No data found.</label></td>
                     </tr>
                 }
             }
@@ -37,13 +59,6 @@
                     <td colspan="5"><label>No data found.</label></td>
                 </tr>
             }
-        }
-        else
-        {
-            <tr>
-                <td colspan="5"><label>No data found.</label></td>
-            </tr>
-        }
-    </tbody>
+        </tbody>
     </table>
 </div>

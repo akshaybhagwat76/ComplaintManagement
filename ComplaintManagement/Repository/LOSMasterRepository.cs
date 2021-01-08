@@ -888,7 +888,7 @@ namespace ComplaintManagement.Repository
                     {
                         if (casestage == "Actionable")
                         {
-                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive && i.CaseType == "Actionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive.Value && i.CaseType == "Actionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
 
                             if (LOSLists != null || SBULists != null || SubSBULists != null)
                             {
@@ -952,7 +952,7 @@ namespace ComplaintManagement.Repository
                         else if (casestage == "NonActionable")
                         {
                             //WorkFlow1 = db.HR_Role.Where(i => i.IsActive && i.CaseType == "NonActionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
-                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive && i.CaseType == "NonActionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive.Value && i.CaseType == "NonActionable" && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
 
                             if (LOSLists != null || SBULists != null || SubSBULists != null)
                             {
@@ -1456,7 +1456,7 @@ namespace ComplaintManagement.Repository
                     try
                     {
                         
-                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive  && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
+                            WorkFlow1 = db.HR_Role.Where(i => i.IsActive.Value  && i.CreatedDate >= fromDate && i.CreatedDate <= toDate).ToList().OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.Id).ToList();
 
                             if (LOSLists != null || SBULists != null || SubSBULists != null)
                             {

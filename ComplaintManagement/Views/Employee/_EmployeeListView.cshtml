@@ -30,6 +30,10 @@
                 {
                     @Html.Raw(Messages.InProgress)
                 }
+                else if (item.ComplaintStatus == Messages.Opened)
+                {
+                    @Html.Raw(Messages.Draft)
+                }
                 else
                 {
                     @item.ComplaintStatus

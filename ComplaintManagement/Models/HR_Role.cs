@@ -24,7 +24,7 @@ namespace ComplaintManagement.Models
         public string Status { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
-        public bool IsActive { get; set; }
+        public Nullable<bool> IsActive { get; set; }
         public Nullable<int> HRUserId { get; set; }
         public Nullable<int> CommitteeUSerId { get; set; }
     }
