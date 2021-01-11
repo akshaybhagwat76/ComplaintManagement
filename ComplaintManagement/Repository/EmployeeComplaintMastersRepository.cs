@@ -720,8 +720,7 @@ namespace ComplaintManagement.Repository
                                     //roleMasterLineItem.ForEach(x => rolesId = string.Join(",", x.Id));
                                     // roleMasterLineItem.ForEach(x => assignedUsersroleId = string.Join(",", x.UserId));
 
-                                    int count = db.EmployeeComplaintMasters.ToList().Count();
-                                    count = count + 1;
+                                    string count = CreateComplaintNo();
                                     assignedUsersroleId = string.Join(",", roleMasterLineItem.Select(x => x.UserId).ToList());
                                     rolesId = string.Join(",", roleMasterLineItem.Select(x => x.Id).ToList());
                                     LOSName = losId > 0 ? new LOSMasterRepository().Get(losId) != null ? new LOSMasterRepository().Get(losId).LOSName : Messages.NotAvailable : Messages.NotAvailable;
@@ -733,7 +732,7 @@ namespace ComplaintManagement.Repository
                                     employeeComplaintWorkFlowDto.RoleId = rolesId;
                                     employeeComplaintWorkFlowDto.AssignedUserRoles = assignedUsersroleId; employeeComplaintWorkFlowDto.DueDate = Complaintdata.DueDate;
                                     employeeComplaintWorkFlowDto.LOSId = losId; employeeComplaintWorkFlowDto.SBUId = SBUId; employeeComplaintWorkFlowDto.SubSBUId = subSBUId; employeeComplaintWorkFlowDto.CompentencyId = competencyId;
-                                    employeeComplaintWorkFlowDto.ComplaintNo = "Case_"+count.ToString()+ "_"+LOSName+"_"+DateTime.UtcNow.ToString("dd")+"_"+ DateTime.UtcNow.ToString("MM")+"_"+DateTime.UtcNow.ToString("yyyy");
+                                    employeeComplaintWorkFlowDto.ComplaintNo = DateTime.UtcNow.ToString("dd")+""+ DateTime.UtcNow.ToString("MM")+""+DateTime.UtcNow.ToString("yyyy")+"_"+ count;
                                 }
                                 
                             }
@@ -958,10 +957,6 @@ namespace ComplaintManagement.Repository
 
 
         //Aman work
-
-
-
-
         public EmployeeCompliantMasterVM SaveHRComplaint(EmployeeCompliantMasterVM EmployeeComplaintVM, String Id, int Hrid, string UserInvolved, int Status)
         {
             try
@@ -1192,7 +1187,40 @@ namespace ComplaintManagement.Repository
             }
         }
 
+        public string CreateComplaintNo()
+        {
+            try
+            {
+                var numberSystem = db.NumberSystems.FirstOrDefault(); 
+                if(numberSystem == null)
+                {
+                    numberSystem = new NumberSystem();
+                    numberSystem.NoLength = 6;
+                    numberSystem.AutoIncrement = 0;
+                    db.NumberSystems.Add(numberSystem);
+                    db.SaveChanges();
 
+                    numberSystem = db.NumberSystems.FirstOrDefault();
+                }
+                else
+                {
+                    numberSystem.AutoIncrement = numberSystem.AutoIncrement + 1;
+                    db.Entry(numberSystem).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                var length = numberSystem.NoLength;
+                var AutoIncrement = numberSystem.AutoIncrement;
+
+                string newString = new string('0', (length)-(AutoIncrement.ToString().Length));
+                string ComplaintNo = newString + AutoIncrement;
+                return ComplaintNo;
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+        }
 
     }
 }

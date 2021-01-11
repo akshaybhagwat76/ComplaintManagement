@@ -44,6 +44,54 @@ function deleteFile() {
     });
 }
 
+$(document).on('change', '#CategoryId', function () {
+    var CategoryId = $('#CategoryId').val();
+    StartProcess();
+    $.ajax({
+        type: "POST",
+        url: "/Compliant/CategoryWiseSubCategory",
+        data: { CategoryId: CategoryId },
+        success: function (response) {
+            StopProcess();
+            if (response.status !== "Fail") {
+                $('#SubCategoryId').val(response.data.Id);
+                console.log(response);
+            }
+            else {
+                funToastr(false, "This Category not linked with any sub-category");
+                //funToastr(false, response.error);
+            }
+        },
+        error: function (error) {
+            toastr.error(error)
+        }
+    });
+})
+
+$(document).on('change', '#SubCategoryId', function () {
+    var SubCategoryId = $('#SubCategoryId').val();
+    StartProcess();
+    $.ajax({
+        type: "POST",
+        url: "/Compliant/SubCategoryWiseCategory",
+        data: { SubCategoryId: SubCategoryId },
+        success: function (response) {
+            StopProcess();
+            if (response.status !== "Fail" && response.data.CategoryId !='0') {
+                $('#CategoryId').val(response.data.CategoryId);
+                console.log(response);
+            }
+            else {
+                funToastr(false, "This Sub-Category not linked with any category");
+                //funToastr(false, response.error);
+            }
+        },
+        error: function (error) {
+            toastr.error(error)
+        }
+    });
+})
+
 function submitForm(flag) {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
@@ -448,10 +496,6 @@ function CloseComplaintHr() {
         }
     });
 }
-
-
-
-
 function SubmitGOBack() {
     let url = `/Compliant/ComplaintTwo_Index`
     location.href = url;
@@ -485,3 +529,4 @@ function deleteFile1() {
         }
     });
 }
+

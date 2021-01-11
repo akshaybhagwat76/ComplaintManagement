@@ -802,8 +802,9 @@ namespace ComplaintManagement.Controllers
                 if (chart == "CaseType")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.HR_Role on a.ComplaintId equals b.ComplentId
-                                        where b.CaseType.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.HR_Role on a.ComplaintId equals c.ComplentId
+                                        where c.CaseType.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -812,7 +813,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Case Type: " + label;
@@ -820,8 +825,9 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "Category")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.CategoryMasters on a.EmployeeComplaintMaster.CategoryId equals b.Id
-                                        where b.CategoryName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.CategoryMasters on a.EmployeeComplaintMaster.CategoryId equals c.Id
+                                        where c.CategoryName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -830,7 +836,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Category wise: " + label;
@@ -838,17 +848,22 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "SubCategory")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.SubCategoryMasters on a.EmployeeComplaintMaster.SubCategoryId equals b.Id
-                                        where b.SubCategoryName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.SubCategoryMasters on a.EmployeeComplaintMaster.SubCategoryId equals c.Id
+                                        where c.SubCategoryName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
                                             Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
-                                            SubCategory = b.SubCategoryName,
+                                            SubCategory = c.SubCategoryName,
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Sub-Category wise: " + label;
@@ -867,7 +882,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = c.Region,
                                         }).ToList();
 
                     modelTitle = "Region wise: " + label;
@@ -886,7 +905,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Office wise: " + label;
@@ -894,17 +917,22 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "LOS")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.LOSMasters on a.LOSId equals b.Id
-                                        where b.LOSName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.LOSMasters on a.LOSId equals c.Id
+                                        where c.LOSName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
-                                            LOSName = b.LOSName,
+                                            LOSName = c.LOSName,
                                             Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
                                             SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                             SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "LOS wise: " + label;
@@ -912,8 +940,9 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "SBU")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.SBUMasters on a.SBUId equals b.Id
-                                        where b.SBU.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.SBUMasters on a.SBUId equals c.Id
+                                        where c.SBU.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -922,7 +951,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = c.SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "SBU wise: " + label;
@@ -930,8 +963,9 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "SubSBU")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.SubSBUMasters on a.SubSBUId equals b.Id
-                                        where b.SubSBU.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.SubSBUMasters on a.SubSBUId equals c.Id
+                                        where c.SubSBU.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -940,7 +974,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = c.SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Sub-SBU wise: " + label;
@@ -958,7 +996,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Gender of Complainant: " + label;
@@ -977,7 +1019,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(c.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Gender of Respondent: " + label;
@@ -995,7 +1041,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Designation of Complainant: " + label;
@@ -1014,7 +1064,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(c.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Designation of Respondent: " + label;
@@ -1023,7 +1077,7 @@ namespace ComplaintManagement.Controllers
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
                                         join b in db.UserMasters on a.CreatedBy equals b.Id
-                                        where b.TimeType.ToLower().Trim().Contains(label.ToLower().Trim()) //== label.ToLower().Trim()
+                                        where b.TimeType.ToLower().Trim().Replace(" ", "")==label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -1032,7 +1086,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Mode of Complaint: " + label;
@@ -1053,25 +1111,47 @@ namespace ComplaintManagement.Controllers
                         dateStart = dateFrom.ToDateTime().Value.AddDays(29);
                         dateEnd = dateFrom.ToDateTime().Value.AddDays(44);
                     }
-                    else if (label.ToLower().Trim().Replace(" ", "") == "45 and Above")
+                    else if (label.ToLower().Trim().Replace(" ", "") == ("45 and Above").ToLower().Trim().Replace(" ", ""))
                     {
                         dateStart = dateFrom.ToDateTime().Value.AddDays(i);
                         dateEnd = dateTo.ToDateTime().Value;
 
                     }
-                    var ageingPiBarCharts = from a in complaintTList.Distinct().Where(a => a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd)
-                                            select a;
+                    dashboardPiChart = (from a in complaintTList.Distinct()
+                                            join b in db.UserMasters on a.CreatedBy equals b.Id
+                                            where a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd
+                                       select new TableListPiAndBarChartVM
+                                       {
+                                           LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
+                                           Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
+                                           SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
+                                           CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
+                                           CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
+                                           CaseNo = a.ComplaintNo,
+                                           ComplaintId = a.ComplaintId,
+                                           SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                           SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                           Status = a.ActionType,
+                                           Region = new RegionMasterRepository().Get(b.RegionId).Region,
+                                       }).ToList();
 
-                    dashboardPiChart.AddRange(ageingPiBarCharts.Select(a => new TableListPiAndBarChartVM
-                    {
-                        LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
-                        Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
-                        SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
-                        CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
-                        CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
-                        CaseNo = a.ComplaintNo,
-                        ComplaintId = a.ComplaintId
-                    }));
+                    //from a in complaintTList.Distinct().Where(a => a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd)
+                    //select a;
+
+                    //dashboardPiChart.AddRange(ageingPiBarCharts.Select(a => new TableListPiAndBarChartVM
+                    //{
+                    //    LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
+                    //    Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
+                    //    SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
+                    //    CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
+                    //    CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
+                    //    CaseNo = a.ComplaintNo,
+                    //    ComplaintId = a.ComplaintId,
+                    //    SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                    //    SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                    //    //CaseStage = b.CaseType,
+                    //    Region = new RegionMasterRepository().Get(a.RegionId).Region,
+                    //}));
 
                     modelTitle = "Ageing/Case Closure: " + label;
                 }
@@ -1217,8 +1297,9 @@ namespace ComplaintManagement.Controllers
                 if (chart == "CaseType")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.HR_Role on a.ComplaintId equals b.ComplentId
-                                        where b.CaseType.ToLower().Trim() == label.ToLower().Trim() && b.CreatedDate?.Year.ToString() ==year
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.HR_Role on a.ComplaintId equals c.ComplentId
+                                        where c.CaseType.ToLower().Trim() == label.ToLower().Trim() && c.CreatedDate?.Year.ToString() ==year
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -1227,7 +1308,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Case Type: " + label;
@@ -1235,8 +1320,9 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "Category")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.CategoryMasters on a.EmployeeComplaintMaster.CategoryId equals b.Id
-                                        where b.CategoryName.ToLower().Trim() == label.ToLower().Trim() && a.CreatedDate.Year.ToString() == year
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.CategoryMasters on a.EmployeeComplaintMaster.CategoryId equals c.Id
+                                        where c.CategoryName.ToLower().Trim() == label.ToLower().Trim() && a.CreatedDate.Year.ToString() == year
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -1245,7 +1331,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Category wise: " + label;
@@ -1253,17 +1343,22 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "SubCategory")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.SubCategoryMasters on a.EmployeeComplaintMaster.SubCategoryId equals b.Id
-                                        where b.SubCategoryName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "") && a.CreatedDate.Year.ToString() == year
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.SubCategoryMasters on a.EmployeeComplaintMaster.SubCategoryId equals c.Id
+                                        where c.SubCategoryName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "") && a.CreatedDate.Year.ToString() == year
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
                                             Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
-                                            SubCategory = b.SubCategoryName,
+                                            SubCategory = c.SubCategoryName,
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Sub-Category wise: " + label;
@@ -1282,7 +1377,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = c.Region,
                                         }).ToList();
 
                     modelTitle = "Region wise: " + label;
@@ -1301,7 +1400,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Office wise: " + label;
@@ -1309,17 +1412,22 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "LOS")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.LOSMasters on a.LOSId equals b.Id
-                                        where b.LOSName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "") && a.CreatedDate.Year.ToString() == year
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.LOSMasters on a.LOSId equals c.Id
+                                        where c.LOSName.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "") && a.CreatedDate.Year.ToString() == year
                                         select new TableListPiAndBarChartVM
                                         {
-                                            LOSName = b.LOSName,
+                                            LOSName = c.LOSName,
                                             Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
                                             SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "LOS wise: " + label;
@@ -1327,8 +1435,9 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "SBU")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.SBUMasters on a.SBUId equals b.Id
-                                        where b.SBU.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "") && a.CreatedDate.Year.ToString() == year
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.SBUMasters on a.SBUId equals c.Id
+                                        where c.SBU.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "") && a.CreatedDate.Year.ToString() == year
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -1337,7 +1446,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = c.SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "SBU wise: " + label;
@@ -1345,8 +1458,9 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "SubSBU")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.SubSBUMasters on a.SubSBUId equals b.Id
-                                        where b.SubSBU.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "") && a.CreatedDate.Year.ToString() == year
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        join c in db.SubSBUMasters on a.SubSBUId equals c.Id
+                                        where c.SubSBU.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "") && a.CreatedDate.Year.ToString() == year
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -1355,7 +1469,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = c.SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Sub-SBU wise: " + label;
@@ -1373,7 +1491,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Gender of Complainant: " + label;
@@ -1392,7 +1514,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(c.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Gender of Respondent: " + label;
@@ -1410,7 +1536,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Designation of Complainant: " + label;
@@ -1429,7 +1559,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(c.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Designation of Respondent: " + label;
@@ -1447,7 +1581,11 @@ namespace ComplaintManagement.Controllers
                                             CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
-                                            ComplaintId = a.ComplaintId
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
                                         }).ToList();
 
                     modelTitle = "Mode of Complaint: " + label;
@@ -1474,19 +1612,40 @@ namespace ComplaintManagement.Controllers
                         dateEnd = dateTo.ToDateTime().Value;
 
                     }
-                    var ageingPiBarCharts = from a in complaintTList.Distinct().Where(a => a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd)
-                                            select a;
+                    dashboardPiChart = (from a in complaintTList.Distinct()
+                                             join b in db.UserMasters on a.CreatedBy equals b.Id
+                                             where (a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd) && a.CreatedDate.Year.ToString() == year
+                                             select new TableListPiAndBarChartVM
+                                             {
+                                                 LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
+                                                 Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
+                                                 SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
+                                                 CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
+                                                 CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
+                                                 CaseNo = a.ComplaintNo,
+                                                 ComplaintId = a.ComplaintId,
+                                                 SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                                 SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                                 Status = a.ActionType,
+                                                 Region = new RegionMasterRepository().Get(b.RegionId).Region,
+                                             }).ToList();
 
-                    dashboardPiChart.AddRange(ageingPiBarCharts.Where(x=>x.CreatedDate.Year.ToString()==year).Select(a => new TableListPiAndBarChartVM
-                    {
-                        LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
-                        Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
-                        SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
-                        CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
-                        CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
-                        CaseNo = a.ComplaintNo,
-                        ComplaintId = a.ComplaintId
-                    }));
+
+
+
+                    //from a in complaintTList.Distinct().Where(a => a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd)
+                    //                        select a;
+
+                    //dashboardPiChart.AddRange(ageingPiBarCharts.Where(x=>x.CreatedDate.Year.ToString()==year).Select(a => new TableListPiAndBarChartVM
+                    //{
+                    //    LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
+                    //    Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
+                    //    SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
+                    //    CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
+                    //    CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
+                    //    CaseNo = a.ComplaintNo,
+                    //    ComplaintId = a.ComplaintId
+                    //}));
 
                     modelTitle = "Ageing/Case Closure: " + label;
                 }

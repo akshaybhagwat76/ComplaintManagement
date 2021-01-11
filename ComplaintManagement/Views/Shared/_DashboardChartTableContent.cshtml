@@ -11,6 +11,10 @@
                         <td>LOS</td>
                         <td>Category</td>
                         <td>Sub-Category</td>
+                        <td>SBU</td>
+                        <td>Sub-SBU</td>
+                        <td>Region</td>
+                        <td>CaseStage</td>
                         <td>Created By</td>
                         <td>Created On</td>
                         <td>Case No</td>
@@ -25,14 +29,34 @@
                 {
                     foreach (var item in ViewBag.dashboardChartWiseData)
                     {
-            <tr>
-                <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
-                <td class="text-black"><strong>@item.Category</strong></td>
-                <td class="text-black"><strong>@item.SubCategory</strong></td>
-                <td class="text-black"><strong>@item.CreatedBy</strong></td>
-                <td class="text-black"><strong>@item.CreatedOn</strong></td>
-                <td class="text-black"><strong>@item.CaseNo</strong></td>
-            </tr>
+                        <tr>
+                            <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
+                            <td class="text-black"><strong>@item.Category</strong></td>
+                            <td class="text-black"><strong>@item.SubCategory</strong></td>
+                            <td class="text-black"><strong>@item.SBU</strong></td>
+                            <td class="text-black"><strong>@item.SubSBU</strong></td>
+                            <td class="text-black"><strong>@item.Region</strong></td>
+                            <td class="text-black">
+                                <strong>
+                                    @if (item.Status == Messages.SUBMITTED || item.Status == Messages.COMMITTEE)
+                                    {
+                                        @Html.Raw(Messages.InProgress)
+                                    }
+                                    else if (item.Status == Messages.Opened)
+                                    {
+                                        @Html.Raw(Messages.Draft)
+                                    }
+                                    else
+                                    {
+                                        @item.Status
+                                    }
+
+                                </strong>
+                            </td>
+                            <td class="text-black"><strong>@item.CreatedBy</strong></td>
+                            <td class="text-black"><strong>@item.CreatedOn</strong></td>
+                            <td class="text-black"><strong>@item.CaseNo</strong></td>
+                        </tr>
                     }
                 }
                 else

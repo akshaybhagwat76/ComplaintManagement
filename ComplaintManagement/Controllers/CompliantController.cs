@@ -56,8 +56,6 @@ namespace ComplaintManagement.Controllers
             UserVM.ComplaintStatus = Messages.Opened; UserVM.Id = UserVM.CompentencyId = 0; UserVM.DateOfJoining = DateTime.UtcNow.AddDays(5);
             return View(UserVM);
         }
-
-
         public ActionResult Edit(string id, bool isView, string isRedirect)
         {
             EmployeeCompliantMasterVM EmployeeCompliant_oneVM = new EmployeeCompliantMasterVM();
@@ -374,7 +372,7 @@ namespace ComplaintManagement.Controllers
             ViewBag.ManagementLevel = UserVM.BusinessTitle > 0 ? new DesignationMasterRepository().Get(UserVM.BusinessTitle) != null ? new DesignationMasterRepository().Get(UserVM.BusinessTitle).Designation : Messages.NotAvailable : Messages.NotAvailable;
 
             ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
-            ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); 
+            ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList();
             ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(sid)).ToList();
             ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
             if (!string.IsNullOrEmpty(UserVM.ImagePath))
@@ -984,14 +982,14 @@ namespace ComplaintManagement.Controllers
                 new EmployeeComplaintHistoryRepository().AddComplaintHistory(Remark, ids, Messages.COMPLETED, db);
                 //Notification Work
                 var LOSName = string.Empty; var CategoryName = string.Empty; var SubCategoryName = string.Empty;
-                string NotificationContent = string.Empty; 
+                string NotificationContent = string.Empty;
                 List<string> mailTo = new List<string>();
                 List<string> mailBody = new List<string>();
                 CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.CategoryId)).CategoryName;
                 SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(ComplaintMaster.SubCategoryId)).SubCategoryName;
                 var userData = new UserMastersRepository().Get(Convert.ToInt32(sid));
                 LOSName = new LOSMasterRepository().Get(WorkFlow.LOSId).LOSName;
-                NotificationContent = WorkFlow.ComplaintNo+" (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been closed on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for " + LOSName + "by" + userData.EmployeeName + ".";
+                NotificationContent = WorkFlow.ComplaintNo + " (" + LOSName + "-" + CategoryName + "-" + SubCategoryName + ") has been closed on " + DateTime.UtcNow.ToString("dd/MM/yyyy") + " for " + LOSName + "by" + userData.EmployeeName + ".";
 
                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(ComplaintMaster.CreatedBy));
                 mailTo.Add(userData.WorkEmail);
@@ -1141,6 +1139,54 @@ namespace ComplaintManagement.Controllers
             {
                 return RedirectToAction("Compliant_three", new { id = CryptoEngineUtils.Encrypt(Convert.ToString(Id), true), isView = false });
             }
+        }
+        
+        public JsonResult CategoryWiseSubCategory(int CategoryId)
+        {
+            try
+            {
+                SubCategoryMasterVM Subcategory = new SubCategoryMasterVM();
+                if (!string.IsNullOrEmpty(CategoryId.ToString()))
+                {
+                    Subcategory = new SubCategoryMastersRepository().CategoryWiseSubCategory(CategoryId);
+
+                    return new ReplyFormat().Success(Messages.SUCCESS, Subcategory);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
+        }
+
+        public JsonResult SubCategoryWiseCategory(int SubCategoryId)
+        {
+            try
+            {
+                SubCategoryMasterVM Subcategory = new SubCategoryMasterVM();
+                if (!string.IsNullOrEmpty(SubCategoryId.ToString()))
+                {
+                    Subcategory = new SubCategoryMastersRepository().Get(SubCategoryId);
+
+                    return new ReplyFormat().Success(Messages.SUCCESS, Subcategory);
+                }
+                else
+                {
+                    return new ReplyFormat().Error(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
         }
     }
 }

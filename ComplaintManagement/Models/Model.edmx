@@ -338,6 +338,14 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="NumberSystem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NoLength" Type="int" Nullable="false" />
+          <Property Name="AutoIncrement" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="RegionMasters">
           <Key>
             <PropertyRef Name="Id" />
@@ -683,6 +691,7 @@
           <EntitySet Name="LOSMasters" EntityType="Self.LOSMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LOSMasters_History" EntityType="Self.LOSMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NotificationAlert" EntityType="Self.NotificationAlert" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NumberSystem" EntityType="Self.NumberSystem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegionMasters" EntityType="Self.RegionMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegionMasters_History" EntityType="Self.RegionMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RoleMasters" EntityType="Self.RoleMasters" Schema="dbo" store:Type="Tables" />
@@ -806,6 +815,7 @@
             <End Role="CategoryMaster" EntitySet="CategoryMasters" />
             <End Role="SubCategoryMaster" EntitySet="SubCategoryMasters" />
           </AssociationSet>
+          <EntitySet Name="NumberSystems" EntityType="DB_A6A061_complaintuserModel.NumberSystem" />
         </EntityContainer>
         <EntityType Name="CategoryMaster">
           <Key>
@@ -1481,6 +1491,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="NumberSystem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NoLength" Type="Int32" Nullable="false" />
+          <Property Name="AutoIncrement" Type="Int32" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2064,6 +2082,15 @@
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
                 <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NumberSystems">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.NumberSystem">
+              <MappingFragment StoreEntitySet="NumberSystem">
+                <ScalarProperty Name="AutoIncrement" ColumnName="AutoIncrement" />
+                <ScalarProperty Name="NoLength" ColumnName="NoLength" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

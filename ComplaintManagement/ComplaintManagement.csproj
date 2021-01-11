@@ -296,6 +296,9 @@
     <Compile Include="Models\NotificationAlert.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\NumberSystem.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RegionMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

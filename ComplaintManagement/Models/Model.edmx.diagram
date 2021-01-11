@@ -56,6 +56,7 @@
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SBUMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_SubCategoryMasters_CategoryMasters" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.NumberSystem" Width="1.5" PointX="7.92858965691579" PointY="31.11006036359354" />
         
         
         

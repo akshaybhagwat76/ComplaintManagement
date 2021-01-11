@@ -200,20 +200,36 @@ namespace ComplaintManagement.Repository
         {
             return db.SubCategoryMasters.Count(x => x.IsActive && x.SubCategoryName.ToUpper() == SubCategoryName.ToUpper()) > 0;
         }
-        public bool IsCategoryExist(int CategoryId)
-        {
-            return db.SubCategoryMasters.Count(x => x.IsActive && x.CategoryId == CategoryId) > 0;
-        }
-        public bool IsCategoryExist(int CategoryId,int id)
-        {
-            return db.SubCategoryMasters.Count(x => x.IsActive && x.CategoryId == CategoryId && x.Id != id) > 0;
-        }
-
         public bool IsExist(string SubCategoryName, int id)
         {
             return db.SubCategoryMasters.Count(x => x.IsActive && x.SubCategoryName.ToUpper() == SubCategoryName.ToUpper() && x.Id != id) > 0;
         }
-
+        public bool IsCategoryExist(int CategoryId)
+        {
+            return db.SubCategoryMasters.Count(x => x.IsActive && x.CategoryId == CategoryId) > 0;
+        }
+        public bool IsCategoryExist(int CategoryId, int id)
+        {
+            return db.SubCategoryMasters.Count(x => x.IsActive && x.CategoryId == CategoryId && x.Id != id) > 0;
+        }
+        public SubCategoryMasterVM CategoryWiseSubCategory(int CategoryId)
+        {
+            SubCategoryMaster Subcategory = new SubCategoryMaster();
+            try
+            {
+                Subcategory = db.SubCategoryMasters.FirstOrDefault(x => x.IsActive && x.CategoryId == CategoryId);
+                if (Subcategory == null)
+                {
+                    throw new Exception(Messages.BAD_DATA);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+            return Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(Subcategory);
+        }
         public string UploadImportSubCategories(string file)
         {
             return new Common().SaveExcelFromBase64(file);

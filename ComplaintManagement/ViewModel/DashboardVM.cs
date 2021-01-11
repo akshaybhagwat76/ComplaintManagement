@@ -97,6 +97,10 @@ namespace ComplaintManagement.ViewModel
         public string CreatedBy { get; set; }
         public string CreatedOn { get; set; }
         public string CaseNo{get;set;}
+        public string SBU { get; set; }
+        public string SubSBU { get; set; }
+        public string Status { get; set; }
+        public string Region { get; set; }
 
 
     }

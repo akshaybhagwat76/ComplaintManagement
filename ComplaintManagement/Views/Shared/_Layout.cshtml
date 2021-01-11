@@ -81,11 +81,11 @@
                 </a>
             </li>
             <!-- Divider -->
-            <li><hr class="sidebar-divider"></li>
             <!-- Heading -->
             @{
                 if (userRole != Messages.LeadUser && userRole != Messages.AdminUser)
                 {
+                    <li><hr class="sidebar-divider"></li>
                     <li>
                         <div class="sidebar-heading">
                             Compliant
@@ -115,10 +115,10 @@
                                         <a class="collapse-item" href="/Employee/Index">Complaint Listing</a>
                                     }
                                     @*else if (userRole != Messages.NormalUser)
-                                        {
-                                            <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
-                                            <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint Listing</a>
-                                        }*@
+                                {
+                                    <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
+                                    <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint Listing</a>
+                                }*@
                                 }
 
 
