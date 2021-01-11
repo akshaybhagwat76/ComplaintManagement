@@ -64,9 +64,9 @@
                                 });
 
                             }
-                           
-                                @Html.DropDownListFor(model => model.CaseType, (List<SelectListItem>)listItems, new { @class = "form-control required" })
-                          
+
+                            @Html.DropDownListFor(model => model.CaseType, (List<SelectListItem>)listItems, new { @class = "form-control required" })
+
 
                         </li>
                         <li class="nav-item mr-3">
@@ -92,7 +92,7 @@
 
                             </div>
                         </li>
-                     
+
                     </ul>
                 </div>
                 <div class="col-md-2">
@@ -106,7 +106,7 @@
                         <li class="nav-item">
                             <a href="javascript:void(0)" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" id="btnLink"><i class="fas fa-mail-bulk"></i></a>
                         </li>
-                       
+
                     </ul>
                 </div>
             </div>
@@ -176,7 +176,7 @@
 
                                                 @if (Model.CaseType == "CaseType")
                                                 {
-                                                    <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                                                    <td class="text-black text-center"><strong><a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId ),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2">@item.ComplaintNo</a></strong></td>
                                                     <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.RegionName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
@@ -188,7 +188,7 @@
                                                 }
                                                 else if (Model.CaseType == "CaseStage")
                                                 {
-                                                    <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                                                    <td class="text-black text-center"><strong><a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId ),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2">@item.ComplaintNo</a></strong></td>
 
                                                     <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.Category</strong></td>
@@ -206,7 +206,7 @@
 
                                                 else
                                                 {
-                                                    <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                                                    <td class="text-black text-center"><strong><a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId ),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2">@item.ComplaintNo</a></strong></td>
                                                     <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                                                     <td class="text-black text-center"><strong>@item.Category</strong></td>
                                                     <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
@@ -305,6 +305,7 @@
         </div>
     </div>
 </div>
+@Html.Partial("_GetHistory")
 @Scripts.Render("~/Assets/Common")
 @Scripts.Render("~/Assets/LOSMasters")
 
@@ -501,5 +502,12 @@
             location.href = '/LOS/GetXOLReport?currentPage = ' + $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&types=' + types + '&typevalues=' + typevalues;
         }
     }
-
+     function getHistory(id) {
+        if (id !== "") {
+            var url = "/Compliant/GetHistoryByComplaint?ComplaintId=" + id;
+            $("#historyContent").load(url, function () {
+                $("#historyModal").modal("show");
+            })
+        }
+    }
 </script>

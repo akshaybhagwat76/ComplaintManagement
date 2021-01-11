@@ -1,4 +1,5 @@
-﻿<div class="card-body">
+﻿@using ComplaintManagement.Helpers
+<div class="card-body">
     <div class="table-responsive">
         <table class="table f-14" id="myTable">
             <thead>
@@ -21,7 +22,7 @@
                     foreach (var item in ViewBag.LossReporting)
                     {
                         <tr>
-                            <td class="text-black text-center"><strong>@item.ComplaintNo</strong></td>
+                            <td class="text-black text-center"><strong><a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId ),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2">@item.ComplaintNo</a></strong></td>
                             <td class="text-black text-center"><strong>@item.LOSName</strong></td>
                             <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
                             <td class="text-black text-center"><strong>@item.Category</strong></td>
@@ -64,4 +65,14 @@
 
 </div>
 
-
+@Html.Partial("_GetHistory")
+<script>
+      function getHistory(id) {
+        if (id !== "") {
+            var url = "/Compliant/GetHistoryByComplaint?ComplaintId=" + id;
+            $("#historyContent").load(url, function () {
+                $("#historyModal").modal("show");
+            })
+        }
+    }
+</script>
