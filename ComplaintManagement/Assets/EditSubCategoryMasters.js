@@ -27,10 +27,10 @@ function submitForm() {
         funToastr(false, "This sub category is already exist."); return;
     }
 
-    if (isValidCategory) {
-        $("#CategoryId").addClass("adderror");
-        funToastr(false, 'This Category is already linked with other sub-category.'); return;
-    }
+    //if (isValidCategory) {
+    //    $("#CategoryId").addClass("adderror");
+    //    funToastr(false, 'This Category is already linked with other sub-category.'); return;
+    //}
 
     if (retval && !isValidSubCategory) {
         var data = {
@@ -98,24 +98,24 @@ function checkDuplicate() {
     }
 }
 
-$(document).on('change', '#CategoryId', function () {
-    var CategoryId = $("#CategoryId").val();
-    var Id = $("#Id").val();
-    var data = { CategoryId: CategoryId, Id: Id }
-    if (CategoryId !== "") {
-        $.post("/SubCategory/CheckIfCategoryExist", { data: data }, function (data) {
-            if (data != null) {
-                if (data.data) {
-                    isValidCategory = true;
-                    $("#CategoryId").addClass("adderror");
-                    funToastr(false, 'This Category is already linked with other sub-category.');
-                }
-                else {
-                    isValidCategory = false;
-                    $("#CategoryId").removeClass("adderror");
-                }
-            }
-        })
+//$(document).on('change', '#CategoryId', function () {
+//    var CategoryId = $("#CategoryId").val();
+//    var Id = $("#Id").val();
+//    var data = { CategoryId: CategoryId, Id: Id }
+//    if (CategoryId !== "") {
+//        $.post("/SubCategory/CheckIfCategoryExist", { data: data }, function (data) {
+//            if (data != null) {
+//                if (data.data) {
+//                    isValidCategory = true;
+//                    $("#CategoryId").addClass("adderror");
+//                    funToastr(false, 'This Category is already linked with other sub-category.');
+//                }
+//                else {
+//                    isValidCategory = false;
+//                    $("#CategoryId").removeClass("adderror");
+//                }
+//            }
+//        })
 
-    }
-});
+//    }
+//});

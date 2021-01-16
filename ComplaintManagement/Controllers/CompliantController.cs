@@ -1145,7 +1145,7 @@ namespace ComplaintManagement.Controllers
         {
             try
             {
-                SubCategoryMasterVM Subcategory = new SubCategoryMasterVM();
+                List<SubCategoryMasterVM> Subcategory = new List<SubCategoryMasterVM>();
                 if (!string.IsNullOrEmpty(CategoryId.ToString()))
                 {
                     Subcategory = new SubCategoryMastersRepository().CategoryWiseSubCategory(CategoryId);

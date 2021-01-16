@@ -383,24 +383,33 @@ namespace ComplaintManagement.Repository
                                     if (employeeCompliantMasterDto.LastPerformedBy != null && employeeCompliantMasterDto.LastPerformedBy != "")
                                     {
 
-                                        string[] lastPerformBy = employeeCompliantMasterDto.LastPerformedBy.Split(',');
-                                        foreach (var Ids in lastPerformBy)
+                                        if(employeeComplaintWorkFlowDto.ActionType == Messages.COMMITTEE)
                                         {
-                                            string UserName = string.Empty;
-                                            string UserRole = string.Empty;
-                                            int Id = Convert.ToInt32(Ids);
-                                            var isCommitteeUserAssigned = CommitteeMemberData.UserId.Split(',').Where(i => i.ToString() == Id.ToString()).Count() > 0;
-                                            if (isCommitteeUserAssigned)
-                                            {
-                                                UserRole = Messages.COMMITTEE;
-                                            }
-                                            else
-                                            {
-                                                UserRole = new UserMastersRepository().Get(Convert.ToInt32(Ids)).Type;
-                                            }
-                                            //UserName = new UserMastersRepository().Get(Convert.ToInt32(Ids)).EmployeeName;// + ", ";
-                                            PendingWith = UserRole;//+= UserName + "(" + UserRole + ")" + ", ";
+                                            PendingWith = Messages.COMMITTEE;
                                         }
+                                        else
+                                        {
+                                            PendingWith = Messages.HRUser;
+                                        }
+
+                                        //string[] lastPerformBy = employeeCompliantMasterDto.LastPerformedBy.Split(',');
+                                        //foreach (var Ids in lastPerformBy)
+                                        //{
+                                        //    string UserName = string.Empty;
+                                        //    string UserRole = string.Empty;
+                                        //    int Id = Convert.ToInt32(Ids);
+                                        //    var isCommitteeUserAssigned = CommitteeMemberData.UserId.Split(',').Where(i => i.ToString() == Id.ToString()).Count() > 0;
+                                        //    if (isCommitteeUserAssigned && employeeComplaintWorkFlowDto.ActionType == Messages.COMMITTEE)
+                                        //    {
+                                        //        UserRole = Messages.COMMITTEE;
+                                        //    }
+                                        //    else
+                                        //    {
+                                        //        UserRole = new UserMastersRepository().Get(Convert.ToInt32(Ids)).Type;
+                                        //    }
+                                        //    //UserName = new UserMastersRepository().Get(Convert.ToInt32(Ids)).EmployeeName;// + ", ";
+                                        //    PendingWith = UserRole;//+= UserName + "(" + UserRole + ")" + ", ";
+                                        //}
                                     }
                                     else
                                     {
@@ -484,25 +493,33 @@ namespace ComplaintManagement.Repository
                                         string PendingWith = string.Empty;
                                         if (employeeCompliantMasterDto.LastPerformedBy != null && employeeCompliantMasterDto.LastPerformedBy != "")
                                         {
-                                            
-                                            string[] lastPerformBy = employeeCompliantMasterDto.LastPerformedBy.Split(',');
-                                            foreach (var Ids in lastPerformBy)
+                                            if (employeeComplaintWorkFlowDto.ActionType == Messages.COMMITTEE)
                                             {
-                                                string UserName = string.Empty;
-                                                string UserRole = string.Empty;
-                                                int Id = Convert.ToInt32(Ids);
-                                                var isCommitteeUserAssigned = CommitteeMemberData.UserId.Split(',').Where(i => i.ToString() == Id.ToString()).Count() > 0;
-                                                if (isCommitteeUserAssigned)
-                                                {
-                                                    UserRole = Messages.COMMITTEE;
-                                                }
-                                                else
-                                                {
-                                                    UserRole = new UserMastersRepository().Get(Convert.ToInt32(Ids)).Type;
-                                                }
-                                                //UserName = new UserMastersRepository().Get(Convert.ToInt32(Ids)).EmployeeName;// + ", ";
-                                                PendingWith = UserRole;//+= UserName + "(" + UserRole + ")" + ", ";
+                                                PendingWith = Messages.COMMITTEE;
                                             }
+                                            else
+                                            {
+                                                PendingWith = Messages.HRUser;
+                                            }
+
+                                            //string[] lastPerformBy = employeeCompliantMasterDto.LastPerformedBy.Split(',');
+                                            //foreach (var Ids in lastPerformBy)
+                                            //{
+                                            //    string UserName = string.Empty;
+                                            //    string UserRole = string.Empty;
+                                            //    int Id = Convert.ToInt32(Ids);
+                                            //    var isCommitteeUserAssigned = CommitteeMemberData.UserId.Split(',').Where(i => i.ToString() == Id.ToString()).Count() > 0;
+                                            //    if (isCommitteeUserAssigned)
+                                            //    {
+                                            //        UserRole = Messages.COMMITTEE;
+                                            //    }
+                                            //    else
+                                            //    {
+                                            //        UserRole = new UserMastersRepository().Get(Convert.ToInt32(Ids)).Type;
+                                            //    }
+                                            //    //UserName = new UserMastersRepository().Get(Convert.ToInt32(Ids)).EmployeeName;// + ", ";
+                                            //    PendingWith = UserRole;//+= UserName + "(" + UserRole + ")" + ", ";
+                                            //}
                                         }
                                         else
                                         {

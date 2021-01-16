@@ -212,23 +212,24 @@ namespace ComplaintManagement.Repository
         {
             return db.SubCategoryMasters.Count(x => x.IsActive && x.CategoryId == CategoryId && x.Id != id) > 0;
         }
-        public SubCategoryMasterVM CategoryWiseSubCategory(int CategoryId)
+        public List<SubCategoryMasterVM> CategoryWiseSubCategory(int CategoryId)
         {
-            SubCategoryMaster Subcategory = new SubCategoryMaster();
+            List<SubCategoryMaster> Subcategory = new List<SubCategoryMaster>();
             try
             {
-                Subcategory = db.SubCategoryMasters.FirstOrDefault(x => x.IsActive && x.CategoryId == CategoryId);
+                Subcategory = db.SubCategoryMasters.Where(x => x.IsActive && x.CategoryId == CategoryId).ToList();
                 if (Subcategory == null)
                 {
                     throw new Exception(Messages.BAD_DATA);
                 }
+                
             }
             catch (Exception ex)
             {
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
-            return Mapper.Map<SubCategoryMaster, SubCategoryMasterVM>(Subcategory);
+            return Mapper.Map<List<SubCategoryMaster>, List<SubCategoryMasterVM>>(Subcategory);
         }
         public string UploadImportSubCategories(string file)
         {

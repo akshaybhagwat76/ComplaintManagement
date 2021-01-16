@@ -154,10 +154,10 @@
                                         Text = "",
                                         Value = ""
                                     });
-                                    listSubCategoryId.AddRange(ViewBag.lstSubCategories);
+                                    //listSubCategoryId.AddRange(ViewBag.lstSubCategories);
                                 }
 
-                                @Html.DropDownList("SubCategoryId", (List<SelectListItem>)listSubCategoryId, new { @class = "form-control required" })
+                                @Html.DropDownList("SubCategoryId",(List<SelectListItem>)listSubCategoryId , new { @class = "form-control required" })
 
                             </div>
                         </div>

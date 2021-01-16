@@ -54,8 +54,29 @@ $(document).on('change', '#CategoryId', function () {
         success: function (response) {
             StopProcess();
             if (response.status !== "Fail") {
-                $('#SubCategoryId').val(response.data.Id);
-                console.log(response);
+                console.log(response.data);
+                //$("#SubCategoryId").html("");
+
+                var select = $("#SubCategoryId");
+                select.empty();
+                select.append($('<option/>', {
+                    value: "",
+                    text: "--Select subcategory--"
+                }));
+                $.each(response.data, function (index, itemData) {
+                    select.append($('<option/>', {
+                        value: itemData.Id,
+                        text: itemData.SubCategoryName
+                    }));
+                });
+
+                //$.each(response.data, function (i, data) {
+                //    console.log(data);
+                //    $("#SubCategoryId").append($('<option></option>').val(data.Id).html(data.SubCategoryName));
+                //});
+
+                //$('#SubCategoryId').val(response.data.Id);
+                
             }
             else {
                 funToastr(false, "This Category not linked with any sub-category");
@@ -68,29 +89,29 @@ $(document).on('change', '#CategoryId', function () {
     });
 })
 
-$(document).on('change', '#SubCategoryId', function () {
-    var SubCategoryId = $('#SubCategoryId').val();
-    StartProcess();
-    $.ajax({
-        type: "POST",
-        url: "/Compliant/SubCategoryWiseCategory",
-        data: { SubCategoryId: SubCategoryId },
-        success: function (response) {
-            StopProcess();
-            if (response.status !== "Fail" && response.data.CategoryId !='0') {
-                $('#CategoryId').val(response.data.CategoryId);
-                console.log(response);
-            }
-            else {
-                funToastr(false, "This Sub-Category not linked with any category");
-                //funToastr(false, response.error);
-            }
-        },
-        error: function (error) {
-            toastr.error(error)
-        }
-    });
-})
+//$(document).on('change', '#SubCategoryId', function () {
+//    var SubCategoryId = $('#SubCategoryId').val();
+//    StartProcess();
+//    $.ajax({
+//        type: "POST",
+//        url: "/Compliant/SubCategoryWiseCategory",
+//        data: { SubCategoryId: SubCategoryId },
+//        success: function (response) {
+//            StopProcess();
+//            if (response.status !== "Fail" && response.data.CategoryId !='0') {
+//                $('#CategoryId').val(response.data.CategoryId);
+//                console.log(response);
+//            }
+//            else {
+//                funToastr(false, "This Sub-Category not linked with any category");
+//                //funToastr(false, response.error);
+//            }
+//        },
+//        error: function (error) {
+//            toastr.error(error)
+//        }
+//    });
+//})
 
 function submitForm(flag) {
     $("#lblError").removeClass("success").removeClass("adderror").text('');

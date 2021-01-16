@@ -370,7 +370,7 @@
                                         @{
                                             <td class="text-black">
                                                 <strong>
-                                                    @if (item.ActionType == Messages.Opened)
+                                                    @if (item.ActionType == Messages.Opened || item.ActionType == "Save")
                                                     {
                                                         @Html.Raw(Messages.Draft.ToString())
                                                     }
