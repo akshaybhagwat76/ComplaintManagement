@@ -1680,7 +1680,7 @@ namespace ComplaintManagement.Controllers
                     slides = pptPresentation.Slides;
                     slide = slides.AddSlide(i, customLayout);
                     textRange = slide.Shapes[1].TextFrame.TextRange;
-                    textRange.Text = "                   " + imageItem.Heading;
+                    textRange.Text = "                     " + imageItem.Heading;
                     textRange.Font.Name = "Arial";
                     textRange.Font.Size = 40;
 
@@ -1730,7 +1730,7 @@ namespace ComplaintManagement.Controllers
                     slides = pptPresentation.Slides;
                     slide = slides.AddSlide(i, customLayout);
                     textRange = slide.Shapes[1].TextFrame.TextRange;
-                    textRange.Text = "<p style='text-align:center;'>" + imageItem.Heading;
+                    textRange.Text = "                    " + imageItem.Heading;
                     textRange.Font.Name = "Arial";
                     textRange.Font.Size = 40;
 
