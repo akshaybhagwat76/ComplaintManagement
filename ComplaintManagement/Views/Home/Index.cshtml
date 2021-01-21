@@ -26,6 +26,7 @@
     var OverDueComplaints = Model.OverDueComplaints;
     var AwaitingComplaints = Model.AwaitingComplaints;
 }
+<link href="~/Content/fSelect.css" rel="stylesheet" type="text/css" />
 @*<script src="~/Scripts/vendor/datepicker/bootstrap-datepicker.js"></script>*@
 @*<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"/>*@
 @Html.Hidden("Role", userRole)
@@ -103,6 +104,12 @@
                         </li>
                         <li class="nav-item mr-3">
                             <button type="submit" id="btn_dataSearch" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-search"></i></button>
+                        </li>
+                        <li class="nav-item mr-3">
+                            <button type="submit" id="btn_chartToImage" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-file-powerpoint"></i></button>
+                        </li>
+                        <li class="nav-item mr-3">
+                            <button type="submit" id="btn_sendMail" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fa fa-envelope" aria-hidden="true"></i></button>
                         </li>
                     </ul>
                 </div>
@@ -284,78 +291,55 @@
     </div>
 </div>
 
+<div class="modal fade" id="ModalPopUp" role="dialog" style="width:100%">
+    <div class="modal-dialog err-pop">
+        <div class="modal-content" style="width:700px;height:300px">
+            <div class="modal-header" style="background-color:#ff6a00">
+                <span style="text-align:center">Send Email</span>
+                <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <table style="margin-top:10px;width:100%" cellpadding="10" cellspacing="10">
+                        <tr>
+                            <td>
+                                <label>Involved Users</label>
+                            </td>
+                            <td>
+                                @{
+                                    List<SelectListItem> listUser = new List<SelectListItem>();
+                                    listUser = new List<SelectListItem>();
+                                    listUser.Add(new SelectListItem
+                                    {
+                                        Text = "",
+                                        Value = ""
+                                    });
+                                    listUser.AddRange(ViewBag.lstUser);
+                                }
+                                @Html.DropDownList("InvolvedUserId", (List<SelectListItem>)listUser, new { @class = "form-control multiselect required", multiple = "multiple" })
 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Comment
+                            </td>
+                            <td>
+                                @Html.TextArea("Comment", new { @class = "form-control comment", @style = "Border-radius:2%" })
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+                <hr />
+                <button type="button" class="btn btn-primary" id="sendemail">Send Mail</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/fSelect.js"></script>
 @Scripts.Render("~/plugins/Chart")
-
 @Scripts.Render("~/Assets/EmployeeComplaintDashboard")
-
-@*<div class="modal" id="dueComplaints">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-black font-weight-bold">Due Complaints</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                </div>
-            </div>
-        </div>
-    </div>*@
-
-@*<div class="modal" id="overdueComplaints">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-black font-weight-bold">Overdue Complaints</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table f-14">
-                            <thead>
-                                <tr>
-                                    <td>LOS</td>
-                                    <td>Category</td>
-                                    <td>Sub-Category</td>
-                                    <td>Created By</td>
-                                    <td>Created On</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                    <td class="text-black"><strong>test22222</strong></td>
-                                    <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                    <td class="text-black"><strong>29/11/2020</strong></td>
-                                    <td class="text-black"><strong>29/11/2020</strong></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                    <td class="text-black"><strong>test22222</strong></td>
-                                    <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                    <td class="text-black"><strong>29/11/2020</strong></td>
-                                    <td class="text-black"><strong>29/11/2020</strong></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-black"><strong>LOS-27Test1</strong></td>
-                                    <td class="text-black"><strong>test22222</strong></td>
-                                    <td class="text-black"><strong>29NoVSUb1zxxc</strong></td>
-                                    <td class="text-black"><strong>29/11/2020</strong></td>
-                                    <td class="text-black"><strong>29/11/2020</strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>*@
-
 @Html.Partial("_ComplaintAwaiting")
 @Html.Partial("_ComplaintDue")
 @Html.Partial("_ComplaintOverDue")

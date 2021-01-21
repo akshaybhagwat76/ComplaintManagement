@@ -3,8 +3,12 @@ using ComplaintManagement.Models;
 using ComplaintManagement.Repository;
 using ComplaintManagement.ViewModel;
 using Elmah;
+using Microsoft.Office.Interop.PowerPoint;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -20,10 +24,11 @@ namespace ComplaintManagement.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
         public ActionResult Index()
-
         {
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
             return View(new CompliantMastersRepository().GetDashboardCounts());
         }
 
@@ -368,8 +373,8 @@ namespace ComplaintManagement.Controllers
                 dateTo = DateTime.UtcNow.ToString("yyyy-MM-dd");
             }
 
-            DateTime dateF = Convert.ToDateTime(dateFrom);
-            DateTime dateT = Convert.ToDateTime(dateTo);
+            DateTime? dateF = dateFrom.ToDateTime();
+            DateTime? dateT = dateTo.ToDateTime();
 
             List<LOSMasterVM> losMasterList = new List<LOSMasterVM>();
             List<SBUMasterVM> sbuMasterList = new List<SBUMasterVM>();
@@ -472,7 +477,7 @@ namespace ComplaintManagement.Controllers
                 complaintTList = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && x.CreatedDate >= dateF && x.CreatedDate <= dateT).ToList();
             }
             //dashboard count start
-            
+
             var data = (from a in complaintTList.Distinct()
                         join b in db.HR_Role on a.ComplaintId equals b.ComplentId
                         group a by new { b.CreatedDate?.Year, b.CaseType } into caseTypeGroup
@@ -929,7 +934,7 @@ namespace ComplaintManagement.Controllers
                                             CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
                                             CaseNo = a.ComplaintNo,
                                             ComplaintId = a.ComplaintId,
-                                             SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
                                             SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
                                             Status = a.ActionType,
                                             Region = new RegionMasterRepository().Get(b.RegionId).Region,
@@ -1077,7 +1082,7 @@ namespace ComplaintManagement.Controllers
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
                                         join b in db.UserMasters on a.CreatedBy equals b.Id
-                                        where b.TimeType.ToLower().Trim().Replace(" ", "")==label.ToLower().Trim().Replace(" ", "")
+                                        where b.TimeType.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -1118,22 +1123,22 @@ namespace ComplaintManagement.Controllers
 
                     }
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                            join b in db.UserMasters on a.CreatedBy equals b.Id
-                                            where a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd
-                                       select new TableListPiAndBarChartVM
-                                       {
-                                           LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
-                                           Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
-                                           SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
-                                           CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
-                                           CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
-                                           CaseNo = a.ComplaintNo,
-                                           ComplaintId = a.ComplaintId,
-                                           SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
-                                           SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
-                                           Status = a.ActionType,
-                                           Region = new RegionMasterRepository().Get(b.RegionId).Region,
-                                       }).ToList();
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        where a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd
+                                        select new TableListPiAndBarChartVM
+                                        {
+                                            LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
+                                            Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
+                                            SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
+                                            CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
+                                            CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
+                                            CaseNo = a.ComplaintNo,
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
+                                        }).ToList();
 
                     //from a in complaintTList.Distinct().Where(a => a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd)
                     //select a;
@@ -1155,8 +1160,8 @@ namespace ComplaintManagement.Controllers
 
                     modelTitle = "Ageing/Case Closure: " + label;
                 }
-                
-                if(TempData["ModelTitle"] != null)
+
+                if (TempData["ModelTitle"] != null)
                 {
                     TempData.Remove("ModelTitle");
                 }
@@ -1172,7 +1177,7 @@ namespace ComplaintManagement.Controllers
             }
         }
         [HttpGet]
-        public ActionResult DashboardBarChartTableBind(string dateFrom, string dateTo, string chart, string label,string year)
+        public ActionResult DashboardBarChartTableBind(string dateFrom, string dateTo, string chart, string label, string year)
         {
             try
             {
@@ -1299,7 +1304,7 @@ namespace ComplaintManagement.Controllers
                     dashboardPiChart = (from a in complaintTList.Distinct()
                                         join b in db.UserMasters on a.CreatedBy equals b.Id
                                         join c in db.HR_Role on a.ComplaintId equals c.ComplentId
-                                        where c.CaseType.ToLower().Trim() == label.ToLower().Trim() && c.CreatedDate?.Year.ToString() ==year
+                                        where c.CaseType.ToLower().Trim() == label.ToLower().Trim() && c.CreatedDate?.Year.ToString() == year
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -1613,40 +1618,22 @@ namespace ComplaintManagement.Controllers
 
                     }
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                             join b in db.UserMasters on a.CreatedBy equals b.Id
-                                             where (a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd) && a.CreatedDate.Year.ToString() == year
-                                             select new TableListPiAndBarChartVM
-                                             {
-                                                 LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
-                                                 Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
-                                                 SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
-                                                 CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
-                                                 CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
-                                                 CaseNo = a.ComplaintNo,
-                                                 ComplaintId = a.ComplaintId,
-                                                 SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
-                                                 SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
-                                                 Status = a.ActionType,
-                                                 Region = new RegionMasterRepository().Get(b.RegionId).Region,
-                                             }).ToList();
-
-
-
-
-                    //from a in complaintTList.Distinct().Where(a => a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd)
-                    //                        select a;
-
-                    //dashboardPiChart.AddRange(ageingPiBarCharts.Where(x=>x.CreatedDate.Year.ToString()==year).Select(a => new TableListPiAndBarChartVM
-                    //{
-                    //    LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
-                    //    Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
-                    //    SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
-                    //    CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
-                    //    CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
-                    //    CaseNo = a.ComplaintNo,
-                    //    ComplaintId = a.ComplaintId
-                    //}));
-
+                                        join b in db.UserMasters on a.CreatedBy equals b.Id
+                                        where (a.CreatedDate.Date >= dateStart && a.CreatedDate.Date <= dateEnd) && a.CreatedDate.Year.ToString() == year
+                                        select new TableListPiAndBarChartVM
+                                        {
+                                            LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
+                                            Category = new CategoryMastersRepository().Get(a.EmployeeComplaintMaster.CategoryId).CategoryName,
+                                            SubCategory = new SubCategoryMastersRepository().Get(a.EmployeeComplaintMaster.SubCategoryId).SubCategoryName,
+                                            CreatedBy = new UserMastersRepository().Get(a.CreatedBy).EmployeeName,
+                                            CreatedOn = a.CreatedDate.ToString("dd/MM/yyyy"),
+                                            CaseNo = a.ComplaintNo,
+                                            ComplaintId = a.ComplaintId,
+                                            SBU = new SBUMasterRepository().Get(a.SBUId).SBU,
+                                            SubSBU = new SubSBUMasterRepository().Get(a.SubSBUId).SubSBU,
+                                            Status = a.ActionType,
+                                            Region = new RegionMasterRepository().Get(b.RegionId).Region,
+                                        }).ToList();
                     modelTitle = "Ageing/Case Closure: " + label;
                 }
 
@@ -1660,5 +1647,141 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+
+        [HttpPost]
+        public ActionResult PrintBase64ToPPT(string jsonInput = "")
+        {
+            try
+            {
+                List<ImageBase64> reqObj = JsonConvert.DeserializeObject<List<ImageBase64>>(jsonInput);
+                String path = Server.MapPath("~/Documents/ChartPPT/");
+                string fileName = Server.MapPath("~/Documents/ChartPPT/Charts.pptx");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                else
+                {
+                    if ((System.IO.File.Exists(fileName)))
+                    {
+                        System.IO.File.Delete(fileName);
+                    }
+                }
+                Application pptAppliCation = new Application();
+                Presentation pptPresentation = pptAppliCation.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
+                int i = 0;
+                foreach (var imageItem in reqObj)
+                {
+                    i++;
+                    Microsoft.Office.Interop.PowerPoint.Slides slides;
+                    Microsoft.Office.Interop.PowerPoint.Slide slide;
+                    Microsoft.Office.Interop.PowerPoint.TextRange textRange;
+                    Microsoft.Office.Interop.PowerPoint.CustomLayout customLayout = pptPresentation.SlideMaster.CustomLayouts[Microsoft.Office.Interop.PowerPoint.PpSlideLayout.ppLayoutText];
+                    slides = pptPresentation.Slides;
+                    slide = slides.AddSlide(i, customLayout);
+                    textRange = slide.Shapes[1].TextFrame.TextRange;
+                    textRange.Text = "                   " + imageItem.Heading;
+                    textRange.Font.Name = "Arial";
+                    textRange.Font.Size = 40;
+
+                    Microsoft.Office.Interop.PowerPoint.Shape shape = slide.Shapes[2];
+                    string imgFileName = Server.MapPath("~/Documents/ChartPPT/" + i + ".png");
+                    if ((System.IO.File.Exists(imgFileName)))
+                    {
+                        System.IO.File.Delete(imgFileName);
+                    }
+                    System.IO.File.WriteAllBytes(imgFileName, imageItem.UrlBase64);
+                    slide.Shapes.AddPicture(imgFileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, shape.Left, shape.Top, shape.Width, shape.Height);
+                }
+                var random = new Random();
+                var objGuid = new string(Enumerable.Repeat(chars, 5).Select(s => s[random.Next(s.Length)]).ToArray());
+                var ServerSavePath = Path.Combine(Server.MapPath("~/Documents/ChartPPT/Charts_") + objGuid + ".pptx");
+                pptPresentation.SaveAs(ServerSavePath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsDefault, Microsoft.Office.Core.MsoTriState.msoTrue);
+                return File(ServerSavePath, "application/mspowerpoint", "Charts.pptx");
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SendMailBase64ToPPT(string jsonInput = "", bool IsMailSend = false, string JsonData = "", string[] InvolveUserId = null)
+        {
+            try
+            {
+                List<ImageBase64> reqObj = JsonConvert.DeserializeObject<List<ImageBase64>>(jsonInput);
+                String path = Server.MapPath("~/Documents/ChartPPT/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                Application pptAppliCation = new Application();
+                Presentation pptPresentation = pptAppliCation.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoFalse);
+                int i = 0;
+                foreach (var imageItem in reqObj)
+                {
+                    i++;
+                    Microsoft.Office.Interop.PowerPoint.Slides slides;
+                    Microsoft.Office.Interop.PowerPoint.Slide slide;
+                    Microsoft.Office.Interop.PowerPoint.TextRange textRange;
+                    Microsoft.Office.Interop.PowerPoint.CustomLayout customLayout = pptPresentation.SlideMaster.CustomLayouts[Microsoft.Office.Interop.PowerPoint.PpSlideLayout.ppLayoutText];
+                    slides = pptPresentation.Slides;
+                    slide = slides.AddSlide(i, customLayout);
+                    textRange = slide.Shapes[1].TextFrame.TextRange;
+                    textRange.Text = "<p style='text-align:center;'>" + imageItem.Heading;
+                    textRange.Font.Name = "Arial";
+                    textRange.Font.Size = 40;
+
+                    Microsoft.Office.Interop.PowerPoint.Shape shape = slide.Shapes[2];
+                    string imgFileName = Server.MapPath("~/Documents/ChartPPT/" + i + ".png");
+                    if ((System.IO.File.Exists(imgFileName)))
+                    {
+                        System.IO.File.Delete(imgFileName);
+                    }
+                    System.IO.File.WriteAllBytes(imgFileName, imageItem.UrlBase64);
+                    slide.Shapes.AddPicture(imgFileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, shape.Left, shape.Top, shape.Width, shape.Height);
+                }
+                var random = new Random();
+                
+                var objGuid = new string(Enumerable.Repeat(chars, 5).Select(s => s[random.Next(s.Length)]).ToArray());
+                var ServerSavePath = Path.Combine(Server.MapPath("~/Documents/ChartPPT/Charts_") + objGuid + ".pptx");
+                pptPresentation.SaveAs(ServerSavePath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsDefault, Microsoft.Office.Core.MsoTriState.msoTrue);
+                pptPresentation.Close();
+                pptAppliCation.Quit();
+                List<DashboardMailSend> mailObj = JsonConvert.DeserializeObject<List<DashboardMailSend>>(JsonData);
+                List<string> mailTo = new List<string>();
+                List<string> mailBody = new List<string>();
+                List<string> mailAttachment = new List<string>();
+                string[] assignToUserId = InvolveUserId;//.Split(',').ToList();
+                var Subject = string.Empty;
+                var Comment = string.Empty;
+
+                foreach (var item in mailObj)
+                {
+                    Subject = item.ChartType.ToUpper() + " " + item.DateFrom + " " + item.DateTo;
+                    Comment = item.Comment;
+                }
+
+                foreach (var item in assignToUserId)
+                {
+                    mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item)).WorkEmail);
+                    mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p> Please Find attachment.</p></br><p>" + Comment + "</p><p>Thank You.</br></br>CMS</p></body></html>");
+                }
+                mailAttachment.Add(ServerSavePath);
+                MailSend.SendEmailWithDifferentBody(mailTo, Subject, mailBody, "", "", mailAttachment);
+                return new ReplyFormat().Success(Messages.SUCCESS);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+        }
+
+
     }
+
 }

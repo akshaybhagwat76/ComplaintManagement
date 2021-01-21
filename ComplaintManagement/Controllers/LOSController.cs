@@ -1533,10 +1533,6 @@ namespace ComplaintManagement.Controllers
             byte[] data = stream.ToArray();
             return data;
         }
-
-
-
-
         [HttpGet]
         [AllowAnonymous]
         public ActionResult UserMail(string userID, string comment,string range,int losid)

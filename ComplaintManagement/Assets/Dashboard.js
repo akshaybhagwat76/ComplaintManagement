@@ -2,6 +2,7 @@
 //var myChart1 = null;
 
 $(document).ready(function () {
+    $('.multiselect').fSelect();
     var currentUserrole = $("#Role").val();
     if (currentUserrole !== "" || currentUserrole !== undefined) {
         if (currentUserrole.length > 2) {
@@ -19,6 +20,7 @@ $(document).ready(function () {
             }
         }
     }
+    
     if (currentUserrole.toLowerCase() == "lead" || currentUserrole.toLowerCase() == "admin") {
         let today = new Date();
         $('#txt_dateFrom').datepicker({
@@ -248,15 +250,8 @@ function DashboardPiChartTableBind(dateFrom, dateTo, chart, label) {
 }
 
 function DashboardBarChartTableBind(dateFrom, dateTo, chart, label,year) {
-    
-    
     StartProcess();
     label = label.split(" ").join("");
-    //alert(dateFrom);
-    //alert(dateTo);
-    //alert(chart);
-    //alert(label);
-    //alert(year);
     var url = `/Home/DashboardBarChartTableBind?dateFrom=${dateFrom}&dateTo=${dateTo}&chart=${chart}&label=${label}&year=${year}`;
     $("#chartWiseTableShow").load(url, function () {
         var table = $('#dashboardChart').DataTable({
@@ -267,19 +262,59 @@ function DashboardBarChartTableBind(dateFrom, dateTo, chart, label,year) {
         $("#chartWiseDataBind").modal("show")
     });
 }
+var Base64Image = [];
+function ChartBase64Image(base64,heading) {
+    //var url_base64jp = document.getElementById("myChart").toDataURL("image/jpg");
+    var url_base64 = base64.replace('data:image/png;base64,', '');
+    Base64Image.push({ UrlBase64: url_base64, Heading: heading});
 
+}
+
+$(document).on('click', '#btn_chartToImage', function () {
+    //alert();
+    console.log(Base64Image);
+    $.post('/home/PrintBase64ToPPT', { jsonInput: JSON.stringify(Base64Image) }, function (result) {
+
+    });
+})
+
+$(document).on('click', '#btn_sendMail', function () {
+    $('#ModalPopUp').modal('show');
+})
+
+$(document).on('click', '#sendemail', function () {
+    StartProcess();
+    var JsonData = [];
+    JsonData.push({ Comment: $('#Comment').val(), DateFrom: $('#txt_dateFrom').val(), DateTo: $('#txt_dateTo').val(), ChartType: $('#ddlChart').val() });
+    var UserInvolved = $('.multiselect').val();
+    console.log(UserInvolved);
+    $.post('/home/SendMailBase64ToPPT', { jsonInput: JSON.stringify(Base64Image), IsMailSend: true, JsonData: JSON.stringify(JsonData), InvolveUserId: UserInvolved }, function (result) {
+        StopProcess();
+        if (result.status != "Fail") {
+            $('#ModalPopUp').modal('hide');
+            //$('.multiselect').val('');
+            //$('#Comment').val('');
+            alert("Mail has been sent");
+        } else {
+            $('#ModalPopUp').modal('show');
+            console.log(result);
+            funToastr(false, "mail has been not sent"); 
+        }
+    });
+})
+
+
+        
 function DashboardPiGraphData() {
+    Base64Image = [];
     StartProcess();
     let dateFrom = ($('#txt_dateFrom').val());
     let dateTo = ($('#txt_dateTo').val());
     $.get('/home/DashboardPiChart', { dateFrom: dateFrom, dateTo: dateTo }, function (result) {
-        console.log(result);
         StopProcess();
-        //console.log(result.categoryPiCharts[1].Label);
         if (result != null && result != "undefined" && result != "") {
             //Case Type Pi chart
-            if (result.caseTypeofComplaint != null) {//&& result.casePiChart.Actionable != '0' || result.casePiChart.NonActionable !='0') {
-
+            if (result.caseTypeofComplaint != null) {
                 var Labels = []; var Values = []; var Colors = [];
                 $.each(result.caseTypeofComplaint, function (i) {
                     Labels.push(result.caseTypeofComplaint[i].Label);
@@ -306,12 +341,11 @@ function DashboardPiGraphData() {
                         }]
                     },
                     options: {
-                        responsive: true,
                         legend: {
                             position: 'bottom',
                         },
                         tooltips: {
-                            enabled: true
+                            enabled: true,
                         },
                         animation: {
                             animateScale: true,
@@ -338,6 +372,14 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "CaseType", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("caseTypeChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64,"Case Type");
+                                this.options.animation.onComplete = null;
+                            }
+                        },
+                        
                     }
                 });
             }
@@ -408,6 +450,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "Category", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("categoryChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64,"Category Wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
 
                 });
@@ -477,6 +526,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "SubCategory", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("subCategoryChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Sub-Category wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -546,6 +602,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "Region", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("regionChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, " Region wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -615,6 +678,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "Office", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("officeChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Office wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -684,6 +754,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "LOS", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("losChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "LOS wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -753,6 +830,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "SBU", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("sbuChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "SBU wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -822,6 +906,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "SubSBU", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("subSBUChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Sub-SBU wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -891,6 +982,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "GenderofComplainant", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("genderOfComplainantChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Gender of Complainant");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -960,6 +1058,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "GenderofRespondent", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("genderOfRespondentChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Gender of Respondent");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -1029,6 +1134,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "DesignationofComplainant", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("designationOfComplainantChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Designation of Complainant");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -1098,6 +1210,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "DesignationofRespondent", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("designationOfRespondentChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Designation of Respondent");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -1169,6 +1288,13 @@ function DashboardPiGraphData() {
                             //alert(id);
                             DashboardPiChartTableBind(dateFrom, dateTo, "ModeofComplaint", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("modeofComplaintChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Mode of Complaint");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
                 });
             }
@@ -1240,6 +1366,13 @@ function DashboardPiGraphData() {
                             var label = chartData.labels[idx];
                             DashboardPiChartTableBind(dateFrom, dateTo, "Ageing", label);
                         },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("ageingChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Ageing/Case Closure");
+                                this.options.animation.onComplete = null;
+                            }
+                        }
                     }
 
                 });
@@ -1254,6 +1387,7 @@ function DashboardPiGraphData() {
 }
 
 function DashboardBarGraphData() {
+    Base64Image = [];
     StartProcess();
     let dateFrom = ($('#txt_dateFrom').val());
     let dateTo = ($('#txt_dateTo').val());
@@ -1265,9 +1399,7 @@ function DashboardBarGraphData() {
 
 
     $.get('/home/DashboardBarChart', { dateFrom: dateFrom, dateTo: dateTo }, function (result) {
-        console.log(result);
         StopProcess();
-        //console.log(result.categoryPiCharts[1].Label);
         if (result != null && result != "undefined" && result != "") {
             //Case Type Bar chart
             if (result.caseTypeofComplaint1 != null) {
@@ -1287,9 +1419,8 @@ function DashboardBarGraphData() {
                 }
                 myChart = new Chart(ctx, {
                     type: 'bar',
-                    //data: result,
                     data: {
-                        labels: Years, //["Actionable", "Non-Actionable"],
+                        labels: Years, 
                         datasets: [{
                             label: "Actionable",
                             backgroundColor: "rgb(54, 162, 235)",
@@ -1324,29 +1455,26 @@ function DashboardBarGraphData() {
                         plugins: {
                             datalabels: {
                                 color:'#fff',
-
-                                //    function (context) {
-                                //    return context.dataset.backgroundColor;
-                                //},
-                                //font: {
-                                //    weight: 'bold'
-                                //},
                             }
                         },
-                        
                         onClick: 
                             function (event, array) {
                                 var active = window.myChart.getElementAtEvent(event);
                                 var elementIndex = active[0]._datasetIndex;
-                                console.log("elementIndex: " + elementIndex);
                                 var chartData = array[elementIndex]['_chart'].data;
                                 var idx = array[elementIndex]['_index'];
                                 var year = chartData.labels[idx];
                                 var label = chartData.datasets[elementIndex].label;
-                                console.log(label);
-                                console.log(year);
                                 DashboardBarChartTableBind(dateFrom, dateTo, "CaseType", label, year);
-                        },
+                            },
+                        
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("caseTypeChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Case Type");
+                                this.options.animation.onComplete = null;
+                            }
+                        }, 
                     }
                 });
             }
@@ -1392,33 +1520,29 @@ function DashboardBarGraphData() {
                         },
                         plugins: {
                             datalabels: {
-                                //align: 'end',
-                                //anchor: 'end',
                                 color:'#fff',
-                                //    function (context) {
-                                //    return context.dataset.backgroundColor;
-                                //},
                                 font: {
                                     weight: 'bold'
                                 },
                             }
-                        }
-                        ,
-
+                        },
                         onClick:
                             function (event, array) {
                                 var active = window.myChart1.getElementAtEvent(event);
                                 var elementIndex = active[0]._datasetIndex;
-                                console.log("elementIndex: " + elementIndex);
                                 var chartData = array[elementIndex]['_chart'].data;
                                 var idx = array[elementIndex]['_index'];
                                 var year = chartData.labels[idx];
                                 var label = chartData.datasets[elementIndex].label;
-                                console.log(label);
-                                console.log(year);
                                 DashboardBarChartTableBind(dateFrom, dateTo, "Category", label, year);
                             },
-                            
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("categoryChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Category wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        },
                     }
 
                 });
@@ -1468,20 +1592,22 @@ function DashboardBarGraphData() {
                                 color:'#fff',
                                 
                             }
-                        }
-                        ,
-
+                        },
                         onClick: function (event, array) {
                             var active = window.myChart2.getElementAtEvent(event);
                             var elementIndex = active[0]._datasetIndex;
-                            console.log("elementIndex: " + elementIndex);
                             var chartData = array[elementIndex]['_chart'].data;
                             var idx = array[elementIndex]['_index'];
                             var year = chartData.labels[idx];
                             var label = chartData.datasets[elementIndex].label;
-                            console.log(label);
-                            console.log(year);
                             DashboardBarChartTableBind(dateFrom, dateTo, "SubCategory", label, year);
+                        },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("subCategoryChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Sub-Category wise");
+                                this.options.animation.onComplete = null;
+                            }
                         },
                     }
                 });
@@ -1531,20 +1657,22 @@ function DashboardBarGraphData() {
                                 color: '#fff',
                                 
                             }
-                        }
-                        ,
-
+                        },
                         onClick: function (event, array) {
                             var active = window.myChart3.getElementAtEvent(event);
                             var elementIndex = active[0]._datasetIndex;
-                            console.log("elementIndex: " + elementIndex);
                             var chartData = array[elementIndex]['_chart'].data;
                             var idx = array[elementIndex]['_index'];
                             var year = chartData.labels[idx];
                             var label = chartData.datasets[elementIndex].label;
-                            console.log(label);
-                            console.log(year);
                             DashboardBarChartTableBind(dateFrom, dateTo, "Region", label, year);
+                        },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("regionChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Region wise");
+                                this.options.animation.onComplete = null;
+                            }
                         },
                     }
                 });
@@ -1594,20 +1722,22 @@ function DashboardBarGraphData() {
                             datalabels: {
                                 color: '#fff',
                             }
-                        }
-                        ,
-
+                        },
                         onClick: function (event, array) {
                             var active = window.myChart4.getElementAtEvent(event);
                             var elementIndex = active[0]._datasetIndex;
-                            console.log("elementIndex: " + elementIndex);
                             var chartData = array[elementIndex]['_chart'].data;
                             var idx = array[elementIndex]['_index'];
                             var year = chartData.labels[idx];
                             var label = chartData.datasets[elementIndex].label;
-                            console.log(label);
-                            console.log(year);
                             DashboardBarChartTableBind(dateFrom, dateTo, "Office", label, year);
+                        },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("officeChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Office wise");
+                                this.options.animation.onComplete = null;
+                            }
                         },
                     }
                 });
@@ -1657,23 +1787,24 @@ function DashboardBarGraphData() {
                                 color: '#fff',
                                 
                             }
-                        }
-                        ,
-
+                        },
                         onClick:
                             function (event, array) {
                                 var active = window.myChart5.getElementAtEvent(event);
                                 var elementIndex = active[0]._datasetIndex;
-                                console.log("elementIndex: " + elementIndex);
                                 var chartData = array[elementIndex]['_chart'].data;
                                 var idx = array[elementIndex]['_index'];
                                 var year = chartData.labels[idx];
                                 var label = chartData.datasets[elementIndex].label;
-                                console.log(label);
-                                console.log(year);
                                 DashboardBarChartTableBind(dateFrom, dateTo, "LOS", label, year);
                             },
-
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("losChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "LOS wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        },
                     }
                 });
             }
@@ -1721,22 +1852,24 @@ function DashboardBarGraphData() {
                             datalabels: {
                                 color: '#fff',
                             }
-                        }
-                        ,
-
+                        },
                         onClick:
                             function (event, array) {
                                 var active = window.myChart6.getElementAtEvent(event);
                                 var elementIndex = active[0]._datasetIndex;
-                                console.log("elementIndex: " + elementIndex);
                                 var chartData = array[elementIndex]['_chart'].data;
                                 var idx = array[elementIndex]['_index'];
                                 var year = chartData.labels[idx];
                                 var label = chartData.datasets[elementIndex].label;
-                                console.log(label);
-                                console.log(year);
                                 DashboardBarChartTableBind(dateFrom, dateTo, "SBU", label, year);
                             },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("sbuChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "SBU wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        },
                     }
                 });
             }
@@ -1784,22 +1917,24 @@ function DashboardBarGraphData() {
                             datalabels: {
                                 color: '#fff',
                             }
-                        }
-                        ,
-
+                        },
                         onClick:
                             function (event, array) {
                                 var active = window.myChart7.getElementAtEvent(event);
                                 var elementIndex = active[0]._datasetIndex;
-                                console.log("elementIndex: " + elementIndex);
                                 var chartData = array[elementIndex]['_chart'].data;
                                 var idx = array[elementIndex]['_index'];
                                 var year = chartData.labels[idx];
                                 var label = chartData.datasets[elementIndex].label;
-                                console.log(label);
-                                console.log(year);
                                 DashboardBarChartTableBind(dateFrom, dateTo, "SubSBU", label, year);
                             },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("subSBUChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Sub-SBU wise");
+                                this.options.animation.onComplete = null;
+                            }
+                        },
                     }
                 });
             }
@@ -1847,24 +1982,24 @@ function DashboardBarGraphData() {
                             datalabels: {
                                 color: '#fff',
                             }
-                        }
-                        ,
-
+                        },
                         onClick:
                             function (event, array) {
                                 var active = window.myChart8.getElementAtEvent(event);
                                 var elementIndex = active[0]._datasetIndex;
-                                console.log("elementIndex: " + elementIndex);
                                 var chartData = array[elementIndex]['_chart'].data;
                                 var idx = array[elementIndex]['_index'];
                                 var year = chartData.labels[idx];
                                 var label = chartData.datasets[elementIndex].label;
-                                console.log(label);
-                                console.log(year);
                                 DashboardBarChartTableBind(dateFrom, dateTo, "GenderofComplainant", label, year);
                             },
-
-                            
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("genderOfComplainantChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Gender of Complainant");
+                                this.options.animation.onComplete = null;
+                            }
+                        },
                     }
                 });
             }
@@ -1915,20 +2050,22 @@ function DashboardBarGraphData() {
                                     weight: 'bold'
                                 },
                             }
-                        }
-                        ,
-
+                        },
                         onClick: function (event, array) {
                             var active = window.myChart9.getElementAtEvent(event);
                             var elementIndex = active[0]._datasetIndex;
-                            console.log("elementIndex: " + elementIndex);
                             var chartData = array[elementIndex]['_chart'].data;
                             var idx = array[elementIndex]['_index'];
                             var year = chartData.labels[idx];
                             var label = chartData.datasets[elementIndex].label;
-                            console.log(label);
-                            console.log(year);
                             DashboardBarChartTableBind(dateFrom, dateTo, "GenderofRespondent", label, year);
+                        },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("genderOfRespondentChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Gender of Respondent");
+                                this.options.animation.onComplete = null;
+                            }
                         },
                     }
                 });
@@ -1977,20 +2114,22 @@ function DashboardBarGraphData() {
                             datalabels: {
                                 color: '#fff'
                             }
-                        }
-                        ,
-
+                        },
                         onClick: function (event, array) {
                             var active = window.myChart10.getElementAtEvent(event);
                             var elementIndex = active[0]._datasetIndex;
-                            console.log("elementIndex: " + elementIndex);
                             var chartData = array[elementIndex]['_chart'].data;
                             var idx = array[elementIndex]['_index'];
                             var year = chartData.labels[idx];
                             var label = chartData.datasets[elementIndex].label;
-                            console.log(label);
-                            console.log(year);
                             DashboardBarChartTableBind(dateFrom, dateTo, "DesignationofComplainant", label, year);
+                        },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("designationOfComplainantChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Designation of Complainant");
+                                this.options.animation.onComplete = null;
+                            }
                         },
                     }
                 });
@@ -2045,14 +2184,18 @@ function DashboardBarGraphData() {
                         onClick: function (event, array) {
                             var active = window.myChart11.getElementAtEvent(event);
                             var elementIndex = active[0]._datasetIndex;
-                            console.log("elementIndex: " + elementIndex);
                             var chartData = array[elementIndex]['_chart'].data;
                             var idx = array[elementIndex]['_index'];
                             var year = chartData.labels[idx];
                             var label = chartData.datasets[elementIndex].label;
-                            console.log(label);
-                            console.log(year);
                             DashboardBarChartTableBind(dateFrom, dateTo, "DesignationofRespondent", label, year);
+                        },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("designationOfRespondentChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Designation of Respondent");
+                                this.options.animation.onComplete = null;
+                            }
                         },
                     }
                 });
@@ -2101,20 +2244,22 @@ function DashboardBarGraphData() {
                             datalabels: {
                                 color: '#fff'
                             }
-                        }
-                        ,
-
+                        },
                         onClick: function (event, array) {
                             var active = window.myChart12.getElementAtEvent(event);
                             var elementIndex = active[0]._datasetIndex;
-                            console.log("elementIndex: " + elementIndex);
                             var chartData = array[elementIndex]['_chart'].data;
                             var idx = array[elementIndex]['_index'];
                             var year = chartData.labels[idx];
                             var label = chartData.datasets[elementIndex].label;
-                            console.log(label);
-                            console.log(year);
                             DashboardBarChartTableBind(dateFrom, dateTo, "ModeofComplaint", label, year);
+                        },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("modeofComplaintChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Mode of Complaint");
+                                this.options.animation.onComplete = null;
+                            }
                         },
                     }
                 });
@@ -2163,20 +2308,22 @@ function DashboardBarGraphData() {
                             datalabels: {
                                 color: '#fff'
                             }
-                        }
-                        ,
-
+                        },
                         onClick: function (event, array) {
                             var active = window.myChart13.getElementAtEvent(event);
                             var elementIndex = active[0]._datasetIndex;
-                            console.log("elementIndex: " + elementIndex);
                             var chartData = array[elementIndex]['_chart'].data;
                             var idx = array[elementIndex]['_index'];
                             var year = chartData.labels[idx];
                             var label = chartData.datasets[elementIndex].label;
-                            console.log(label);
-                            console.log(year);
                             DashboardBarChartTableBind(dateFrom, dateTo, "Ageing", label, year);
+                        },
+                        animation: {
+                            onComplete: function () {
+                                var url_base64 = document.getElementById("ageingChart").toDataURL("image/png");
+                                ChartBase64Image(url_base64, "Ageing/Case Closure");
+                                this.options.animation.onComplete = null;
+                            }
                         },
                     }
                 });

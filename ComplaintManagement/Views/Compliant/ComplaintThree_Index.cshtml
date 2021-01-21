@@ -23,176 +23,186 @@
 }
 
 
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-            <div class="preloader"></div>
-            <div class="page-title">
-                <h2 class="text-black">Complaint Information</h2>
-            </div>
-            <div class="card mb-4 rounded-0 border-0" style="display:none;">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
-                        </div>
-                        <div class="col-lg-2">
-                            <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
-                        </div>
-                        <div class="col-lg-3">
-                            @{
-                                List<SelectListItem> listCategory = new List<SelectListItem>();
-                                listCategory = new List<SelectListItem>();
-                                listCategory.Add(new SelectListItem
-                                {
-                                    Text = "Select Category",
-                                    Value = ""
-                                });
-                                listCategory.AddRange(ViewBag.lstCategories);
-                            }
-                            @Html.DropDownList("CategoryId", (List<SelectListItem>)listCategory, new { @class = "form-control required" })
-                        </div>
-                        <div class="col-lg-3">
-                            @{
-                                List<SelectListItem> listSubCategoryId = new List<SelectListItem>();
-                                listSubCategoryId = new List<SelectListItem>();
-                                listSubCategoryId.Add(new SelectListItem
-                                {
-                                    Text = "Select SubCategory",
-                                    Value = ""
-                                });
-                                listSubCategoryId.AddRange(ViewBag.lstSubCategories);
-                            }
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <div class="preloader"></div>
+    <div class="page-title">
+        <h2 class="text-black">Complaint Information</h2>
+    </div>
+    <div class="card mb-4 rounded-0 border-0" style="display:none;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-2">
+                    <input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />
+                </div>
+                <div class="col-lg-2">
+                    <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
+                </div>
+                <div class="col-lg-3">
+                    @{
+                        List<SelectListItem> listCategory = new List<SelectListItem>();
+                        listCategory = new List<SelectListItem>();
+                        listCategory.Add(new SelectListItem
+                        {
+                            Text = "Select Category",
+                            Value = ""
+                        });
+                        listCategory.AddRange(ViewBag.lstCategories);
+                    }
+                    @Html.DropDownList("CategoryId", (List<SelectListItem>)listCategory, new { @class = "form-control required" })
+                </div>
+                <div class="col-lg-3">
+                    @{
+                        List<SelectListItem> listSubCategoryId = new List<SelectListItem>();
+                        listSubCategoryId = new List<SelectListItem>();
+                        listSubCategoryId.Add(new SelectListItem
+                        {
+                            Text = "Select SubCategory",
+                            Value = ""
+                        });
+                        listSubCategoryId.AddRange(ViewBag.lstSubCategories);
+                    }
 
-                            @Html.DropDownList("SubCategoryId", (List<SelectListItem>)listSubCategoryId, new { @class = "form-control required" })
-                        </div>
-                        <div class="col-lg-2">
-                            <ul class="nav">
-                                <li class="nav-item">
-                                    <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    @Html.DropDownList("SubCategoryId", (List<SelectListItem>)listSubCategoryId, new { @class = "form-control required" })
+                </div>
+                <div class="col-lg-2">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <!-- Tab Bar -->
-            <div class="user-list">
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card mb-4 rounded-0 border-0">
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table f-14" id="myTable">
-                                        @if (ViewBag.lstEmployeeComplaint != null)
-                                        {
-                                            if (ViewBag.lstEmployeeComplaint.Count > 0)
-                                            {
-                                                <thead>
-                                                    <tr>
-                                                        <td>LOS</td>
-                                                        <td>Category</td>
-                                                        <td>Sub-Category</td>
-                                                        <td>Created By</td>
-                                                        <td>Created On</td>
-                                                        <td class="text-center">Pending With</td>
-                                                        <td class="text-center">Status</td>
-                                                        <td class="text-center">Action</td>
-                                                    </tr>
-                                                </thead>
-                                            }
-                                        }
-                                        <tbody>
-                                            @if (ViewBag.lstEmployeeComplaint != null)
-                                            {
-                                                if (ViewBag.lstEmployeeComplaint.Count > 0)
-                                                {
-                                                    foreach (var item in ViewBag.lstEmployeeComplaint)
-                                                    {
+        </div>
+    </div>
+    <!-- Tab Bar -->
+    <div class="user-list">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12">
+                <div class="card mb-4 rounded-0 border-0">
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table f-14" id="myTable">
+                                @if (ViewBag.lstEmployeeComplaint != null)
+                                {
+                                    if (ViewBag.lstEmployeeComplaint.Count > 0)
+                                    {
+                                        <thead>
                                             <tr>
-                                                <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
-                                                <td class="text-black"><strong>@item.Category</strong></td>
-                                                <td class="text-black"><strong>@item.SubCategory</strong></td>
-                                                <td class="text-black"><strong>@item.CreatedByName</strong></td>
-                                                <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
-                                                <td class="text-black text-center"><strong>@item.LastPerformedBy</strong></td>
-                                                <td class="text-black text-center">
-                                                    <strong>
-                                                        @if (item.ActionType == Messages.SUBMITTED || item.ActionType == Messages.COMMITTEE)
+                                                <td>LOS</td>
+                                                <td>Category</td>
+                                                <td>Sub-Category</td>
+                                                <td>Created By</td>
+                                                <td>Created On</td>
+                                                <td class="text-center">Pending With</td>
+                                                <td class="text-center">Status</td>
+                                                <td class="text-center">Action</td>
+                                            </tr>
+                                        </thead>
+                                    }
+                                }
+                                <tbody>
+                                    @if (ViewBag.lstEmployeeComplaint != null)
+                                    {
+                                        if (ViewBag.lstEmployeeComplaint.Count > 0)
+                                        {
+                                            foreach (var item in ViewBag.lstEmployeeComplaint)
+                                            {
+                                                <tr>
+                                                    <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
+                                                    <td class="text-black"><strong>@item.Category</strong></td>
+                                                    <td class="text-black"><strong>@item.SubCategory</strong></td>
+                                                    <td class="text-black"><strong>@item.CreatedByName</strong></td>
+                                                    <td class="text-black"><strong>@item.CreatedDate.ToString("dd/MM/yyyy")</strong></td>
+                                                    <td class="text-black text-center"><strong>@item.LastPerformedBy</strong></td>
+                                                    <td class="text-black text-center">
+                                                        <strong>
+                                                            @if (item.ActionType == Messages.SUBMITTED || item.ActionType == Messages.COMMITTEE)
+                                                            {
+                                                                @Html.Raw(Messages.InProgress)
+                                                            }
+                                                            else if (item.ActionType == Messages.Opened)
+                                                            {
+                                                                @Html.Raw(Messages.Draft)
+                                                            }
+                                                            else
+                                                            {
+                                                                @item.ActionType
+                                                            }
+
+                                                        </strong>
+                                                    </td>
+                                                    <td class="text-center text-nowrap">
+                                                        @if (item.ActionType.ToLower() == Messages.COMMITTEE.ToLower())
                                                         {
-                                                            @Html.Raw(Messages.InProgress)
-                                                        }
-                                                        else if (item.ActionType == Messages.Opened)
-                                                        {
-                                                            @Html.Raw(Messages.Draft)
+                                                            <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
                                                         }
                                                         else
                                                         {
-                                                            @item.ActionType
+                                                            <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2  disabled-div"><i class="fas fa-edit text-danger"></i></a>
                                                         }
-
-                                                    </strong>
-                                                </td>
-                                                <td class="text-center text-nowrap">
-                                                    @if (item.ActionType.ToLower() == Messages.COMMITTEE.ToLower())
-                                                    {
-                                                        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2  disabled-div"><i class="fas fa-edit text-danger"></i></a>
-                                                    }
-                                                    <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-info text-danger"></i></a>
-                                                </td>
+                                                        <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-info text-danger"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="5"><label>No data found.</label></td>
                                             </tr>
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <tr>
-                                                        <td colspan="5"><label>No data found.</label></td>
-                                                    </tr>
-                                                }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5"><label>No data found.</label></td>
+                                        </tr>
+                                    }
+                            </table>
+                        </div>
+                        <br />
+                        <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
+                            <tr>
+                                @for (int i = 1; i <= ViewBag.PageCount; i++)
+                                {
+                                    <td>
+                                        <div class="pagination">
+                                            @if (i != ViewBag.CurrentPageIndex)
+                                            {
+                                                <a href="javascript:PagerClick(@i);">@i</a>
                                             }
                                             else
                                             {
-                                                <tr>
-                                                    <td colspan="5"><label>No data found.</label></td>
-                                                </tr>
+                                                <span>@i</span>
                                             }
-                                    </table>
-                                </div>
-                                <br />
-                                <table class="float-right" id="paginator" cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        @for (int i = 1; i <= ViewBag.PageCount; i++)
-                                        {
-                                            <td>
-                                                <div class="pagination">
-                                                    @if (i != ViewBag.CurrentPageIndex)
-                                                    {
-                                                        <a href="javascript:PagerClick(@i);">@i</a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span>@i</span>
-                                                    }
-                                                </div>
-                                            </td>
-                                        }
-                                    </tr>
-                                </table>
-                                <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
-                            </div>
-                        </div>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        </table>
+                        <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
                     </div>
                 </div>
             </div>
         </div>
-      
+    </div>
+</div>
+
 @Scripts.Render("~/Assets/Common")
 @Scripts.Render("~/Assets/EditEmployeeCompliant_ThreeMasters")
 @Html.Partial("_GetHistory")
+<script>
+    function PagerClick(index) {
+        $("#hfCurrentPageIndex").val(index);
+
+        location.href = '/Compliant/ComplaintThreecommittee_Index?&currentPage=' + $("#hfCurrentPageIndex").val();
+
+
+    }
+</script>
+
 
 
 

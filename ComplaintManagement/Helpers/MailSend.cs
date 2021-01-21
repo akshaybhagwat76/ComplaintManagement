@@ -55,7 +55,7 @@ namespace ComplaintManagement.Helpers
                 //})
                 //{
 
-                
+
             }
             catch (Exception ex)
             {
@@ -64,7 +64,7 @@ namespace ComplaintManagement.Helpers
             }
         }
 
-        public static void SendEmailWithByteExcel(List<string> to, string subject, string body, byte[] attachmentUrls = null, string from = "", string password = "",  bool isBodyHtml = true, List<string> cc = null)
+        public static void SendEmailWithByteExcel(List<string> to, string subject, string body, byte[] attachmentUrls = null, string from = "", string password = "", bool isBodyHtml = true, List<string> cc = null)
         {
             try
             {
@@ -141,44 +141,39 @@ namespace ComplaintManagement.Helpers
                 ////    IsBodyHtml = isBodyHtml
                 ////};
                 ///
+
                 var msg = new MailMessage();
-                foreach (var item in to)
+                if (attachmentUrls != null)
                 {
-                    foreach (var bodyItem in body)
+                    foreach (var attachmentUrl in attachmentUrls)
                     {
-                        msg.Subject = subject;
-                        msg.Body = bodyItem;
-                        msg.IsBodyHtml = isBodyHtml;
-                        msg.To.Add(new MailAddress(item));
-                        SmtpClient smtp = new SmtpClient();
-                        smtp.EnableSsl = true;
-                        smtp.Send(msg);
+                        if (!string.IsNullOrEmpty(attachmentUrl))
+                        {
+                            var attachment = new Attachment(attachmentUrl);
+                            msg.Attachments.Add(attachment);
+                        }
                     }
                 }
+                string[] bodyItem = body.ToArray();
+                int i = 0;
+                foreach (var Item in to)
+                {
+                    
+                    msg.Subject = subject;
+                    msg.Body = bodyItem[i];
+                    msg.IsBodyHtml = isBodyHtml;
+                    msg.To.Add(new MailAddress(Item));
+                    //msg.To = Item;
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.EnableSsl = true;
+                    smtp.Send(msg);
+                    i++;
+                }
+
 
                 //if (cc != null) cc.ForEach(x => { msg.CC.Add(x); });
 
-                //if (attachmentUrls != null)
-                //{
-                //    foreach (var attachmentUrl in attachmentUrls)
-                //    {
-                //        if (!string.IsNullOrEmpty(attachmentUrl))
-                //        {
-                //            var attachment = new Attachment(attachmentUrl);
-                //            msg.Attachments.Add(attachment);
-                //        }
-                //    }
-                //}
-                // your remote SMTP server IP.
-                
-                //using (var smtp = new SmtpClient
-                //{
-                //    Host = "mail.variablesoft.com",
-                //    Port = 25,
-                //    Credentials = new System.Net.NetworkCredential(from, password),
-                //    EnableSsl = false
-                //})
-                //{
+
 
 
             }
@@ -222,14 +217,14 @@ namespace ComplaintManagement.Helpers
                 SmtpClient smtp = new SmtpClient();
                 smtp.EnableSsl = true;
                 smtp.Send(msg);
-               
+
             }
             catch (Exception ex)
             {
                 throw;
                 // Throw exception or Log exception and error emails.
             }
-           
+
         }
 
 

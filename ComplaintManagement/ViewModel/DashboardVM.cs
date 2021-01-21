@@ -105,5 +105,18 @@ namespace ComplaintManagement.ViewModel
 
     }
 
+    public class ImageBase64
+    {
+        public byte[] UrlBase64 { get; set; }
+        public string Heading { get; set; }
+    }
 
+    public class DashboardMailSend
+    {
+        public string Comment { get; set; }
+        public string DateFrom { get; set; }
+        public string DateTo { get; set; }
+        public string InvolveUserId { get; set; }
+        public string ChartType { get; set; }
+    }
 }

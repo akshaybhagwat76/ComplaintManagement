@@ -211,6 +211,13 @@
             })
         }
     }
+    function PagerClick(index) {
+            $("#hfCurrentPageIndex").val(index);
+
+            location.href = '/Compliant/ComplaintTwoHR_Index?&currentPage='+ $("#hfCurrentPageIndex").val();
+
+
+    }
 
 </script>
 

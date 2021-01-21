@@ -793,7 +793,7 @@ namespace ComplaintManagement.Controllers
                 if (!string.IsNullOrEmpty(ComplaintId))
                 {
                     ComplaintId = CryptoEngineUtils.Decrypt(ComplaintId.Replace(" ", "+"), true);
-                    ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(ComplaintId) && (x.ActionType.ToLower() != Messages.PushToCommittee.ToLower() && x.ActionType.ToLower() != Messages.BackToBUHC.ToLower())).ToList();
+                    ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(ComplaintId) && (x.ActionType.ToLower() != Messages.PushToCommittee.ToLower() && x.ActionType.ToLower() != Messages.BackToBUHC.ToLower() ) && x.UserType.ToLower() != Messages.COMMITTEE.ToLower()).ToList();
                     return PartialView("_ComplaintHistoryContent");
                 }
                 return new ReplyFormat().Error(Messages.BAD_DATA);
@@ -853,7 +853,77 @@ namespace ComplaintManagement.Controllers
         [HttpGet]
         public ActionResult ComplaintThree_Index()
         {
-            ViewBag.lstEmployeeComplaint = new EmployeeComplaintHistoryRepository().GetAllComplaintsThree();
+            int currentPage = 1;
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+            var complaintcommittee = new EmployeeComplaintHistoryRepository().GetAllComplaintsThree();
+            var complaintcomm = complaintcommittee.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+            ViewBag.lstEmployeeComplaint = complaintcomm.ToList();
+            lstCount = complaintcommittee.Count;
+            double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+            ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+            ViewBag.CurrentPageIndex = currentPage;
+
+
+            ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
+            ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
+
+            //var DataTableDetail = new HomeController().getDataTableDetail("EmployeeCompliant", null);
+            //ViewBag.Page = DataTableDetail.Item1;
+            //ViewBag.PageIndex = DataTableDetail.Item2;
+            return View();
+        }
+        public ActionResult ComplaintThreecommittee_Index(int currentPage)
+        {
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+
+            var complaintcommittee = new EmployeeComplaintHistoryRepository().GetAllComplaintsThree();
+            var complaintcomm = complaintcommittee.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+            ViewBag.lstEmployeeComplaint = complaintcomm.ToList();
+            lstCount = complaintcommittee.Count;
+
+            double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+            ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+            ViewBag.CurrentPageIndex = currentPage;
+
+            ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
+            ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
+
+            //var DataTableDetail = new HomeController().getDataTableDetail("EmployeeCompliant", null);
+            //ViewBag.Page = DataTableDetail.Item1;
+            //ViewBag.PageIndex = DataTableDetail.Item2;
+
+
+            return View("ComplaintThree_Index");
+        }
+
+
+        [HttpGet]
+        public ActionResult ComplaintTwo_Index()
+        {
+            int currentPage = 1;
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+            var complaintHR = new EmployeeComplaintHistoryRepository().GetAllComplaintsTwo();
+            var comphr = complaintHR.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+            ViewBag.lstEmployeeComplaint = comphr.ToList();
+            lstCount = complaintHR.Count;
+            double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+            ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+            ViewBag.CurrentPageIndex = currentPage;
             ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
             ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
 
@@ -862,17 +932,29 @@ namespace ComplaintManagement.Controllers
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
         }
-        [HttpGet]
-        public ActionResult ComplaintTwo_Index()
+        public ActionResult ComplaintTwoHR_Index(int currentPage)
         {
-            ViewBag.lstEmployeeComplaint = new EmployeeComplaintHistoryRepository().GetAllComplaintsTwo();
+
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+            var complaintHR = new EmployeeComplaintHistoryRepository().GetAllComplaintsTwo();
+            var comphr = complaintHR.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+            ViewBag.lstEmployeeComplaint = comphr.ToList();
+            lstCount = complaintHR.Count;
+            double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+            ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+            ViewBag.CurrentPageIndex = currentPage;
             ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
             ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
 
             var DataTableDetail = new HomeController().getDataTableDetail("EmployeeCompliant", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
-            return View();
+            return View("ComplaintTwo_Index");
         }
 
         //Aman work
