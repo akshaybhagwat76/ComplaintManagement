@@ -1655,43 +1655,56 @@ namespace ComplaintManagement.Controllers
             {
                 List<ImageBase64> reqObj = JsonConvert.DeserializeObject<List<ImageBase64>>(jsonInput);
                 String path = Server.MapPath("~/Documents/ChartPPT/");
-                string fileName = Server.MapPath("~/Documents/ChartPPT/Charts.pptx");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
                 }
-                else
-                {
-                    if ((System.IO.File.Exists(fileName)))
-                    {
-                        System.IO.File.Delete(fileName);
-                    }
-                }
                 Application pptAppliCation = new Application();
                 Presentation pptPresentation = pptAppliCation.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
-                int i = 0;
-                foreach (var imageItem in reqObj)
+
+                int j = 0;
+                for (int i = 0; i <= reqObj.Count() + 1; i++)
                 {
-                    i++;
+                    
                     Microsoft.Office.Interop.PowerPoint.Slides slides;
                     Microsoft.Office.Interop.PowerPoint.Slide slide;
                     Microsoft.Office.Interop.PowerPoint.TextRange textRange;
                     Microsoft.Office.Interop.PowerPoint.CustomLayout customLayout = pptPresentation.SlideMaster.CustomLayouts[Microsoft.Office.Interop.PowerPoint.PpSlideLayout.ppLayoutText];
+
+
                     slides = pptPresentation.Slides;
-                    slide = slides.AddSlide(i, customLayout);
+                    slide = slides.AddSlide(i+1, customLayout);
                     textRange = slide.Shapes[1].TextFrame.TextRange;
-                    textRange.Text = "                     " + imageItem.Heading;
                     textRange.Font.Name = "Arial";
                     textRange.Font.Size = 40;
-
                     Microsoft.Office.Interop.PowerPoint.Shape shape = slide.Shapes[2];
-                    string imgFileName = Server.MapPath("~/Documents/ChartPPT/" + i + ".png");
-                    if ((System.IO.File.Exists(imgFileName)))
+                   
+                    if (i == 0)
                     {
-                        System.IO.File.Delete(imgFileName);
+                        string FileName = Server.MapPath("~/Documents/ChartPPT/ppt_heading_img.png");
+                        textRange.Text = "          Complaint Management System";
+                        slide.Shapes.AddPicture(FileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, shape.Left, shape.Top, shape.Width, shape.Height);
                     }
-                    System.IO.File.WriteAllBytes(imgFileName, imageItem.UrlBase64);
-                    slide.Shapes.AddPicture(imgFileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, shape.Left, shape.Top, shape.Width, shape.Height);
+                    else if (i == 1)
+                    {
+                        textRange.Text = "                           Index";
+                        slide.Shapes[2].TextFrame.TextRange.Text = " Case Type \n Category wise \n Sub-Category wise \n Region wise \n Office wise \n LOS wise " +
+                            "\n SBU wise \n Sub-SBU wise \n Gender of Complainant \n Gender of Respondent \n Designation of Complainant " +
+                            "\n Designation of Respondent \n Mode of Complaint \n Ageing/Case Closure ";
+                    }
+                    else
+                    {
+                        
+                        textRange.Text = "                       " + reqObj[j].Heading;
+                        string imgFileName = Server.MapPath("~/Documents/ChartPPT/" + i + ".png");
+                        if ((System.IO.File.Exists(imgFileName)))
+                        {
+                            System.IO.File.Delete(imgFileName);
+                        }
+                        System.IO.File.WriteAllBytes(imgFileName, reqObj[j].UrlBase64);
+                        slide.Shapes.AddPicture(imgFileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, shape.Left, shape.Top, shape.Width, shape.Height);
+                        j++;
+                    }
                 }
                 var random = new Random();
                 var objGuid = new string(Enumerable.Repeat(chars, 5).Select(s => s[random.Next(s.Length)]).ToArray());
@@ -1719,32 +1732,54 @@ namespace ComplaintManagement.Controllers
                 }
                 Application pptAppliCation = new Application();
                 Presentation pptPresentation = pptAppliCation.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoFalse);
-                int i = 0;
-                foreach (var imageItem in reqObj)
+                int j = 0;
+                //foreach (var imageItem in reqObj)
+                //{
+                for (int i = 0; i <= reqObj.Count() + 1; i++)
                 {
-                    i++;
+
                     Microsoft.Office.Interop.PowerPoint.Slides slides;
                     Microsoft.Office.Interop.PowerPoint.Slide slide;
                     Microsoft.Office.Interop.PowerPoint.TextRange textRange;
                     Microsoft.Office.Interop.PowerPoint.CustomLayout customLayout = pptPresentation.SlideMaster.CustomLayouts[Microsoft.Office.Interop.PowerPoint.PpSlideLayout.ppLayoutText];
+
+
                     slides = pptPresentation.Slides;
-                    slide = slides.AddSlide(i, customLayout);
+                    slide = slides.AddSlide(i + 1, customLayout);
                     textRange = slide.Shapes[1].TextFrame.TextRange;
-                    textRange.Text = "                    " + imageItem.Heading;
                     textRange.Font.Name = "Arial";
                     textRange.Font.Size = 40;
-
                     Microsoft.Office.Interop.PowerPoint.Shape shape = slide.Shapes[2];
-                    string imgFileName = Server.MapPath("~/Documents/ChartPPT/" + i + ".png");
-                    if ((System.IO.File.Exists(imgFileName)))
+                    
+                    if (i == 0)
                     {
-                        System.IO.File.Delete(imgFileName);
+                        string FileName = Server.MapPath("~/Documents/ChartPPT/ppt_heading_img.png");
+                        textRange.Text = "          Complaint Management System";
+                        slide.Shapes.AddPicture(FileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, shape.Left, shape.Top, shape.Width, shape.Height);
                     }
-                    System.IO.File.WriteAllBytes(imgFileName, imageItem.UrlBase64);
-                    slide.Shapes.AddPicture(imgFileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, shape.Left, shape.Top, shape.Width, shape.Height);
+                    else if (i == 1)
+                    {
+                        textRange.Text = "                           Index";
+                        slide.Shapes[2].TextFrame.TextRange.Text = " Case Type \n Category wise \n Sub-Category wise \n Region wise \n Office wise \n LOS wise " +
+                            "\n SBU wise \n Sub-SBU wise \n Gender of Complainant \n Gender of Respondent \n Designation of Complainant " +
+                            "\n Designation of Respondent \n Mode of Complaint \n Ageing/Case Closure ";
+                    }
+                    else
+                    {
+
+                        textRange.Text = "                       " + reqObj[j].Heading;
+                        string imgFileName = Server.MapPath("~/Documents/ChartPPT/" + i + ".png");
+                        if ((System.IO.File.Exists(imgFileName)))
+                        {
+                            System.IO.File.Delete(imgFileName);
+                        }
+                        System.IO.File.WriteAllBytes(imgFileName, reqObj[j].UrlBase64);
+                        slide.Shapes.AddPicture(imgFileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, shape.Left, shape.Top, shape.Width, shape.Height);
+                        j++;
+                    }
                 }
                 var random = new Random();
-                
+
                 var objGuid = new string(Enumerable.Repeat(chars, 5).Select(s => s[random.Next(s.Length)]).ToArray());
                 var ServerSavePath = Path.Combine(Server.MapPath("~/Documents/ChartPPT/Charts_") + objGuid + ".pptx");
                 pptPresentation.SaveAs(ServerSavePath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsDefault, Microsoft.Office.Core.MsoTriState.msoTrue);
@@ -1767,7 +1802,7 @@ namespace ComplaintManagement.Controllers
                 foreach (var item in assignToUserId)
                 {
                     mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item)).WorkEmail);
-                    mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p> Please Find attachment.</p></br><p>" + Comment + "</p><p>Thank You.</br></br>CMS</p></body></html>");
+                    mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p> Please Find attachment.</p></br><p>" + Comment + "</p><p>Thank You.</p><p></br></br>CMS</p></body></html>");
                 }
                 mailAttachment.Add(ServerSavePath);
                 MailSend.SendEmailWithDifferentBody(mailTo, Subject, mailBody, "", "", mailAttachment);
