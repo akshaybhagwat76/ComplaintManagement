@@ -53,10 +53,14 @@ namespace ComplaintManagement.Controllers
                 Session["EmployeeId"] = user.EmployeeId;
                 Session["id"] = user.Id;
 
+                var isCommitteeUserAssigned = false;
                 var CommitteeMemberData= (from u in db.CommitteeMasters
                                           where u.IsActive
                                           select u).FirstOrDefault();
-                var isCommitteeUserAssigned = CommitteeMemberData.UserId.Split(',').Where(i => i.ToString() == user.Id.ToString()).Count() > 0;
+                if (CommitteeMemberData != null)
+                {
+                    isCommitteeUserAssigned = CommitteeMemberData.UserId.Split(',').Where(i => i.ToString() == user.Id.ToString()).Count() > 0;
+                }
                 if (isCommitteeUserAssigned)
                 {
                     user.Type = Messages.Committee;

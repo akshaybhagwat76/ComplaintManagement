@@ -2424,8 +2424,6 @@
     <Content Include="Views\Compliant\ComplaintThree_Index.cshtml" />
     <Content Include="Views\Compliant\ComplaintTwo_Index.cshtml" />
     <Content Include="Views\LOS\LosReport.cshtml" />
-    <Content Include="Views\Shared\_LosReportMail.cshtml" />
-    <Content Include="Views\UserMailer\UserMailed.cshtml" />
     <Content Include="Views\Compliant\NotificationList.cshtml" />
     <Content Include="Views\LOS\LosReport2.cshtml" />
     <Content Include="Views\LOS\_XLOS.cshtml" />
@@ -2436,6 +2434,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Documents\" />
     <Folder Include="Views\Files\" />
+    <Folder Include="Views\UserMailer\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

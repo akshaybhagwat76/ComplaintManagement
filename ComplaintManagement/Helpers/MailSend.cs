@@ -179,7 +179,7 @@ namespace ComplaintManagement.Helpers
             }
             catch (Exception ex)
             {
-                throw;
+                //throw;
                 // Throw exception or Log exception and error emails.
             }
         }

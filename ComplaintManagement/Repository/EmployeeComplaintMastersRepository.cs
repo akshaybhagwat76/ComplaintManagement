@@ -389,10 +389,10 @@ namespace ComplaintManagement.Repository
                                 mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item)).WorkEmail);
                                 mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
                             }
-                            //MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Send back by committee", mailBody);
+                            
 
                             dbContextTransaction.Commit();
-
+                            MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Send back by committee", mailBody);
                         }
                         catch (Exception ex)
                         {
@@ -773,7 +773,8 @@ namespace ComplaintManagement.Repository
                                 mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item.UserId)).WorkEmail);
                                 mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item.UserId)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
                             }
-                            //MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody);
+                            
+                            MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody);
                             dbContextTransaction.Commit();
                         }
                     }
@@ -1151,12 +1152,10 @@ namespace ComplaintManagement.Repository
                                 }
 
                                 //string htmlBody= @"<html><body><p>Dear Ms. Susan,</p></br><p>"+ NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>";
+                                MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody);
 
-
-                                //MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody);
                             }
                             dbContextTransaction.Commit();
-
                         }
 
                         catch (Exception ex)
