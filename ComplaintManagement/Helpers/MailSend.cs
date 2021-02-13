@@ -2,9 +2,12 @@
 using ComplaintManagement.Repository;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Configuration;
 using System.Net.Mail;
 using System.Web;
+using System.Web.Configuration;
 
 namespace ComplaintManagement.Helpers
 {
@@ -129,6 +132,10 @@ namespace ComplaintManagement.Helpers
 
         public static void SendEmailWithDifferentBody(List<string> to, string subject, List<string> body, int? complanitId = null, string from = "", string password = "", List<string> attachmentUrls = null, bool isBodyHtml = true, List<string> cc = null)
         {
+
+            Configuration configurationFile = WebConfigurationManager.OpenWebConfiguration(HttpContext.Current.Request.ApplicationPath);
+            MailSettingsSectionGroup mailSettings = (MailSettingsSectionGroup)configurationFile.GetSectionGroup("system.net/mailSettings");
+            string emailFromWebConfig = mailSettings.Smtp.From.ToString();
             try
             {
                 //if (string.IsNullOrEmpty(from))
@@ -144,6 +151,7 @@ namespace ComplaintManagement.Helpers
                 ////    IsBodyHtml = isBodyHtml
                 ////};
                 ///
+               
 
                 var msg = new MailMessage();
                 if (attachmentUrls != null)
@@ -171,7 +179,7 @@ namespace ComplaintManagement.Helpers
                     smtp.EnableSsl = true;
                     smtp.Send(msg);
                     i++;
-                    new EmployeeComplaintHistoryRepository().AddEmailHistory(null, Item, complanitId, null, "Success", subject);
+                    new EmployeeComplaintHistoryRepository().AddEmailHistory(emailFromWebConfig, Item, complanitId, null, "Success", subject);
                 }
                
 
@@ -179,7 +187,7 @@ namespace ComplaintManagement.Helpers
             }
             catch (Exception ex)
             {
-                new EmployeeComplaintHistoryRepository().AddEmailHistory(null, null, complanitId, ex.Message, "Failure", subject);
+                new EmployeeComplaintHistoryRepository().AddEmailHistory(emailFromWebConfig, null, complanitId, ex.Message, "Failure", subject);
             }
         }
 
