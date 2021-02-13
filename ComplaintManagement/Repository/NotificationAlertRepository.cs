@@ -40,11 +40,13 @@ namespace ComplaintManagement.Repository
             }
             catch (DbEntityValidationException dve)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(null, string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)), "Notification Alert");
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
                 throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
             }
             catch (Exception ex)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(null, ex.Message.ToString(), "Notification Alert");
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }

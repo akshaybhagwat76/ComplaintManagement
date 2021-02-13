@@ -29,14 +29,13 @@
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" Width="1.5" PointX="2.2571050833245296" PointY="4.5318276456239763" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EntityMaster" Width="1.5" PointX="1.2419213416250057" PointY="16.573065899579351" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EntityMasters_History" Width="1.5" PointX="8.54025106157188" PointY="10.520415117275164" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.HR_Role" Width="1.5" PointX="8.8846286613888239" PointY="7.7405490464254045" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LocationMaster" Width="1.5" PointX="7.6058233136338291" PointY="4.229715826096812" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LocationMasters_History" Width="1.5" PointX="2.7242189695705745" PointY="8.5441885779351878" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMaster" Width="1.5" PointX="4.2554381286052232" PointY="3.4078962818756215" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMasters_History" Width="1.5" PointX="3.7692772223471094" PointY="3.5228973196460389" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.LOSMasters_History" Width="1.5" PointX="12.375" PointY="3.75" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.NotificationAlert" Width="1.5" PointX="9.9171680332707091" PointY="2.875831784157004" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMaster" Width="1.5" PointX="0.73178024065298042" PointY="27.768722860034892" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMasters_History" Width="1.5" PointX="7.4433498324096892" PointY="3.2009919598703234" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RegionMasters_History" Width="1.5" PointX="8" PointY="0.875" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RoleMaster" Width="1.5" PointX="2.7399103784653871" PointY="8.5023115316882318" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.RoleMasters_History" Width="1.5" PointX="4.5998669139108932" PointY="28.485057486447065" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.SBUMaster" Width="1.5" PointX="8.92534994190808" PointY="22.789259414556092" />
@@ -57,6 +56,11 @@
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_UserMasters_SubSBUMasters" />
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_SubCategoryMasters_CategoryMasters" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.NumberSystem" Width="1.5" PointX="7.92858965691579" PointY="31.11006036359354" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.tbl_Staff" Width="1.5" PointX="11.75" PointY="16.375" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.EmailTrack" Width="1.5" PointX="6.869857100243614" PointY="14.896319634698481" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.HR_Role" Width="1.5" PointX="7.4283646770885055" PointY="23.742304872601434" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.ErrorLogHistoryEntry" Width="1.5" PointX="10.286248481965739" PointY="23.866475384620241" />
+        
         
         
         
@@ -138,6 +142,26 @@
 =======
         
 &gt;&gt;&gt;&gt;&gt;&gt;&gt; ad4621c7b195345b47b7e1ae7944dff966a511dc
+=======
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; ad4621c7b195345b47b7e1ae7944dff966a511dc
+=======
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; ad4621c7b195345b47b7e1ae7944dff966a511dc
 =======
 &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
       &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87

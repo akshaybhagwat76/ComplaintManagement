@@ -84,6 +84,7 @@ namespace ComplaintManagement.Repository
                         catch (Exception ex)
                         {
                             dbContextTransaction.Rollback();
+                            new EmployeeComplaintHistoryRepository().ErrorLogHistory(null, ex.Message.ToString(), "Compentency Master");
                             throw new Exception(ex.Message.ToString());
                         }
                     }
@@ -92,11 +93,13 @@ namespace ComplaintManagement.Repository
             }
             catch (DbEntityValidationException dve)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(null, string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)), "Compentency Master");
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
                 throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
             }
             catch (Exception ex)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(null, ex.Message.ToString(), "Compentency Master");
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }

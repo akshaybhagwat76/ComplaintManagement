@@ -22,6 +22,7 @@ namespace ComplaintManagement.Repository
 
         public EmployeeCompliantMasterVM AddOrUpdate(EmployeeCompliantMasterVM EmployeeComplaintVM, string flag = null)
         {
+            int ids = 0;
             try
             {
                 //Get the current claims principal
@@ -29,6 +30,7 @@ namespace ComplaintManagement.Repository
 
                 var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
                    .Select(c => c.Value).SingleOrDefault();
+                
                 if (!string.IsNullOrEmpty(sid))
                 {
                     using (var dbContextTransaction = db.Database.BeginTransaction())
@@ -50,6 +52,7 @@ namespace ComplaintManagement.Repository
                                 db.SaveChanges();
 
                                 EmployeeComplaintVM.EmployeeComplaintMasterId = EmployeeComplaint.Id;
+                                ids= EmployeeComplaint.Id;
                                 if (flag != "B")
                                 {
                                     EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
@@ -89,7 +92,7 @@ namespace ComplaintManagement.Repository
                                     }
                                 }
                                 db.Entry(EmployeeComplaint).CurrentValues.SetValues(EmployeeComplaintVM);
-
+                                ids = EmployeeComplaint.Id;
                                 if (flag != "B")
                                 {
                                     EmployeeComplaintMastersHistory EmployeeComplaintMasters_History = Mapper.Map<EmployeeCompliantMasterVM, EmployeeComplaintMastersHistory>(EmployeeComplaintVM);
@@ -120,6 +123,7 @@ namespace ComplaintManagement.Repository
                                     }
                                 }
                             }
+                            new EmployeeComplaintHistoryRepository().ErrorLogHistory(ids, ex.Message.ToString(), Messages.Draft);
                             throw new Exception(ex.Message.ToString());
                         }
                     }
@@ -136,11 +140,13 @@ namespace ComplaintManagement.Repository
             }
             catch (DbEntityValidationException dve)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(ids, string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)), Messages.Draft);
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
                 throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
             }
             catch (Exception ex)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(ids, ex.Message.ToString(), Messages.Draft);
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
@@ -280,11 +286,13 @@ namespace ComplaintManagement.Repository
             }
             catch (DbEntityValidationException dve)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(EmployeeComplaintVM.ComplaintId, string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)), Messages.Draft);
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
                 throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
             }
             catch (Exception ex)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(EmployeeComplaintVM.ComplaintId, ex.Message.ToString(), Messages.Draft);
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
@@ -392,7 +400,7 @@ namespace ComplaintManagement.Repository
                             
 
                             dbContextTransaction.Commit();
-                            MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Send back by committee", mailBody);
+                            MailSend.SendEmailWithDifferentBody( mailTo, "Compliant Send back by committee", mailBody, EmployeeComplaintVM.ComplaintId);
                         }
                         catch (Exception ex)
                         {
@@ -413,6 +421,7 @@ namespace ComplaintManagement.Repository
                                     }
                                 }
                             }
+                            new EmployeeComplaintHistoryRepository().ErrorLogHistory(EmployeeComplaintVM.ComplaintId, ex.Message.ToString(), "Compliant Send back by committee");
                             throw new Exception(ex.Message.ToString());
                         }
                     }
@@ -421,11 +430,13 @@ namespace ComplaintManagement.Repository
             }
             catch (DbEntityValidationException dve)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(EmployeeComplaintVM.ComplaintId, string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)), "Compliant Send back by committee");
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
                 throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
             }
             catch (Exception ex)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(EmployeeComplaintVM.ComplaintId, ex.Message.ToString(), "Compliant Send back by committee");
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
@@ -774,7 +785,7 @@ namespace ComplaintManagement.Repository
                                 mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item.UserId)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
                             }
                             
-                            MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody);
+                            MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody, Complaintdata.Id);
                             dbContextTransaction.Commit();
                         }
                     }
@@ -782,6 +793,7 @@ namespace ComplaintManagement.Repository
                 catch (Exception ex)
                 {
                     dbContextTransaction.Rollback();
+                    new EmployeeComplaintHistoryRepository().ErrorLogHistory(Complaintdata.Id, ex.Message.ToString(), "Complaint Submit");
                     throw new Exception(ex.Message.ToString());
                 }
             }
@@ -790,9 +802,11 @@ namespace ComplaintManagement.Repository
 
         public bool WithdrawComplaint(int id, string remarks)
         {
+            int ID = 0;
             try
             {
                 var data = db.EmployeeComplaintMasters.FirstOrDefault(p => p.Id == id);
+                ID = data.Id;
                 if (data != null && !string.IsNullOrEmpty(remarks))
                 {
                     data.IsSubmitted = false;
@@ -813,6 +827,7 @@ namespace ComplaintManagement.Repository
             }
             catch (Exception ex)
             {
+                new EmployeeComplaintHistoryRepository().ErrorLogHistory(ID, ex.Message.ToString(), "Complaint Withdraw");
                 if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
                 throw new Exception(ex.Message.ToString());
             }
@@ -1152,7 +1167,7 @@ namespace ComplaintManagement.Repository
                                 }
 
                                 //string htmlBody= @"<html><body><p>Dear Ms. Susan,</p></br><p>"+ NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>";
-                                MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody);
+                                MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody, ids);
 
                             }
                             dbContextTransaction.Commit();
@@ -1177,6 +1192,15 @@ namespace ComplaintManagement.Repository
                                     }
                                 }
                             }
+                            if (Status == 1)
+                            {
+                                new EmployeeComplaintHistoryRepository().ErrorLogHistory(ids, ex.Message.ToString(), "Save");
+                            }
+                            else if(Status == 2)
+                            {
+                                new EmployeeComplaintHistoryRepository().ErrorLogHistory(ids, ex.Message.ToString(), Messages.PushToCommittee);
+                            }
+                           
                             throw new Exception(ex.Message.ToString());
                         }
                     }

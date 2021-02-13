@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ComplaintManagement.Models;
+using ComplaintManagement.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -8,6 +10,7 @@ namespace ComplaintManagement.Helpers
 {
     public sealed class MailSend
     {
+        
         public static void SendEmail(List<string> to, string subject, string body, string from = "", string password = "", List<string> attachmentUrls = null, bool isBodyHtml = true, List<string> cc = null)
         {
             try
@@ -124,7 +127,7 @@ namespace ComplaintManagement.Helpers
         }
 
 
-        public static void SendEmailWithDifferentBody(List<string> to, string subject, List<string> body, string from = "", string password = "", List<string> attachmentUrls = null, bool isBodyHtml = true, List<string> cc = null)
+        public static void SendEmailWithDifferentBody(List<string> to, string subject, List<string> body, int? complanitId = null, string from = "", string password = "", List<string> attachmentUrls = null, bool isBodyHtml = true, List<string> cc = null)
         {
             try
             {
@@ -168,19 +171,15 @@ namespace ComplaintManagement.Helpers
                     smtp.EnableSsl = true;
                     smtp.Send(msg);
                     i++;
+                    new EmployeeComplaintHistoryRepository().AddEmailHistory(null, Item, complanitId, null, "Success", subject);
                 }
-
+               
 
                 //if (cc != null) cc.ForEach(x => { msg.CC.Add(x); });
-
-
-
-
             }
             catch (Exception ex)
             {
-                //throw;
-                // Throw exception or Log exception and error emails.
+                new EmployeeComplaintHistoryRepository().AddEmailHistory(null, null, complanitId, ex.Message, "Failure", subject);
             }
         }
 

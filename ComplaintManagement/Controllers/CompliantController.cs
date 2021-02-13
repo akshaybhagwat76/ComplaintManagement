@@ -84,6 +84,7 @@ namespace ComplaintManagement.Controllers
                         userMasterVM.DateOfJoining = EmployeeCompliant_oneVM.DueDate;
                         userMasterVM.Attachments = EmployeeCompliant_oneVM.Attachments;
                         userMasterVM.ComplaintId = ids;
+                        ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status && c.CategoryId == EmployeeCompliant_oneVM.CategoryId).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); 
                     }
                     ViewBag.Entity = userMasterVM.Company > 0 ? new EntityMasterRepository().Get(userMasterVM.Company) != null ? new EntityMasterRepository().Get(userMasterVM.Company).EntityName : Messages.NotAvailable : Messages.NotAvailable;
                     ViewBag.SBU = userMasterVM.SBUId > 0 ? new SBUMasterRepository().Get(userMasterVM.SBUId) != null ? new SBUMasterRepository().Get(userMasterVM.SBUId).SBU : Messages.NotAvailable : Messages.NotAvailable;
@@ -94,7 +95,7 @@ namespace ComplaintManagement.Controllers
                     ViewBag.ManagementLevel = userMasterVM.BusinessTitle > 0 ? new DesignationMasterRepository().Get(userMasterVM.BusinessTitle) != null ? new DesignationMasterRepository().Get(userMasterVM.BusinessTitle).Designation : Messages.NotAvailable : Messages.NotAvailable;
 
                     ViewBag.lstCategories = new CategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.CategoryName, Value = d.Id.ToString() }).ToList();
-                    ViewBag.lstSubCategories = new SubCategoryMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.SubCategoryName, Value = d.Id.ToString() }).ToList(); ;
+                    
 
                     ViewBag.CategoryName = new CategoryMastersRepository().Get(Convert.ToInt32(EmployeeCompliant_oneVM.CategoryId)).CategoryName;
                     ViewBag.SubCategoryName = new SubCategoryMastersRepository().Get(Convert.ToInt32(EmployeeCompliant_oneVM.SubCategoryId)).SubCategoryName;
@@ -1076,7 +1077,7 @@ namespace ComplaintManagement.Controllers
                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(ComplaintMaster.CreatedBy));
                 mailTo.Add(userData.WorkEmail);
                 mailBody.Add(@"<html><body><p>Dear " + userData.EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
-                //MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Completion", mailBody);
+                MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Completion", mailBody, ids);
             }
             catch (Exception ex)
             {

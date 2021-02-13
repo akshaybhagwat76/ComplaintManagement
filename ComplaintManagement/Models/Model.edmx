@@ -136,6 +136,20 @@
           <Property Name="EntityState" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="DesignationId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="EmailTrack">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmailFrom" Type="nvarchar" MaxLength="100" />
+          <Property Name="EmailTo" Type="nvarchar" MaxLength="100" />
+          <Property Name="ErrorDescription" Type="nvarchar(max)" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ComplaintId" Type="int" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" />
+          <Property Name="ComplaintStatus" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="EmployeeComplaintHistory">
           <Key>
             <PropertyRef Name="Id" />
@@ -245,6 +259,17 @@
           <Property Name="ModifiedBy" Type="int" Nullable="false" />
           <Property Name="EntityState" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="EntityId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ErrorLogHistoryEntry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ErrorDescription" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="SreenName" Type="nvarchar" MaxLength="100" />
+          <Property Name="ComplaintId" Type="int" />
         </EntityType>
         <EntityType Name="HR_Role">
           <Key>
@@ -497,6 +522,31 @@
           <Property Name="EntityState" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="SubSBUId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="tbl_Staff">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="USER_PERSON_TYPE" Type="nvarchar" MaxLength="1000" />
+          <Property Name="EntityName" Type="nvarchar" MaxLength="1000" />
+          <Property Name="LOS" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Organisation_SBU" Type="nvarchar" MaxLength="1000" />
+          <Property Name="SubSBU" Type="nvarchar" MaxLength="1000" />
+          <Property Name="CompetencyName" Type="nvarchar" MaxLength="1000" />
+          <Property Name="OfficeLocation" Type="nvarchar" MaxLength="1000" />
+          <Property Name="office" Type="nvarchar" MaxLength="1000" />
+          <Property Name="JoiningDate" Type="datetime" />
+          <Property Name="Mobile_no" Type="nvarchar" MaxLength="1000" />
+          <Property Name="People_Manager_ID" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Type" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Status" Type="nvarchar" MaxLength="1000" />
+          <Property Name="EmployeeName" Type="nvarchar" MaxLength="1000" />
+          <Property Name="EmployeeID" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Date_Of_Birth" Type="int" />
+          <Property Name="Email" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Designation" Type="nvarchar" MaxLength="1000" />
+        </EntityType>
         <EntityType Name="UserMasters">
           <Key>
             <PropertyRef Name="Id" />
@@ -679,12 +729,14 @@
           <EntitySet Name="CompetencyMasters_History" EntityType="Self.CompetencyMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DesignationMasters" EntityType="Self.DesignationMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DesignationMasters_History" EntityType="Self.DesignationMasters_History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmailTrack" EntityType="Self.EmailTrack" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeComplaintHistory" EntityType="Self.EmployeeComplaintHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeComplaintMasters" EntityType="Self.EmployeeComplaintMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeComplaintMastersHistory" EntityType="Self.EmployeeComplaintMastersHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeComplaintWorkFlow" EntityType="Self.EmployeeComplaintWorkFlow" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntityMasters" EntityType="Self.EntityMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntityMasters_History" EntityType="Self.EntityMasters_History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ErrorLogHistoryEntry" EntityType="Self.ErrorLogHistoryEntry" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HR_Role" EntityType="Self.HR_Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LocationMasters" EntityType="Self.LocationMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LocationMasters_History" EntityType="Self.LocationMasters_History" Schema="dbo" store:Type="Tables" />
@@ -702,6 +754,7 @@
           <EntitySet Name="SubCategoryMasters_History" EntityType="Self.SubCategoryMasters_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubSBUMasters" EntityType="Self.SubSBUMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubSBUMasters_History" EntityType="Self.SubSBUMasters_History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Staff" EntityType="Self.tbl_Staff" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMasters" EntityType="Self.UserMasters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMasters_History" EntityType="Self.UserMasters_History" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_EmployeeComplaintMasters_UserMasters" Association="Self.FK_EmployeeComplaintMasters_UserMasters">
@@ -761,7 +814,6 @@
           <EntitySet Name="EmployeeComplaintWorkFlows" EntityType="DB_A6A061_complaintuserModel.EmployeeComplaintWorkFlow" />
           <EntitySet Name="EntityMasters" EntityType="DB_A6A061_complaintuserModel.EntityMaster" />
           <EntitySet Name="EntityMasters_History" EntityType="DB_A6A061_complaintuserModel.EntityMasters_History" />
-          <EntitySet Name="HR_Role" EntityType="DB_A6A061_complaintuserModel.HR_Role" />
           <EntitySet Name="LocationMasters" EntityType="DB_A6A061_complaintuserModel.LocationMaster" />
           <EntitySet Name="LocationMasters_History" EntityType="DB_A6A061_complaintuserModel.LocationMasters_History" />
           <EntitySet Name="LOSMasters" EntityType="DB_A6A061_complaintuserModel.LOSMaster" />
@@ -816,6 +868,10 @@
             <End Role="SubCategoryMaster" EntitySet="SubCategoryMasters" />
           </AssociationSet>
           <EntitySet Name="NumberSystems" EntityType="DB_A6A061_complaintuserModel.NumberSystem" />
+          <EntitySet Name="tbl_Staff" EntityType="DB_A6A061_complaintuserModel.tbl_Staff" />
+          <EntitySet Name="EmailTracks" EntityType="DB_A6A061_complaintuserModel.EmailTrack" />
+          <EntitySet Name="HR_Role" EntityType="DB_A6A061_complaintuserModel.HR_Role" />
+          <EntitySet Name="ErrorLogHistoryEntries" EntityType="DB_A6A061_complaintuserModel.ErrorLogHistoryEntry" />
         </EntityContainer>
         <EntityType Name="CategoryMaster">
           <Key>
@@ -1062,24 +1118,6 @@
           <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
           <Property Name="EntityState" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="EntityId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="HR_Role">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="ComplentId" Type="Int32" />
-          <Property Name="CaseType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Attachement" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="HRUserId" Type="Int32" />
-          <Property Name="CommitteeUSerId" Type="Int32" />
         </EntityType>
         <EntityType Name="LocationMaster">
           <Key>
@@ -1499,6 +1537,74 @@
           <Property Name="NoLength" Type="Int32" Nullable="false" />
           <Property Name="AutoIncrement" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="tbl_Staff">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="USER_PERSON_TYPE" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="EntityName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="LOS" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Organisation_SBU" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="SubSBU" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="CompetencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="OfficeLocation" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="office" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="JoiningDate" Type="DateTime" Precision="3" />
+          <Property Name="Mobile_no" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="People_Manager_ID" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeID" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Of_Birth" Type="Int32" />
+          <Property Name="Email" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Designation" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="EmailTrack">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmailFrom" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EmailTo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ErrorDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ComplaintId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ComplaintStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="HR_Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="ComplentId" Type="Int32" />
+          <Property Name="CaseType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Attachement" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InvolvedUsersId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="HRUserId" Type="Int32" />
+          <Property Name="CommitteeUSerId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="ErrorLogHistoryEntry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ErrorDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="SreenName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ComplaintId" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1757,25 +1863,6 @@
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="EntityName" ColumnName="EntityName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="HR_Role">
-            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.HR_Role">
-              <MappingFragment StoreEntitySet="HR_Role">
-                <ScalarProperty Name="CommitteeUSerId" ColumnName="CommitteeUSerId" />
-                <ScalarProperty Name="HRUserId" ColumnName="HRUserId" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
-                <ScalarProperty Name="Remark" ColumnName="Remark" />
-                <ScalarProperty Name="Attachement" ColumnName="Attachement" />
-                <ScalarProperty Name="CaseType" ColumnName="CaseType" />
-                <ScalarProperty Name="ComplentId" ColumnName="ComplentId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2091,6 +2178,78 @@
               <MappingFragment StoreEntitySet="NumberSystem">
                 <ScalarProperty Name="AutoIncrement" ColumnName="AutoIncrement" />
                 <ScalarProperty Name="NoLength" ColumnName="NoLength" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Staff">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.tbl_Staff">
+              <MappingFragment StoreEntitySet="tbl_Staff">
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Date_Of_Birth" ColumnName="Date_Of_Birth" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="People_Manager_ID" ColumnName="People_Manager_ID" />
+                <ScalarProperty Name="Mobile_no" ColumnName="Mobile_no" />
+                <ScalarProperty Name="JoiningDate" ColumnName="JoiningDate" />
+                <ScalarProperty Name="office" ColumnName="office" />
+                <ScalarProperty Name="OfficeLocation" ColumnName="OfficeLocation" />
+                <ScalarProperty Name="CompetencyName" ColumnName="CompetencyName" />
+                <ScalarProperty Name="SubSBU" ColumnName="SubSBU" />
+                <ScalarProperty Name="Organisation_SBU" ColumnName="Organisation_SBU" />
+                <ScalarProperty Name="LOS" ColumnName="LOS" />
+                <ScalarProperty Name="EntityName" ColumnName="EntityName" />
+                <ScalarProperty Name="USER_PERSON_TYPE" ColumnName="USER_PERSON_TYPE" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmailTracks">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.EmailTrack">
+              <MappingFragment StoreEntitySet="EmailTrack">
+                <ScalarProperty Name="ComplaintStatus" ColumnName="ComplaintStatus" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ComplaintId" ColumnName="ComplaintId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ErrorDescription" ColumnName="ErrorDescription" />
+                <ScalarProperty Name="EmailTo" ColumnName="EmailTo" />
+                <ScalarProperty Name="EmailFrom" ColumnName="EmailFrom" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HR_Role">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.HR_Role">
+              <MappingFragment StoreEntitySet="HR_Role">
+                <ScalarProperty Name="CommitteeUSerId" ColumnName="CommitteeUSerId" />
+                <ScalarProperty Name="HRUserId" ColumnName="HRUserId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="InvolvedUsersId" ColumnName="InvolvedUsersId" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Attachement" ColumnName="Attachement" />
+                <ScalarProperty Name="CaseType" ColumnName="CaseType" />
+                <ScalarProperty Name="ComplentId" ColumnName="ComplentId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ErrorLogHistoryEntries">
+            <EntityTypeMapping TypeName="DB_A6A061_complaintuserModel.ErrorLogHistoryEntry">
+              <MappingFragment StoreEntitySet="ErrorLogHistoryEntry">
+                <ScalarProperty Name="ComplaintId" ColumnName="ComplaintId" />
+                <ScalarProperty Name="SreenName" ColumnName="SreenName" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ErrorDescription" ColumnName="ErrorDescription" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

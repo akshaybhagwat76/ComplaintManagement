@@ -15,6 +15,7 @@ namespace ComplaintManagement.Repository
 {
     public class EmployeeComplaintHistoryRepository
     {
+        private DB_A6A061_complaintuserEntities db = new DB_A6A061_complaintuserEntities();
         public void AddComplaintHistory(string remarks, int complaintId, string actionType, DB_A6A061_complaintuserEntities db)
         {
             try
@@ -545,5 +546,74 @@ namespace ComplaintManagement.Repository
             return EmployeeComplaintWorkFlowListDto;
         }
 
+        public void AddEmailHistory(string EmailFrom, string EmailTo, int? complaintId, string ErrorDescription,string status,string ComplaintStatus)
+        {
+            try
+            {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                string usertypeValue = identity.Claims.Where(c => c.Type == ClaimTypes.Role)
+                   .Select(c => c.Value).SingleOrDefault();
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    EmailTrack emailHistory = new EmailTrack();
+                    emailHistory.EmailFrom = EmailFrom;
+                    emailHistory.EmailTo = EmailTo;
+                    emailHistory.CreatedBy = Convert.ToInt32(sid);
+                    emailHistory.ErrorDescription = ErrorDescription;
+                    emailHistory.ComplaintId = complaintId;
+                    emailHistory.CreateDate = DateTime.UtcNow;
+                    emailHistory.Status = status;
+                    emailHistory.ComplaintStatus = ComplaintStatus;
+                    db.EmailTracks.Add(emailHistory);
+                    db.SaveChanges();
+                }
+            }
+            catch (DbEntityValidationException dve)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
+                throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
+
+        public void ErrorLogHistory(int? complaintId, string ErrorDescription, string status)
+        {
+            try
+            {
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                string usertypeValue = identity.Claims.Where(c => c.Type == ClaimTypes.Role)
+                   .Select(c => c.Value).SingleOrDefault();
+                var sid = identity.Claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).SingleOrDefault();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    ErrorLogHistoryEntry errorHistory = new ErrorLogHistoryEntry();
+                    errorHistory.CreatedBy = Convert.ToInt32(sid);
+                    errorHistory.ErrorDescription = ErrorDescription;
+                    errorHistory.ComplaintId = complaintId;
+                    errorHistory.CreateDate = DateTime.UtcNow;
+                    errorHistory.SreenName = status;
+                    db.ErrorLogHistoryEntries.Add(errorHistory);
+                    db.SaveChanges();
+                }
+            }
+            catch (DbEntityValidationException dve)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(dve);
+                throw new Exception(string.Join("\n", dve.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(y => y.ErrorMessage)));
+            }
+            catch (Exception ex)
+            {
+                if (HttpContext.Current != null) ErrorSignal.FromCurrentContext().Raise(ex);
+                throw new Exception(ex.Message.ToString());
+            }
+        }
     }
 }

@@ -154,7 +154,10 @@
                                         Text = "",
                                         Value = ""
                                     });
-                                    //listSubCategoryId.AddRange(ViewBag.lstSubCategories);
+                                    if (Convert.ToInt32(Id) > 0)
+                                    {
+                                        listSubCategoryId.AddRange(ViewBag.lstSubCategories);
+                                    }
                                 }
 
                                 @Html.DropDownList("SubCategoryId",(List<SelectListItem>)listSubCategoryId , new { @class = "form-control required" })

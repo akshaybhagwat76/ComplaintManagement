@@ -1805,7 +1805,7 @@ namespace ComplaintManagement.Controllers
                     mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p> Please Find attachment.</p></br><p>" + Comment + "</p><p>Thank You.</p><p></br></br>CMS</p></body></html>");
                 }
                 mailAttachment.Add(ServerSavePath);
-                MailSend.SendEmailWithDifferentBody(mailTo, Subject, mailBody, "", "", mailAttachment);
+                MailSend.SendEmailWithDifferentBody(mailTo, Subject, mailBody, null,"", "", mailAttachment);
                 return new ReplyFormat().Success(Messages.SUCCESS);
 
             }
