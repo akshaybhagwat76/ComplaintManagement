@@ -11,7 +11,7 @@ using ComplaintManagement.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using ComplaintManagement.Models;
-
+using Dapper;
 namespace ComplaintManagement.Controllers
 {
     public class AccountController : Controller

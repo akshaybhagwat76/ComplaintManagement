@@ -33,7 +33,7 @@
         <!-- Topbar -->
         
         <!-- End of Topbar -->
-        <a href="/Role/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+        <a href="/Role/Index" class="btn btn-danger ml-4" data-toggle="tooltip" data-placement="top" title="Back">&laquo; Back</a> <br /><br />
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
@@ -47,7 +47,7 @@
                         <div class="col-md-8">
                             <ul class="nav">
                                 <li class="nav-item">
-                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "Role", new {id = ViewBag.name})'"><i class="fas fa-file-excel"></i></button>
+                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "Role", new {id = ViewBag.name})'" data-toggle="tooltip" data-placement="top" title="Excel"><i class="fas fa-file-excel"></i></button>
                                 </li>
                             </ul>
                         </div>
@@ -189,10 +189,10 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-danger btn-user btn-sm" id="btnUpload">Upload</a>
-                        <a href="/Role/Index" class="btn bg-white border btn-user btn-sm">Cancel</a>
+                        <a class="btn btn-danger btn-user btn-sm" id="btnUpload" data-toggle="tooltip" data-placement="top" title="Upload">Upload</a>
+                        <a href="/Role/Index" class="btn bg-white border btn-user btn-sm" data-toggle="tooltip" data-placement="top" title="Cancel">Cancel</a>
                     </div>
-                    <a href="/Files/DownloadFile?filePath=/Imports/Samples/Role/Role.xlsx" class="ml-3 mt-n2">Download Sample</a>
+                    <a href="/Files/DownloadFile?filePath=/Imports/Samples/Role/Role.xlsx" class="ml-3 mt-n2" data-toggle="tooltip" data-placement="top" title="Download">Download Sample</a>
                     <label id="lblError" class="ml-n5 mt-5 adderror"></label>
                 </div>
             </div>

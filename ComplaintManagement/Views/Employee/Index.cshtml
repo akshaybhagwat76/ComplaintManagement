@@ -73,13 +73,13 @@
                         <div class="col-lg-2">
                             <ul class="nav">
                                 <li class="nav-item">
-                                    <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                                    <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p" data-toggle="tooltip" data-placement="top" title="Search"><i class="fas fa-search"></i></button>
                                 </li>
                                 <li class="nav-item ml-2">
-                                    <a href="/Compliant/Compliant_one" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
+                                    <a href="/Compliant/Compliant_one" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" data-toggle="tooltip" data-placement="top" title="Create"><i class="fas fa-plus"></i></a>
                                 </li>
                                 <li class="nav-item">
-                                    &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportData", "Employee")'"><i class="fas fa-file-excel"></i></button>
+                                    &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportData", "Employee")'" data-toggle="tooltip" data-placement="top" title="Ppt"><i class="fas fa-file-excel"></i></button>
                                 </li>
                                 @*<li class="nav-item ml-2">
             <button class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
@@ -170,8 +170,8 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-danger btn-user btn-sm" id="btnUpload">Upload</a>
-                        <a href="/Employee/Index" class="btn bg-white border btn-user btn-sm">Cancel</a>
+                        <a class="btn btn-danger btn-user btn-sm" id="btnUpload" data-toggle="tooltip" data-placement="top" title="Upload">Upload</a>
+                        <a href="/Employee/Index" class="btn bg-white border btn-user btn-sm" data-toggle="tooltip" data-placement="top" title="Cancel">Cancel</a>
                     </div>
                     <a href="/Files/DownloadFile?filePath=/Imports/Samples/EmployeeCompliant/EmployeeCompliant.xlsx" class="ml-3 mt-n2">Download Sample</a>
                     <label id="lblError" class="ml-n5 mt-5 adderror"></label>

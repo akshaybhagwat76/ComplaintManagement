@@ -68,7 +68,7 @@
                 <div class="col-lg-2">
                     <ul class="nav">
                         <li class="nav-item">
-                            <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                            <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p" data-toggle="tooltip" data-placement="top" title="Search"><i class="fas fa-search"></i></button>
                         </li>
                     </ul>
                 </div>
@@ -136,13 +136,13 @@
                                                     <td class="text-center text-nowrap">
                                                         @if (item.ActionType.ToLower() == Messages.COMMITTEE.ToLower())
                                                         {
-                                                            <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
+                                                            <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit text-danger"></i></a>
                                                         }
                                                         else
                                                         {
-                                                            <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2  disabled-div"><i class="fas fa-edit text-danger"></i></a>
+                                                            <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)',false,'@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id), true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId), true)" class="mr-2  disabled-div" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit text-danger"></i></a>
                                                         }
-                                                        <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2"><i class="fas fa-info text-danger"></i></a>
+                                                        <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2" data-toggle="tooltip" data-placement="top" title="History"><i class="fas fa-info text-danger"></i></a>
                                                     </td>
                                                 </tr>
                                             }

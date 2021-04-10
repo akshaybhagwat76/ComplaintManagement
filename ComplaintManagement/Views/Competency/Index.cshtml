@@ -41,10 +41,10 @@
                             <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
                         </li>
                         <li class="nav-item">
-                            <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                            <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p" data-toggle="tooltip" data-placement="top" title="Search"><i class="fas fa-search"></i></button>
                         </li>
                         <li class="nav-item">
-                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportData", "Location")'"><i class="fas fa-file-excel"></i></button>
+                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportData", "Location")'" data-toggle="tooltip" data-placement="top" title="Excel"><i class="fas fa-file-excel"></i></button>
                         </li>
                     </ul>
                 </div>
@@ -111,10 +111,10 @@
                                                 </strong>
                                             </td>
                                             <td class="text-center">
-                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="javascript:void(0)" onclick="deleteCompetency('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                <a href="/Competency/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
+                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" class="mr-2" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit text-danger"></i></a>
+                                                <a href="javascript:void(0)" onclick="deleteCompetency('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Views"><i class="fas fa-clock text-danger"></i></a>
+                                                <a href="/Competency/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id" data-toggle="tooltip" data-placement="top" title="History">&nbsp;<i class="fas fa-history text-danger"></i></a>
 
                                             </td>
                                         </tr>
@@ -171,10 +171,10 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-danger btn-user btn-sm" id="btnUpload">Upload</a>
-                        <a href="/Competency/Index" class="btn bg-white border btn-user btn-sm">Cancel</a>
+                        <a class="btn btn-danger btn-user btn-sm" id="btnUpload" data-toggle="tooltip" data-placement="top" title="Upload">Upload</a>
+                        <a href="/Competency/Index" class="btn bg-white border btn-user btn-sm" data-toggle="tooltip" data-placement="top" title="Cancel">Cancel</a>
                     </div>
-                    <a href="/Files/DownloadFile?filePath=/Imports/Samples/Competency/Competency.xlsx" class="ml-3 mt-n2">Download Sample</a>
+                    <a href="/Files/DownloadFile?filePath=/Imports/Samples/Competency/Competency.xlsx" class="ml-3 mt-n2" data-toggle="tooltip" data-placement="top" title="Downlaod">Download Sample</a>
                     <label id="lblError" class="ml-n5 mt-5 adderror"></label>
                 </div>
             </div>

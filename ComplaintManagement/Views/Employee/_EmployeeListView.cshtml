@@ -60,10 +60,10 @@
 
 
         <td class="text-center text-nowrap">
-            <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" class="mr-2 @(item.ComplaintStatus.ToLower()==Messages.SUBMITTED.ToLower()  ? "disabled-div" : "") @(item.ComplaintStatus.ToLower()==Messages.COMPLETED.ToLower()  ? "disabled-div" : "")"><i class="fas fa-edit text-danger"></i></a>
+            <a href="javascript:void(0)"  onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)"  class="mr-2 @(item.ComplaintStatus.ToLower()==Messages.SUBMITTED.ToLower()  ? "disabled-div" : "") @(item.ComplaintStatus.ToLower()==Messages.COMPLETED.ToLower()  ? "disabled-div" : "")"><i class="fas fa-edit text-danger"></i></a>
             @*<a href="javascript:void(0)" onclick="deleteEmployeeCompliant('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>*@
-            <a href="javascript:void(0)" onclick="widthdrawComplaint('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" class="mr-2 @(item.ComplaintStatus.ToLower()==Messages.COMPLETED.ToLower()  ? "disabled-div" : "")"><i class="fas fa-concierge-bell text-danger"></i></a>
-            <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" class="mr-2"><i class="fas fa-info text-danger"></i></a>
+            <a href="javascript:void(0)" onclick="widthdrawComplaint('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" class="mr-2 @(item.ComplaintStatus.ToLower()==Messages.COMPLETED.ToLower()  ? "disabled-div" : "")" data-toggle="tooltip" data-placement="top" title="Widthdraw"><i class="fas fa-concierge-bell text-danger"></i></a>
+            <a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" class="mr-2" data-toggle="tooltip" data-placement="top" title="History"><i class="fas fa-info text-danger"></i></a>
             <a href="#">@*<i class="fas fa-clock text-danger"></i>*@</a>
         </td>
     </tr>

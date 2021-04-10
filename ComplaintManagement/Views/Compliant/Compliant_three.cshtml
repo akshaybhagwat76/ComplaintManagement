@@ -148,7 +148,7 @@
                             <p class="text-black font-weight-bold m-0">@ViewBag.SubCategoryName</p>
                         </div>
                         <div class="col-md-4">
-                            <label>Remarks</label>
+                            <label>Remark</label>
                             <p class="text-black font-weight-bold m-0">@Model.Remark</p>
                         </div>
                     </div>
@@ -348,7 +348,7 @@
                                             <tr>
                                                 <td class="border-top-0">Created By</td>
                                                 <td class="border-top-0">Created On</td>
-                                                <td class="border-top-0">Remarks</td>
+                                                <td class="border-top-0">Remark</td>
                                                 <td class="border-top-0">Type</td>
                                                 <td class="border-top-0">Action</td>
                                             </tr>
@@ -497,9 +497,10 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <a href="javascript:void(0)" id="btnBackToBUHCSave" onclick="submitBackToBUHCForm()" class="btn btn-danger btn-md">Back to BUHC</a>
-                        <a href="javascript:void(0)" id="btnSave" onclick="submitForm()" class="btn btn-danger btn-md">Save</a>
-                        <a href="javascript:void(0)" id="btnBackSave" onclick="submitBackForm()" class="btn btn-danger btn-md">Back</a>
+                        <a href="javascript:void(0)" id="btnBackToBUHCSave" onclick="submitBackToBUHCForm()" class="btn btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="Back BUHC">Back to BUHC
+                        </a>
+                        <a href="javascript:void(0)" id="btnSave" onclick="submitForm()" class="btn btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="Save">Save</a>
+                        <a href="javascript:void(0)" id="btnBackSave" onclick="submitBackForm()" class="btn btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="Back">Back</a>
                         <label id="lblError" class="adderror"></label>
                     </div>
                 </form>

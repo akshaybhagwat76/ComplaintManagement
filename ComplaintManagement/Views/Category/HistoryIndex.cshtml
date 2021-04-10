@@ -27,7 +27,7 @@
 
     @Html.Hidden("history",(object)ViewBag.name)
    
-        <a href="/Category/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+        <a href="/Category/Index" class="btn btn-danger ml-4" data-toggle="tooltip" data-placement="top" title="Back">&laquo; Back</a> <br /><br />
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
@@ -42,7 +42,7 @@
                         <div class="col-md-8">
                             <ul class="nav">
                                 <li class="nav-item">
-                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "Category", new {id = ViewBag.name})'"><i class="fas fa-file-excel"></i></button>
+                                    <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportDataHistory", "Category", new {id = ViewBag.name})'" data-toggle="tooltip" data-placement="top" title="Excel"><i class="fas fa-file-excel"></i></button>
                                 </li>
                             </ul>
                         </div>

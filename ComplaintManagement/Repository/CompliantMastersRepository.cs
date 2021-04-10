@@ -252,8 +252,7 @@ namespace ComplaintManagement.Repository
         //}
 
         public DashboardVM GetDashboardCounts()
-        
-        {
+          {
             DashboardVM Dashboard = new DashboardVM();
             try
             {
@@ -265,44 +264,66 @@ namespace ComplaintManagement.Repository
 
                 if (!string.IsNullOrEmpty(sid) && !string.IsNullOrEmpty(Role))
                 {
-                    List<EmployeeCompliantMasterVM> employeeComplaintMaster = new EmployeeComplaintMastersRepository().GetAll();
-                    List<EmployeeComplaintWorkFlowVM> employeeComplaintWorkFlowList = new EmployeeWorkFlowRepository().GetAll();
+                    //List<EmployeeCompliantMasterVM> employeeComplaintMaster = new EmployeeComplaintMastersRepository().GetAll();
+                    //List<EmployeeComplaintWorkFlowVM> employeeComplaintWorkFlowList = new EmployeeWorkFlowRepository().GetAll();
+
+                    List<EmployeeCompliantMasterVM> employeeComplaintMaster = new List<EmployeeCompliantMasterVM>();
+                    List<EmployeeComplaintWorkFlowVM> employeeComplaintWorkFlowList = new List<EmployeeComplaintWorkFlowVM>();
+                    
                     if (employeeComplaintMaster != null)
                     {
-                        foreach (EmployeeComplaintWorkFlowVM workFlow in employeeComplaintWorkFlowList)
-                        {
+                        //foreach (EmployeeComplaintWorkFlowVM workFlow in employeeComplaintWorkFlowList)
+                        //{
                             if (Role == Messages.Committee)
                             {
-                                Dashboard.DueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.Committee && x.DueDate >= DateTime.Now ).Count();
-                                Dashboard.OverDueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.Committee && x.DueDate <= DateTime.UtcNow).Count();
+                                Dashboard.DueComplaints =db.EmployeeComplaintWorkFlows.Where(x => x.ActionType == Messages.Committee && x.DueDate >= DateTime.Now ).Count();
+                                Dashboard.OverDueComplaints =db.EmployeeComplaintWorkFlows.Where(x => x.ActionType == Messages.Committee && x.DueDate <= DateTime.UtcNow).Count();
                             }
                             else
                             {
-                                if (workFlow.AssignedUserRoles != null && !string.IsNullOrEmpty(workFlow.AssignedUserRoles) && workFlow.AssignedUserRoles.Length > 0)
-                                {
-                                    string[] assignedUsers = employeeComplaintWorkFlowList.Select(s => s.AssignedUserRoles).ToArray();
-                                    foreach (string userId in assignedUsers)
+                                //if (workFlow.AssignedUserRoles != null && !string.IsNullOrEmpty(workFlow.AssignedUserRoles) && workFlow.AssignedUserRoles.Length > 0)
+                                //{
+                                    if (Role != "Lead" && Role!="Normal")
                                     {
-                                        string[] assignedUsersId = userId.Split(',');
-                                        foreach (string Id in assignedUsersId)
+                                //string[] assignedUsers = employeeComplaintWorkFlowList.Select(s => s.AssignedUserRoles).ToArray();
+                                       string[] assignedUsers = db.EmployeeComplaintWorkFlows.Select(s => s.AssignedUserRoles).ToArray();
+                                        foreach (string userId in assignedUsers)
                                         {
-                                            if (Convert.ToInt32(Id) == Convert.ToInt32(sid))
+                                            string[] assignedUsersId = userId.Split(',');
+                                            foreach (string Id in assignedUsersId)
                                             {
-                                                Dashboard.DueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate >= DateTime.Now && x.AssignedUserRoles.Split(',').Contains(sid)).Count();  //&& Convert.ToInt32(x.AssignedUserRoles) == Convert.ToInt32(sid) 
-                                                Dashboard.OverDueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate <= DateTime.UtcNow && x.AssignedUserRoles.Split(',').Contains(sid)).Count();
+                                                if (Convert.ToInt32(Id) == Convert.ToInt32(sid))
+                                                {
+                                            //        Dashboard.DueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate >= DateTime.Now && x.AssignedUserRoles.Split(',').Contains(sid)).Count();  //&& Convert.ToInt32(x.AssignedUserRoles) == Convert.ToInt32(sid) 
+                                            //        Dashboard.OverDueComplaints = employeeComplaintWorkFlowList.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate <= DateTime.UtcNow && x.AssignedUserRoles.Split(',').Contains(sid)).Count();
+                                            //var results =db..AsQueryable();
+                                             Dashboard.DueComplaints = db.EmployeeComplaintWorkFlows.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate >= DateTime.Now && x.AssignedUserRoles.Contains(sid)).Count();
+                                             Dashboard.OverDueComplaints = db.EmployeeComplaintWorkFlows.Where(x => x.ActionType == Messages.SUBMITTED && x.DueDate <= DateTime.UtcNow && x.AssignedUserRoles.Contains(sid)).Count();
+
+                                        }
                                             }
                                         }
                                     }
-                                }
+                                    else
+                                    {
+                                        Dashboard.Inprogress = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && (x.ActionType == "Submitted" || x.ActionType == "Committee")).Count();
+                                        Dashboard.Completed = db.EmployeeComplaintWorkFlows.Where(x => x.IsActive && (x.ActionType == "Completed")).Count();
+                                    }
+                                    }
                             }
 
                         }
-                    }
-                    if (Role.ToLower() == Messages.NormalUser.ToLower())
-                    {
-                        Dashboard.AwaitingComplaints = employeeComplaintMaster.Where(x => x.ComplaintStatus == Messages.SUBMITTED && x.CreatedBy == Convert.ToInt32(sid)).Count();
-                    }
+                //}
+                if (Role.ToLower() == Messages.NormalUser.ToLower())
+                {
+                    int ssid = Convert.ToInt32(sid);
+                    //    Dashboard.AwaitingComplaints = db.EmployeeComplaintMasters.Where(x => x.ComplaintStatus == Messages.SUBMITTED && x.CreatedBy == ssid).Count();
+
+                    Dashboard.AwaitingComplaints = db.EmployeeComplaintWorkFlows.Where(x => x.ActionType == Messages.SUBMITTED && x.CreatedBy == ssid).Count();
+
                 }
+                //}
+                //}
             }
             catch (Exception ex)
             {

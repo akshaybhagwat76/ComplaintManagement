@@ -25,7 +25,7 @@
                     foreach (var item in ViewBag.lstComplaintOverDue)
                     {
             <tr>
-                <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)">@item.LOSName</strong></td>
+                <td class="text-black"><strong id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)">@item.LOSName</strong></td>
                 <td class="text-black"><strong>@item.Category</strong></td>
                 <td class="text-black"><strong>@item.SubCategory</strong></td>
                 <td class="text-black"><strong>@item.CreatedByName</strong></td>

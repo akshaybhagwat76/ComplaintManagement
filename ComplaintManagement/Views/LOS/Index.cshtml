@@ -42,20 +42,20 @@
                             <input type="date" id="toDate" value="@ViewBag.toDate" class="form-control" placeholder="To Date" />
                         </li>
                         <li class="nav-item">
-                            <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                            <button type="button" onclick="filterGrid()" class="btn btn-danger rounded-circle h-40p w-40p" data-toggle="tooltip" data-placement="top" title="Search"><i class="fas fa-search"></i></button>
                         </li>
                         <li class="nav-item">
-                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportData", "LOS")'"><i class="fas fa-file-excel"></i></button>
+                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="location.href='@Url.Action("ExportData", "LOS")'" data-toggle="tooltip" data-placement="top" title="Excel"><i class="fas fa-file-excel"></i></button>
                         </li>
                     </ul>
                 </div>
                 <div class="col-md-2">
                     <ul class="nav">
                         <li class="nav-item mr-4">
-                            <a href="/LOS/Create" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
+                            <a href="/LOS/Create" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" data-toggle="tooltip" data-placement="top" title="Create"><i class="fas fa-plus"></i></a>
                         </li>
                         <li class="nav-item">
-                            <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"><i class="fas fa-upload"></i></button>
+                            <button type="submit" class="btn btn-outline-danger rounded-circle h-40p w-40p" data-toggle="modal" data-target="#uploadFile"  data-placement="top" title="Upload"><i class="fas fa-upload"></i></button>
                         </li>
                     </ul>
                 </div>
@@ -134,10 +134,10 @@
                                                 </strong>
                                             </td>
                                             <td class="text-center text-nowrap">
-                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-edit text-danger"></i></a>
-                                                <a href="javascript:void(0)" onclick="deleteLOS('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2"><i class="fas fa-trash-alt text-danger"></i></a>
-                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id"><i class="fas fa-clock text-danger"></i></a>
-                                                <a href="/LOS/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id">&nbsp;<i class="fas fa-history text-danger"></i></a>
+                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2" data-toggle="tooltip" data-placement="top" title="Create"><i class="fas fa-edit text-danger"></i></a>
+                                                <a href="javascript:void(0)" onclick="deleteLOS('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',false)" data-id="@item.Id" class="mr-2" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt text-danger"></i></a>
+                                                <a href="javascript:void(0)" onclick="performAction('@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)',true)" data-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Views"><i class="fas fa-clock text-danger"></i></a>
+                                                <a href="/LOS/HistoryIndex?id=@CryptoEngineUtils.Encrypt(Convert.ToString(item.Id),true)" data-id="@item.Id" data-toggle="tooltip" data-placement="top" title="History">&nbsp;<i class="fas fa-history text-danger"></i></a>
                                             </td>
                                         </tr>
                                     }

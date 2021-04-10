@@ -34,7 +34,7 @@ namespace ComplaintManagement.ViewModel
         public string Comments { get; set; }
         public string fromDate { get; set; }
 public string toDate { get; set; }
-        public int losid { get; set; }
+        //public int losid { get; set; }
 
 
     }

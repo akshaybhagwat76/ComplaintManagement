@@ -1,0 +1,49 @@
+﻿@using ComplaintManagement.Helpers
+
+<div class="table-responsive">
+    <table class="table f-14 border" data-order='[[0, "desc"]]' id="caseTables" style="width:100%">
+        <thead>
+            <tr>
+                <td class="text-center">Case No</td>
+                <td class="text-center">Created By</td>
+                <td class="text-center">Category</td>
+                <td class="text-center">Sub Category</td>
+                <td class="text-center">Office</td>
+                <td class="text-center">LOS</td>
+                <td class="text-center">SBU</td>
+                <td class="text-center">Sub SBU</td>
+                <td class="text-center">Case Stage</td>
+                <td class="text-center">Case Type</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (ViewBag.LossReporting != null)
+            {
+                foreach (var item in ViewBag.LossReporting)
+                {
+                    <tr>
+                        <td class="text-black text-center"><strong><a href="javascript:void(0)" onclick="getHistory('@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId ),true)')" data-id="@CryptoEngineUtils.Encrypt(Convert.ToString(item.ComplaintId),true)" class="mr-2">@item.ComplaintNo</a></strong></td>
+                        <td class="text-black text-center"><strong>@item.CreatedByName</strong></td>
+                        <td class="text-black text-center"><strong>@item.Category</strong></td>
+                        <td class="text-black text-center"><strong>@item.SubCategory</strong></td>
+                        <td class="text-black text-center"><strong>@item.CompanyName</strong></td>
+                        <td class="text-black text-center"><strong>@item.LOSName</strong></td>
+                        <td class="text-black text-center"><strong>@item.SBU</strong></td>
+                        <td class="text-black text-center"><strong>@item.SubSbU</strong></td>
+                        <td class="text-black text-center"><strong>@item.ActionType</strong></td>
+                        <td class="text-black text-center"><strong>@item.CaseType</strong></td>
+
+
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="11"><label>No data found.</label></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

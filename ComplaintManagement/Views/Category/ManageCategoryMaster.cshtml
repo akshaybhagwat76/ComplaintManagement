@@ -28,7 +28,7 @@
 
         @if (ViewBag.ViewState != null && ViewBag.ViewState == true)
         {
-            <a href="/Category/Index" class="btn btn-danger ml-4">&laquo; Back</a> <br /><br />
+            <a href="/Category/Index" class="btn btn-danger ml-4" data-toggle="tooltip" data-placement="top" title="Back">&laquo; Back</a> <br /><br />
         }
         <div class="container-fluid">
             <div class="page-title mb-3">
@@ -72,8 +72,8 @@
 
                                     </div>
                                     <div class="col-sm-12 text-right">
-                                        <a href="javascript:void(0)" onclick="submitForm()" class="btn btn-danger">Save</a>
-                                        <a href="/Category/Index" class="btn btn-white border">Cancel</a>
+                                        <a href="javascript:void(0)" onclick="submitForm()" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Save">Save</a>
+                                        <a href="/Category/Index" class="btn btn-white border" data-toggle="tooltip" data-placement="top" title="Cancel">Cancel</a>
                                         <label id="lblError" class="inline"></label>
                                     </div>
                                 </div>

@@ -98,13 +98,13 @@
                 <div class="col-md-2">
                     <ul class="nav">
                         <li class="nav-item mr-2">
-                            <button type="button" onclick="filterXOLReportGrid()" class="btn btn-danger rounded-circle h-40p w-40p"><i class="fas fa-search"></i></button>
+                            <button type="button" onclick="filterXOLReportGrid()" class="btn btn-danger rounded-circle h-40p w-40p" data-toggle="tooltip" data-placement="top" title="Search"><i class="fas fa-search"></i></button>
                         </li>
                         <li class="nav-item mr-2">
-                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="exportXolReport()"><i class="fas fa-file-excel"></i></button>
+                            &nbsp; <button type="button" class="btn btn-danger rounded-circle h-40p w-40p" onclick="exportXolReport()" data-toggle="tooltip" data-placement="top" title="Excel"><i class="fas fa-file-excel"></i></button>
                         </li>
                         <li class="nav-item">
-                            <a href="javascript:void(0)" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" id="btnLink"><i class="fas fa-mail-bulk"></i></a>
+                            <a href="javascript:void(0)" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center" id="btnLink" data-toggle="tooltip" data-placement="top" title="Email"><i class="fas fa-mail-bulk"></i></a>
                         </li>
 
                     </ul>
@@ -298,7 +298,7 @@
 
                 </div>
                 <hr />
-                <button type="button" class="btn btn-primary" id="sendemail">Send Mail</button>
+                <button type="button" class="btn btn-primary" id="sendemail" data-toggle="tooltip" data-placement="top" title="Send Mail">Send Mail</button>
             </div>
 
 

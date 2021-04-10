@@ -253,11 +253,15 @@ submitComplaint = function (id) {
         success: function (response) {
             StopProcess();
             if (response.status === "Fail") {
-                $("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+                //$("#lblError").removeClass("success").removeClass("adderror").addClass("adderror").text(response.error).show();
+                swal(response.error);
+
             }
             else {
                 $("#btnSave").addClass("disabled-div");
-                $("#lblError").removeClass("success").removeClass("adderror").addClass("success").text(response.data).show();
+                //$("#lblError").removeClass("success").removeClass("adderror").addClass("success").text(response.data).show();
+                swal(response.data);
+                window.location.href = '/Employee/Index';
             }
         },
         error: function (error) {

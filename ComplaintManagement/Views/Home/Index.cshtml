@@ -37,11 +37,14 @@
     <div class="card mb-4 rounded-0 border-0">
         <div class="card-body text-black">
             <div class="row">
-                <div class="col-md-4 text-center">
-                    @*<h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>*@
-                    @{
+                @if (userRole != "Lead")
+                {
+                    <div class="col-md-4 text-center">
 
-                        if (DueComplaints > 0)
+                        @*<h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>*@
+
+
+                        @if (DueComplaints > 0)
                         {
                             <a onclick="getDueComplaints()" id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0">
                                 <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
@@ -55,34 +58,68 @@
                                 <strong>Due Complaints</strong>
                             </a>
                         }
-                    }
 
-                </div>
-                <div class="col-md-4 text-center">
-                    @{
-                        if (OverDueComplaints > 0)
-                        {
-                            <a onclick="getOverDueComplaints()" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
+
+                    </div>
+
+                    <div class="col-md-4 text-center">
+                        @{
+                            if (OverDueComplaints > 0)
+                            {
+                                <a onclick="getOverDueComplaints()" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
+                            }
+                            else
+                            {
+                                <a id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
+                            }
                         }
-                        else
-                        {
-                            <a id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.OverDueComplaints</h2><strong>Overdue Complaints</strong></a>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        @{
+                            if (AwaitingComplaints > 0)
+                            {
+                                <a id="awaitingComplaint" onclick="getAwaitingComplaint()" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
+                            }
+                            else
+                            {
+                                <a id="awaitingComplaint" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
+                            }
                         }
-                    }
-                </div>
-                <div class="col-md-4 text-center">
-                    @{
-                        if (AwaitingComplaints > 0)
-                        {
-                            <a id="awaitingComplaint" onclick="getAwaitingComplaint()" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
-                        }
-                        else
-                        {
-                            <a id="awaitingComplaint" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2><strong>Awaiting My Approval Complaints</strong></a>
-                        }
-                    }
-                </div>
+                    </div>
+                }
+
+                else if (userRole == "Lead")
+                {
+
+
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="col-md-12">
+
+
+                                    <a onclick="CaseType()" style="margin-left:10%" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.Inprogress</h2><strong>In Progress</strong></a>
+
+                                    <a onclick="CaseTyped()" style="margin-left:30%" id="OverDueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><h2 class="font-weight-bold" id="OverDueComplaintsCount">@Model.Completed</h2><strong>Completed</strong></a>
+
+                                    @*<input type="date" id="fromDate" value="@ViewBag.startDate" class="form-control" placeholder="From Date" />*@
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+
+
+                }
+
             </div>
+
         </div>
     </div>
     <div class="card mb-4 rounded-0 border-0 divHideShow" style="display:none;">
@@ -97,19 +134,25 @@
                             </select>
                         </li>
                         <li class="nav-item mr-3">
+                            <select name="ddlChart" id="ddlCharted" class="form-control">
+                                <option value="numbers" selected>Numbers Wise</option>
+                                <option value="percentage">Percentage Wise</option>
+                            </select>
+                        </li>
+                        <li class="nav-item mr-3">
                             <input type="text" id="txt_dateFrom" class="form-control" placeholder="From Date" />
                         </li>
                         <li class="nav-item mr-3">
                             <input type="text" id="txt_dateTo" class="form-control" placeholder="To Date" />
                         </li>
                         <li class="nav-item mr-3">
-                            <button type="submit" id="btn_dataSearch" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-search"></i></button>
+                            <button type="submit" id="btn_dataSearch" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center" data-toggle="tooltip" data-placement="top" title="Search"><i class="fas fa-search"></i></button>
                         </li>
                         <li class="nav-item mr-3">
-                            <button type="submit" id="btn_chartToImage" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fas fa-file-powerpoint"></i></button>
+                            <button type="submit" id="btn_chartToImage" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center" data-toggle="tooltip" data-placement="top" title="Ppt"><i class="fas fa-file-powerpoint"></i></button>
                         </li>
                         <li class="nav-item mr-3">
-                            <button type="submit" id="btn_sendMail" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center"><i class="fa fa-envelope" aria-hidden="true"></i></button>
+                            <button type="submit" id="btn_sendMail" class="btn btn-danger rounded-circle h-40p w-40p d-flex align-items-center" data-toggle="tooltip" data-placement="top" title="Email"><i class="fa fa-envelope" aria-hidden="true"></i></button>
                         </li>
                     </ul>
                 </div>
@@ -343,4 +386,71 @@
 @Html.Partial("_ComplaintAwaiting")
 @Html.Partial("_ComplaintDue")
 @Html.Partial("_ComplaintOverDue")
+@Html.Partial("_CaseType")
+@Html.Partial("_ComplaintHistoryContent")
 @Html.Partial("_DashboardChartTable")
+@Html.Partial("_GetHistory")
+<script>
+
+    function filterXOLReportGrid() {
+        var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+        //var losid = $(".losval option:selected").val();
+        //var types = $("#CaseType").val();
+        var typevalues = $("#typevalues").val();
+        if (fromDate == "" || toDate == "" || typevalues == "") {
+            funToastr(false, "Please select from and to date and a types and a values"); return;
+        }
+        else {
+
+            if ($("#hfCurrentPageIndex").val() == "") {
+                $("#hfCurrentPageIndex").val("1");
+            }
+            location.href = '/Home/GetCaseTypes?currentPage= ' + $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&typevalues=' + typevalues + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        }
+    }
+    function exportXolReport() {
+        var fromDate = $("#fromDate").val(); var toDate = $("#toDate").val();
+        var losid = $(".losval option:selected").val();
+        var types = $("#CaseType").val();
+        var typevalues = $("#typevalues").val();
+        if (fromDate == "" || toDate == "" && types == "" && typevalues == "") {
+            funToastr(false, "Please select from and to date and a types and a values"); return;
+        }
+        else {
+
+            if ($("#hfCurrentPageIndex").val() == "") {
+                $("#hfCurrentPageIndex").val("1");
+            }
+            location.href = '/LOS/ExportLDataLOSReport2?range=' + fromDate + ',' + toDate + '&types=' + "CaseType" + '&typevalues=' + typevalues + '&currentPage=' + $("#hfCurrentPageIndex").val();
+        }
+    }
+    function PagerClick(index) {
+        $("#hfCurrentPageIndex").val(index);
+        var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : ""; var toDate = $("#toDate").val() == undefined ? "" : $("#toDate").val();
+
+        var typevalues = $("#typevalues").val();
+
+        var range = "";
+        if (fromDate !== "" && toDate !== "") {
+            range = fromDate + ',' + toDate;
+        }
+        if ($("#history").val() == undefined) {
+            location.href = '/Home/GetCaseTypes?currentPage= ' + $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&typevalues=' + typevalues;
+
+        }
+        else {
+            location.href = '/Home/GetCaseTypes?currentPage = ' + $("#hfCurrentPageIndex").val() + '&range=' + fromDate + ',' + toDate + '&typevalues=' + typevalues;
+        }
+    }
+    function getHistory(id) {
+        if (id !== "") {
+            var url = "/Home/GetHistoryByComplaint?ComplaintId=" + id;
+            $("#historyContent").load(url, function () {
+                $("#historyModal").modal("show");
+            })
+        }
+    }
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>

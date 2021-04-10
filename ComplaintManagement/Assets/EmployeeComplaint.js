@@ -185,20 +185,46 @@ function filterGrid() {
 
 function PagerClick(index) {
     StartProcess();
-    $("#hfCurrentPageIndex").val(index);
-    var fromDate = $("#fromDate").val() != undefined ? $("#fromDate").val() : ""; var toDate = $("#toDate").val() == undefined ? "" : $("#toDate").val();
+    //var crpage = $("#hfCurrentPageIndex").val(index);
+
+    //var fromDate = document.getElementById("fromDate").value;
+    //var toDate = document.getElementById("toDate").value;
+    //var CategoryId = document.getElementById("CategoryId").value;
+    //SubCategoryId = document.getElementById("SubCategoryId").value;
+    var data = {
+        fromDate: document.getElementById("fromDate").value,
+        toDate: document.getElementById("toDate").value,
+        CategoryId: document.getElementById("CategoryId").value,
+        SubCategoryId: document.getElementById("SubCategoryId").value,
+        currentPage: index,
+    };
+
     var range = "";
-    if (fromDate !== "" && toDate !== "") {
+    
         range = fromDate + ',' + toDate;
-    }
-
-
-    if ($("#history").val() == undefined) {
-        location.href = '/Employee/LoadEmployeeComplain?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + range;
-    }
-    else {
-        location.href = '/Employee/LoadEmployeeComplain?currentPageIndex=' + $("#hfCurrentPageIndex").val() + '&range=' + $("#history").val();
-    }
+    
+    $.ajax({
+        type: "POST",
+        url: "/Employee/LoadEmployeeComplaints",
+        data: { data: data },
+        success: function (data) {
+            if (data.status == "Fail") {
+                StopProcess();
+                funToastr(false, data.error);
+            }
+            else {
+                StopProcess();
+                $("#myTable").find('tbody').empty();
+                $("#myTable").find('tbody').html(data.data.Url);
+            }
+        }, error: function (response) {
+            funToastr(false, response.responseText);
+        },
+        failure: function (response) {
+            funToastr(false, response.responseText);
+        }
+    })
+   
 }
 
 function getHistory(id) {

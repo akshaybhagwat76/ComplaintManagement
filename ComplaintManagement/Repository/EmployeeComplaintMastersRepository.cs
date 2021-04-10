@@ -395,9 +395,8 @@ namespace ComplaintManagement.Repository
                             {
                                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(item));
                                 mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item)).WorkEmail);
-                                mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
+                                mailBody.Add(@"<html><body><p>Subject:Compliant Send back by committee" + ",</p></br><p>Receipt-HR User" + ",</p></br><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>Employee Assistance Portal</p></body></html>");
                             }
-                            
 
                             dbContextTransaction.Commit();
                             MailSend.SendEmailWithDifferentBody( mailTo, "Compliant Send back by committee", mailBody, EmployeeComplaintVM.ComplaintId);
@@ -782,7 +781,7 @@ namespace ComplaintManagement.Repository
                             {
                                 new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, item.UserId);
                                 mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item.UserId)).WorkEmail);
-                                mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item.UserId)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
+                                mailBody.Add(@"<html><body><p>Subject:Complent Submission" + ",</p></br><p>Receipt-HR User" + ",</p></br><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item.UserId)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p></br><p>MobileNo.:" + userData.MobileNo + "</p><p>Thank You.</br></br>Employee Assistance Portal</p></body></html>");
                             }
                             
                             MailSend.SendEmailWithDifferentBody(mailTo, "Compliant Submission", mailBody, Complaintdata.Id);
@@ -1163,7 +1162,7 @@ namespace ComplaintManagement.Repository
                                 {
                                     new NotificationAlertRepository().AddNotificatioAlert(NotificationContent, Convert.ToInt32(item));
                                     mailTo.Add(new UserMastersRepository().Get(Convert.ToInt32(item)).WorkEmail);
-                                    mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>");
+                                    mailBody.Add(@"<html><body><p>Subject:Compliant Submission" + ",</p></br><p>Receipt-Committee User" + ",</p></br> <p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p>" + NotificationContent + "</p><p>Thank You.</br></br>Employee Assistance Portal</p></body></html>");
                                 }
 
                                 //string htmlBody= @"<html><body><p>Dear Ms. Susan,</p></br><p>"+ NotificationContent + "</p><p>Thank You.</br></br>CMS</p></body></html>";

@@ -1,4 +1,6 @@
-﻿var isValidLOS = false;
+﻿//import { json } from "modernizr";
+
+var isValidLOS = false;
 function submitForm() {
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
@@ -58,11 +60,11 @@ function submitForm() {
             CompetencyId: $("#CompentencyIds").val().toString(),
             InvolvedUsersId: $(".test").val().toString(),
             Status: $("#Status").val() == "true" ? true : false
-        }
+        };
         StartProcess();
         $.ajax({
             type: "POST",
-            url: "/LOS/AddOrUpdateLOS",
+            url: "/LOS/AddOrUpdateLOS",            
             data: { LOSVM: data },
             success: function (data) {
                 if (data.status == "Fail") {

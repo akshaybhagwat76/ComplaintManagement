@@ -29,8 +29,80 @@ namespace ComplaintManagement.Controllers
         public ActionResult Index()
         {
             ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+
+            var types = new List<SelectListItem>
+            {
+
+             new SelectListItem{ Text="All", Value = "0" },
+             new SelectListItem{ Text="In Progress", Value = "InProgess" },
+             new SelectListItem{ Text="Closed", Value = "Closed" },
+            };
+
+            ViewBag.typevalues = types;
+            var DataTableDetail = new HomeController().getDataTableDetail("LOS", null);
+            ViewBag.Page = DataTableDetail.Item1;
+            ViewBag.PageIndex = DataTableDetail.Item2;
+
             return View(new CompliantMastersRepository().GetDashboardCounts());
         }
+        public ActionResult GetCaseTypes(int currentPage, string range, string types, string typevalues)
+        {
+
+            ViewModel.DashboardVM Ls = new ViewModel.DashboardVM();
+            int maxRows = 10; int lstCount = 0;
+            if (currentPage == 0)
+            {
+                maxRows = 2147483647;
+            }
+            if (typevalues != "0")
+            {
+                var Casetypes = new LOSMasterRepository().GetAllCaseStageReport(range, typevalues);
+                ViewBag.LossReporting = Casetypes.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+
+                lstCount = Casetypes.Count;
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                var typed = new List<SelectListItem>
+                {
+             new SelectListItem{ Text="All", Value = "0" },
+             new SelectListItem{ Text="In Progress", Value ="InProgess" },
+             new SelectListItem{ Text="Closed", Value = "Closed" },
+
+              };
+                ViewBag.typevalues = typed;
+            }
+            else if (typevalues == "0")
+            {
+                var Casetypes = new LOSMasterRepository().GetAllStageReport(range, typevalues);
+                ViewBag.LossReporting = Casetypes.Skip((currentPage - 1) * maxRows).Take(maxRows).ToList();
+                lstCount = Casetypes.Count;
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                ViewBag.CurrentPageIndex = currentPage;
+                var typed1 = new List<SelectListItem>
+                {
+             new SelectListItem{ Text="All", Value = "0" },
+             new SelectListItem{ Text="In Progress", Value = "InProgess" },
+             new SelectListItem{ Text="Closed", Value = "Closed" },
+
+
+              };
+                ViewBag.typevalues = typed1;
+
+            }
+
+
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+            ViewBag.startDate = range.Split(',')[0];
+            ViewBag.toDate = range.Split(',')[1];
+            return View("Index", Ls);
+        }
+
+
+
 
         public ActionResult Index1()
         {
@@ -54,7 +126,6 @@ namespace ComplaintManagement.Controllers
 
             System.Web.HttpContext.Current.Session[SessionName + "PageLength"] = null;
             System.Web.HttpContext.Current.Session[SessionName + "Page"] = null;
-
             return Tuple.Create<int, int>(Page, PageIndex);
         }
         [HttpGet]
@@ -289,20 +360,20 @@ namespace ComplaintManagement.Controllers
 
             dashboardPiChart.designationofComplainant = (from a in complaintTList.Distinct()
                                                          join b in db.UserMasters on a.CreatedBy equals b.Id
-                                                         group b by b.Manager into genderGroup
+                                                         join d in db.DesignationMasters on b.BusinessTitle equals d.Id
+                                                         group d by d.Designation into buisnessGroup
                                                          select new ListPiChartVM
                                                          {
-                                                             Label = genderGroup.FirstOrDefault().Manager,
-                                                             Value = genderGroup.Count()
+                                                             Label = buisnessGroup.FirstOrDefault().Designation,
+                                                             Value = buisnessGroup.Count()
                                                          }).ToList();
 
             dashboardPiChart.designationofRespondent = (from a in complaintTList.Distinct()
-                                                        join b in db.HR_Role on a.ComplaintId equals b.ComplentId
-                                                        join c in db.UserMasters on b.HRUserId equals c.Id
-                                                        group c by c.Manager into genderGroup
+                                                        join b in db.HR_Role on a.ComplaintId equals b.ComplentId                                                        
+                                                        group b by b.Status into genderGroup
                                                         select new ListPiChartVM
                                                         {
-                                                            Label = genderGroup.FirstOrDefault().Manager,
+                                                            Label = genderGroup.FirstOrDefault().Status,
                                                             Value = genderGroup.Count()
                                                         }).ToList();
 
@@ -512,6 +583,17 @@ namespace ComplaintManagement.Controllers
                                                         Year = categoryGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                     }).ToList();
 
+            if (dashboardPiChart.categoryPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.categoryPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.categoryPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
+
+
             dashboardPiChart.subCategoryPiBarCharts = (from a in complaintTList.Distinct()
                                                        join b in db.SubCategoryMasters on a.EmployeeComplaintMaster.SubCategoryId equals b.Id
                                                        group a by new { a.EmployeeComplaintMaster.SubCategoryId } into subCategoryGroup
@@ -522,6 +604,17 @@ namespace ComplaintManagement.Controllers
                                                            Value2 = subCategoryGroup.Where(a => a.CreatedDate.Year == yearBack).Count(),
                                                            Year = subCategoryGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                        }).ToList();
+            if (dashboardPiChart.subCategoryPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.subCategoryPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.subCategoryPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
+
+
 
             dashboardPiChart.regionPiBarCharts = (from a in complaintTList.Distinct()
                                                   join b in db.UserMasters on a.CreatedBy equals b.Id
@@ -535,6 +628,17 @@ namespace ComplaintManagement.Controllers
                                                       Year = reagionGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                   }).ToList();
 
+            if (dashboardPiChart.regionPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.regionPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.regionPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
+
+
             dashboardPiChart.officePiBarCharts = (from a in complaintTList.Distinct()
                                                   join b in db.UserMasters on a.CreatedBy equals b.Id
                                                   join c in db.EntityMasters on b.Company equals c.Id
@@ -547,6 +651,17 @@ namespace ComplaintManagement.Controllers
                                                       Year = officeGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                   }).ToList();
 
+            if (dashboardPiChart.officePiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.officePiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.officePiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+               });
+            }
+
+
             dashboardPiChart.losPiBarCharts = (from a in complaintTList.Distinct()
                                                join b in db.LOSMasters on a.LOSId equals b.Id
                                                group a by new { a.LOSId } into losGroup
@@ -557,6 +672,16 @@ namespace ComplaintManagement.Controllers
                                                    Value2 = losGroup.Where(a => a.CreatedDate.Year == yearBack).Count(),
                                                    Year = losGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                }).ToList();
+            if (dashboardPiChart.losPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.losPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.losPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
+
 
             dashboardPiChart.sbuPiBarCharts = (from a in complaintTList.Distinct()
                                                join b in db.SBUMasters on a.SBUId equals b.Id
@@ -569,6 +694,17 @@ namespace ComplaintManagement.Controllers
                                                    Year = sbuGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                }).ToList();
 
+            if (dashboardPiChart.sbuPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.sbuPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.sbuPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
+
+
             dashboardPiChart.subSBUPiBarCharts = (from a in complaintTList.Distinct()
                                                   join b in db.SubSBUMasters on a.SubSBUId equals b.Id
                                                   group a by new { a.SubSBUId } into subSUBGroup
@@ -580,6 +716,17 @@ namespace ComplaintManagement.Controllers
                                                       Year = subSUBGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                   }).ToList();
 
+            if (dashboardPiChart.subSBUPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.subSBUPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.subSBUPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
+
+
             dashboardPiChart.genderofComplainantPiBarCharts = (from a in complaintTList.Distinct()
                                                                join b in db.UserMasters on a.CreatedBy equals b.Id
                                                                group a by new { b.Gender } into genderGroup
@@ -590,6 +737,17 @@ namespace ComplaintManagement.Controllers
                                                                    Value2 = genderGroup.Where(a => a.CreatedDate.Year == yearBack).Count(),
                                                                    Year = genderGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                                }).ToList();
+
+            if (dashboardPiChart.genderofComplainantPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.genderofComplainantPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.genderofComplainantPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
+
 
             dashboardPiChart.genderofRespondentPiBarCharts = (from a in complaintTList.Distinct()
                                                               join b in db.HR_Role on a.ComplaintId equals b.ComplentId
@@ -603,7 +761,15 @@ namespace ComplaintManagement.Controllers
                                                                   Year = genderGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                               }).ToList();
 
-
+            if (dashboardPiChart.genderofRespondentPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.genderofRespondentPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.genderofRespondentPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
 
             dashboardPiChart.designationofComplainantPiBarCharts = (from a in complaintTList.Distinct()
                                                                     join b in db.UserMasters on a.CreatedBy equals b.Id
@@ -615,6 +781,16 @@ namespace ComplaintManagement.Controllers
                                                                         Value2 = genderGroup.Where(a => a.CreatedDate.Year == yearBack).Count(),
                                                                         Year = genderGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                                     }).ToList();
+
+            if (dashboardPiChart.designationofComplainantPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.designationofComplainantPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.designationofComplainantPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
 
             dashboardPiChart.designationofRespondentPiBarCharts = (from a in complaintTList.Distinct()
                                                                    join b in db.HR_Role on a.ComplaintId equals b.ComplentId
@@ -628,6 +804,17 @@ namespace ComplaintManagement.Controllers
                                                                        Year = genderGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                                    }).ToList();
 
+            if (dashboardPiChart.designationofRespondentPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.designationofRespondentPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.designationofRespondentPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
+
+
             dashboardPiChart.modeofComplaintPiBarCharts = (from a in complaintTList.Distinct()
                                                            join b in db.UserMasters on a.CreatedBy equals b.Id
                                                            group a by new { b.TimeType } into modeOfComplaintGroup
@@ -638,6 +825,17 @@ namespace ComplaintManagement.Controllers
                                                                Value2 = modeOfComplaintGroup.Where(a => a.CreatedDate.Year == yearBack).Count(),
                                                                Year = modeOfComplaintGroup.Select(a => a.CreatedDate.Year).FirstOrDefault()
                                                            }).ToList();
+
+
+            if (dashboardPiChart.modeofComplaintPiBarCharts.Count() == 1)
+            {
+                dashboardPiChart.modeofComplaintPiBarCharts.Add(new ListPiAndBarChartVM
+                {
+                    Label = dashboardPiChart.modeofComplaintPiBarCharts[0].Label,
+                    Value1 = 0,
+                    Value2 = 0
+                });
+            }
 
 
             int i = 0, j = 15;
@@ -658,6 +856,8 @@ namespace ComplaintManagement.Controllers
                         Value1 = ageingPiBarCharts.Where(a => a.CreatedDate.Year == yearCurrent).Count(),
                         Value2 = ageingPiBarCharts.Where(a => a.CreatedDate.Year == yearBack).Count(),
                     });
+
+                  
                 }
                 else
                 {
@@ -673,6 +873,8 @@ namespace ComplaintManagement.Controllers
                 }
                 i = j;
                 j += 15;
+                
+
 
             }
 
@@ -1037,7 +1239,8 @@ namespace ComplaintManagement.Controllers
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
                                         join b in db.UserMasters on a.CreatedBy equals b.Id
-                                        where b.Manager.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
+                                        join d in db.DesignationMasters on b.BusinessTitle equals d.Id
+                                        where d.Designation.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -1058,9 +1261,10 @@ namespace ComplaintManagement.Controllers
                 else if (chart == "DesignationofRespondent")
                 {
                     dashboardPiChart = (from a in complaintTList.Distinct()
-                                        join b in db.HR_Role on a.ComplaintId equals b.ComplentId
-                                        join c in db.UserMasters on b.HRUserId equals c.Id
-                                        where c.Manager.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
+                                        //join b in db.EmployeeComplaintWorkFlows on a.ComplaintNo equals b.ComplaintNo
+                                        join bd in db.HR_Role on a.ComplaintId equals bd.ComplentId
+                                        join c in db.UserMasters on bd.HRUserId equals c.Id
+                                        where bd.Status.ToLower().Trim().Replace(" ", "") == label.ToLower().Trim().Replace(" ", "")
                                         select new TableListPiAndBarChartVM
                                         {
                                             LOSName = new LOSMasterRepository().Get(a.LOSId).LOSName,
@@ -1665,7 +1869,7 @@ namespace ComplaintManagement.Controllers
                 int j = 0;
                 for (int i = 0; i <= reqObj.Count() + 1; i++)
                 {
-                    
+
                     Microsoft.Office.Interop.PowerPoint.Slides slides;
                     Microsoft.Office.Interop.PowerPoint.Slide slide;
                     Microsoft.Office.Interop.PowerPoint.TextRange textRange;
@@ -1673,12 +1877,12 @@ namespace ComplaintManagement.Controllers
 
 
                     slides = pptPresentation.Slides;
-                    slide = slides.AddSlide(i+1, customLayout);
+                    slide = slides.AddSlide(i + 1, customLayout);
                     textRange = slide.Shapes[1].TextFrame.TextRange;
                     textRange.Font.Name = "Arial";
                     textRange.Font.Size = 40;
                     Microsoft.Office.Interop.PowerPoint.Shape shape = slide.Shapes[2];
-                   
+
                     if (i == 0)
                     {
                         string FileName = Server.MapPath("~/Documents/ChartPPT/ppt_heading_img.png");
@@ -1694,7 +1898,7 @@ namespace ComplaintManagement.Controllers
                     }
                     else
                     {
-                        
+
                         textRange.Text = "                       " + reqObj[j].Heading;
                         string imgFileName = Server.MapPath("~/Documents/ChartPPT/" + i + ".png");
                         if ((System.IO.File.Exists(imgFileName)))
@@ -1750,7 +1954,7 @@ namespace ComplaintManagement.Controllers
                     textRange.Font.Name = "Arial";
                     textRange.Font.Size = 40;
                     Microsoft.Office.Interop.PowerPoint.Shape shape = slide.Shapes[2];
-                    
+
                     if (i == 0)
                     {
                         string FileName = Server.MapPath("~/Documents/ChartPPT/ppt_heading_img.png");
@@ -1805,7 +2009,7 @@ namespace ComplaintManagement.Controllers
                     mailBody.Add(@"<html><body><p>Dear " + new UserMastersRepository().Get(Convert.ToInt32(item)).EmployeeName + ",</p></br><p> Please Find attachment.</p></br><p>" + Comment + "</p><p>Thank You.</p><p></br></br>CMS</p></body></html>");
                 }
                 mailAttachment.Add(ServerSavePath);
-                MailSend.SendEmailWithDifferentBody(mailTo, Subject, mailBody, null,"", "", mailAttachment);
+                MailSend.SendEmailWithDifferentBody(mailTo, Subject, mailBody, null, "", "", mailAttachment);
                 return new ReplyFormat().Success(Messages.SUCCESS);
 
             }
@@ -1815,7 +2019,93 @@ namespace ComplaintManagement.Controllers
                 return new ReplyFormat().Error(ex.Message.ToString());
             }
         }
+        public ActionResult Alertmail()
+        {
+            return View();
+        }
 
+        public ActionResult mailDue()
+        {
+            MailScheduler ms = new MailScheduler();
+            var response = ms.GetAllMailData();
+            return View("Alertmail");
+        }
+        public ActionResult mailOverdue()
+        {
+            MailScheduler ms = new MailScheduler();
+            var response = ms.GetAllMailOverdueData();
+            return View("Alertmail");
+        }
+        public ActionResult Escelation1()
+        {
+            MailScheduler ms = new MailScheduler();
+            var response = ms.GetAllMailEsclationOneOverdueData();
+            return View("Alertmail");
+        }
+        public ActionResult Escelation2()
+        {
+            MailScheduler ms = new MailScheduler();
+            var response = ms.GetAllMailEsclationTwoOverdueData();
+            return View("Alertmail");
+        }
+        public ActionResult Escelation3()
+        {
+            MailScheduler ms = new MailScheduler();
+            var response = ms.GetAllMailEsclationThreeOverdueData();
+            return View("Alertmail");
+        }
+        public ActionResult GetCaseint(string types, string typevalues)
+        {
+
+            ViewModel.DashboardVM Ls = new ViewModel.DashboardVM();
+            int maxRows = 10; int lstCount = 0;
+
+            if (typevalues != "0")
+            {
+                var Casetypes = new LOSMasterRepository().GetAllCaseReport(typevalues);
+                ViewBag.LossReporting = Casetypes.ToList();
+
+                lstCount = Casetypes.Count;
+                double pageCount = (double)((decimal)lstCount / Convert.ToDecimal(maxRows));
+                ViewBag.PageCount = (int)Math.Ceiling(pageCount);
+
+                //ViewBag.CurrentPageIndex = currentPage;
+                var typed = new List<SelectListItem>
+                {
+             new SelectListItem{ Text="All", Value = "0" },
+             new SelectListItem{ Text="In Progress", Value ="InProgess" },
+             new SelectListItem{ Text="Closed", Value = "Closed" },
+
+              };
+                ViewBag.typevalues = typed;
+            }
+
+
+            ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+
+            return PartialView("_CasesContentTyped");
+        }
+        public ActionResult GetHistoryByComplaint(string ComplaintId)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(ComplaintId))
+                {
+                    ComplaintId = CryptoEngineUtils.Decrypt(ComplaintId.Replace(" ", "+"), true);
+                    ViewBag.lstComplaintHistory = new EmployeeComplaintHistoryRepository().GetAll().Where(x => x.ComplaintId == Convert.ToInt32(ComplaintId)).ToList();
+                    ViewBag.lstUser = new UserMastersRepository().GetAll().Where(c => c.Status).ToList().Select(d => new SelectListItem { Text = d.EmployeeName, Value = d.Id.ToString() }).ToList();
+                    return PartialView("_ComplaintHistoryContent");
+                }
+                return new ReplyFormat().Error(Messages.BAD_DATA);
+            }
+
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ReplyFormat().Error(ex.Message.ToString());
+            }
+
+        }
 
     }
 

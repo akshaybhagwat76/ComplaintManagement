@@ -7,7 +7,12 @@ namespace ComplaintManagement.ViewModel
         public int DueComplaints { get; set; }
         public int OverDueComplaints { get; set; }
         public int AwaitingComplaints { get; set; }
-
+        public string CaseType { get; set; }
+        public string typevalues { get; set; }
+        public int Inprogress { get; set; }
+        public int Completed { get; set; }
+        public List<LOSMasterVM> LosMasterVM { get; set; }
+        public List<EmployeeComplaintHistoryVM> EmployeeComplaintHistoryVM { get; set; }
     }
     public class DashboardPiChartVM
     {
