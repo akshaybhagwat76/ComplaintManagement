@@ -1,0 +1,454 @@
+﻿@using ComplaintManagement.ViewModel;
+@using System.Security.Claims;
+@using ComplaintManagement.Repository;
+@using ComplaintManagement.Helpers;
+@using Elmah;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - CMS</title>
+    @Scripts.Render("~/bundles/modernizr")
+
+    <!-- Custom fonts for this template-->
+    @Styles.Render("~/font-awesome/all")
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    @Styles.Render("~/sb-admin2/css")
+    @Styles.Render("~/sb-admin2/styles")
+    @* @Styles.Render("~/Content/css")*@
+    @*@Styles.Render("~/Scripts/vendor/jquery-ui/jqueryuiStyles")*@
+    @Styles.Render("~/plugins/toastrStyles")
+    @Styles.Render("~/Content/plugins/dataTables/dataTablesStyles")
+    <link href="~/Scripts/vendor/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <!-- Section for main scripts render -->
+    @*@Scripts.Render("~/bundles/jquery")*@
+    @*@Scripts.Render("~/sb-admin2/jquery")*@
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+    @*@Scripts.Render("~/plugins/dataTables")*@
+    @*@Scripts.Render("~/sb-admin2/jquery")*@
+    @Scripts.Render("~/sb-admin2/jquery")
+
+    <!--<link href="css/helper.css" rel="stylesheet">-->
+
+
+    @{
+        string userRole = string.Empty;
+        var user = ""; var userImage = string.Empty;
+        int userId = 0;
+        var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+        if (claimsIdentity != null)
+        {
+            var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Name);
+            var cI = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.UserData);
+            var userIDInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Sid);
+            var userRoleInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
+
+            if (c != null && cI != null && userIDInfo != null && userRoleInfo != null)
+            {
+                userRole = userRoleInfo.Value;
+                user = c.Value.ToString();
+                userImage = cI.Value.ToString();
+                userId = Convert.ToInt32(userIDInfo.Value.ToString());
+            }
+        }
+
+    }
+</head>
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-menu sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <li>
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/home/index">
+                    <div class="sidebar-brand-icon rotate-n-15">
+                    </div>
+                    <div class="sidebar-brand-text mx-3">Employee Assistance Portal</div>
+                </a>
+            </li>
+            <!-- Divider -->
+            <li>
+                <hr class="sidebar-divider my-0">
+            </li>
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="/home/index">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a class="nav-link" href="/home/Alertmail">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Alerts Mail</span>
+                </a>
+            </li>
+            <!-- Divider -->
+            <!-- Heading -->
+            @{
+                if (userRole != Messages.LeadUser && userRole != Messages.AdminUser)
+                {
+                    <li><hr class="sidebar-divider"></li>
+                    <li>
+                        <div class="sidebar-heading">
+                            Compliant
+                        </div>
+                    </li>
+                    <!-- Nav Item - Pages Collapse Menu -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            <i class="fas fa-fw fa-cog"></i>
+                            <span>Compliants</span>
+                        </a>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+
+                                @*<a class="collapse-item" href="/Compliant/Compliant_one">Compliant_one</a>*@
+                                @{
+                                    if (userRole == Messages.HRUser)
+                                    {
+                                        <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
+                                    }
+                                    else if (userRole == Messages.Committee)
+                                    {
+                                        <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint List</a>
+                                    }
+                                    else if (userRole == Messages.NormalUser)
+                                    {
+                                        <a class="collapse-item" href="/Employee/Index">Complaint Listing</a>
+                                    }
+                                    @*else if (userRole != Messages.NormalUser)
+                                {
+                                    <a class="collapse-item" href="/Compliant/ComplaintTwo_Index">HR Complaint Listing</a>
+                                    <a class="collapse-item" href="/Compliant/ComplaintThree_Index">Committee Complaint Listing</a>
+                                }*@
+                                }
+
+
+                            </div>
+                        </div>
+                    </li>
+                } }
+            <!-- Divider -->
+            @{
+                if (userRole == Messages.AdminUser)
+                {
+                    <li> <hr class="sidebar-divider"></li>
+                    <!-- Heading -->
+                    <li>
+                        <div class="sidebar-heading">
+                            Masters
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <i class="fas fa-fw fa-table"></i>
+                            <span>Masters</span>
+                        </a>
+                        <div id="collapseOne" class="collapse" aria-labelledby="collapseOne" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <a class="collapse-item" href="/UserMaster/Index">
+                                    <span>User</span>
+                                </a>
+                                <a class="collapse-item" href="/Category/index">
+                                    <span>Category</span>
+                                </a>
+                                <a class="collapse-item" href="/subcategory/Index">
+                                    <span>Sub Category</span>
+                                </a>
+                                <a class="collapse-item" href="/designation/index">
+                                    <span>Designation</span>
+                                </a>
+                                <a class="collapse-item" href="/LOS/Index">
+                                    <span>LOS</span>
+                                </a>
+                                <a class="collapse-item" href="/SBU/Index">
+                                    <span>SBU</span>
+                                </a>
+                                <a class="collapse-item" href="/subsbu/Index">
+                                    <span>Sub SBU</span>
+                                </a>
+                                <a class="collapse-item" href="/competency/Index">
+                                    <span>Competency</span>
+                                </a>
+                                <a class="collapse-item" href="/location/Index">
+                                    <span>Location</span>
+                                </a>
+                                <a class="collapse-item" href="/entity/Index">
+                                    <span>Entity</span>
+                                </a>
+                                <a class="collapse-item" href="/region/Index">
+                                    <span>Region</span>
+                                </a>
+                                <a class="collapse-item" href="/role/Index">
+                                    <span>Role</span>
+                                </a>
+                                <a class="collapse-item" href="/committee/Index">
+                                    <span>Committee</span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                }
+            }
+
+
+            @{
+                if (userRole == Messages.LeadUser || userRole == Messages.AdminUser)
+                {
+                    <li> <hr class="sidebar-divider"></li>
+                    <li>
+                        <div class="sidebar-heading">
+                            Reports
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                            <i class="fas fa-fw fa-table"></i>
+                            <span>Reports</span>
+                        </a>
+                        <div id="collapseThree" class="collapse" aria-labelledby="collapseThree" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+
+                                <a class="collapse-item" href="/LOS/LosReport">
+                                    <span>XLOS Report</span>
+                                </a>
+                                <a class="collapse-item" href="/LOS/LosReport2">
+                                    <span>Complaint Report</span>
+                                </a>
+
+                            </div>
+
+                        </div>
+                    </li>
+                }
+            }
+            <!-- Divider -->
+            <li>
+                <hr class="sidebar-divider d-none d-md-block">
+            </li>
+            <!-- Sidebar Toggler (Sidebar) -->
+            <li class="text-center">
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
+            </li>
+        </ul>
+        <!-- End of Sidebar -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div class="preloader"></div>
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-header topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <h4 class="text-white m-0">@ViewBag.Heading</h4>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <form class="d-none d-sm-inline-block form-inline my-3 mw-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light border-0 pl-30 py-2 rounded-pill" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                    <i class="fas fa-search fa-sm" id="searchIcon"></i>
+                                </div>
+                            </form>
+                        </li>
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw text-white"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter" id="notificationCount"></span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <div id="notificationList">
+
+                                </div>
+                                <a class="dropdown-item text-center small text-gray-500" href="/Compliant/NotificationList">Show All Alerts</a>
+                            </div>
+                        </li>
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-white small">@user</span>
+                                <img class="img-profile rounded-circle" src="@userImage">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="/UserMaster/Edit?id=@CryptoEngineUtils.Encrypt(Convert.ToString(userId),true)&isView=false">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- Content Wrapper -->
+                @RenderBody()
+                <!-- End of Content Wrapper -->
+            </div>
+        </div>
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/Account/LogOff">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+    @Scripts.Render("~/Assets/Common")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/sb-admin2/js")
+    @Scripts.Render("~/plugins/dataTables")
+
+    <!-- Bootstrap core JavaScript-->
+    @Scripts.Render("~/sb-admin2/bootstrapbundle")
+    <!-- Core plugin JavaScript-->
+    @Scripts.Render("~/sb-admin2/Jqueryeasing")
+    @Scripts.Render("~/plugins/toastr")
+    @RenderSection("scripts", required: false)
+    <!-- Custom scripts for all pages-->
+    <script>
+        $(document).ready(function () {
+            // setInterval(function () {
+            NotificationAlertCount();
+            NotificationAlertList();
+            //}, 60000);
+
+        });
+        function NotificationAlertCount() {
+            $.ajax({
+                type: "GET",
+                url: "/Compliant/NotificationAlertCount",
+                data: {},
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == "Success") {
+                        if (parseInt(response.data) <= 3) {
+                            count = response.data;
+                        } else {
+                            count = "3+";
+                        }
+                        $('#notificationCount').html(count);
+                    }
+                    else {
+                        $('#notificationCount').html('0')
+                    }
+                },
+                error: function (error) {
+                    toastr.error(error)
+                }
+            });
+        }
+        function NotificationAlertList() {
+            $.ajax({
+                type: "GET",
+                url: "/Compliant/NotificationAlertList",
+                data: {},
+                success: function (response) {
+                    console.log(response);
+                    console.log(response.data);
+                    if (response.status == "Success") {
+                        var html = "";
+                        $('#notificationList').html("");
+                        if (response.data.length > 0) {
+                            for (var i = 0; i < response.data.length; i++) {
+                                html += '<a class="dropdown-item d-flex align-items-center" href="#">';
+                                html += '<div class="mr-3">';
+                                html += '<div class="icon-circle bg-primary">';
+                                html += '<i class="fas fa-file-alt text-white"></i>';
+                                html += '</div>';
+                                html += '</div>';
+                                html += '<div>';
+                                html += '<div class="small text-gray-500">' + response.data[i].CreatedDate + '</div>';
+                                html += '<span class="font-weight-bold">' + response.data[i].NotificationContent + '</span>';
+                                html += '</div>';
+                                html += '</a>';
+                            }
+                        }
+                        $('#notificationList').append(html);
+                    }
+                    else {
+                        $('#notificationList').html("");
+                    }
+                },
+                error: function (error) {
+                    toastr.error(error)
+                }
+            });
+        }
+        $('#alertsDropdown').on('click', function () {
+            $.ajax({
+                type: "POST",
+                url: "/Compliant/NotificationAlertRead",
+                data: {},
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == "Success") {
+                        NotificationAlertCount();
+                    }
+
+                },
+                error: function (error) {
+                    toastr.error(error)
+                }
+            });
+        })
+        var table = $('#notificationTable').DataTable({
+            // "order":[["desc"]]
+        });
+    </script>
+</body>
+</html>
