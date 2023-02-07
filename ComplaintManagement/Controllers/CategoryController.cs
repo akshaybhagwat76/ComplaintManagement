@@ -20,8 +20,8 @@ namespace ComplaintManagement.Controllers
         public ActionResult Index()
         {
             ViewBag.lstCategories = GetAll(1);
-
-            var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
+          
+                    var DataTableDetail = new HomeController().getDataTableDetail("Categories", null);
             ViewBag.Page = DataTableDetail.Item1;
             ViewBag.PageIndex = DataTableDetail.Item2;
             return View();
@@ -106,6 +106,8 @@ namespace ComplaintManagement.Controllers
             var lst = new CategoryMastersRepository().GetAll();
             lstCount = lst.Count;
 
+
+          
 
             if (!string.IsNullOrEmpty(range))
             {

@@ -12,18 +12,15 @@ namespace ComplaintManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class SubCategoryMaster
+    public partial class OperationMaster
     {
         public int Id { get; set; }
-        public string SubCategoryName { get; set; }
-        public bool Status { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public bool IsActive { get; set; }
+        public string OperationName { get; set; }
+        public string Status { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
-        public int CreatedBy { get; set; }
-        public int ModifiedBy { get; set; }
-        public Nullable<int> CategoryId { get; set; }
-    
-        public virtual CategoryMaster CategoryMaster { get; set; }
+        public Nullable<bool> IsActive { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
+        public Nullable<int> ModifiedBy { get; set; }
     }
 }

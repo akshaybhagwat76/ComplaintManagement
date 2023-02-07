@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="c1d4e34d98e247d08f21874b74160844" Name="Diagram1" ZoomLevel="79">
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CategoryMaster" Width="1.5" PointX="7.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CategoryMasters_History" Width="1.5" PointX="7.75" PointY="4.75" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CategoryMasters_History" Width="1.5" PointX="17.375" PointY="4.75" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeMaster" Width="1.5" PointX="5.75" PointY="8.75" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeMasters_History" Width="1.5" PointX="7.75" PointY="8.75" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CompetencyMaster" Width="1.5" PointX="0.75" PointY="18.875" />
@@ -46,9 +46,19 @@
         <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_EmployeeComplaintWorkFlow_EmployeeComplaintMasters" />
         <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.HR_Role" Width="1.5" PointX="16.375" PointY="8.75" />
 <<<<<<< HEAD
-        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeRole" Width="1.5" PointX="16.375" PointY="13.75" />
+        
+        
+        <AssociationConnector Association="DB_A6A061_complaintuserModel.FK_SubCategoryMasters_CategoryMasters" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CommitteeRole" Width="1.5" PointX="9.052470975114252" PointY="26.976670516178324" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.CompanyMaster" Width="1.5" PointX="5.5889578692563617" PointY="0.16872398563135602" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.OperationMaster" Width="1.5" PointX="0.885834206308161" PointY="5.3381809319081626" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.PolicyDetail" Width="1.5" PointX="0.58105533224579664" PointY="17.5509688786934" />
+        <EntityTypeShape EntityType="DB_A6A061_complaintuserModel.PolicyMaster" Width="1.5" PointX="2.2405957739057931" PointY="9.08908431655219" />
+        
+        
 =======
->>>>>>> 525b854f064146abb23cc4147b76fbf3b1f62a87
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
+      &gt;&gt;&gt;&gt;&gt;&gt;&gt; 525b854f064146abb23cc4147b76fbf3b1f62a87
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

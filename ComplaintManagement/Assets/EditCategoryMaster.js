@@ -1,6 +1,7 @@
 ﻿var isValidCategory = false; 
 
 function submitForm() {
+    debugger;
     $("#lblError").removeClass("success").removeClass("adderror").text('');
     var retval = true;
     $("#myForm .required").each(function () {

@@ -151,22 +151,22 @@
                             <form id="myForm" class="m-t" role="form" action="javascript:;">
                                 <input type="hidden" value="@Model.Id" id="Id" />
                                 <div class="form-group row">
-                                    <div class="col-sm-9 mb-3">
-                                        @Html.LabelFor(model => model.UserId, new { @class = "requiredLabel" })
-                                        @{
-                                            List<SelectListItem> listUser = new List<SelectListItem>();
-                                            listUser = new List<SelectListItem>();
-                                            listUser.Add(new SelectListItem
-                                            {
-                                                Text = "",
-                                                Value = ""
-                                            });
-                                            listUser.AddRange(ViewBag.lstUser);
-                                        }
+                                            <div class="col-sm-9 mb-3">
+                                                @Html.LabelFor(model => model.UserId, new { @class = "requiredLabel" })
+                                                @{
+                                                    List<SelectListItem> listUser = new List<SelectListItem>();
+                                                    listUser = new List<SelectListItem>();
+                                                    listUser.Add(new SelectListItem
+                                                    {
+                                                        Text = "",
+                                                        Value = ""
+                                                    });
+                                                    listUser.AddRange(ViewBag.lstUser);
+                                                }
 
-                                        @Html.DropDownListFor(model => model.UserId, (List<SelectListItem>)listUser, new { @class = "form-control required" })
+                                                @Html.DropDownListFor(model => model.UserId, (List<SelectListItem>)listUser, new { @class = "form-control required" })
 
-                                    </div>
+                                            </div>
 
                                     <div class="col-sm-9 mb-3">
 

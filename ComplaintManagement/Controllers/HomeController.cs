@@ -12,7 +12,7 @@ namespace ComplaintManagement.Controllers
     {
         public ActionResult Index()
         {
-            return View(new CompliantMastersRepository().GetDashboardCounts());
+            return View();
         }
 
         public ActionResult Index1()

@@ -1,0 +1,290 @@
+﻿@using ComplaintManagement.Helpers
+@model ComplaintManagement.ViewModel.PolicyMasterVM         
+@{
+    var user = ""; var userImage = string.Empty;
+    int userId = 0;
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+    if (claimsIdentity != null)
+    {
+        var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Name);
+        var cI = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.UserData);
+        var userIDInfo = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Sid);
+
+        if (c != null && cI != null && userIDInfo != null)
+        {
+
+            user = c.Value.ToString();
+            userImage = cI.Value.ToString();
+            userId = Convert.ToInt32(userIDInfo.Value.ToString());
+        }
+    }
+    ViewBag.Title = "Manage Policy";
+}
+
+<style>
+    .ng-valid {
+        width: 2%;
+    }
+
+    .modal-footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0.75rem;
+        border-top: 0px solid #e3e6f0;
+        border-bottom-right-radius: calc(0.3rem - 1px);
+        border-bottom-left-radius: calc(0.3rem - 1px);
+    }
+</style>
+<div class="container-fluid">
+    <div class="page-title mb-3">
+        <h2 class="text-black">@ViewBag.PageType Policy Master</h2>
+    </div>
+    <!-- Tab Bar -->
+    <div class="row">
+        <div class="preloader"></div>
+
+        <div class="col-xl-12 col-lg-8">
+            <div class="card shadow mb-4">
+                <!-- Card Body -->
+                <div class="card-body">
+                    <form id="myForm" class="m-t" role="form" action="javascript:;">
+                        @Html.HiddenFor(c => c.PolicyId)
+                        <input type="hidden" value="0" id="Id">
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3">
+
+
+                                @Html.LabelFor(model => model.CompanyId, new { @class = "requiredLabel" })
+                                @{
+                                    List<SelectListItem> listCompany = new List<SelectListItem>();
+                                    listCompany = new List<SelectListItem>();
+                                    listCompany.Add(new SelectListItem
+                                    {
+                                        Text = "",
+                                        Value = ""
+                                    });
+                                    listCompany.AddRange(ViewBag.companylist);
+                                }
+
+                                @Html.DropDownListFor(model => model.CompanyId, (List<SelectListItem>)listCompany, new { @class = "form-control required" })
+
+
+
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.PolicyNumber, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.PolicyNumber, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Policy Number", @onfocusout = "checkDuplicate()" } })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.PolicyName, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.PolicyName, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Policy Name", @onfocusout = "checkDuplicate()" } })
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.TimeCode, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.TimeCode, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Time Code", @onfocusout = "checkDuplicate()" } })
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.Lastcertificatenumber, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.Lastcertificatenumber, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Last certificate number", @onfocusout = "checkDuplicate()" } })
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.Validsince, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.Validsince, new { htmlAttributes = new { @class = "form-control form-control-user required", @type = "date", @placeholder = "Valid since", @onfocusout = "checkDuplicate()" } })
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.Validuntil, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.Validuntil, new { htmlAttributes = new { @class = "form-control form-control-user required", @type = "date", @placeholder = "Valid   until", @onfocusout = "checkDuplicate()" } })
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.OperationId, new { @class = "requiredLabel" })
+                                @{
+                                    List<SelectListItem> listUser = new List<SelectListItem>();
+                                    listUser = new List<SelectListItem>();
+                                    listUser.Add(new SelectListItem
+                                    {
+                                        Text = "",
+                                        Value = ""
+                                    });
+                                    listUser.AddRange(ViewBag.operationList);
+                                }
+
+                                @Html.DropDownListFor(model => model.OperationId, (List<SelectListItem>)listUser, new { @class = "form-control required" })
+
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.Able)
+                                @Html.CheckBoxFor(model => model.Able, new { htmlAttributes = new { @class = "form-control form-control-user required", @onfocusout = "checkDuplicate()" } })
+                            </div>
+                        </div>
+                        <label>National Cost </label>
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.Dry, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.Dry, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Dry", @onfocusout = "checkDuplicate()" } })
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.Reefer, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.Reefer, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Reefer", @onfocusout = "checkDuplicate()" } })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.InternationalCostDry, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.InternationalCostDry, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Dry", @onfocusout = "checkDuplicate()" } })
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                @Html.LabelFor(model => model.InternationalCostReefer, new { @class = "requiredLabel" })
+                                @Html.EditorFor(model => model.InternationalCostReefer, new { htmlAttributes = new { @class = "form-control form-control-user required", @placeholder = "Reefer  ", @onfocusout = "checkDuplicate()" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Observations, new { @class = "requiredLabel" })
+                            @Html.TextAreaFor(model => model.Observations, new { rows = "7", cols = "190", @class = "form-control form-control-user required" })
+                            @*@Html.TextAreaFor(model => model.Observations, new { htmlAttributes = new { @class = "form-control form-control-user required", @onfocusout = "checkDuplicate()" } })*@
+                        </div>
+                    </form>
+                    <div class="form-group row mt-5" id="form">
+
+                        <div class="col-sm-3 mb-3 mt-n3">
+                            @Html.Label("SecurityRequirementsCommodity", new { @class = "requiredLabel" })
+                            @{
+                                List<SelectListItem> listItems = new List<SelectListItem>();
+                                listItems = new List<SelectListItem>();
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "---Select Name---",
+                                    Value = "---SelectName---"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Merchandise Clase A",
+                                    Value = "MerchandiseClaseA"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Merchandise Clase B",
+                                    Value = "MerchandiseClaseB"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Exclusions",
+                                    Value = "exclusions"
+                                });
+                            }
+
+                            @Html.DropDownList("SecurityRequirementsCommodity", (List<SelectListItem>)listItems, new { @class = "form-control required" })
+
+
+                        </div>
+                        <div class="col-sm-3 mb-3 mt-n3">
+                            @Html.Label("Requirement", new { @class = "requiredLabel" })
+                            @{
+                                List<SelectListItem> listreq = new List<SelectListItem>();
+                                listreq = new List<SelectListItem>();
+                                listreq.Add(new SelectListItem
+                                {
+                                    Text = "---Select Name---",
+                                    Value = "---SelectName---"
+                                });
+                                listreq.Add(new SelectListItem
+                                {
+                                    Text = " Sin Exigencia",
+                                    Value = "SinExigencia"
+                                });
+                                listreq.Add(new SelectListItem
+                                {
+                                    Text = "Exigencia Mínima",
+                                    Value = "ExigenciaMínima"
+                                });
+                                listreq.Add(new SelectListItem
+                                {
+                                    Text = "Exigencia Media",
+                                    Value = "ExigenciaMedia"
+                                });
+                                listreq.Add(new SelectListItem
+                                {
+                                    Text = "Exigencia Máxima",
+                                    Value = "ExigenciaMáxima"
+                                });
+                            }
+                            @Html.DropDownList("Requirement", (List<SelectListItem>)listreq, new { @class = "form-control required" })
+                        </div>
+                        <div class="col-sm-3 mb-3 mt-n3">
+                            @Html.Label("Minimum", new { @class = "requiredLabel" })
+                            @Html.Editor("Minimum", new { htmlAttributes = new { @class = "form-control  required", @placeholder = "Minimum", @type = "number" } })
+                        </div>
+                        <div class="col-sm-3 mb-3 mt-n3">
+                            @Html.Label("Maximum", new { @class = "requiredLabel" })
+                            @Html.Editor("Maximum", new { htmlAttributes = new { @class = "form-control  required", @placeholder = "Maximum", @type = "number" } })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <a href="javascript:void(0)" onclick="submit()" style="float: right;" id="dataupload" class="btn rounded-circle h-40p w-40p btn-outline-danger d-flex align-items-center"><i class="fas fa-plus"></i></a>
+
+                        </div>
+                    </div>
+                    <table class="table" id="del">
+                        <thead>
+                            <tr>
+                                <th scope="col">Commodity</th>
+                                <th scope="col">Requirement</th>
+                                <th scope="col">Minimum </th>
+                                <th scope="col">Maximum</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table1">
+                        </tbody>
+                    </table>
+
+                    <button type="button" class="btn btn-primary" id="deletebtn" href="#" style="float: right;">Delete</button>
+                    <div class="modal-footer mt-5">
+
+                        <a href="javascript:void(0)" onclick="submitForm()" class="btn btn-danger">keep</a>
+                        <a href="/Policy/Index" class="btn btn-white border">Cancel</a>
+                        <label id="lblError" class="inline"></label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@Scripts.Render("~/Assets/EditPolicyMaster")
+<link href="sweetalert.css" type="text/css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.1/sweetalert2.min.css" integrity="sha512-NvuRGlPf6cHpxQqBGnPe7fPoACpyrjhlSNeXVUY7BZAj1nNhuNpRBq3osC4yr2vswUEuHq2HtCsY2vfLNCndYA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.1/sweetalert2.min.js" integrity="sha512-vCI1Ba/Ob39YYPiWruLs4uHSA3QzxgHBcJNfFMRMJr832nT/2FBrwmMGQMwlD6Z/rAIIwZFX8vJJWDj7odXMaw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>   
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+ <script>
+
+     function setDate(d) {
+         var now = new Date(d);
+         var day = ("0" + now.getDate()).slice(-2);
+         var month = ("0" + (now.getMonth() + 1)).slice(-2);
+         var today = now.getFullYear() + "-" + (month) + "-" + (day);
+         return today;
+     }
+
+     var Validuntil = '@Model.Validuntil';
+     var Validsince = '@Model.Validsince';
+     $('#Validuntil').val(setDate(Validuntil));
+     $('#Validsince').val(setDate(Validsince));
+ </script>

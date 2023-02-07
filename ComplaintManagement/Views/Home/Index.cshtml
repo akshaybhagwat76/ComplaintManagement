@@ -1,5 +1,5 @@
 ﻿@using ComplaintManagement.Helpers
-@model ComplaintManagement.ViewModel.DashboardVM
+@*@model ComplaintManagement.ViewModel.DashboardVM*@
 @{
     var user = ""; var userImage = string.Empty;
     int userId = 0; string userRole = string.Empty;
@@ -144,7 +144,7 @@
             </div>
             <div class="card mb-4 rounded-0 border-0">
                 <div class="card-body text-black">
-                    <div class="row">
+                    @*<div class="row">
                         <div class="col-md-4 text-center">
                             <h2 class="font-weight-bold" id="dueComplaintsCount">@Model.DueComplaints</h2>
                             <a onclick="getDueComplaints()" id="dueComplaintPopup" data-toggle="modal" class="text-dark btn border-0 p-0"><strong>Due Complaints</strong></a>
@@ -157,7 +157,7 @@
                             <h2 class="font-weight-bold" id="AwaitingComplaintsCount">@Model.AwaitingComplaints</h2>
                             <a id="awaitingComplaint" onclick="getAwaitingComplaint()" class="text-dark btn border-0 p-0"><strong>Awaiting My Approval Complaints</strong></a>
                         </div>
-                    </div>
+                    </div>*@
                 </div>
             </div>
             <div class="card mb-4 rounded-0 border-0">

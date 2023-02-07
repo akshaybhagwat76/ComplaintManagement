@@ -154,7 +154,7 @@ namespace ComplaintManagement.Repository
                             commitRole.CreatedDate = DateTime.UtcNow;
                             //EmployeeComplaint = Mapper.Map<CommitteeRole, CommitteeRole>(EmployeeComplaintVM);
                             commitRole.Userid = Id;
-                            commitRole.Status = 1; //committee save
+                            commitRole.Status = "1"; //committee save
                             commitRole.ComplaintId = 1;
                             commitRole.InvolvedUsersId = EmployeeComplaintVM.InvolvedUsersId;
                             commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;
@@ -224,7 +224,7 @@ namespace ComplaintManagement.Repository
                             commitRole.IsActive = true;
                             commitRole.CreatedDate = DateTime.UtcNow;
                             commitRole.Userid = Id;
-                            commitRole.Status = 2; //committee Back to buhc
+                            commitRole.Status = "2"; //committee Back to buhc
                             commitRole.ComplaintId = 1;
                             commitRole.InvolvedUsersId = EmployeeComplaintVM.InvolvedUsersId;
                             commitRole.CashTypeId = EmployeeComplaintVM.CashTypeId;

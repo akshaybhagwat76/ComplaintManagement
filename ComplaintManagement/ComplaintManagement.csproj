@@ -196,6 +196,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
     <Compile Include="Controllers\LOSController.cs" />
+    <Compile Include="Controllers\PolicyController.cs" />
     <Compile Include="Controllers\RegionController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\SBUController.cs" />
@@ -224,6 +225,9 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CommitteeRole.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CompanyMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CompetencyMaster.cs">
@@ -286,6 +290,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\OperationMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PolicyDetail.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PolicyMaster.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RegionMaster.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -325,6 +338,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\CategoryMastersRepository.cs" />
     <Compile Include="Repository\CommitteeMastersRepository.cs" />
+    <Compile Include="Repository\CompanyMasterRepository.cs" />
     <Compile Include="Repository\CompetencyMastersRepository.cs" />
     <Compile Include="Repository\CompliantMastersRepository.cs" />
     <Compile Include="Repository\DesignationMasterRepository.cs" />
@@ -333,6 +347,8 @@
     <Compile Include="Repository\EmployeeWorkFlowRepository.cs" />
     <Compile Include="Repository\EntityMasterRepository.cs" />
     <Compile Include="Repository\LocationMastersRepository.cs" />
+    <Compile Include="Repository\OperationMasterRepository.cs" />
+    <Compile Include="Repository\PolicyMasterRepository.cs" />
     <Compile Include="Repository\RegionMasterRepository.cs" />
     <Compile Include="Repository\RoleMasterRepoitory.cs" />
     <Compile Include="Repository\SBUMasterRepository.cs" />
@@ -345,6 +361,7 @@
     <Compile Include="ViewModel\CategoryMasterVM.cs" />
     <Compile Include="ViewModel\CommitteeMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CommitteeMasterVM.cs" />
+    <Compile Include="ViewModel\CompanyVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterHistoryVM.cs" />
     <Compile Include="ViewModel\CompetencyMasterVM.cs" />
     <Compile Include="ViewModel\CompliantSearchVM.cs" />
@@ -361,6 +378,9 @@
     <Compile Include="ViewModel\LocationMasterVM.cs" />
     <Compile Include="ViewModel\LoginVM.cs" />
     <Compile Include="ViewModel\LOSMasterHistoryVM.cs" />
+    <Compile Include="ViewModel\OperationMasterVM.cs" />
+    <Compile Include="ViewModel\PolicyDetailsMasterVM.cs" />
+    <Compile Include="ViewModel\PolicyMasterVM.cs" />
     <Compile Include="ViewModel\RegionMasterHistoryVM.cs" />
     <Compile Include="ViewModel\RegionMasterVM.cs" />
     <Compile Include="ViewModel\RoleMasterHistoryVM.cs" />
@@ -384,6 +404,7 @@
     <Content Include="Assets\CompetencyMasters.js" />
     <Content Include="Assets\Dashboard.js" />
     <Content Include="Assets\DesignationMasters.js" />
+    <Content Include="Assets\EditPolicyMaster.js" />
     <Content Include="Assets\EditCategoryMaster.js" />
     <Content Include="Assets\EditCommitteeMaster.js" />
     <Content Include="Assets\EditCompetencyMasters.js" />
@@ -405,6 +426,7 @@
     <Content Include="Assets\LocationMasters.js" />
     <Content Include="Assets\Login.js" />
     <Content Include="Assets\LOSMasters.js" />
+    <Content Include="Assets\PolicyMaster.js" />
     <Content Include="Assets\RegionMasters.js" />
     <Content Include="Assets\RoleMaster.js" />
     <Content Include="Assets\SBUMasters.js" />
@@ -2402,6 +2424,8 @@
     <Content Include="Views\Shared\_ComplaintOverDueContent.cshtml" />
     <Content Include="Views\Compliant\ComplaintThree_Index.cshtml" />
     <Content Include="Views\Compliant\ComplaintTwo_Index.cshtml" />
+    <Content Include="Views\Policy\Index.cshtml" />
+    <Content Include="Views\Policy\ManagePolicyMaster.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

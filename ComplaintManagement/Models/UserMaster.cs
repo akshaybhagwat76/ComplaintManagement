@@ -46,6 +46,7 @@ namespace ComplaintManagement.Models
         public System.DateTime CreatedDate { get; set; }
         public int CreatedBy { get; set; }
         public int ModifiedBy { get; set; }
+        public string empguid { get; set; }
     
         public virtual CompetencyMaster CompetencyMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

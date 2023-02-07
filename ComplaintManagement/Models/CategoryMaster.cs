@@ -14,6 +14,12 @@ namespace ComplaintManagement.Models
     
     public partial class CategoryMaster
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public CategoryMaster()
+        {
+            this.SubCategoryMasters = new HashSet<SubCategoryMaster>();
+        }
+    
         public int Id { get; set; }
         public string CategoryName { get; set; }
         public bool Status { get; set; }
@@ -22,5 +28,8 @@ namespace ComplaintManagement.Models
         public bool IsActive { get; set; }
         public int CreatedBy { get; set; }
         public int ModifiedBy { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubCategoryMaster> SubCategoryMasters { get; set; }
     }
 }

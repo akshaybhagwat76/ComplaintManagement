@@ -14,10 +14,9 @@ namespace ComplaintManagement.Models
     
     public partial class CommitteeRole
     {
-        
         public int Id { get; set; }
         public Nullable<int> Userid { get; set; }
-        public Nullable<int> Status { get; set; }
+        public string Status { get; set; }
         public Nullable<int> ComplaintId { get; set; }
         public string Remark { get; set; }
         public string CashTypeId { get; set; }
@@ -26,5 +25,6 @@ namespace ComplaintManagement.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public Nullable<int> CommitteeUserId { get; set; }
+        public string Attachment { get; set; }
     }
 }

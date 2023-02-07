@@ -56,6 +56,8 @@
         public const string PRODUCT_IMAGE = "Product";
         public const string Active = "Active";
         public const string Inactive = "Inactive";
+        public const string Yes = "Yes";
+        public const string No = "No";
         public const string Status = "Status";
         public const string Id = "Id";
 

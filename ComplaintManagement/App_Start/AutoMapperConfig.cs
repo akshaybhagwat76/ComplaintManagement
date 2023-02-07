@@ -99,6 +99,18 @@ namespace ComplaintManagement.App_Start
 
                 cfg.CreateMap<EmployeeComplaintWorkFlowVM, EmployeeComplaintWorkFlow>();
                 cfg.CreateMap<EmployeeComplaintWorkFlow, EmployeeComplaintWorkFlowVM>();
+
+                cfg.CreateMap<CompanyVM, CompanyMaster>();
+                cfg.CreateMap<CompanyMaster, CompanyVM>();
+
+                cfg.CreateMap<OperationMasterVM, OperationMaster>();
+                cfg.CreateMap<OperationMaster, OperationMasterVM>();
+
+                cfg.CreateMap<PolicyMasterVM, PolicyMaster>();
+                cfg.CreateMap<PolicyMaster, PolicyMasterVM>();
+
+                cfg.CreateMap<PolicyDetailsMasterVM, PolicyDetail>();
+                cfg.CreateMap<PolicyDetail, PolicyDetailsMasterVM>();
             });
         }
     }

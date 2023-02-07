@@ -26,7 +26,7 @@ namespace ComplaintManagement.Repository
         }
 
         public CategoryMasterVM AddOrUpdate(CategoryMasterVM categoryVM)
-        {
+                {
             try
             {
                 //Get the current claims principal

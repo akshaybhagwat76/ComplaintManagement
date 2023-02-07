@@ -244,6 +244,16 @@ namespace ComplaintManagement
             // Employee Awaiting Compliants
             bundles.Add(new ScriptBundle("~/Assets/EmployeeComplaintAwaiting").Include(
                       "~/Assets/_ComplaintAwaitingContent.js"));
+
+
+            //Edit Policy Master
+            bundles.Add(new ScriptBundle("~/Assets/EditPolicyMaster").Include(
+                      "~/Assets/EditPolicyMaster.js"));
+
+
+            //Policy Master
+            bundles.Add(new ScriptBundle("~/Assets/PolicyMasters").Include(
+                      "~/Assets/PolicyMaster.js"));
         }
     }
 }

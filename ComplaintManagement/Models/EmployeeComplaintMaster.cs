@@ -36,6 +36,7 @@ namespace ComplaintManagement.Models
         public string ComplaintStatus { get; set; }
         public System.DateTime DueDate { get; set; }
         public bool IsSubmitted { get; set; }
+        public string LastPerformedBy { get; set; }
     
         public virtual UserMaster UserMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
